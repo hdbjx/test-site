@@ -13,7 +13,7 @@ const CTAS: Record<NonNullable<PostMeta["cta"]>, { title: string; body: string; 
 export function PostCta({ cta = "premium" }: { cta?: PostMeta["cta"] }) {
   const c = CTAS[cta ?? "premium"];
   return (
-    <aside className="my-12 rounded-[var(--radius-panel)] border-2 border-ink bg-white p-6 md:p-8">
+    <aside className="panel panel-red my-12 p-6 md:p-8">
       <p className="font-display text-xl font-semibold">{c.title}</p>
       <p className="mt-2 text-ink/80">{c.body}</p>
       <TrackedLink href={c.href} event="book_click" params={{ location: "blog_cta" }} className="btn btn-primary mt-5">

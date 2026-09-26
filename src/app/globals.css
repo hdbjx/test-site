@@ -57,9 +57,9 @@
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
     text-wrap: balance;
   }
   p { text-wrap: pretty; }
@@ -92,8 +92,10 @@
   }
 
   /* Type scale */
-  .t-display { font-size: clamp(2.5rem, 7vw, 4.75rem); letter-spacing: -0.035em; line-height: 0.98; }
-  .t-h2 { font-size: clamp(2rem, 4.2vw, 3.25rem); letter-spacing: -0.03em; }
+  /* Display type is Bebas Neue — the face Every Detail already uses for headlines and prices */
+  .t-display { font-family: var(--font-numeral); font-weight: 400; font-size: clamp(4rem, 12vw, 8.5rem); letter-spacing: 0.005em; line-height: 0.86; }
+  .t-page { font-family: var(--font-numeral); font-weight: 400; font-size: clamp(3rem, 7.5vw, 6.25rem); letter-spacing: 0.005em; line-height: 0.88; }
+  .t-h2 { font-family: var(--font-numeral); font-weight: 400; font-size: clamp(2.75rem, 6vw, 4.5rem); letter-spacing: 0.01em; line-height: 0.9; }
   .t-h3 { font-size: 1.375rem; letter-spacing: -0.015em; line-height: 1.2; }
   .t-lede { font-size: clamp(1.125rem, 1.6vw, 1.3rem); line-height: 1.55; color: var(--color-ink); max-width: 38rem; }
   .t-small { font-size: 0.9375rem; line-height: 1.55; }
@@ -107,34 +109,51 @@
     color: var(--color-oxblood);
   }
 
-  /* Buttons */
+  /* Buttons — hard offset shadow, lifted from the existing Every Detail pages */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     min-height: 3.25rem;
-    padding: 0.875rem 1.75rem;
+    padding: 0.8rem 1.6rem 0.7rem;
     border-radius: 999px;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1rem;
-    letter-spacing: -0.01em;
+    border: 2px solid var(--color-ink);
+    box-shadow: 4px 4px 0 var(--color-ink);
+    font-family: var(--font-numeral);
+    font-weight: 400;
+    font-size: 1.375rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
     text-decoration: none;
-    transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out), border-color 180ms var(--ease-out), transform 120ms var(--ease-out);
+    transition: transform 120ms var(--ease-out), box-shadow 120ms var(--ease-out), background-color 150ms;
     -webkit-tap-highlight-color: transparent;
     cursor: pointer;
   }
-  .btn:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--color-ink); }
+  }
+  .btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--color-ink); }
   .btn-primary { background: var(--color-red); color: #fff; }
-  .btn-primary:hover { background: var(--color-red-hover); }
-  .btn-secondary { background: transparent; color: var(--color-ink); border: 1.5px solid var(--color-ink); }
-  .btn-secondary:hover { background: var(--color-ink); color: var(--color-paper); }
-  .btn-on-dark { background: var(--color-paper); color: var(--color-ink); }
-  .btn-on-dark:hover { background: #fff; }
-  .btn-outline-on-dark { background: transparent; color: var(--color-paper); border: 1.5px solid rgb(243 241 236 / 0.6); }
-  .btn-outline-on-dark:hover { border-color: var(--color-paper); background: rgb(243 241 236 / 0.08); }
-  .btn-sm { min-height: 2.75rem; padding: 0.625rem 1.25rem; font-size: 0.9375rem; }
+  .btn-secondary { background: var(--color-paper); color: var(--color-ink); }
+  .btn-on-dark { background: var(--color-paper); color: var(--color-ink); border-color: var(--color-paper); box-shadow: 4px 4px 0 var(--color-red); }
+  @media (hover: hover) and (pointer: fine) {
+    .btn-on-dark:hover { box-shadow: 6px 6px 0 var(--color-red); }
+  }
+  .btn-on-dark:active { box-shadow: 1px 1px 0 var(--color-red); }
+  .btn-outline-on-dark { background: transparent; color: var(--color-paper); border-color: var(--color-paper); box-shadow: none; }
+  @media (hover: hover) and (pointer: fine) {
+    .btn-outline-on-dark:hover { box-shadow: none; transform: none; background: rgb(243 241 236 / 0.1); }
+  }
+  .btn-outline-on-dark:active { box-shadow: none; }
+  .btn-sm { min-height: 2.75rem; padding: 0.55rem 1.1rem 0.45rem; font-size: 1.2rem; box-shadow: 3px 3px 0 var(--color-ink); }
+
+  /* Panels: ink border + offset shadow. Used for the few things that deserve a frame. */
+  .panel { background: #fff; border: 2px solid var(--color-ink); border-radius: 10px; box-shadow: 6px 6px 0 var(--color-ink); }
+  .panel-red { box-shadow: 6px 6px 0 var(--color-red); }
+
+  /* Double rule — the divider from the current ceramic page */
+  .rule-double { height: 6px; border-top: 2px solid var(--color-ink); border-bottom: 1px solid var(--color-ink); }
 
   /* Inline text link */
   .link {
@@ -184,20 +203,20 @@
     justify-content: center;
     min-height: 3.75rem;
     padding: 0.75rem 1rem;
-    border: 1.5px solid rgb(17 17 17 / 0.18);
-    border-radius: var(--radius-panel);
+    border: 2px solid rgb(17 17 17 / 0.16);
+    border-radius: 10px;
     background: rgb(255 255 255 / 0.55);
     cursor: pointer;
     text-align: left;
     transition: border-color 150ms, background-color 150ms;
   }
-  .choice:hover { border-color: rgb(17 17 17 / 0.45); }
+  .choice:hover { border-color: rgb(17 17 17 / 0.5); }
   .choice[aria-checked="true"],
   .choice[aria-pressed="true"],
   .choice:has(input:checked) {
     border-color: var(--color-ink);
     background: #fff;
-    box-shadow: inset 0 0 0 1px var(--color-ink);
+    box-shadow: 3px 3px 0 var(--color-ink);
   }
   .choice:has(input:focus-visible) { outline: 2px solid var(--color-red); outline-offset: 2px; }
 

@@ -180,7 +180,7 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
 
       {/* Summary: sticky on desktop, inline before submit on mobile */}
       <aside className="lg:col-span-4">
-        <div className="rounded-[var(--radius-panel)] border-2 border-ink bg-white p-6 lg:sticky lg:top-24">
+        <div className="panel p-6 lg:sticky lg:top-24">
           <h2 className="font-display text-lg font-semibold">Your detail</h2>
           {vehicle && service && price ? (
             <>

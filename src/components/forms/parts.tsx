@@ -117,7 +117,7 @@ export function formToObject(form: HTMLFormElement): Record<string, string> {
 
 export function Success({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div role="status" className="rounded-[var(--radius-panel)] border-2 border-ink bg-white p-8">
+    <div role="status" className="panel panel-red p-8">
       <h2 className="t-h3">{title}</h2>
       <div className="mt-3 space-y-3 text-ink/80">{children}</div>
     </div>

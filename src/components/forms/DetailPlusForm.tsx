@@ -102,7 +102,7 @@ export function DetailPlusForm() {
       <ChoiceGroup legend="What gets cleaned?" name="coverage" options={coverages} value={coverage} onChange={setCoverage} cols="grid-cols-1 sm:grid-cols-3" />
       <ChoiceGroup legend="Vehicle" name="vehicle" options={vehicles} value={vehicle} onChange={setVehicle} cols="grid-cols-2 sm:grid-cols-3" />
 
-      <div className="rounded-[var(--radius-panel)] border-2 border-ink bg-white p-6">
+      <div className="panel p-6">
         <p className="text-sm text-muted">Your plan</p>
         <p className="mt-1 font-display text-lg font-semibold" aria-live="polite">
           {summary}

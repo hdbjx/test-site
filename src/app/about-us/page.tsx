@@ -2,6 +2,7 @@ import { CtaBand } from "@/components/CtaBand";
 import { PageHeader } from "@/components/PageHeader";
 import { Photo } from "@/components/Photo";
 import { ReviewGrid } from "@/components/ReviewGrid";
+import { RowList } from "@/components/RowList";
 import { TeamGrid } from "@/components/TeamGrid";
 import { TrackedLink } from "@/components/TrackedLink";
 import { areas } from "@/data/areas";
@@ -19,20 +20,20 @@ export const metadata = pageMetadata({
 
 const standards = [
   {
-    title: "Training before trust",
+    title: "Training",
     body: "Technicians progress through three tiers of training. Responsibility grows as skill is proven on real cars.",
   },
   {
-    title: "Systems, not memory",
+    title: "Systems",
     body: "Checklists, scheduling, client notes and follow-up run on tools we built ourselves, so every job runs the same way.",
   },
   {
-    title: "Professional equipment",
+    title: "Equipment",
     body: "Two fully equipped rigs with our own power, water and professional products. We don't borrow your hose or outlet.",
   },
   {
-    title: "Accountable to Decatur",
-    body: `We work for neighbors, and ${reviewCountLabel} of them have left five-star reviews. That's the standard we protect.`,
+    title: "Reviews",
+    body: `${reviewCountLabel} five-star Google reviews. Read them before you book; we want you to.`,
   },
 ];
 
@@ -44,8 +45,8 @@ export default function AboutPage() {
         title="Student-run. Professionally detailed."
         lede={
           <p>
-            Every Detail is a mobile detailing company built and run by students in Decatur, Georgia. The age of the team
-            is part of the story. The quality of the work is the point.
+            Every Detail is a mobile detailing company started and run by students in Decatur, Georgia. Here&rsquo;s how
+            it began, how we train, and who&rsquo;ll be working on your car.
           </p>
         }
         aside={<Photo id="about-team" priority ratio="4/3" sizes="(min-width: 1024px) 45vw, 100vw" className="rounded-[var(--radius-photo)]" />}
@@ -76,15 +77,10 @@ export default function AboutPage() {
 
       {/* Standards */}
       <section className="container-ed py-16 md:py-24">
-        <h2 className="t-h2 max-w-3xl">How a student-run company stays professional</h2>
-        <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {standards.map((s) => (
-            <li key={s.title} className="border-t-2 border-ink pt-5">
-              <h3 className="font-display text-lg font-semibold">{s.title}</h3>
-              <p className="mt-2 text-ink/75">{s.body}</p>
-            </li>
-          ))}
-        </ul>
+        <h2 className="t-h2 max-w-4xl">How a student-run company stays professional</h2>
+        <div className="mt-10">
+          <RowList items={standards} />
+        </div>
       </section>
 
       {/* Founder */}

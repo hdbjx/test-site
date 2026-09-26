@@ -3,6 +3,7 @@ import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
 import { PageHeader } from "@/components/PageHeader";
 import { ReviewGrid } from "@/components/ReviewGrid";
+import { RowList } from "@/components/RowList";
 import { TrackedLink } from "@/components/TrackedLink";
 import { DetailPlusForm } from "@/components/forms/DetailPlusForm";
 import { detailPlusBenefits, detailPlusGuarantee, detailPlusSteps, frequencies } from "@/data/detailplus";
@@ -47,18 +48,13 @@ export default function DetailPlusPage() {
           <div className="lg:col-span-4">
             <h2 className="t-h2">Who it&rsquo;s for</h2>
             <p className="mt-5 text-lg text-ink/80">
-              Families with kids and pets in the back seat. Commuters who live in the car. Anyone who likes how it feels
-              right after a detail and wants it to stay that way.
+              People who want the car clean all the time, not just the week after a detail. It works especially well
+              for family cars, pet owners and daily commuters.
             </p>
           </div>
-          <ul className="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:col-span-7 lg:col-start-6">
-            {detailPlusBenefits.map((b) => (
-              <li key={b.title} className="border-t-2 border-ink pt-4">
-                <h3 className="font-display text-lg font-semibold">{b.title}</h3>
-                <p className="mt-1 text-[0.9375rem] text-ink/75">{b.body}</p>
-              </li>
-            ))}
-          </ul>
+          <div className="lg:col-span-7 lg:col-start-6">
+            <RowList items={detailPlusBenefits} />
+          </div>
         </div>
       </section>
 

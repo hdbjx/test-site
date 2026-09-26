@@ -89,7 +89,7 @@ export default function ServicesPage() {
         <section key={s.id} id={s.slug} aria-labelledby={`${s.slug}-h`} className={`py-16 md:py-24 ${i > 0 ? "border-t border-line" : ""}`}>
           <div className="container-ed grid gap-10 lg:grid-cols-12">
             <div className="lg:col-span-6">
-              <p className="kicker">{s.recommended ? "Most booked · recommended for first visits" : s.short}</p>
+              <p className="font-display font-semibold text-oxblood">{s.recommended ? "Most booked. Recommended for first visits." : s.short}</p>
               <h2 id={`${s.slug}-h`} className="t-h2 mt-3">
                 {s.name}
               </h2>

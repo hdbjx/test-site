@@ -25,7 +25,9 @@ export function Footer() {
             Mobile car detailing in Decatur and nearby Atlanta neighborhoods. {site.tagline}
           </p>
           <p className="mt-3 text-paper/80">
-            {site.award.title} · {reviewCountLabel} five-star Google reviews
+            {site.award.title}
+            <br />
+            {reviewCountLabel} five-star Google reviews
           </p>
           <TrackedLink href="/book" event="book_click" params={{ location: "footer" }} className="btn btn-on-dark mt-8">
             Book your detail
