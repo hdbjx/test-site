@@ -124,7 +124,7 @@ export default function AboutPage() {
         <div className="container-ed">
           <p className="eyebrow">On the job</p>
           <h2 className="t-h2 mt-3 mb-8">Built in driveways around Decatur</h2>
-          <WorkGallery ids={["team-02", "rig-01", "rig-02", "rig-03", "rig-04", "rig-05", "rig-06", "team-04"]} />
+          <WorkGallery ids={["team-02", "rig-01", "rig-02", "rig-03", "rig-04", "work-02", "work-06", "work-07"]} />
         </div>
       </section>
 
