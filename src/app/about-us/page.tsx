@@ -87,10 +87,12 @@ export default function AboutPage() {
       {/* Founder */}
       <section className="border-t border-line bg-paper2 py-16 md:py-24">
         <div className="container-ed grid gap-10 lg:grid-cols-12 lg:items-center">
-          <div className="max-w-sm lg:col-span-4">
-            <Photo id="about-founder" ratio="4/5" sizes="(min-width: 1024px) 30vw, 80vw" className="rounded-[var(--radius-photo)]" />
+          <div className="lg:col-span-3">
+            <p className="eyebrow">Founder</p>
+            <p className="mt-3 font-display text-3xl font-semibold">Wiley</p>
+            <p className="mt-1 text-muted">Founder &amp; owner</p>
           </div>
-          <figure className="lg:col-span-7 lg:col-start-6">
+          <figure className="lg:col-span-8 lg:col-start-5">
             <blockquote className="font-display text-2xl font-medium leading-snug tracking-tight md:text-3xl">
               <p>
                 &ldquo;I believe every vehicle deserves professional-level attention, and every customer should drive away
@@ -124,7 +126,7 @@ export default function AboutPage() {
         <div className="container-ed">
           <p className="eyebrow">On the job</p>
           <h2 className="t-h2 mt-3 mb-8">Built in driveways around Decatur</h2>
-          <WorkGallery ids={["team-02", "rig-01", "rig-02", "rig-03", "rig-04", "work-02", "work-06", "work-07"]} />
+          <WorkGallery ids={["about-ops-01", "about-ops-02", "about-ops-03", "about-ops-04", "about-ops-05", "about-ops-06"]} />
         </div>
       </section>
 

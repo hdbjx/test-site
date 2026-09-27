@@ -141,7 +141,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="lg:col-span-5 lg:col-start-8">
-            <Photo id="about-team" ratio="4/3" sizes="(min-width: 1024px) 40vw, 100vw" className="rounded-[10px] border-2 border-ink" />
+            <Photo id="home-team" ratio="4/3" sizes="(min-width: 1024px) 40vw, 100vw" className="rounded-[10px] border-2 border-ink" />
             <ul className="mt-6 columns-2 gap-6 text-[0.9375rem]">
               {team.map((m) => (
                 <li key={m.name} className="break-inside-avoid border-b border-ink/15 py-2">

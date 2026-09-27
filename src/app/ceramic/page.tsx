@@ -65,7 +65,7 @@ export default function CeramicPage() {
       </section>
 
       <section className="container-ed py-12 md:py-16">
-        <WorkGallery ids={["paint-01", "paint-02", "paint-03"]} />
+        <WorkGallery ids={["ceramic-01", "ceramic-02", "paint-02", "paint-03", "ceramic-03"]} />
       </section>
 
       {/* Packages */}

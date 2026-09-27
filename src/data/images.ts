@@ -214,6 +214,18 @@ export const images: SiteImage[] = [
   category: "rig",
 },
   
+  // Additional unique photography for editorial galleries.
+  { id: "about-ops-01", file: "/images/team-rig-setup.jpg", alt: "Every Detail team setting up a mobile detailing rig", w: 3, h: 2, category: "team" },
+  { id: "about-ops-02", file: "/images/technician-rig.jpg", alt: "Every Detail technician working from a mobile detailing rig", w: 2, h: 3, category: "rig" },
+  { id: "about-ops-03", file: "/images/every-detail-flag.jpg", alt: "Every Detail flag beside a mobile detailing setup", w: 2, h: 3, category: "brand" },
+  { id: "about-ops-04", file: "/images/mobile-rig-work.jpg", alt: "Every Detail mobile rig set up for a driveway detail", w: 3, h: 2, category: "rig" },
+  { id: "about-ops-05", file: "/images/exterior-wash-team.jpg", alt: "Every Detail technicians washing a vehicle together", w: 3, h: 2, category: "team" },
+  { id: "about-ops-06", file: "/images/team-driveway-detail.jpg", alt: "Every Detail technicians detailing a vehicle in a residential driveway", w: 3, h: 2, category: "team" },
+  { id: "home-team", file: "/images/branded-rig-home.jpg", alt: "Every Detail mobile detailing rig at a residential job", w: 3, h: 2, category: "rig" },
+  { id: "ceramic-01", file: "/images/red-car-rig.jpg", alt: "Glossy red vehicle beside the Every Detail mobile rig", w: 3, h: 2, category: "paint" },
+  { id: "ceramic-02", file: "/images/exterior-hand-detail.jpg", alt: "Hand detailing a vehicle exterior finish", w: 3, h: 2, category: "paint" },
+  { id: "ceramic-03", file: "/images/driveway-detail.jpg", alt: "Vehicle being detailed in a residential driveway", w: 3, h: 2, category: "work" },
+
   // ------------------------------------------------------------
   // PAINT + CERAMIC
   // ------------------------------------------------------------

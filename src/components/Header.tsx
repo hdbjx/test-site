@@ -1,11 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { moreNav, primaryNav } from "@/data/navigation";
-import { logo } from "@/data/images";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { supabaseConfigured } from "@/lib/supabase/config";
@@ -83,7 +81,7 @@ export function Header() {
       </a>
       <div className="container-ed flex h-[4.5rem] items-center justify-between gap-6">
         <Link href="/" className="flex shrink-0 items-center" aria-label="Every Detail home">
-          <Image src={logo.mark.file} alt="Every Detail" width={logo.mark.w} height={logo.mark.h} priority className="h-11 w-auto" />
+          <span className="font-display text-xl font-semibold tracking-[-0.03em] text-ink">EVERY DETAIL</span>
         </Link>
 
         {/* Desktop */}
