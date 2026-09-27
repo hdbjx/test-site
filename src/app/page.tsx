@@ -121,7 +121,7 @@ export default function Home() {
             </div>
           )}
           <div className="mt-10">
-            <WorkGallery ids={["work-01", "work-03", "work-07", "work-08", "work-09"]} />
+            <WorkGallery ids={["work-01", "work-02", "work-03", "work-04", "work-05", "work-06", "work-07", "work-08"]} />
           </div>
         </div>
       </section>

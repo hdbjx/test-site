@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
 import { RowList } from "@/components/RowList";
 import { TrackedLink } from "@/components/TrackedLink";
+import { WorkGallery } from "@/components/WorkGallery";
 import { paintFaqs } from "@/data/faqs";
 import { beforeAfterPairs, imagesIn } from "@/data/images";
 import { ceramicDoes, ceramicDoesNot, paintDefects, paintProcess, paintServices } from "@/data/paint";
@@ -61,6 +62,10 @@ export default function CeramicPage() {
             )}
           </div>
         </div>
+      </section>
+
+      <section className="container-ed py-12 md:py-16">
+        <WorkGallery ids={["paint-01", "paint-02", "paint-03"]} />
       </section>
 
       {/* Packages */}

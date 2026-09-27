@@ -37,23 +37,31 @@ export type SiteImage = {
 };
 
 export const images: SiteImage[] = [
-  { id: "hero", file: "/images/hero.jpg", wix: "01523f_394ab7a5ffea4645ac01f7a216c2fd4c~mv2.jpg", alt: "Every Detail mobile detailing", w: 16, h: 9, category: "hero", altReview: true },
+  // Homepage hero is intentionally locked to _DSC0553 from the original photo set.
+  { id: "hero", file: "/images/hero.jpg", alt: "Red Volvo being foam washed by Every Detail in a residential driveway", w: 3, h: 2, category: "hero" },
 
-  { id: "work-01", file: "/images/work-01.jpg", wix: "01523f_e6c4dff117b94dd98e5261067a42dfe7~mv2.jpg", alt: "Vehicle detailed by Every Detail", w: 3, h: 2, category: "work", altReview: true },
-  { id: "work-02", file: "/images/work-02.jpg", wix: "01523f_ab554e5d4d3a4db88c2324c4e83d6b4b~mv2.jpg", alt: "Vehicle detailed by Every Detail", w: 2, h: 3, category: "work", altReview: true },
-  { id: "work-03", file: "/images/work-03.jpg", wix: "01523f_b8376dd356414c69b5cf48d1189ad162~mv2.jpg", alt: "Vehicle detailed by Every Detail", w: 16, h: 9, category: "work", altReview: true },
-  { id: "work-04", file: "/images/work-04.jpg", wix: "01523f_afc1e4a64ccd4f7888feb0a88b80def5~mv2.jpg", alt: "Vehicle detailed by Every Detail", w: 2, h: 3, category: "work", altReview: true },
-  { id: "work-05", file: "/images/work-05.jpg", wix: "01523f_f7960b1efc584bad944a61303f608f22~mv2.jpg", alt: "Vehicle detailed by Every Detail", w: 3, h: 2, category: "work", altReview: true },
-  { id: "work-06", file: "/images/work-06.jpg", wix: "01523f_eff45b13a4af413592a62a47db1515a2~mv2.jpg", alt: "Vehicle detailed by Every Detail", w: 2, h: 3, category: "work", altReview: true },
-  { id: "work-07", file: "/images/work-07.jpg", wix: "01523f_74fccebb228c439d9251a411e495f1dc~mv2.jpg", alt: "Vehicle detailed by Every Detail", w: 1, h: 1, category: "work", altReview: true },
-  { id: "work-08", file: "/images/work-08.jpg", wix: "01523f_d24036bd515e4d85be16aca080abdaab~mv2.jpg", alt: "Vehicle detailed by Every Detail", w: 3, h: 2, category: "work", altReview: true },
-  { id: "work-09", file: "/images/work-09.jpg", wix: "01523f_bee470a0582a43bc885a23990cb5df32~mv2.jpg", alt: "Vehicle detailed by Every Detail", w: 1, h: 1, category: "work", altReview: true },
-  { id: "work-10", file: "/images/work-10.jpg", wix: "01523f_92257539ff514bfe98de895143c94634~mv2.jpg", alt: "Vehicle detailed by Every Detail", w: 2, h: 3, category: "work", altReview: true },
+  // Curated work. Only the strongest, most distinct frames from both photo sets are used.
+  { id: "work-01", file: "/images/black-truck-finished.jpg", alt: "Finished black truck after an Every Detail mobile detail", w: 2, h: 3, category: "exterior" },
+  { id: "work-02", file: "/images/foam-wash.jpg", alt: "Every Detail technician foam washing a black SUV in a residential driveway", w: 2, h: 3, category: "work" },
+  { id: "work-03", file: "/images/interior-detail.jpg", alt: "Every Detail technician detailing the front interior of a vehicle", w: 2, h: 3, category: "interior" },
+  { id: "work-04", file: "/images/red-audi-finished.jpg", alt: "Finished red Audi after an Every Detail service", w: 2, h: 3, category: "exterior" },
+  { id: "work-05", file: "/images/finished-sedan-rig.jpg", alt: "Finished sedan beside the Every Detail mobile rig", w: 3, h: 2, category: "exterior" },
+  { id: "work-06", file: "/images/exterior-hand-wash.jpg", alt: "Every Detail technician hand washing a black SUV", w: 2, h: 3, category: "work" },
+  { id: "work-07", file: "/images/wheel-detail-team.jpg", alt: "Two Every Detail technicians working together on a vehicle exterior", w: 2, h: 3, category: "team" },
+  { id: "work-08", file: "/images/clean-interior.jpg", alt: "Clean vehicle interior after detailing", w: 3, h: 2, category: "interior" },
 
-  { id: "about-founder", file: "/images/about-founder.jpg", wix: "01523f_3c67d0a50d43472fbf53902b7a7a6783~mv2.jpg", alt: "Wiley, founder of Every Detail", w: 2, h: 3, category: "team", altReview: true },
-  { id: "about-team", file: "/images/about-team.jpg", wix: "01523f_ef75c6ecce31429e895787d48855c053~mv2.jpg", alt: "Every Detail at work", w: 3, h: 2, category: "team", altReview: true },
+  // Team and operations.
+  { id: "about-team", file: "/images/full-team.jpg", alt: "Every Detail team gathered with the company mobile detailing rigs", w: 3, h: 2, category: "team" },
+  { id: "about-founder", file: "/images/team-tablet.jpg", alt: "Every Detail team member managing a job on site", w: 2, h: 3, category: "team" },
+  { id: "team-01", file: "/images/full-team.jpg", alt: "Every Detail team gathered with the company mobile detailing rigs", w: 3, h: 2, category: "team" },
+  { id: "rig-01", file: "/images/organized-rig.jpg", alt: "Every Detail technicians accessing equipment in the organized mobile detailing rig", w: 2, h: 3, category: "rig" },
+  { id: "rig-02", file: "/images/rig-access.jpg", alt: "Every Detail technician working from the mobile detailing rig", w: 2, h: 3, category: "rig" },
+  { id: "rig-03", file: "/images/branded-trailer-van.jpg", alt: "Every Detail branded van and detailing trailer", w: 3, h: 2, category: "rig" },
 
-  { id: "og-default", file: "/images/og-default.png", wix: "01523f_a52c50d56d6240fdb4f26fbabdae1fcf~mv2.png", alt: "Every Detail mobile car detailing", w: 1230, h: 630, category: "brand" },
+  // Paint and ceramic imagery.
+  { id: "paint-01", file: "/images/mercedes-paint.jpg", alt: "Water beading on glossy black Mercedes paint", w: 2, h: 3, category: "paint" },
+  { id: "paint-02", file: "/images/red-paint-detail.jpg", alt: "Glossy red paint finish after detailing", w: 2, h: 3, category: "paint" },
+  { id: "paint-03", file: "/images/classic-red-car.jpg", alt: "Glossy red classic car finish", w: 2, h: 3, category: "paint" },
 ];
 
 /**

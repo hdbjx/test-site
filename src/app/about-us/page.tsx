@@ -5,6 +5,7 @@ import { ReviewGrid } from "@/components/ReviewGrid";
 import { RowList } from "@/components/RowList";
 import { TeamGrid } from "@/components/TeamGrid";
 import { TrackedLink } from "@/components/TrackedLink";
+import { WorkGallery } from "@/components/WorkGallery";
 import { areas } from "@/data/areas";
 import { reviewCountLabel, site } from "@/data/site";
 import { leadership, team, technicians } from "@/data/team";
@@ -116,6 +117,14 @@ export default function AboutPage() {
         <p className="mt-2 max-w-2xl text-ink/75">Tier 3 technicians are our most experienced. Every technician trains up through the tiers.</p>
         <div className="mt-6">
           <TeamGrid members={technicians} />
+        </div>
+      </section>
+
+      <section className="border-t border-line bg-paper2 py-16 md:py-24">
+        <div className="container-ed">
+          <p className="eyebrow">On the job</p>
+          <h2 className="t-h2 mt-3 mb-8">Built in driveways around Decatur</h2>
+          <WorkGallery ids={["team-02", "rig-01", "rig-02", "rig-03", "rig-04", "rig-05", "rig-06", "team-04"]} />
         </div>
       </section>
 
