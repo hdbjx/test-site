@@ -39,7 +39,8 @@ export type SiteImage = {
 export const images: SiteImage[] = [
   // Homepage hero is intentionally locked to _DSC0553 from the original photo set.
   { id: "hero", file: "/images/hero.jpg", alt: "Red Volvo being foam washed by Every Detail in a residential driveway", w: 3, h: 2, category: "hero" },
-
+{ id: "og-default", file: "/images/hero.jpg", alt: "Every Detail mobile auto detailing in Decatur, Georgia", w: 3, h: 2, category: "brand" },
+  
   // Curated work. Only the strongest, most distinct frames from both photo sets are used.
   { id: "work-01", file: "/images/black-truck-finished.jpg", alt: "Finished black truck after an Every Detail mobile detail", w: 2, h: 3, category: "exterior" },
   { id: "work-02", file: "/images/foam-wash.jpg", alt: "Every Detail technician foam washing a black SUV in a residential driveway", w: 2, h: 3, category: "work" },
