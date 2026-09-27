@@ -205,6 +205,15 @@ export const images: SiteImage[] = [
     category: "rig",
   },
 
+  {
+  id: "rig-04",
+  file: "/images/branded-trailer-van.jpg",
+  alt: "Every Detail mobile detailing van and trailer in Decatur, Georgia",
+  w: 3,
+  h: 2,
+  category: "rig",
+},
+  
   // ------------------------------------------------------------
   // PAINT + CERAMIC
   // ------------------------------------------------------------
