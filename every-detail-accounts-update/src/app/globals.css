@@ -1,0 +1,251 @@
+@import "tailwindcss";
+
+/* Self-hosted brand fonts (no Google Fonts request at runtime) */
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/space-grotesk/700.css";
+@import "@fontsource/barlow/400.css";
+@import "@fontsource/barlow/500.css";
+@import "@fontsource/barlow/600.css";
+@import "@fontsource/barlow/400-italic.css";
+@import "@fontsource/bebas-neue/400.css";
+
+/* ─────────────────────────────────────────────
+   EVERY DETAIL DESIGN TOKENS
+   paper  — cream base, most of the site
+   paper2 — alternate section tone
+   sand   — warm beige accent surfaces
+   ink    — text and the one dark section
+   muted  — secondary text (AA on paper and paper2)
+   red    — actions only (buttons, active states, links)
+   oxblood — brand surfaces: footer, final CTA, recommended marker
+   ───────────────────────────────────────────── */
+@theme {
+  --color-paper: #f3f1ec;
+  --color-paper2: #ebe6dd;
+  --color-sand: #dbc7b3;
+  --color-ink: #111111;
+  --color-muted: #666666;
+  --color-red: #b8363d;
+  --color-red-hover: #9f2c33;
+  --color-oxblood: #590d07;
+  --color-line: rgb(17 17 17 / 0.14);
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-numeral: "Bebas Neue", "Space Grotesk", ui-sans-serif, sans-serif;
+
+  --radius-photo: 3px;
+  --radius-panel: 6px;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5.5rem;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1.0625rem; /* 17px */
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  fieldset { min-width: 0; } /* fieldsets otherwise refuse to shrink below their content */
+  ::selection { background: var(--color-sand); color: var(--color-ink); }
+
+  :focus-visible {
+    outline: 2px solid var(--color-red);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-ed {
+    width: 100%;
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-ed { padding-inline: 2rem; }
+  }
+
+  /* Type scale */
+  /* Display type is Bebas Neue — the face Every Detail already uses for headlines and prices */
+  .t-display { font-family: var(--font-numeral); font-weight: 400; font-size: clamp(4rem, 12vw, 8.5rem); letter-spacing: 0.005em; line-height: 0.86; }
+  .t-page { font-family: var(--font-numeral); font-weight: 400; font-size: clamp(3rem, 7.5vw, 6.25rem); letter-spacing: 0.005em; line-height: 0.88; }
+  .t-h2 { font-family: var(--font-numeral); font-weight: 400; font-size: clamp(2.75rem, 6vw, 4.5rem); letter-spacing: 0.01em; line-height: 0.9; }
+  .t-h3 { font-size: 1.375rem; letter-spacing: -0.015em; line-height: 1.2; }
+  .t-lede { font-size: clamp(1.125rem, 1.6vw, 1.3rem); line-height: 1.55; color: var(--color-ink); max-width: 38rem; }
+  .t-small { font-size: 0.9375rem; line-height: 1.55; }
+  .t-numeral { font-family: var(--font-numeral); letter-spacing: 0.01em; line-height: 0.9; font-weight: 400; }
+
+  /* Section kicker: used only where it names the section's job (not above every heading) */
+  .kicker {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--color-oxblood);
+  }
+
+  /* Buttons — hard offset shadow, lifted from the existing Every Detail pages */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3.25rem;
+    padding: 0.8rem 1.6rem 0.7rem;
+    border-radius: 999px;
+    border: 2px solid var(--color-ink);
+    box-shadow: 4px 4px 0 var(--color-ink);
+    font-family: var(--font-numeral);
+    font-weight: 400;
+    font-size: 1.375rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-decoration: none;
+    transition: transform 120ms var(--ease-out), box-shadow 120ms var(--ease-out), background-color 150ms;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--color-ink); }
+  }
+  .btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--color-ink); }
+  .btn-primary { background: var(--color-red); color: #fff; }
+  .btn-secondary { background: var(--color-paper); color: var(--color-ink); }
+  .btn-on-dark { background: var(--color-paper); color: var(--color-ink); border-color: var(--color-paper); box-shadow: 4px 4px 0 var(--color-red); }
+  @media (hover: hover) and (pointer: fine) {
+    .btn-on-dark:hover { box-shadow: 6px 6px 0 var(--color-red); }
+  }
+  .btn-on-dark:active { box-shadow: 1px 1px 0 var(--color-red); }
+  .btn-outline-on-dark { background: transparent; color: var(--color-paper); border-color: var(--color-paper); box-shadow: none; }
+  @media (hover: hover) and (pointer: fine) {
+    .btn-outline-on-dark:hover { box-shadow: none; transform: none; background: rgb(243 241 236 / 0.1); }
+  }
+  .btn-outline-on-dark:active { box-shadow: none; }
+  .btn-sm { min-height: 2.75rem; padding: 0.55rem 1.1rem 0.45rem; font-size: 1.2rem; box-shadow: 3px 3px 0 var(--color-ink); }
+
+  /* Panels: ink border + offset shadow. Used for the few things that deserve a frame. */
+  .panel { background: #fff; border: 2px solid var(--color-ink); border-radius: 10px; box-shadow: 6px 6px 0 var(--color-ink); }
+  .panel-red { box-shadow: 6px 6px 0 var(--color-red); }
+
+  /* Double rule — the divider from the current ceramic page */
+  .rule-double { height: 6px; border-top: 2px solid var(--color-ink); border-bottom: 1px solid var(--color-ink); }
+
+  /* Inline text link */
+  .link {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-red);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    transition: color 150ms;
+  }
+  .link:hover { color: var(--color-red); }
+
+  /* Dotted leader between a name and a price, like a printed rate card */
+  .leader {
+    flex: 1;
+    min-width: 1.5rem;
+    border-bottom: 2px dotted rgb(17 17 17 / 0.28);
+    transform: translateY(-0.35em);
+  }
+
+  /* Forms */
+  .field-label { display: block; font-family: var(--font-display); font-weight: 600; font-size: 0.9375rem; margin-bottom: 0.375rem; }
+  .field-hint { font-weight: 400; color: var(--color-muted); font-family: var(--font-body); }
+  .field {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.75rem 0.95rem;
+    background: #fff;
+    border: 1.5px solid rgb(17 17 17 / 0.22);
+    border-radius: var(--radius-panel);
+    font: inherit;
+    font-size: 1rem; /* 16px+ prevents iOS zoom */
+    color: var(--color-ink);
+    transition: border-color 150ms;
+  }
+  .field:hover { border-color: rgb(17 17 17 / 0.4); }
+  .field:focus { outline: none; border-color: var(--color-ink); box-shadow: 0 0 0 3px rgb(184 54 61 / 0.25); }
+  .field[aria-invalid="true"] { border-color: var(--color-red); }
+  textarea.field { min-height: 7.5rem; resize: vertical; }
+  .field-error { color: var(--color-red); font-size: 0.9375rem; margin-top: 0.375rem; }
+
+  /* Selectable option tiles (vehicle, service, plan builder) */
+  .choice {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 3.75rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid rgb(17 17 17 / 0.16);
+    border-radius: 10px;
+    background: rgb(255 255 255 / 0.55);
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 150ms, background-color 150ms;
+  }
+  .choice:hover { border-color: rgb(17 17 17 / 0.5); }
+  .choice[aria-checked="true"],
+  .choice[aria-pressed="true"],
+  .choice:has(input:checked) {
+    border-color: var(--color-ink);
+    background: #fff;
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
+  .choice:has(input:focus-visible) { outline: 2px solid var(--color-red); outline-offset: 2px; }
+
+  /* Long-form article body */
+  .prose-ed { font-size: 1.125rem; line-height: 1.7; max-width: 42rem; }
+  .prose-ed > * + * { margin-top: 1.1em; }
+  .prose-ed h2 { font-size: 1.75rem; margin-top: 2em; }
+  .prose-ed h3 { font-size: 1.3rem; margin-top: 1.6em; }
+  .prose-ed ul { list-style: disc; padding-left: 1.25em; }
+  .prose-ed ol { list-style: decimal; padding-left: 1.25em; }
+  .prose-ed li + li { margin-top: 0.4em; }
+  .prose-ed a { text-decoration: underline; text-decoration-color: var(--color-red); text-underline-offset: 3px; }
+  .prose-ed img { border-radius: var(--radius-photo); }
+  .prose-ed blockquote { border-left: 3px solid var(--color-sand); padding-left: 1rem; color: var(--color-muted); }
+  .prose-ed strong { font-weight: 600; }
+}
+
+/* Accordion (native <details> — crawlable and keyboard accessible by default) */
+.faq summary { list-style: none; cursor: pointer; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq .faq-icon { transition: transform 200ms var(--ease-out); }
+.faq details[open] .faq-icon { transform: rotate(45deg); }
+.faq details[open] > div { animation: faq-open 220ms var(--ease-out); }
+@keyframes faq-open { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+/* Hero: the one orchestrated load moment */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.rise { animation: rise 700ms var(--ease-out) both; }
+.rise-2 { animation-delay: 90ms; }
+.rise-3 { animation-delay: 180ms; }
+.rise-4 { animation-delay: 270ms; }
