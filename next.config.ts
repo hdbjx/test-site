@@ -37,7 +37,6 @@ const legacyRedirects = (): R[] => [
   // Wix account/store pages with no equivalent (302: may point somewhere real later)
   { source: "/cart-page", destination: "/", statusCode: 302 },
   { source: "/my-addresses", destination: "/", statusCode: 302 },
-  { source: "/account/:path*", destination: "/", statusCode: 302 },
   { source: "/members-area/:path*", destination: "/", statusCode: 302 },
   { source: "/client-portal", destination: site.external.clientPortal ?? "/", statusCode: 302 },
   { source: "/gift-cards", destination: site.external.giftCards ?? "/", statusCode: 302 },
