@@ -20,7 +20,7 @@ export function MobileBookBar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (HIDDEN_ON.includes(pathname)) return null;
+  if (HIDDEN_ON.includes(pathname) || pathname.startsWith("/account")) return null;
 
   return (
     <div

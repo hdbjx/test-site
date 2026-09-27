@@ -63,6 +63,7 @@
     text-wrap: balance;
   }
   p { text-wrap: pretty; }
+  fieldset { min-width: 0; } /* fieldsets otherwise refuse to shrink below their content */
   ::selection { background: var(--color-sand); color: var(--color-ink); }
 
   :focus-visible {

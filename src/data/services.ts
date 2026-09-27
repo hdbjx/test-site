@@ -27,6 +27,7 @@ export type Service = {
   whoFor: string;
   includes: string[];
   cadence: string;
+  crew: number; // technicians needed on the job (used for live availability)
   recommended?: boolean;
 };
 
@@ -45,6 +46,7 @@ export const services: Record<ServiceId, Service> = {
       "Windows and wheels cleaned",
     ],
     cadence: "Works best every 3–4 weeks",
+    crew: 1,
   },
   premium: {
     id: "premium",
@@ -61,6 +63,7 @@ export const services: Record<ServiceId, Service> = {
       "Trim, leather and surface conditioning",
     ],
     cadence: "Works best every 6–8 weeks",
+    crew: 2,
     recommended: true,
   },
   factoryReset: {
@@ -78,6 +81,7 @@ export const services: Record<ServiceId, Service> = {
       "Every crevice, seam and vent",
     ],
     cadence: "Once or twice a year",
+    crew: 2,
   },
 };
 
@@ -127,3 +131,12 @@ export function isVehicleId(v: unknown): v is VehicleId {
 export function isServiceId(s: unknown): s is ServiceId {
   return typeof s === "string" && (serviceIds as readonly string[]).includes(s);
 }
+
+/** Map a stored vehicle_size (label or id, any case) back to a VehicleId. */
+export function vehicleIdFromSize(size: string | null | undefined): VehicleId | undefined {
+  if (!size) return undefined;
+  const k = size.trim().toLowerCase().replace(/[^a-z]/g, "");
+  return vehicles.find((v) => v.id.toLowerCase() === k || v.label.toLowerCase().replace(/[^a-z]/g, "") === k)?.id;
+}
+
+export const vehicleLabel = (id: VehicleId) => vehicles.find((v) => v.id === id)!.label;

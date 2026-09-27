@@ -8,6 +8,7 @@ import { moreNav, primaryNav } from "@/data/navigation";
 import { logo } from "@/data/images";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
+import { supabaseConfigured } from "@/lib/supabase/config";
 
 export function Header() {
   const pathname = usePathname();
@@ -132,6 +133,15 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {supabaseConfigured && (
+            <Link
+              href="/account"
+              aria-current={isActive("/account") ? "page" : undefined}
+              className="hidden rounded px-3 py-2 font-display text-[0.9375rem] font-semibold text-ink/80 hover:text-ink lg:block"
+            >
+              Account
+            </Link>
+          )}
           <Link
             href="/book"
             onClick={() => track("book_click", { location: "header" })}
@@ -170,7 +180,7 @@ export function Header() {
           className="fixed inset-x-0 bottom-0 top-[4.5rem] z-40 overflow-y-auto bg-paper lg:hidden"
         >
           <nav aria-label="Mobile" className="container-ed flex flex-col py-6">
-            {[...primaryNav, ...moreNav].map((item) => (
+            {[...primaryNav, ...moreNav, ...(supabaseConfigured ? [{ label: "Account", href: "/account", external: false }] : [])].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
