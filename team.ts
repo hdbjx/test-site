@@ -18,7 +18,7 @@ export const roleLabels: Record<TeamRole, string> = {
 export type TeamMember = { name: string; role: TeamRole; photo?: string };
 
 export const team: TeamMember[] = [
-  { name: "Wiley", role: "owner", photo: "about-founder" },
+  { name: "Wiley", role: "owner" },
   { name: "Davis", role: "manager" },
   { name: "Skylar", role: "marketing" },
   { name: "Grady", role: "tier3" },

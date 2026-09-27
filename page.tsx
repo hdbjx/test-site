@@ -4,7 +4,9 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
+import { RowList } from "@/components/RowList";
 import { TrackedLink } from "@/components/TrackedLink";
+import { WorkGallery } from "@/components/WorkGallery";
 import { paintFaqs } from "@/data/faqs";
 import { beforeAfterPairs, imagesIn } from "@/data/images";
 import { ceramicDoes, ceramicDoesNot, paintDefects, paintProcess, paintServices } from "@/data/paint";
@@ -36,10 +38,10 @@ export default function CeramicPage() {
           </div>
           <div className={`mt-10 grid gap-10 ${paintPhotos.length ? "lg:grid-cols-12 lg:items-center" : ""}`}>
             <div className={paintPhotos.length ? "lg:col-span-6" : "max-w-3xl"}>
-              <h1 className="t-display">Paint correction &amp; ceramic coating in Decatur, GA</h1>
+              <h1 className="t-page">Paint correction &amp; ceramic coating in Decatur, GA</h1>
               <p className="t-lede mt-6 text-paper/80">
-                We polish out swirls, haze and light scratches, then protect the finish with a coating that lasts years,
-                not weeks. It&rsquo;s the difference between a clean car and paint that actually looks better.
+                We machine-polish out swirls, haze and light scratches, then protect the finish with a two-year ceramic
+                coating. Mobile, in your driveway.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <TrackedLink href={quoteHref} event="paint_inquiry" params={{ location: "ceramic_hero" }} className="btn btn-primary">
@@ -62,6 +64,10 @@ export default function CeramicPage() {
         </div>
       </section>
 
+      <section className="container-ed py-12 md:py-16">
+        <WorkGallery ids={["paint-02", "paint-03", "paint-04", "paint-05"]} />
+      </section>
+
       {/* Packages */}
       <section id="packages" className="container-ed scroll-mt-24 py-16 md:py-24">
         <h2 className="t-h2">Packages and starting prices</h2>
@@ -72,13 +78,14 @@ export default function CeramicPage() {
 
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
           {/* Ceramic — the main package */}
-          <article id="ceramic-coating" className="scroll-mt-24 rounded-[var(--radius-panel)] border-2 border-ink bg-white p-7 md:p-10 lg:col-span-7">
-            <p className="kicker">Correction included</p>
+          <article id="ceramic-coating" className="panel panel-red relative scroll-mt-24 p-7 md:p-10 lg:col-span-7">
             <div className="mt-2 flex flex-wrap items-baseline gap-x-4">
-              <h3 className="font-display text-3xl font-bold tracking-tight md:text-4xl">{ceramic.name}</h3>
+              <h3 className="t-h2 pr-24 md:pr-28">{ceramic.name}</h3>
             </div>
-            <p className="mt-4 flex items-baseline gap-2 text-muted">
-              Starting at <span className="t-numeral text-6xl text-ink md:text-7xl">{usd(ceramic.startingAt)}</span>
+            <p className="absolute -right-3 -top-6 flex h-28 w-28 rotate-6 flex-col items-center justify-center rounded-full border-2 border-dashed border-ink/50 bg-sand text-center shadow-[0_0_0_5px_var(--color-sand)] md:-right-6 md:h-32 md:w-32">
+              <span className="font-display text-[0.65rem] font-semibold">Starting at</span>
+              <span className="t-numeral text-5xl md:text-6xl">{usd(ceramic.startingAt)}</span>
+              <span className="font-display text-[0.65rem] font-semibold">Correction included</span>
             </p>
             <p className="mt-4 text-lg text-ink/85">{ceramic.summary}</p>
             <ul className="mt-6 space-y-2 border-t border-line pt-6">
@@ -138,14 +145,9 @@ export default function CeramicPage() {
               hiding them. A wash, wax or sealant can&rsquo;t do that.
             </p>
           </div>
-          <dl className="grid gap-6 sm:grid-cols-2 lg:col-span-6 lg:col-start-7">
-            {paintDefects.map((d) => (
-              <div key={d.name} className="border-t-2 border-ink pt-4">
-                <dt className="font-display font-semibold">{d.name}</dt>
-                <dd className="mt-1 text-[0.9375rem] text-ink/75">{d.detail}</dd>
-              </div>
-            ))}
-          </dl>
+          <div className="lg:col-span-6 lg:col-start-7">
+            <RowList items={paintDefects.map((d) => ({ title: d.name, body: d.detail }))} />
+          </div>
         </div>
       </section>
 

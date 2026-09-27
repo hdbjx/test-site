@@ -1,146 +1,141 @@
-import { CtaBand } from "@/components/CtaBand";
-import { FaqList } from "@/components/FaqList";
-import { JsonLd } from "@/components/JsonLd";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
-import { ReviewGrid } from "@/components/ReviewGrid";
-import { TrackedLink } from "@/components/TrackedLink";
-import { DetailPlusForm } from "@/components/forms/DetailPlusForm";
-import { detailPlusBenefits, detailPlusGuarantee, detailPlusSteps, frequencies } from "@/data/detailplus";
-import { detailPlusFaqs } from "@/data/faqs";
-import { pageMetadata, serviceSchema } from "@/lib/seo";
+import { CancelJobButton } from "@/components/account/CancelJobButton";
+import { ProfileForm } from "@/components/account/ProfileForm";
+import { VehicleManager } from "@/components/account/VehicleManager";
+import { site } from "@/data/site";
+import { getMyJobs, getSession } from "@/lib/supabase/account";
+import { supabaseConfigured } from "@/lib/supabase/config";
+import { usd } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = pageMetadata({
-  title: "Detail+ Recurring Car Detailing Membership | Every Detail",
-  description:
-    "Recurring mobile detailing in Decatur and Atlanta. Choose every 2 weeks to quarterly, interior, exterior or both, for one flat rate per visit. No contracts.",
-  path: "/detailplus",
-});
+export const metadata = pageMetadata({ title: "Your account | Every Detail", description: "Your vehicles and bookings.", path: "/account", noindex: true });
+export const dynamic = "force-dynamic";
 
-export default function DetailPlusPage() {
+const TZ = "America/New_York";
+const when = (iso: string) =>
+  new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(iso));
+
+const CANCEL_NOTICE_MS = 24 * 3600 * 1000; // matches booking_settings.min_notice_hours
+
+export default async function AccountPage() {
+  if (!supabaseConfigured) redirect("/book");
+  const session = await getSession();
+
+  if (session.state === "signed-out") redirect("/account/sign-in");
+
+  if (session.state === "unconfirmed" || session.state === "staff") {
+    return (
+      <>
+        <PageHeader crumbs={[{ name: "Account", path: "/account" }]} title="Your account" />
+        <section className="container-ed max-w-2xl pb-24">
+          <div className="panel p-8">
+            {session.state === "unconfirmed" ? (
+              <p>Confirm your email to finish setting up. We sent a link to {session.email}.</p>
+            ) : (
+              <p>{session.email} is an Every Detail staff login. Use the Every Detail app for scheduling. Customer accounts need a separate email.</p>
+            )}
+            <form action="/auth/sign-out" method="post" className="mt-6">
+              <button className="btn btn-secondary btn-sm">Sign out</button>
+            </form>
+          </div>
+        </section>
+      </>
+    );
+  }
+
+  const { account, garage, email } = session;
+  const jobs = await getMyJobs();
+  const now = Date.now();
+  const upcoming = jobs
+    .filter((j) => j.status !== "cancelled" && j.status !== "complete" && Date.parse(j.scheduled_start) > now)
+    .sort((a, b) => Date.parse(a.scheduled_start) - Date.parse(b.scheduled_start));
+  const past = jobs.filter((j) => j.status === "complete" || (j.status !== "cancelled" && Date.parse(j.scheduled_start) <= now)).slice(0, 8);
+  const first = account.full_name.split(" ")[0];
+
   return (
     <>
-      <PageHeader
-        crumbs={[{ name: "Detail+", path: "/detailplus" }]}
-        title={
-          <>
-            Detail<span className="text-red">+</span>
-          </>
-        }
-        lede={
-          <p>
-            Recurring detailing for people who&rsquo;d rather keep the car clean than keep scheduling it. Pick how often
-            and what gets cleaned. We show up on schedule, for the same flat rate, every visit.
-          </p>
-        }
-      >
-        <TrackedLink href="#build" event="detailplus_start" params={{ location: "detailplus_hero" }} className="btn btn-primary">
-          Build your plan
-        </TrackedLink>
-        <a href="#how" className="btn btn-secondary">
-          How it works
-        </a>
+      <PageHeader crumbs={[{ name: "Account", path: "/account" }]} title={`Hi, ${first}`}>
+        <Link href="/book" className="btn btn-primary">
+          Book a detail
+        </Link>
+        <form action="/auth/sign-out" method="post">
+          <button className="btn btn-secondary w-full">Sign out</button>
+        </form>
       </PageHeader>
 
-      {/* Who it's for + benefits */}
-      <section className="border-t border-line bg-paper2 py-16 md:py-24">
-        <div className="container-ed grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <h2 className="t-h2">Who it&rsquo;s for</h2>
-            <p className="mt-5 text-lg text-ink/80">
-              Families with kids and pets in the back seat. Commuters who live in the car. Anyone who likes how it feels
-              right after a detail and wants it to stay that way.
-            </p>
-          </div>
-          <ul className="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:col-span-7 lg:col-start-6">
-            {detailPlusBenefits.map((b) => (
-              <li key={b.title} className="border-t-2 border-ink pt-4">
-                <h3 className="font-display text-lg font-semibold">{b.title}</h3>
-                <p className="mt-1 text-[0.9375rem] text-ink/75">{b.body}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section id="how" className="container-ed scroll-mt-24 py-16 md:py-24">
-        <h2 className="t-h2">How it works</h2>
-        <ol className="mt-10 grid gap-8 md:grid-cols-3">
-          {detailPlusSteps.map((s, i) => (
-            <li key={s.title} className="border-t-2 border-ink pt-5">
-              <p className="t-numeral text-5xl text-oxblood">{i + 1}</p>
-              <h3 className="mt-3 font-display text-lg font-semibold">{s.title}</h3>
-              <p className="mt-1 text-ink/75">{s.body}</p>
-            </li>
-          ))}
-        </ol>
-        <div className="mt-12 grid gap-6 border-t border-line pt-8 md:grid-cols-2">
+      <section className="container-ed grid gap-16 pb-24 lg:grid-cols-12">
+        <div className="space-y-16 lg:col-span-7">
           <div>
-            <h3 className="font-display font-semibold">Visit frequency</h3>
-            <p className="mt-1 text-ink/80">{frequencies.map((f) => f.label).join(", ")}.</p>
+            <h2 className="t-h2">Upcoming</h2>
+            {upcoming.length === 0 ? (
+              <p className="mt-4 text-ink/80">
+                Nothing booked.{" "}
+                <Link href="/book" className="link">
+                  Pick a time
+                </Link>
+                .
+              </p>
+            ) : (
+              <ul className="mt-6 border-t-2 border-ink">
+                {upcoming.map((j) => (
+                  <li key={j.id} className="flex flex-wrap items-start justify-between gap-4 border-b border-ink/15 py-5">
+                    <div>
+                      <p className="font-display text-lg font-semibold">{j.service_name}</p>
+                      <p className="text-ink/80">{when(j.scheduled_start)}</p>
+                      <p className="text-sm text-muted">
+                        {j.vehicle}
+                        {j.price ? ` · ${usd(Number(j.price))}` : ""}
+                      </p>
+                    </div>
+                    {Date.parse(j.scheduled_start) - now > CANCEL_NOTICE_MS ? (
+                      <CancelJobButton jobId={j.id} label={`${j.service_name} on ${when(j.scheduled_start)}`} />
+                    ) : (
+                      <a href={site.phone.href} className="link text-sm">
+                        Call to change
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p className="mt-4 text-sm text-muted">Need to reschedule? Cancel and book a new time, or call or text {site.phone.display}.</p>
           </div>
+
           <div>
-            <h3 className="font-display font-semibold">Pricing</h3>
-            <p className="mt-1 text-ink/80">
-              A flat per-visit rate, quoted for your vehicle, frequency and coverage. It doesn&rsquo;t change based on how
-              dirty the car is that day.
-            </p>
+            <h2 className="t-h2">Your vehicles</h2>
+            <p className="mt-2 text-ink/80">Saved vehicles fill in your price when you book, and tell the crew what to expect.</p>
+            <div className="mt-6">
+              <VehicleManager garage={garage} />
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* Guarantee */}
-      <section className="bg-ink py-16 text-paper md:py-20">
-        <div className="container-ed grid gap-6 lg:grid-cols-12 lg:items-center">
-          <p className="t-h2 lg:col-span-7">&ldquo;{detailPlusGuarantee}&rdquo;</p>
-          <p className="text-lg text-paper/75 lg:col-span-4 lg:col-start-9">
-            Whatever your plan covers, interior, exterior or both, gets handled every visit. Spills, stains, crumbs and pet
-            hair included. No add-on fees.
-          </p>
-        </div>
-      </section>
-
-      {/* Builder */}
-      <section id="build" className="container-ed scroll-mt-24 py-16 md:py-24">
-        <div className="grid gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <h2 className="t-h2">Build your plan</h2>
-            <p className="mt-5 text-lg text-ink/80">
-              Choose your schedule, coverage and vehicle. We&rsquo;ll send your flat rate and get the first visit on the
-              calendar.
-            </p>
+        <div className="space-y-16 lg:col-span-4 lg:col-start-9">
+          <div>
+            <h2 className="t-h3">Your details</h2>
+            <div className="mt-5">
+              <ProfileForm account={account} email={email} />
+            </div>
           </div>
-          <div className="lg:col-span-8">
-            <DetailPlusForm />
-          </div>
+          {past.length > 0 && (
+            <div>
+              <h2 className="t-h3">History</h2>
+              <ul className="mt-4 space-y-3 text-[0.9375rem]">
+                {past.map((j) => (
+                  <li key={j.id} className="border-b border-ink/15 pb-3">
+                    <span className="font-semibold">{j.service_name}</span>
+                    <span className="block text-muted">
+                      {when(j.scheduled_start)} · {j.vehicle}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </section>
-
-      <section className="border-t border-line bg-paper2 py-16 md:py-24">
-        <div className="container-ed">
-          <ReviewGrid />
-        </div>
-      </section>
-
-      <section className="container-ed grid gap-10 py-16 md:py-24 lg:grid-cols-12">
-        <h2 className="t-h2 lg:col-span-4">Detail+ questions</h2>
-        <div className="lg:col-span-8">
-          <FaqList faqs={detailPlusFaqs} />
-        </div>
-      </section>
-
-      <CtaBand
-        location="detailplus_final"
-        title="Rather start with one detail?"
-        body="Book a one-time detail first and see the work. You can join Detail+ anytime after."
-      />
-      <JsonLd
-        data={serviceSchema({
-          name: "Detail+ recurring detailing membership",
-          description: "Recurring mobile car detailing on a set schedule for one flat rate per visit.",
-          path: "/detailplus",
-        })}
-      />
     </>
   );
 }

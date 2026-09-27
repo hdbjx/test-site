@@ -1,95 +1,62 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { JsonLd } from "@/components/JsonLd";
-import { PostCta } from "@/components/PostCta";
-import { formatDate, getAllPosts, getPost, relatedPosts } from "@/lib/blog";
-import { articleSchema, pageMetadata } from "@/lib/seo";
+import { PageHeader } from "@/components/PageHeader";
+import { BookingForm } from "@/components/forms/BookingForm";
+import { LiveBooking } from "@/components/forms/LiveBooking";
+import { isServiceId, isVehicleId } from "@/data/services";
+import { getSession } from "@/lib/supabase/account";
+import { supabaseConfigured } from "@/lib/supabase/config";
+import { pageMetadata } from "@/lib/seo";
 
-type Params = { params: Promise<{ slug: string }> };
+export const metadata = pageMetadata({
+  title: "Book Mobile Car Detailing | Every Detail, Decatur GA",
+  description:
+    "Choose your vehicle and service, see your price, and book an open time. We come to you in Decatur and nearby Atlanta.",
+  path: "/book",
+});
 
-export const dynamicParams = false;
+export default async function BookPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ vehicle?: string; service?: string }>;
+}) {
+  const { vehicle, service } = await searchParams;
+  const initialVehicle = isVehicleId(vehicle) ? vehicle : undefined;
+  const initialService = isServiceId(service) ? service : undefined;
 
-export function generateStaticParams() {
-  return getAllPosts().map((p) => ({ slug: p.slug }));
-}
+  // Live booking needs Supabase; without it the site falls back to booking requests.
+  if (!supabaseConfigured || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return (
+      <>
+        <PageHeader
+          crumbs={[{ name: "Book", path: "/book" }]}
+          title="Book your detail"
+          lede={<p>Pick your vehicle and service, tell us where the car will be and which days work. We&rsquo;ll confirm the exact time with you.</p>}
+        />
+        <section className="container-ed pb-24">
+          <BookingForm initialVehicle={initialVehicle} initialService={initialService} />
+        </section>
+      </>
+    );
+  }
 
-export async function generateMetadata({ params }: Params) {
-  const { slug } = await params;
-  const post = getPost(slug);
-  if (!post) return {};
-  return pageMetadata({
-    title: `${post.title} | Every Detail`,
-    description: post.description,
-    path: `/post/${slug}`,
-    type: "article",
-  });
-}
-
-export default async function PostPage({ params }: Params) {
-  const { slug } = await params;
-  const post = getPost(slug);
-  if (!post) notFound();
-  const related = relatedPosts(slug, post.category);
-
-  // Split the body after the 3rd paragraph to place the contextual CTA mid-article.
-  const parts = post.html.split("</p>");
-  const cut = Math.min(3, parts.length - 1);
-  const first = parts.slice(0, cut).join("</p>") + (cut ? "</p>" : "");
-  const second = parts.slice(cut).join("</p>");
+  const session = await getSession().catch(() => ({ state: "signed-out" as const }));
+  const customer = session.state === "customer" ? session : null;
 
   return (
     <>
-      <article className="container-ed pb-16 pt-8 md:pt-10">
-        <Breadcrumbs
-          items={[
-            { name: "Shine On", path: "/blog" },
-            { name: post.title, path: `/post/${slug}` },
-          ]}
+      <PageHeader
+        crumbs={[{ name: "Book", path: "/book" }]}
+        title="Book your detail"
+        lede={<p>Pick your vehicle, service and an open time. It&rsquo;s booked when you hit the button.</p>}
+      />
+      <section className="container-ed pb-24">
+        <LiveBooking
+          account={customer?.account}
+          email={customer?.email}
+          garage={customer?.garage}
+          initialVehicle={initialVehicle}
+          initialService={initialService}
         />
-        <header className="mt-10 max-w-3xl">
-          <p className="text-sm text-muted">
-            {post.category} · <time dateTime={post.date}>{formatDate(post.date)}</time> · {post.readingMinutes} min read
-          </p>
-          <h1 className="t-h2 mt-4">{post.title}</h1>
-          {post.description && <p className="t-lede mt-5 text-ink/80">{post.description}</p>}
-        </header>
-        <div className="mt-12">
-          <div className="prose-ed" dangerouslySetInnerHTML={{ __html: first }} />
-          {second && (
-            <>
-              <div className="max-w-[42rem]">
-                <PostCta cta={post.cta} />
-              </div>
-              <div className="prose-ed" dangerouslySetInnerHTML={{ __html: second }} />
-            </>
-          )}
-          {!second && (
-            <div className="max-w-[42rem]">
-              <PostCta cta={post.cta} />
-            </div>
-          )}
-        </div>
-      </article>
-
-      {related.length > 0 && (
-        <section className="border-t border-line bg-paper2 py-16">
-          <div className="container-ed">
-            <h2 className="t-h3">Keep reading</h2>
-            <ul className="mt-6 grid gap-8 md:grid-cols-3">
-              {related.map((p) => (
-                <li key={p.slug} className="border-t-2 border-ink pt-4">
-                  <p className="text-sm text-muted">{p.category}</p>
-                  <Link href={`/post/${p.slug}`} className="mt-1 block font-display text-lg font-semibold leading-snug hover:underline">
-                    {p.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
-      <JsonLd data={articleSchema({ title: post.title, description: post.description, path: `/post/${slug}`, date: post.date, image: post.image })} />
+      </section>
     </>
   );
 }

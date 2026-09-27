@@ -1,53 +1,79 @@
-import Link from "next/link";
+import { notFound } from "next/navigation";
 import { CtaBand } from "@/components/CtaBand";
 import { PageHeader } from "@/components/PageHeader";
-import { areas } from "@/data/areas";
-import { site } from "@/data/site";
+import { Photo } from "@/components/Photo";
+import { ReviewGrid } from "@/components/ReviewGrid";
+import { ServicePicker } from "@/components/ServicePicker";
+import { TrackedLink } from "@/components/TrackedLink";
+import { areasWithPages } from "@/data/areas";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata = pageMetadata({
-  title: "Service Areas: Decatur & Atlanta Mobile Detailing | Every Detail",
-  description: `Every Detail comes to you in ${areas.map((a) => a.name).join(", ")}. Mobile detailing with our own power and water.`,
-  path: "/service-areas",
-});
+/**
+ * Location landing pages. Only areas with `page` content in src/data/areas.ts are built.
+ * Everything else 404s — no thin, find-and-replace town pages.
+ */
 
-export default function ServiceAreas() {
+type Params = { params: Promise<{ slug: string }> };
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return areasWithPages.map((a) => ({ slug: a.slug }));
+}
+
+export async function generateMetadata({ params }: Params) {
+  const { slug } = await params;
+  const area = areasWithPages.find((a) => a.slug === slug);
+  if (!area) return {};
+  return pageMetadata({ title: `${area.page.title} | Every Detail`, description: area.page.description, path: `/service-areas/${slug}` });
+}
+
+export default async function AreaPage({ params }: Params) {
+  const { slug } = await params;
+  const area = areasWithPages.find((a) => a.slug === slug);
+  if (!area) notFound();
+  const { page } = area;
+
   return (
     <>
       <PageHeader
-        crumbs={[{ name: "Service areas", path: "/service-areas" }]}
-        title="Where we detail"
-        lede={
-          <p>
-            We&rsquo;re based in Decatur and come to driveways, apartment lots and offices across these neighborhoods. We
-            bring our own power and water, so we just need room to work.
-          </p>
-        }
-      />
-      <section className="container-ed pb-20">
-        <ul className="grid border-t border-line sm:grid-cols-2 lg:grid-cols-3">
-          {areas.map((a) => (
-            <li key={a.slug} className="border-b border-line py-5 sm:odd:pr-6">
-              {a.page ? (
-                <Link href={`/service-areas/${a.slug}`} className="font-display text-2xl font-semibold hover:text-red">
-                  {a.name}
-                </Link>
-              ) : (
-                <span className="font-display text-2xl font-semibold">{a.name}</span>
-              )}
-              {a.primary && <span className="ml-3 text-sm text-muted">Home base</span>}
-            </li>
-          ))}
-        </ul>
-        <p className="mt-8 max-w-2xl text-ink/80">
-          Nearby but not listed? Call or text{" "}
-          <a href={site.phone.href} className="link">
-            {site.phone.display}
-          </a>{" "}
-          and ask. We may still be able to get to you.
-        </p>
+        crumbs={[
+          { name: "Service areas", path: "/service-areas" },
+          { name: area.name, path: `/service-areas/${slug}` },
+        ]}
+        title={page.title}
+        lede={<p>{page.intro}</p>}
+        aside={page.photos?.[0] ? <Photo id={page.photos[0]} priority ratio="4/3" sizes="(min-width: 1024px) 45vw, 100vw" className="rounded-[var(--radius-photo)]" /> : undefined}
+      >
+        <TrackedLink href="/book" event="book_click" params={{ location: `area_${slug}` }} className="btn btn-primary">
+          Book your detail
+        </TrackedLink>
+      </PageHeader>
+      <section className="border-t border-line bg-paper2 py-16">
+        <div className="container-ed">
+          <h2 className="t-h2">Detailing in {area.name}</h2>
+          <ul className="mt-8 grid gap-6 md:grid-cols-2">
+            {page.localNotes.map((n) => (
+              <li key={n} className="border-t-2 border-ink pt-4 text-ink/85">
+                {n}
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
-      <CtaBand location="areas" />
+      <section className="container-ed py-16 md:py-24">
+        <h2 id="area-vehicle" className="t-h2">
+          Prices for your vehicle
+        </h2>
+        <div className="mt-10">
+          <ServicePicker location={`area_${slug}`} headingId="area-vehicle" />
+        </div>
+      </section>
+      <section className="border-t border-line bg-paper2 py-16 md:py-24">
+        <div className="container-ed">
+          <ReviewGrid />
+        </div>
+      </section>
+      <CtaBand location={`area_${slug}_final`} />
     </>
   );
 }

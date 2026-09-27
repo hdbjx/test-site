@@ -1,79 +1,95 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CtaBand } from "@/components/CtaBand";
-import { PageHeader } from "@/components/PageHeader";
-import { Photo } from "@/components/Photo";
-import { ReviewGrid } from "@/components/ReviewGrid";
-import { ServicePicker } from "@/components/ServicePicker";
-import { TrackedLink } from "@/components/TrackedLink";
-import { areasWithPages } from "@/data/areas";
-import { pageMetadata } from "@/lib/seo";
-
-/**
- * Location landing pages. Only areas with `page` content in src/data/areas.ts are built.
- * Everything else 404s — no thin, find-and-replace town pages.
- */
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { JsonLd } from "@/components/JsonLd";
+import { PostCta } from "@/components/PostCta";
+import { formatDate, getAllPosts, getPost, relatedPosts } from "@/lib/blog";
+import { articleSchema, pageMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ slug: string }> };
+
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return areasWithPages.map((a) => ({ slug: a.slug }));
+  return getAllPosts().map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Params) {
   const { slug } = await params;
-  const area = areasWithPages.find((a) => a.slug === slug);
-  if (!area) return {};
-  return pageMetadata({ title: `${area.page.title} | Every Detail`, description: area.page.description, path: `/service-areas/${slug}` });
+  const post = getPost(slug);
+  if (!post) return {};
+  return pageMetadata({
+    title: `${post.title} | Every Detail`,
+    description: post.description,
+    path: `/post/${slug}`,
+    type: "article",
+  });
 }
 
-export default async function AreaPage({ params }: Params) {
+export default async function PostPage({ params }: Params) {
   const { slug } = await params;
-  const area = areasWithPages.find((a) => a.slug === slug);
-  if (!area) notFound();
-  const { page } = area;
+  const post = getPost(slug);
+  if (!post) notFound();
+  const related = relatedPosts(slug, post.category);
+
+  // Split the body after the 3rd paragraph to place the contextual CTA mid-article.
+  const parts = post.html.split("</p>");
+  const cut = Math.min(3, parts.length - 1);
+  const first = parts.slice(0, cut).join("</p>") + (cut ? "</p>" : "");
+  const second = parts.slice(cut).join("</p>");
 
   return (
     <>
-      <PageHeader
-        crumbs={[
-          { name: "Service areas", path: "/service-areas" },
-          { name: area.name, path: `/service-areas/${slug}` },
-        ]}
-        title={page.title}
-        lede={<p>{page.intro}</p>}
-        aside={page.photos?.[0] ? <Photo id={page.photos[0]} priority ratio="4/3" sizes="(min-width: 1024px) 45vw, 100vw" className="rounded-[var(--radius-photo)]" /> : undefined}
-      >
-        <TrackedLink href="/book" event="book_click" params={{ location: `area_${slug}` }} className="btn btn-primary">
-          Book your detail
-        </TrackedLink>
-      </PageHeader>
-      <section className="border-t border-line bg-paper2 py-16">
-        <div className="container-ed">
-          <h2 className="t-h2">Detailing in {area.name}</h2>
-          <ul className="mt-8 grid gap-6 md:grid-cols-2">
-            {page.localNotes.map((n) => (
-              <li key={n} className="border-t-2 border-ink pt-4 text-ink/85">
-                {n}
-              </li>
-            ))}
-          </ul>
+      <article className="container-ed pb-16 pt-8 md:pt-10">
+        <Breadcrumbs
+          items={[
+            { name: "Shine On", path: "/blog" },
+            { name: post.title, path: `/post/${slug}` },
+          ]}
+        />
+        <header className="mt-10 max-w-3xl">
+          <p className="text-sm text-muted">
+            {post.category} · <time dateTime={post.date}>{formatDate(post.date)}</time> · {post.readingMinutes} min read
+          </p>
+          <h1 className="t-h2 mt-4">{post.title}</h1>
+          {post.description && <p className="t-lede mt-5 text-ink/80">{post.description}</p>}
+        </header>
+        <div className="mt-12">
+          <div className="prose-ed" dangerouslySetInnerHTML={{ __html: first }} />
+          {second && (
+            <>
+              <div className="max-w-[42rem]">
+                <PostCta cta={post.cta} />
+              </div>
+              <div className="prose-ed" dangerouslySetInnerHTML={{ __html: second }} />
+            </>
+          )}
+          {!second && (
+            <div className="max-w-[42rem]">
+              <PostCta cta={post.cta} />
+            </div>
+          )}
         </div>
-      </section>
-      <section className="container-ed py-16 md:py-24">
-        <h2 id="area-vehicle" className="t-h2">
-          Prices for your vehicle
-        </h2>
-        <div className="mt-10">
-          <ServicePicker location={`area_${slug}`} headingId="area-vehicle" />
-        </div>
-      </section>
-      <section className="border-t border-line bg-paper2 py-16 md:py-24">
-        <div className="container-ed">
-          <ReviewGrid />
-        </div>
-      </section>
-      <CtaBand location={`area_${slug}_final`} />
+      </article>
+
+      {related.length > 0 && (
+        <section className="border-t border-line bg-paper2 py-16">
+          <div className="container-ed">
+            <h2 className="t-h3">Keep reading</h2>
+            <ul className="mt-6 grid gap-8 md:grid-cols-3">
+              {related.map((p) => (
+                <li key={p.slug} className="border-t-2 border-ink pt-4">
+                  <p className="text-sm text-muted">{p.category}</p>
+                  <Link href={`/post/${p.slug}`} className="mt-1 block font-display text-lg font-semibold leading-snug hover:underline">
+                    {p.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+      <JsonLd data={articleSchema({ title: post.title, description: post.description, path: `/post/${slug}`, date: post.date, image: post.image })} />
     </>
   );
 }

@@ -15,7 +15,7 @@ export function PageHeader({ crumbs, title, lede, children, aside }: Props) {
       <Breadcrumbs items={crumbs} />
       <div className={`mt-8 grid gap-10 ${aside ? "lg:grid-cols-12 lg:items-center" : ""}`}>
         <div className={aside ? "lg:col-span-6" : "max-w-3xl"}>
-          <h1 className="t-display">{title}</h1>
+          <h1 className="t-page">{title}</h1>
           {lede && <div className="t-lede mt-6 text-ink/80">{lede}</div>}
           {children && <div className="mt-8 flex flex-col gap-3 sm:flex-row">{children}</div>}
         </div>

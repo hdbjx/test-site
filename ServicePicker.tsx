@@ -76,14 +76,14 @@ export function ServicePicker({ location, headingId }: Props) {
             <article
               key={s.id}
               aria-labelledby={`svc-${location}-${s.id}`}
-              className={`relative flex flex-col rounded-[var(--radius-panel)] border p-6 ${rec ? "mt-3 md:mt-0" : ""} md:rounded-none md:p-8 ${
+              className={`relative flex flex-col rounded-[10px] border-2 p-6 ${rec ? "mt-3 md:mt-0" : ""} md:rounded-none md:p-8 ${
                 rec
-                  ? "order-first border-ink bg-white md:order-none md:z-10 md:-my-3 md:rounded-[var(--radius-panel)] md:py-11 md:shadow-[0_18px_40px_rgb(17_17_17/0.08)]"
-                  : `border-line bg-paper ${i === 0 ? "md:border-r-0" : "md:border-l-0"}`
+                  ? "order-first border-ink bg-white shadow-[6px_6px_0_var(--color-red)] md:order-none md:z-10 md:-my-3 md:rounded-[10px] md:py-11"
+                  : `border-ink/15 bg-paper ${i === 0 ? "md:border-r-0" : "md:border-l-0"}`
               }`}
             >
               {rec && (
-                <p className="absolute -top-3 left-6 rounded-full bg-oxblood px-3 py-1 font-display text-xs font-semibold text-paper md:left-8">
+                <p className="absolute -top-4 left-6 -rotate-2 rounded-full border-2 border-ink bg-oxblood px-3 py-1 font-numeral text-lg leading-none tracking-wide text-paper md:left-8">
                   Recommended for first visits
                 </p>
               )}
