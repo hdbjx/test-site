@@ -55,27 +55,33 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-arrival" aria-label="How Every Detail works">
-        <div className="container-ed arrival-grid">
-          <div className="arrival-statement">
-            <p className="eyebrow">Detailing without the detour</p>
-            <h2>We bring the shop.<br /><span>You keep your day.</span></h2>
-          </div>
-          <div className="arrival-steps">
-            <div><span>01</span><strong>Book online</strong><p>Choose your vehicle, service, and a time that works.</p></div>
-            <div><span>02</span><strong>We pull up</strong><p>Our rig arrives with its own power, water, tools, and products.</p></div>
-            <div><span>03</span><strong>Get your car back</strong><p>Walk outside to a finished car without rearranging your day.</p></div>
-          </div>
-        </div>
-      </section>
-
-      <section className="home-work" aria-labelledby="work-heading">
+      <section className="home-work home-work-v154" aria-labelledby="work-heading">
         <div className="container-ed">
-          <div className="home-work-heading"><p className="eyebrow">Recent work</p><h2 id="work-heading" className="home-display home-display-light">No stock photos.<br />Just our work.</h2></div>
-          <div className="work-editorial">
-            <figure className="work-main"><Photo id="work-05" sizes="(min-width: 1216px) 1152px, 100vw" ratio="16/9" /><figcaption>Mobile detailing, wherever the car lives.</figcaption></figure>
-            <figure className="work-small work-small-a"><Photo id="work-01" sizes="(min-width: 768px) 46vw, 100vw" ratio="4/5" /><figcaption>Finished, not filtered.</figcaption></figure>
-            <figure className="work-small work-small-b"><Photo id="work-08" sizes="(min-width: 768px) 46vw, 100vw" ratio="4/3" /><figcaption>Inside counts too.</figcaption></figure>
+          <div className="work-v154-head">
+            <div>
+              <p className="eyebrow">Real cars. Real driveways.</p>
+              <h2 id="work-heading" className="home-display">The work speaks<br /><span>for itself.</span></h2>
+            </div>
+            <div className="work-v154-note">
+              <span>NO STOCK PHOTOS</span>
+              <p>Everything here was detailed by our team around Decatur and Atlanta.</p>
+            </div>
+          </div>
+
+          <div className="work-v154-main">
+            <Photo id="work-02" sizes="(min-width: 1216px) 1280px, 100vw" ratio="16/8" />
+            <div className="work-v154-caption"><span>01 / IN THE DRIVEWAY</span><strong>Foam wash · Decatur, GA</strong></div>
+          </div>
+
+          <div className="work-v154-pair">
+            <figure className="work-v154-tall">
+              <Photo id="work-01" sizes="(min-width: 900px) 42vw, 92vw" ratio="4/5" />
+              <figcaption><span>02 / FINISHED</span><strong>Black truck · Exterior detail</strong></figcaption>
+            </figure>
+            <figure className="work-v154-wide">
+              <Photo id="work-08" sizes="(min-width: 900px) 48vw, 92vw" ratio="4/3" />
+              <figcaption><span>03 / INSIDE COUNTS</span><strong>Interior reset · Finished clean</strong></figcaption>
+            </figure>
           </div>
         </div>
       </section>
