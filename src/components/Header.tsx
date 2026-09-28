@@ -83,7 +83,7 @@ export function Header() {
       </a>
       <div className={onHome ? "home-nav-shell flex items-center justify-between gap-6" : "container-ed flex h-[4.5rem] items-center justify-between gap-6"}>
         <Link href="/" className="flex shrink-0 items-center" aria-label="Every Detail home">
-          <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className={onHome ? "h-14 w-14 object-contain" : "h-12 w-12 object-contain"} priority />
+          <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className={onHome ? "h-[4.15rem] w-[4.15rem] object-contain" : "h-12 w-12 object-contain"} priority />
         </Link>
 
         {/* Desktop */}
