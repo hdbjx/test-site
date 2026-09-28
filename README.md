@@ -117,7 +117,7 @@ In GA4, mark `booking_submit`, `quote_submit`, `detailplus_submit` and `phone_cl
 | `/services-3` (duplicate ceramic page) | `/ceramic` | 301 |
 | `/join-detail` | `/detailplus/join` | 301 |
 | `/blog/categories/*`, `/tags/*`, `/hashtags/*`, `/page/*` | `/blog` | 301 |
-| `/cart-page`, `/my-addresses`, `/account/*`, `/members-area/*` | `/` | 302 |
+| `/cart-page`, `/my-addresses`, `/members-area/*` | `/` | 302 |
 | `/client-portal`, `/gift-cards` | the `site.external` URL, or `/` | 302 |
 
 Kept at the same URL: `/`, `/our-services`, `/ceramic`, `/detailplus`, `/about-us`, `/get-a-quote`, `/blog`, `/post/*`.
