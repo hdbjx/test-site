@@ -3,29 +3,55 @@ import { CtaBand } from "@/components/CtaBand";
 import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
 import { ServicesDecisionTool } from "@/components/ServicesDecisionTool";
-import { TrackedLink } from "@/components/TrackedLink";
-import { bookingHref } from "@/data/booking";
 import { homeFaqs } from "@/data/faqs";
 import { paintServices } from "@/data/paint";
-import { PRICING, serviceList, startingPrice, vehicles } from "@/data/services";
+import { PRICING, serviceList, vehicles } from "@/data/services";
 import { usd } from "@/lib/format";
 import { pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Car Detailing Services & Prices in Decatur, GA | Every Detail",
-  description: "Compare Maintenance, Premium and Factory Reset mobile detailing, see exact vehicle pricing, and learn what each level is built to handle.",
+  description: "Learn what professional mobile detailing includes, why different vehicles need different levels of cleaning, and compare Every Detail services and pricing.",
   path: "/our-services",
 });
 
-const compareRows = [
-  ["Exterior hand wash", "Included", "Included", "Included"],
-  ["Wheels + windows", "Included", "Included", "Included"],
-  ["Interior", "Refresh", "Deep clean", "Intensive clean"],
-  ["Carpet + upholstery extraction", "—", "As needed", "Included"],
-  ["Trim, leather + surfaces", "Cleaned", "Conditioned", "Conditioned"],
-  ["Paint protection", "—", "Spray sealant", "Spray sealant"],
-  ["Paint decontamination + clay", "—", "—", "Included"],
-  ["Seams, vents + tight areas", "Standard", "Detailed", "Extensive"],
+const detailAreas = [
+  ["01", "Interior", "Vacuuming, seats, carpets and mats, dash, console, cupholders, doors, panels, glass, trunk or cargo area, and the small spaces that quick cleans skip."],
+  ["02", "Exterior", "A careful hand wash, wheels and tires, exterior glass, door jambs, and the exterior surfaces that collect road film, brake dust, bugs and grime."],
+  ["03", "The details", "The difference is time and attention. We work methodically around the whole vehicle instead of only cleaning the easiest, most visible surfaces."],
+];
+
+const serviceEducation = [
+  {
+    no: "01", id: "maintenance-detail", tone: "maintenance", kicker: "MAINTENANCE DETAIL / ROUTINE CARE",
+    title: <>Keep a clean car <span>clean.</span></>,
+    intro: "Maintenance is not a shortcut version of a deep detail. It is a service built for a different starting point: a vehicle that is already clean and cared for.",
+    why: "Because we are not spending the visit reversing months of buildup, one technician can move efficiently through the entire vehicle and preserve the clean baseline you already have.",
+    best: "Vehicles detailed regularly, cars kept in good condition, and returning clients who do not want the vehicle to slide backward between deeper services.",
+    includes: ["Hand wash of the exterior", "Wheels and tires cleaned", "Interior vacuum and surface cleaning", "Windows, door jambs and cargo area", "Routine attention throughout the cabin"],
+    notFor: "A vehicle with significant stains, embedded grime, heavy pet hair or long-term buildup. Those problems require more time than Maintenance is designed to provide.",
+    time: "About 2–3 hours depending on vehicle size", price: "From $150",
+  },
+  {
+    no: "02", id: "premium-detail", tone: "premium", kicker: "PREMIUM DETAIL / FULL DETAIL",
+    title: <>The full <span>inside-and-out detail.</span></>,
+    intro: "Premium is the service most people picture when they hear professional detailing. We thoroughly work through the interior and exterior instead of simply refreshing the surfaces you can see first.",
+    why: "This is where the extra labor becomes visible. Two technicians can spend hours moving through the cabin, mats, seats, trim, glass, jambs, wheels and exterior so the vehicle feels consistently clean, not partially cleaned.",
+    best: "Most first-time clients, daily-driven vehicles, and cars that need a real detail but do not have the heavy buildup that calls for a Factory Reset.",
+    includes: ["Thorough interior vacuum and cleaning", "Seats, mats, dash, console, doors and cupholders", "Interior and exterior glass", "Hand wash, wheels and tires", "Door jambs and cargo area", "Exterior paint protection"],
+    notFor: "Severe stains, major embedded buildup or vehicles that need restoration-level cleaning. Premium is comprehensive, but it is not unlimited labor.",
+    time: "About 2.5–3.5 hours depending on vehicle size", price: "From $260",
+  },
+  {
+    no: "03", id: "factory-reset", tone: "reset", kicker: "FACTORY RESET / DEEPEST CLEAN",
+    title: <>When a normal detail <span>isn’t enough.</span></>,
+    intro: "Factory Reset exists for vehicles where simply doing the Premium process would leave too much behind. The difference is not a fancier name. It is substantially more labor directed at buildup and problem areas.",
+    why: "We add the time-intensive work needed for neglected interiors and exteriors: extraction where needed, deeper work in seams and tight areas, and exterior decontamination. That added labor is why the price steps up significantly.",
+    best: "Heavily used or neglected vehicles, family cars with years of buildup, spills and stains, pet-heavy vehicles, and cars that need a genuine reset before they can be maintained normally.",
+    includes: ["Everything covered by a full detail", "Carpet and upholstery extraction where needed", "More intensive stain and buildup work", "Extensive seams, vents and tight-area cleaning", "Paint decontamination and clay treatment", "More technician time devoted to the vehicle"],
+    notFor: "A car that is already in decent condition. If the vehicle does not need the extra labor, we would rather put it in the service level that actually fits.",
+    time: "About 4+ hours depending on condition and size", price: "From $400",
+  },
 ];
 
 export default function ServicesPage() {
@@ -36,67 +62,76 @@ export default function ServicesPage() {
 
   return (
     <>
-      <main className="services-v160">
-        <section className="svc-hero">
+      <main className="services-v161">
+        <section className="edu-hero">
           <div className="svc-shell">
             <p className="svc-eyebrow">MOBILE DETAILING / DECATUR, GA</p>
-            <div className="svc-hero-grid">
-              <h1>Pick the clean<br/><span>your car needs.</span></h1>
-              <div className="svc-hero-copy">
-                <p>Three levels of mobile detailing, from routine upkeep to a complete reset. We come to your driveway with our own power, water and equipment.</p>
-                <div className="svc-scale"><span>MAINTAIN</span><b>→</b><span>DEEP CLEAN</span><b>→</b><span>RESET</span></div>
+            <div className="edu-hero-grid">
+              <h1>A detail is more than<br/><span>a car wash.</span></h1>
+              <div className="edu-hero-copy">
+                <p className="edu-lede">A wash cleans the obvious surfaces. Professional detailing is a methodical cleaning of the vehicle as a whole.</p>
+                <p>We work through the interior and exterior area by area, including the places quick washes and basic interior cleanings tend to skip. The goal is not just to make the car look cleaner for the afternoon. It is to properly clean it, protect it where the service calls for it, and establish a condition that can actually be maintained.</p>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="svc-ladder" id="choose">
+        <section className="edu-anatomy">
           <div className="svc-shell">
-            <div className="svc-section-head"><p className="svc-eyebrow">01 / CHOOSE YOUR LEVEL</p><h2>What does your car <span>actually need?</span></h2><p>More expensive does not automatically mean better. Start with the condition of the car and how long it has been since its last thorough detail.</p></div>
-            <div className="svc-levels">
-              <article className="svc-level maintenance" id="maintenance-detail">
-                <div className="svc-level-no">01</div><div className="svc-level-main"><p className="svc-tag">ROUTINE UPKEEP</p><h3>Already pretty clean?<br/><span>Keep it that way.</span></h3><p>Maintenance is a thorough inside-and-out refresh for vehicles that are already in good shape. It is designed to preserve a clean baseline, not rescue a neglected interior.</p></div>
-                <div className="svc-level-side"><p><b>Best for</b> Cars detailed regularly or kept clean between deeper services.</p><ul><li>Exterior hand wash + dry</li><li>Interior vacuum + wipe-down</li><li>Windows + wheels cleaned</li></ul><p className="svc-cadence">WORKS BEST EVERY 3–4 WEEKS</p><strong className="svc-from">From {usd(startingPrice("maintenance"))}</strong></div>
-              </article>
-              <article className="svc-level premium" id="premium-detail">
-                <div className="svc-level-no">02</div><div className="svc-level-main"><p className="svc-tag">MOST BOOKED / FIRST VISITS</p><h3>Needs a proper detail?<br/><span>Start here.</span></h3><p>Premium is the full inside-and-out detail most vehicles need. It adds a true interior deep clean and paint protection without stepping up to the restoration-level work of Factory Reset.</p></div>
-                <div className="svc-level-side"><p><b>Best for</b> Most first-time clients and cars that have not been professionally detailed in a while.</p><ul><li>Everything in Maintenance</li><li>Full interior deep clean</li><li>Spray sealant paint protection</li><li>Trim, leather + surface conditioning</li></ul><p className="svc-cadence">WORKS BEST EVERY 6–8 WEEKS</p><strong className="svc-from">From {usd(startingPrice("premium"))}</strong></div>
-              </article>
-              <article className="svc-level reset" id="factory-reset">
-                <div className="svc-level-no">03</div><div className="svc-level-main"><p className="svc-tag">DEEPEST CLEAN</p><h3>Needs serious attention?<br/><span>Reset it.</span></h3><p>Factory Reset is for buildup a normal detail is not designed to solve. We add extraction, paint decontamination and significantly more time in seams, vents and tight areas.</p></div>
-                <div className="svc-level-side"><p><b>Best for</b> Heavily used or neglected vehicles with kids, pets, spills, stains, odor or years of buildup.</p><ul><li>Everything in Premium</li><li>Carpet + upholstery extraction</li><li>Paint decontamination + clay</li><li>Extensive crevice work</li></ul><p className="svc-cadence">USUALLY ONCE OR TWICE A YEAR</p><strong className="svc-from">From {usd(startingPrice("factoryReset"))}</strong></div>
-              </article>
+            <div className="edu-section-intro">
+              <p className="svc-eyebrow">WHAT YOU ARE ACTUALLY PAYING FOR</p>
+              <h2>We work through the <span>whole car.</span></h2>
+              <p>A professional detail costs more than a drive-through wash because it is a hands-on service measured in technician hours, not minutes on a conveyor.</p>
             </div>
+            <div className="edu-area-grid">
+              {detailAreas.map(([no,title,copy]) => <article key={no}><b>{no}</b><h3>{title}</h3><p>{copy}</p></article>)}
+            </div>
+            <div className="edu-value-statement">
+              <p>You’re not paying for a wash.</p>
+              <h3>You’re paying for the <span>time, equipment and attention</span> required to clean the vehicle properly.</h3>
+            </div>
+            <div className="edu-mobile-strip"><strong>WE BRING THE SHOP TO YOUR DRIVEWAY.</strong><span>POWER</span><i>+</i><span>WATER</span><i>+</i><span>EQUIPMENT</span><i>+</i><span>PRODUCTS</span></div>
           </div>
         </section>
 
-        <section className="svc-pricing">
+        <section className="edu-level-intro">
+          <div className="svc-shell edu-level-intro-grid">
+            <div><p className="svc-eyebrow">WHY THREE SERVICE LEVELS?</p><h2>Not every car needs the <span>same amount of work.</span></h2></div>
+            <div><p>A regularly detailed sedan and a family SUV that has gone years without a deep clean should not receive the same process or carry the same price.</p><p>Our three detailing levels are based on the vehicle’s starting condition and the amount of labor needed to get the right result.</p></div>
+          </div>
+        </section>
+
+        <section className="edu-services">
           <div className="svc-shell">
-            <div className="svc-section-head compact"><p className="svc-eyebrow">02 / YOUR EXACT PRICE</p><h2>What do you <span>drive?</span></h2><p>Choose your vehicle once. We will show all three service prices side by side so you can compare the actual options for your car.</p></div>
+            {serviceEducation.map((s) => (
+              <article className={`edu-service ${s.tone}`} id={s.id} key={s.id}>
+                <header><b className="edu-service-no">{s.no}</b><div><p className="svc-eyebrow">{s.kicker}</p><h2>{s.title}</h2></div></header>
+                <div className="edu-service-body">
+                  <div className="edu-service-explain"><p className="edu-service-intro">{s.intro}</p><p>{s.why}</p><div className="edu-best"><span>BEST FOR</span><p>{s.best}</p></div></div>
+                  <div className="edu-service-includes"><p className="edu-mini-label">WHAT THE VISIT COVERS</p><ul>{s.includes.map(x=><li key={x}>{x}</li>)}</ul></div>
+                  <div className="edu-service-limit"><p className="edu-mini-label">WHEN TO STEP UP OR DOWN</p><p>{s.notFor}</p><div className="edu-service-meta"><span>{s.time}</span><strong>{s.price}</strong></div></div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="edu-booking" id="pricing">
+          <div className="svc-shell">
+            <div className="edu-booking-head"><div><p className="svc-eyebrow">NOW THAT YOU KNOW THE DIFFERENCE</p><h2>Find the right price<br/><span>for your car.</span></h2></div><p>Choose your vehicle once to compare all three services. This is where the page shifts from learning to choosing.</p></div>
             <ServicesDecisionTool />
           </div>
         </section>
 
-        <section className="svc-compare">
-          <div className="svc-shell">
-            <div className="svc-section-head"><p className="svc-eyebrow">03 / WHAT CHANGES</p><h2>Same car. <span>Different depth.</span></h2><p>The difference is not just “more cleaning.” Each level changes how deeply we work and what problems the service is intended to handle.</p></div>
-            <div className="svc-compare-wrap">
-              <div className="svc-compare-grid svc-compare-head"><div>WHAT WE DO</div><div>MAINTENANCE</div><div>PREMIUM</div><div>FACTORY RESET</div></div>
-              {compareRows.map((r) => <div className="svc-compare-grid" key={r[0]}>{r.map((c,i) => <div key={i} className={i===0 ? "row-label" : c==="Included" ? "included" : ""}>{c}</div>)}</div>)}
-            </div>
-            <div className="svc-guidance"><div><p className="svc-eyebrow">THE SIMPLE ANSWER</p><h3>If you are unsure, Premium is where most cars should start.</h3></div><p>Maintenance assumes the car already has a clean baseline. Factory Reset is for vehicles with heavier buildup or specific deep-cleaning needs. Premium sits between them and is our most common first service.</p><TrackedLink href={bookingHref(undefined,"premium")} event="book_click" params={{location:"services_guidance",service:"premium"}} className="svc-tactile-btn">Book Premium <span>↗</span></TrackedLink></div>
-          </div>
-        </section>
+        <section className="svc-single"><div className="svc-shell svc-single-inner"><div><p className="svc-eyebrow">ONLY NEED ONE SIDE?</p><h2>Interior-only or exterior-only.</h2></div><p>Our core details cover the whole vehicle. Detail+ members can choose interior-only or exterior-only plans. For a one-time standalone job, send us what you need and we will quote it.</p><Link href="/get-a-quote" className="svc-outline-btn">Get a quote <span>↗</span></Link></div></section>
 
-        <section className="svc-single"><div className="svc-shell svc-single-inner"><div><p className="svc-eyebrow">ONLY NEED HALF?</p><h2>Interior-only or exterior-only.</h2></div><p>Our core details cover the whole vehicle. Detail+ members can choose interior-only or exterior-only plans. For a one-time standalone job, send us what you need and we will quote it.</p><Link href="/get-a-quote" className="svc-outline-btn">Get a quote <span>↗</span></Link></div></section>
+        <section className="svc-paint" id="paint"><div className="svc-shell"><div className="svc-paint-grid"><div><p className="svc-eyebrow">BEYOND DETAILING</p><h2>Cleaning and paint correction are <span>different jobs.</span></h2><p>Detailing removes dirt and contamination from the vehicle. Paint correction goes a step further by machine-polishing the clear coat to reduce visible swirls, haze and defects. Ceramic coating is protection applied after the paint is properly prepared.</p><Link href="/ceramic" className="svc-light-btn">Learn about paint care <span>↗</span></Link></div><div className="svc-paint-list">{paintServices.map((p,i)=><div key={p.id}><b>0{i+1}</b><div><h3>{p.name}</h3><p>{p.bestFor}</p></div><strong>from {usd(p.startingAt)}</strong></div>)}</div></div></div></section>
 
-        <section className="svc-paint" id="paint"><div className="svc-shell"><div className="svc-paint-grid"><div><p className="svc-eyebrow">04 / BEYOND CLEANING</p><h2>Detailing cleans it.<br/><span>Paint care changes it.</span></h2><p>Paint correction and ceramic coating solve a different problem than detailing. Correction machine-polishes defects from the finish. Ceramic coating adds durable protection to the corrected or already-healthy paint.</p><Link href="/ceramic" className="svc-light-btn">Explore paint care <span>↗</span></Link></div><div className="svc-paint-list">{paintServices.map((p,i)=><div key={p.id}><b>0{i+1}</b><div><h3>{p.name}</h3><p>{p.bestFor}</p></div><strong>from {usd(p.startingAt)}</strong></div>)}</div></div></div></section>
+        <section className="svc-plus" id="detail-plus"><div className="svc-shell"><div className="svc-plus-grid"><div><p className="svc-eyebrow">AFTER THE FIRST DETAIL</p><h2>Getting clean is one job.<br/><span>Staying clean is another.</span></h2><p>Detail+ is recurring care for vehicles that already have a clean baseline. Instead of waiting for the car to build up again, we return on a schedule and maintain it.</p><Link href="/detailplus" className="svc-light-btn">Learn how Detail+ works <span>↗</span></Link></div><div className="svc-plus-steps"><div><b>01</b><h3>Establish the baseline</h3><p>Start with the vehicle at the right level of clean.</p></div><div><b>02</b><h3>Choose a schedule</h3><p>Pick a frequency that fits how the vehicle is used.</p></div><div><b>03</b><h3>Maintain it</h3><p>We return before the car needs another major reset.</p></div></div></div></div></section>
 
-        <section className="svc-plus" id="detail-plus"><div className="svc-shell"><div className="svc-plus-grid"><div><p className="svc-eyebrow">05 / RECURRING CARE</p><h2>Get it clean once.<br/><span>Keep it clean.</span></h2><p>Detail+ is for people who would rather maintain the car than wait for it to get bad again. Choose a schedule from every two weeks to quarterly, choose interior, exterior or both, and pay the same flat rate each visit. No contracts.</p><Link href="/detailplus" className="svc-light-btn">How Detail+ works <span>↗</span></Link></div><div className="svc-plus-steps"><div><b>01</b><h3>Pick a schedule</h3><p>Choose the frequency that fits how you use the car.</p></div><div><b>02</b><h3>We come back</h3><p>Your recurring service happens at your driveway.</p></div><div><b>03</b><h3>Stay clean</h3><p>Routine care prevents the big reset cycle.</p></div></div></div></div></section>
+        <section className="svc-process"><div className="svc-shell"><div className="svc-section-head compact"><p className="svc-eyebrow">WHAT HAPPENS ON DETAIL DAY</p><h2>Your driveway.<br/><span>Our setup.</span></h2><p>You do not need to drive to a shop or provide a hose and outlet. We arrive prepared to do the job where the car is parked.</p></div><ol><li><b>01</b><h3>We arrive prepared.</h3><p>Our team brings the power, water, products and equipment needed for the service.</p></li><li><b>02</b><h3>We work through the car.</h3><p>The technicians follow the process for the service level you selected rather than rushing the most visible areas.</p></li><li><b>03</b><h3>We finish and check it.</h3><p>The vehicle is inspected, packed up and returned ready to drive.</p></li></ol></div></section>
 
-        <section className="svc-process"><div className="svc-shell"><div className="svc-section-head compact"><p className="svc-eyebrow">06 / MOBILE MEANS MOBILE</p><h2>Your driveway.<br/><span>Our setup.</span></h2><p>You do not need to drive to a shop or provide a hose and outlet. We arrive prepared to do the job where the car is parked.</p></div><ol><li><b>01</b><h3>Book your service.</h3><p>Choose the vehicle, level of detail and a time that works.</p></li><li><b>02</b><h3>We come to you.</h3><p>Our team arrives with its own power, water, products and equipment.</p></li><li><b>03</b><h3>Get your car back.</h3><p>We complete the service in your driveway and walk through the finished vehicle.</p></li></ol><div className="svc-mobile-proof"><strong>POWER</strong><span>+</span><strong>WATER</strong><span>+</span><strong>EQUIPMENT</strong><em>ALL INCLUDED</em></div></div></section>
-
-        <section className="svc-faq"><div className="svc-shell svc-faq-grid"><div><p className="svc-eyebrow">07 / BEFORE YOU BOOK</p><h2>Service questions.</h2><p>Still deciding? These are the things people most often want to know before we arrive.</p></div><FaqList faqs={homeFaqs.slice(0,8)} /></div></section>
+        <section className="svc-faq"><div className="svc-shell svc-faq-grid"><div><p className="svc-eyebrow">STILL LEARNING?</p><h2>Service questions.</h2><p>Common questions about what we do, what you need to provide and how the service works.</p></div><FaqList faqs={homeFaqs.slice(0,8)} /></div></section>
       </main>
       <CtaBand location="services_final" />
       <JsonLd data={schemas} />

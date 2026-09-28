@@ -54,13 +54,13 @@ export const services: Record<ServiceId, Service> = {
     slug: "premium-detail",
     short: "Bring it back.",
     summary:
-      "Our most booked service. A full interior deep clean plus paint protection, so the whole car looks and feels taken care of again.",
+      "Our most booked service. A thorough inside-and-out detail for vehicles that need more than routine upkeep, finished with exterior paint protection.",
     whoFor: "Most first-time clients, and anyone whose car hasn't been professionally detailed in a while.",
     includes: [
       "Everything in Maintenance",
       "Full interior deep clean",
       "Spray sealant paint protection",
-      "Trim, leather and surface conditioning",
+      "Seats, mats, dash, console, doors and cupholders cleaned",
     ],
     cadence: "Works best every 6–8 weeks",
     crew: 2,
