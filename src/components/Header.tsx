@@ -182,32 +182,34 @@ export function Header() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu"
-          className="fixed inset-x-0 bottom-0 top-[4.5rem] z-40 overflow-y-auto bg-paper text-ink lg:hidden"
+          className={`mobile-menu-panel fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-paper text-ink lg:hidden ${onHome ? "mobile-menu-home" : "mobile-menu-inner"}`}
         >
-          <nav aria-label="Mobile" className="container-ed flex flex-col py-6">
-            {[...serviceNav, ...primaryNav.filter((item) => item.label !== "Services"), ...moreNav, ...(supabaseConfigured ? [{ label: "Account", href: "/account", external: false }] : [])].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                {...(item.external ? { target: "_blank", rel: "noopener" } : {})}
-                {...(item.href === "/account" ? { "data-no-transition": "true" } : {})}
-                aria-current={isActive(item.href) ? "page" : undefined}
-                className="border-b border-line py-4 font-display text-2xl font-semibold tracking-tight aria-[current=page]:text-red"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="mt-8 flex flex-col gap-3">
-              <Link href="/book" className="btn btn-primary" onClick={() => track("book_click", { location: "mobile_menu" })}>
-                Book your detail
-              </Link>
-              <a
-                href={site.phone.href}
-                className="btn btn-secondary"
-                onClick={() => track("phone_click", { location: "mobile_menu" })}
-              >
-                Call {site.phone.display}
-              </a>
+          <nav aria-label="Mobile" className="mobile-menu-nav">
+            <p className="mobile-menu-label">Services</p>
+            <div className="mobile-menu-primary">
+              {serviceNav.map((item, index) => (
+                <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined} className="mobile-menu-service">
+                  <span>0{index + 1}</span>{item.label}
+                </Link>
+              ))}
+            </div>
+
+            <p className="mobile-menu-label mobile-menu-label-more">Explore</p>
+            <div className="mobile-menu-secondary">
+              {primaryNav.filter((item) => item.label !== "Services").map((item) => (
+                <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>{item.label}</Link>
+              ))}
+              {supabaseConfigured && <a href="/account" data-no-transition="true" aria-current={isActive("/account") ? "page" : undefined}>Account</a>}
+              {moreNav.map((item) => item.external ? (
+                <a key={item.href} href={item.href} target="_blank" rel="noopener">{item.label}</a>
+              ) : (
+                <Link key={item.href} href={item.href}>{item.label}</Link>
+              ))}
+            </div>
+
+            <div className="mobile-menu-actions">
+              <Link href="/book" className="btn btn-primary" onClick={() => track("book_click", { location: "mobile_menu" })}>Book your detail</Link>
+              <a href={site.phone.href} className="mobile-menu-phone" onClick={() => track("phone_click", { location: "mobile_menu" })}>Call {site.phone.display}</a>
             </div>
           </nav>
         </div>
