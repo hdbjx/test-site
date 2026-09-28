@@ -31,7 +31,7 @@ export function HomeBookingFlow() {
 
   const chooseVehicle = (id: VehicleId) => {
     setVehicle(id);
-    track("vehicle_select", { vehicle: id, service, location: "home_flow" });
+    track("vehicle_select", { vehicle: id, service: service ?? undefined, location: "home_flow" });
   };
 
   return (
@@ -78,7 +78,7 @@ export function HomeBookingFlow() {
                     <small>About {durationShort(quote.minutes)} · Power + water included</small>
                   </div>
                   <div className="v15-result-price"><span>Total</span><strong>{usd(quote.price)}</strong></div>
-                  <TrackedLink href={bookingHref(vehicle!, service)} event="book_click" params={{ location: "home_flow", vehicle, service }} className="btn btn-primary v15-continue">Choose a time ↗</TrackedLink>
+                  <TrackedLink href={bookingHref(vehicle!, service)} event="book_click" params={{ location: "home_flow", vehicle: vehicle ?? undefined, service: service ?? undefined }} className="btn btn-primary v15-continue">Choose a time ↗</TrackedLink>
                 </>
               )}
             </div>
