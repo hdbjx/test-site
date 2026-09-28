@@ -2082,3 +2082,116 @@
 .edu-service-limit>p{max-width:45ch;line-height:1.55}
 @media(max-width:900px){.edu-service-body{grid-template-columns:1fr;grid-template-areas:"explain" "includes" "guidance"}.edu-service-explain{border-right:0!important;border-bottom:2px solid #111}.edu-service-limit{grid-template-columns:1fr}.edu-service-limit>.edu-mini-label,.edu-service-limit>p,.edu-service-meta{grid-column:1}.edu-service-meta{grid-row:auto;border-left:0;border-top:2px solid #111;margin-top:1.25rem!important;padding:1.25rem 0 0!important;display:flex;justify-content:space-between;align-items:end;gap:1rem}.edu-service-meta span{max-width:220px}.edu-service-meta strong{margin-top:0!important}}
 @media(max-width:600px){.edu-service{box-shadow:6px 6px 0 #dbc7b3}.edu-service.premium{box-shadow:6px 6px 0 var(--color-red)}.edu-service.reset{box-shadow:6px 6px 0 #111}.edu-service header{padding:1.5rem}.edu-service-body>div{padding:1.5rem}.edu-service-meta{display:block}.edu-service-meta strong{margin-top:.5rem!important}}
+
+/* V16.3: mobile polish for homepage + education-first services */
+@media (max-width: 767px) {
+  html { scroll-padding-top: 5rem; }
+  .container-ed { width: min(100% - 2rem, 72rem); }
+
+  /* Header: keep the mobile chrome compact and predictable */
+  .home-nav-shell, .inner-nav-shell { min-height: 4.75rem; padding-left: 1rem; padding-right: .75rem; gap: .5rem; }
+  .home-nav-shell .home-logo-control img, .inner-nav-shell .inner-logo-control img { width: 3.55rem !important; height: 3.55rem !important; }
+  .home-nav-actions, .inner-nav-actions { gap: .35rem; }
+  .home-nav-actions .btn-sm, .inner-nav-actions .btn-sm { min-height: 2.85rem; padding: .65rem .85rem; font-size: .78rem; box-shadow: 3px 3px 0 #111; }
+
+  /* Homepage hero */
+  .hero-full { min-height: 100svh; background-position: 61% center; }
+  .hero-inner.container-ed { width: 100%; padding-left: 1.25rem; padding-right: 1.25rem; padding-top: 7rem; padding-bottom: 2rem; }
+  .hero-copy { width: 100%; max-width: 34rem; }
+  .hero-kicker { font-size: .68rem; letter-spacing: .11em; }
+  .hero-title { font-size: clamp(3.45rem, 16vw, 5rem); line-height: .88; letter-spacing: -.055em; }
+  .hero-lede { max-width: 22rem; font-size: .98rem; line-height: 1.45; }
+  .hero-copy .mt-7 { gap: .7rem; margin-top: 1.35rem !important; }
+  .hero-copy .btn { min-height: 3.25rem; padding: .78rem 1rem; font-size: .9rem; }
+
+  /* Trust bar: deliberate 2x2 proof grid instead of an awkward stacked ticker */
+  .proof-row { border-top: 2px solid #111; border-bottom: 2px solid #111; font-size: .66rem !important; letter-spacing: .045em !important; }
+  .proof-row > div { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0 !important; width: 100% !important; max-width: none !important; min-height: 0 !important; padding: 0 !important; }
+  .proof-row span { min-height: 4.35rem !important; padding: .7rem .55rem !important; white-space: normal !important; line-height: 1.2; text-align: center; border: 0 !important; display: flex; align-items: center; justify-content: center; }
+  .proof-row span:nth-child(odd) { border-right: 1px solid rgb(17 17 17 / .22) !important; }
+  .proof-row span:nth-child(-n+2) { border-bottom: 1px solid rgb(17 17 17 / .22) !important; }
+  .proof-stars { flex-direction: column; gap: .15rem; letter-spacing: .01em !important; }
+
+  /* Homepage rhythm + readability */
+  .home-services-v14, .home-work-v157, .home-story, .home-next-v158, .home-faq { padding-top: 4.5rem !important; padding-bottom: 4.5rem !important; }
+  .home-services-v14 .v14-service-head { margin-bottom: 2rem; }
+  .home-services-v14 .home-display, .work-v157-head .home-display, .home-next-v158 .home-display { font-size: clamp(3.25rem, 15vw, 4.5rem) !important; line-height: .9; }
+  .home-services-v14 .home-section-copy { font-size: .95rem; line-height: 1.5; }
+  .v15-stage-inner { padding-left: 1rem !important; padding-right: 1rem !important; }
+  .v15-service-copy strong { font-size: clamp(2.25rem, 11.5vw, 3.2rem) !important; }
+  .v15-service { padding-top: 1.05rem !important; padding-bottom: 1.05rem !important; }
+  .v14-service-links { display: grid; gap: .8rem; margin-top: 1.6rem !important; }
+
+  .work-v157-shell { width: calc(100% - 2rem) !important; }
+  .work-v157-head { margin-bottom: 2rem !important; }
+  .work-v157-lead > div:first-child { aspect-ratio: 4 / 3 !important; }
+  .work-v157-grid { margin-top: 3rem !important; gap: 3rem !important; }
+  .work-v157-lead figcaption, .work-v157-grid figcaption { padding-top: .7rem; }
+  .work-v157-lead figcaption strong, .work-v157-grid figcaption strong { font-size: .84rem; }
+
+  .upgrade-board { padding: 1.25rem !important; }
+  .upgrade-main { padding-top: 4.4rem !important; }
+  .upgrade-main h3 { font-size: clamp(2.65rem, 12vw, 3.8rem) !important; }
+  .upgrade-copy { font-size: .92rem; line-height: 1.5; }
+  .upgrade-chips { gap: .5rem !important; }
+
+  /* Services page: readable first, decorative second */
+  .services-v161 .svc-shell { width: calc(100% - 2rem); }
+  .edu-hero { padding: 7rem 0 4.25rem !important; }
+  .edu-hero-grid { gap: 2rem !important; }
+  .edu-hero h1 { font-size: clamp(3.55rem, 16vw, 4.8rem) !important; line-height: .9; }
+  .edu-hero-copy { padding-top: 1rem; }
+  .edu-hero-copy .edu-lede { font-size: 1.3rem; line-height: 1.18; }
+  .edu-hero-copy p { font-size: .96rem; line-height: 1.58; }
+
+  .edu-anatomy, .edu-level-intro, .edu-booking, .svc-paint, .svc-plus, .svc-process, .svc-faq { padding-top: 4.5rem !important; padding-bottom: 4.5rem !important; }
+  .edu-section-intro, .edu-level-intro-grid, .edu-booking-head { gap: 1.5rem !important; }
+  .edu-section-intro h2, .edu-level-intro h2, .edu-booking h2, .svc-paint h2, .svc-plus h2 { font-size: clamp(3rem, 13.5vw, 4rem) !important; line-height: .92; }
+  .edu-section-intro > p:last-child, .edu-level-intro-grid > div:last-child p, .edu-booking-head > p { font-size: .96rem; line-height: 1.58; }
+
+  .edu-area-grid { margin-top: 2.25rem !important; gap: .85rem !important; }
+  .edu-area-grid article { min-height: 0 !important; padding: 1.35rem !important; box-shadow: 5px 5px 0 #111; }
+  .edu-area-grid b { font-size: 2.35rem; }
+  .edu-area-grid h3 { margin-top: 2.5rem; font-size: 1.65rem; }
+  .edu-value-statement { margin-top: 3rem !important; padding: 1.5rem !important; }
+  .edu-value-statement h3 { font-size: clamp(2.25rem, 10.5vw, 3.2rem) !important; }
+  .edu-mobile-strip { gap: .65rem !important; padding: 1rem 0 !important; }
+
+  .edu-services { padding-bottom: 4.75rem !important; }
+  .edu-service { width: calc(100% - .4rem); margin-top: 1.4rem !important; }
+  .edu-service header { padding: 1.3rem !important; gap: .55rem !important; }
+  .edu-service-no { font-size: 2.6rem !important; }
+  .edu-service header h2 { font-size: clamp(2.55rem, 12vw, 3.5rem) !important; line-height: .92; }
+  .edu-service-body > div { padding: 1.3rem !important; }
+  .edu-service-intro { font-size: 1.2rem !important; line-height: 1.28 !important; }
+  .edu-service-explain > p:not(.edu-service-intro), .edu-service-limit > p, .edu-best p { font-size: .94rem !important; line-height: 1.55; }
+  .edu-best { margin-top: 1.35rem !important; padding: 1rem !important; box-shadow: 3px 3px 0 var(--color-red); }
+  .edu-service-includes li { font-size: .94rem !important; line-height: 1.4; }
+  .edu-service-meta { margin-top: 1rem !important; padding-top: 1rem !important; }
+  .edu-service-meta strong { font-size: 2.15rem !important; }
+
+  /* Price chooser: tap targets and no horizontal squeeze */
+  .svc-vehicle-choices { grid-template-columns: 1fr 1fr !important; gap: .6rem !important; }
+  .svc-vehicle-choices button { min-height: 4.2rem; padding: .8rem !important; }
+  .svc-live-prices article { grid-template-columns: 2.5rem 1fr !important; padding: 1rem !important; gap: .75rem !important; }
+  .svc-live-number { font-size: 2rem !important; }
+  .svc-live-prices h3 { font-size: 1.2rem !important; }
+  .svc-live-buy { grid-column: 1 / -1 !important; width: 100%; padding-top: .8rem; border-top: 1px solid rgb(17 17 17 / .2); }
+  .svc-live-buy > strong { font-size: 2.2rem !important; }
+  .svc-mini-book { min-height: 2.9rem; }
+
+  .svc-paint-grid, .svc-plus-grid, .svc-faq-grid { gap: 2.5rem !important; }
+  .svc-paint-list > div { grid-template-columns: 2.4rem 1fr !important; }
+  .svc-paint-list > div > strong { grid-column: 2; font-size: 1.3rem; }
+  .svc-plus-steps > div { padding: 1.2rem !important; }
+  .svc-process ol { gap: .8rem !important; }
+  .svc-process li { padding: 1.35rem !important; box-shadow: 4px 4px 0 #dbc7b3; }
+  .svc-mobile-proof { justify-content: flex-start !important; padding: 1rem 0 !important; }
+}
+
+@media (max-width: 390px) {
+  .home-nav-actions .btn-sm, .inner-nav-actions .btn-sm { padding-inline: .7rem; font-size: .72rem; }
+  .hero-title { font-size: clamp(3.2rem, 15.8vw, 4rem); }
+  .proof-row { font-size: .61rem !important; }
+  .svc-vehicle-choices { grid-template-columns: 1fr !important; }
+}
