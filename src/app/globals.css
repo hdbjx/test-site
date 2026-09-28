@@ -971,3 +971,74 @@
   .hero-lede { font-size: 1.08rem; }
   .proof-row { font-size: .78rem; }
 }
+
+/* V10 HEADER: larger, simpler, stronger photographic gradient. */
+.home-header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 15rem;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / .78) 0%,
+    rgb(0 0 0 / .62) 24%,
+    rgb(0 0 0 / .40) 50%,
+    rgb(0 0 0 / .16) 74%,
+    transparent 100%
+  );
+}
+
+@media (min-width: 1024px) {
+  .home-header { padding-top: 0; pointer-events: none; }
+  .home-nav-shell {
+    width: min(1440px, calc(100vw - 4rem));
+    height: 7rem;
+    margin-inline: auto;
+    padding: 0 1rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    pointer-events: auto;
+  }
+  .home-logo-control { width: auto; height: auto; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; backdrop-filter: none; }
+  .home-nav-shell .home-logo-control img { width: 5.4rem !important; height: 5.4rem !important; filter: drop-shadow(0 2px 12px rgb(0 0 0 / .25)); }
+  .home-nav-links { position: static; transform: none; padding: 0; gap: .75rem !important; border: 0; border-radius: 0; background: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .home-nav-shell .home-nav-links a,
+  .home-nav-shell .home-nav-links button,
+  .home-nav-actions > a:not(.btn) {
+    padding: .85rem .9rem;
+    font-size: 1.12rem !important;
+    line-height: 1;
+    color: rgb(255 255 255 / .94) !important;
+    text-shadow: 0 2px 16px rgb(0 0 0 / .55);
+  }
+  .home-nav-actions { gap: 1rem; }
+  .home-nav-actions .btn-sm {
+    min-height: 3.65rem;
+    padding: .95rem 1.55rem;
+    font-size: 1.08rem;
+    border-radius: .72rem;
+  }
+  .services-dropdown { text-shadow: none; }
+}
+
+@media (min-width: 1440px) {
+  .home-nav-shell { height: 7.35rem; }
+  .home-nav-shell .home-logo-control img { width: 5.8rem !important; height: 5.8rem !important; }
+  .home-nav-shell .home-nav-links a,
+  .home-nav-shell .home-nav-links button,
+  .home-nav-actions > a:not(.btn) { font-size: 1.18rem !important; }
+  .home-nav-actions .btn-sm { min-height: 3.85rem; padding-inline: 1.7rem; font-size: 1.12rem; }
+}
+
+@media (max-width: 1023px) {
+  .home-header::before { height: 11rem; background: linear-gradient(to bottom, rgb(0 0 0 / .78), rgb(0 0 0 / .38) 58%, transparent); }
+  .home-nav-shell { height: 5.75rem; }
+  .home-logo-control { width: auto; height: auto; padding: 0; border: 0; background: transparent; box-shadow: none; }
+  .home-nav-shell .home-logo-control img { width: 4.5rem !important; height: 4.5rem !important; filter: drop-shadow(0 2px 12px rgb(0 0 0 / .3)); }
+}

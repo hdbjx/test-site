@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { moreNav, primaryNav } from "@/data/navigation";
+import { moreNav, primaryNav, serviceNav } from "@/data/navigation";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { supabaseConfigured } from "@/lib/supabase/config";
@@ -13,7 +13,9 @@ export function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
+  const servicesRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -21,22 +23,29 @@ export function Header() {
   useEffect(() => {
     setMenuOpen(false);
     setMoreOpen(false);
+    setServicesOpen(false);
   }, [pathname]);
 
-  // "More" dropdown: close on outside click / Escape
+  // Desktop dropdowns: close on outside click / Escape
   useEffect(() => {
-    if (!moreOpen) return;
+    if (!moreOpen && !servicesOpen) return;
     const onDown = (e: MouseEvent) => {
       if (!moreRef.current?.contains(e.target as Node)) setMoreOpen(false);
+      if (!servicesRef.current?.contains(e.target as Node)) setServicesOpen(false);
     };
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMoreOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMoreOpen(false);
+        setServicesOpen(false);
+      }
+    };
     document.addEventListener("mousedown", onDown);
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("mousedown", onDown);
       document.removeEventListener("keydown", onKey);
     };
-  }, [moreOpen]);
+  }, [moreOpen, servicesOpen]);
 
   // Mobile panel: lock scroll, Escape closes, keep focus inside
   useEffect(() => {
@@ -84,17 +93,36 @@ export function Header() {
       <div className={onHome ? "home-nav-shell flex items-center justify-between gap-6" : "container-ed flex h-[4.5rem] items-center justify-between gap-6"}>
         <Link href="/" className={onHome ? "home-logo-control flex shrink-0 items-center" : "flex shrink-0 items-center"} aria-label="Every Detail home">
           <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className={onHome ? "h-[4.15rem] w-[4.15rem] object-contain" : "h-12 w-12 object-contain"} priority />
-          {onHome && <span className="home-wordmark">Every Detail</span>}
         </Link>
 
         {/* Desktop */}
         <nav aria-label="Main" className={onHome ? "home-nav-links hidden items-center gap-1 lg:flex" : "hidden items-center gap-1 lg:flex"}>
-          {primaryNav.map((item) => (
+          <div ref={servicesRef} className="services-menu relative">
+            <button
+              type="button"
+              className={`rounded px-3 py-2 font-display text-[0.9375rem] font-semibold transition-colors ${onHome ? "text-white/90 hover:text-white" : "text-ink/80 hover:text-ink"}`}
+              aria-expanded={servicesOpen}
+              aria-haspopup="menu"
+              onClick={() => setServicesOpen((v) => !v)}
+            >
+              Services <span aria-hidden="true" className="ml-1 text-[.7em]">▾</span>
+            </button>
+            {servicesOpen && (
+              <div role="menu" className={`services-dropdown absolute left-1/2 top-[calc(100%+.75rem)] min-w-[14rem] -translate-x-1/2 overflow-hidden rounded-xl border p-2 shadow-2xl ${onHome ? "border-white/15 bg-[#111]/95 text-white" : "border-line bg-paper text-ink"}`}>
+                {serviceNav.map((item) => (
+                  <Link key={item.href} role="menuitem" href={item.href} className="block rounded-lg px-4 py-3 font-display text-[.98rem] font-semibold transition-colors hover:bg-white/10">
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+          {primaryNav.filter((item) => item.label !== "Services").map((item) => (
             <Link
               key={item.href}
               href={item.href}
               aria-current={isActive(item.href) ? "page" : undefined}
-              className={`rounded px-3 py-2 font-display text-[0.9375rem] font-semibold transition-colors aria-[current=page]:underline aria-[current=page]:decoration-red aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8 ${onHome ? "text-white/85 hover:text-white" : "text-ink/80 hover:text-ink aria-[current=page]:text-ink"}`}
+              className={`rounded px-3 py-2 font-display text-[0.9375rem] font-semibold transition-colors aria-[current=page]:underline aria-[current=page]:decoration-red aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8 ${onHome ? "text-white/90 hover:text-white" : "text-ink/80 hover:text-ink aria-[current=page]:text-ink"}`}
             >
               {item.label}
             </Link>
@@ -149,7 +177,7 @@ export function Header() {
           className="fixed inset-x-0 bottom-0 top-[4.5rem] z-40 overflow-y-auto bg-paper text-ink lg:hidden"
         >
           <nav aria-label="Mobile" className="container-ed flex flex-col py-6">
-            {[...primaryNav, ...moreNav, ...(supabaseConfigured ? [{ label: "Account", href: "/account", external: false }] : [])].map((item) => (
+            {[...serviceNav, ...primaryNav.filter((item) => item.label !== "Services"), ...moreNav, ...(supabaseConfigured ? [{ label: "Account", href: "/account", external: false }] : [])].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}

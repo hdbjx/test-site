@@ -4,10 +4,14 @@ export type NavItem = { label: string; href: string; external?: boolean };
 
 export const primaryNav: NavItem[] = [
   { label: "Services", href: "/our-services" },
+  { label: "Detail+", href: "/detailplus" },
+  { label: "About", href: "/about-us" },
+];
+
+export const serviceNav: NavItem[] = [
+  { label: "Detailing Services", href: "/our-services" },
   { label: "Paint Correction", href: "/ceramic#paint-correction" },
   { label: "Ceramic Coatings", href: "/ceramic#ceramic-coating" },
-  { label: "Membership", href: "/detailplus" },
-  { label: "About", href: "/about-us" },
 ];
 
 export const moreNav: NavItem[] = [
