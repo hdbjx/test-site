@@ -1128,3 +1128,141 @@
   .hero-title { font-size: clamp(6.8rem, 7.7vw, 8.5rem); }
   .hero-lede { font-size: 1.35rem; }
 }
+
+/* =========================================================
+   V11.1 — left-weighted responsive hero precision pass
+   ========================================================= */
+
+/* Large desktop: intentionally asymmetric. The copy is art-directed
+   from the viewport edge rather than centered inside the site container. */
+@media (min-width: 1600px) {
+  .home-nav-shell {
+    height: 10rem;
+  }
+  .home-nav-shell .home-logo-control img {
+    width: 8.15rem !important;
+    height: 8.15rem !important;
+  }
+  .home-nav-shell .home-nav-links a,
+  .home-nav-shell .home-nav-links button,
+  .home-nav-actions > a:not(.btn) {
+    font-size: 1.65rem !important;
+  }
+  .home-nav-actions .btn-sm {
+    min-height: 5.15rem;
+    padding: 1.25rem 2.25rem;
+    font-size: 1.5rem;
+  }
+
+  .hero-inner.container-ed {
+    max-width: none;
+    width: 100%;
+    padding-left: 4.5vw;
+    padding-right: 4.5vw;
+    padding-top: 10rem;
+  }
+  .hero-copy {
+    width: min(70rem, 68vw);
+  }
+  .hero-title {
+    max-width: 70rem;
+    font-size: 10.2rem;
+    line-height: .87;
+  }
+  .hero-lede {
+    max-width: 58rem;
+    font-size: 2.05rem;
+    line-height: 1.38;
+    margin-top: 2.15rem;
+  }
+  .hero-copy .mt-7 {
+    margin-top: 2.35rem;
+    gap: 1.25rem;
+  }
+  .hero-copy .btn {
+    min-height: 5.1rem;
+    padding: 1.2rem 2rem;
+    font-size: 1.5rem;
+  }
+  .proof-row {
+    font-size: 1.08rem;
+  }
+  .proof-row > div {
+    min-height: 6.4rem;
+    grid-template-columns: 1.3fr 1fr 1fr .8fr;
+  }
+  .proof-row span {
+    white-space: nowrap;
+  }
+}
+
+/* Desktop/laptop: preserve the same left-heavy composition while
+   reducing scale enough to protect the Volvo and CTA area. */
+@media (min-width: 1024px) and (max-width: 1599px) {
+  .home-nav-shell {
+    height: 8.65rem;
+  }
+  .home-nav-shell .home-logo-control img {
+    width: 6.95rem !important;
+    height: 6.95rem !important;
+  }
+  .home-nav-shell .home-nav-links a,
+  .home-nav-shell .home-nav-links button,
+  .home-nav-actions > a:not(.btn) {
+    font-size: 1.4rem !important;
+  }
+  .home-nav-actions .btn-sm {
+    min-height: 4.55rem;
+    font-size: 1.3rem;
+  }
+
+  .hero-inner.container-ed {
+    max-width: none;
+    width: 100%;
+    padding-left: 5.5vw;
+    padding-right: 5.5vw;
+  }
+  .hero-copy {
+    width: min(61rem, 72vw);
+  }
+  .hero-title {
+    font-size: clamp(6.3rem, 6.65vw, 7.25rem);
+    line-height: .88;
+  }
+  .hero-lede {
+    max-width: 48rem;
+    font-size: 1.68rem;
+    line-height: 1.4;
+  }
+  .hero-copy .btn {
+    min-height: 4.35rem;
+    padding: 1rem 1.65rem;
+    font-size: 1.25rem;
+  }
+  .proof-row span {
+    white-space: nowrap;
+  }
+}
+
+/* Tablet: deliberately move farther from the edge as the image crop tightens. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-inner.container-ed {
+    max-width: none;
+    width: 100%;
+    padding-left: 7vw;
+    padding-right: 7vw;
+  }
+  .hero-copy {
+    width: min(44rem, 78vw);
+  }
+}
+
+/* Mobile gets a fixed safe inset rather than inheriting desktop container math. */
+@media (max-width: 767px) {
+  .hero-inner.container-ed {
+    max-width: none;
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
