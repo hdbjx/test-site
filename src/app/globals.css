@@ -2057,3 +2057,28 @@
 .edu-booking{padding:clamp(6rem,8vw,9rem) 0;background:#e8ddcf;border-block:3px solid #111}.edu-booking-head{display:grid;grid-template-columns:1.15fr .55fr;gap:clamp(4rem,10vw,12rem);align-items:end;margin-bottom:3.5rem}.edu-booking-head>p{font-size:1.05rem;line-height:1.6;border-top:3px solid #111;padding-top:1.2rem}
 @media(max-width:900px){.edu-hero-grid,.edu-section-intro,.edu-level-intro-grid,.edu-booking-head{grid-template-columns:1fr}.edu-area-grid{grid-template-columns:1fr}.edu-area-grid article{min-height:16rem}.edu-level-intro-grid>div:last-child{border-left:0;border-top:3px solid var(--color-red);padding:1.5rem 0 0}.edu-service header{grid-template-columns:4rem 1fr}.edu-service-body{grid-template-columns:1fr}.edu-service-body>div{border-right:0;border-bottom:2px solid #111}.edu-service-body>div:last-child{border-bottom:0}.edu-mobile-strip{flex-wrap:wrap}.edu-mobile-strip strong{width:100%;margin-right:0}}
 @media(max-width:600px){.edu-hero{padding-top:8rem}.edu-hero h1{font-size:clamp(3.8rem,16vw,5.4rem)}.edu-section-intro h2,.edu-level-intro h2,.edu-booking h2,.edu-service header h2{font-size:clamp(3rem,13vw,4.4rem)}.edu-service header{grid-template-columns:1fr;gap:1rem}.edu-service-no{font-size:3.2rem}.edu-mobile-strip span{font-size:.68rem}.edu-area-grid article{padding:1.5rem}.edu-value-statement{box-shadow:6px 6px 0 var(--color-red)}}
+
+/* V16.2: service education cards, easier reading hierarchy */
+.edu-service{max-width:1180px;margin-left:auto;margin-right:auto}
+.edu-service header{grid-template-columns:5.5rem 1fr;gap:1.5rem;padding:clamp(1.8rem,2.6vw,2.8rem)}
+.edu-service header h2{font-size:clamp(2.8rem,4.3vw,4.8rem);max-width:850px}
+.edu-service-no{font-size:clamp(3.2rem,4.4vw,5rem)}
+.edu-service-body{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);grid-template-areas:"explain includes" "explain guidance"}
+.edu-service-body>div{padding:clamp(1.7rem,2.4vw,2.6rem);border-right:0}
+.edu-service-explain{grid-area:explain;border-right:2px solid #111!important}
+.edu-service-includes{grid-area:includes;border-bottom:2px solid #111}
+.edu-service-limit{grid-area:guidance;display:grid;grid-template-columns:1fr auto;column-gap:2rem;align-items:start;background:rgb(219 199 179/.24)}
+.edu-service-limit>.edu-mini-label,.edu-service-limit>p{grid-column:1}
+.edu-service-meta{grid-column:2;grid-row:1 / span 2;margin-top:0!important;padding:0 0 0 2rem!important;border-left:2px solid #111;min-width:150px;align-self:stretch}
+.edu-service-meta span{border-top:0!important;padding-top:0!important;max-width:145px;line-height:1.35}
+.edu-service-meta strong{font-size:2.35rem!important;white-space:nowrap}
+.edu-service-intro{font-size:clamp(1.35rem,1.55vw,1.65rem);max-width:34ch}
+.edu-service-explain>p:not(.edu-service-intro){max-width:58ch;font-size:1rem}
+.edu-best{background:#f0e4d7;border:2px solid #111!important;padding:1.15rem 1.25rem!important;margin-top:1.7rem!important;box-shadow:4px 4px 0 var(--color-red)}
+.edu-best span{margin-bottom:.45rem}
+.edu-best p{margin:0;line-height:1.5}
+.edu-service-includes ul{gap:.55rem}
+.edu-service-includes li{padding:.25rem 0 .7rem;font-size:1rem}
+.edu-service-limit>p{max-width:45ch;line-height:1.55}
+@media(max-width:900px){.edu-service-body{grid-template-columns:1fr;grid-template-areas:"explain" "includes" "guidance"}.edu-service-explain{border-right:0!important;border-bottom:2px solid #111}.edu-service-limit{grid-template-columns:1fr}.edu-service-limit>.edu-mini-label,.edu-service-limit>p,.edu-service-meta{grid-column:1}.edu-service-meta{grid-row:auto;border-left:0;border-top:2px solid #111;margin-top:1.25rem!important;padding:1.25rem 0 0!important;display:flex;justify-content:space-between;align-items:end;gap:1rem}.edu-service-meta span{max-width:220px}.edu-service-meta strong{margin-top:0!important}}
+@media(max-width:600px){.edu-service{box-shadow:6px 6px 0 #dbc7b3}.edu-service.premium{box-shadow:6px 6px 0 var(--color-red)}.edu-service.reset{box-shadow:6px 6px 0 #111}.edu-service header{padding:1.5rem}.edu-service-body>div{padding:1.5rem}.edu-service-meta{display:block}.edu-service-meta strong{margin-top:.5rem!important}}
