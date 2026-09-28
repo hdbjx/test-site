@@ -101,12 +101,46 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-next">
-        <div className="container-ed">
-          <div className="home-section-head home-section-head-tight"><div><p className="eyebrow">Beyond the detail</p><h2 className="home-display">Keep the finish.<br />Or make it better.</h2></div></div>
-          <div className="next-grid">
-            <Link href="/ceramic" className="next-card next-card-dark"><div className="next-card-top"><span>Paint correction + ceramic</span><span>↗</span></div><div><p className="next-kicker">For paint that needs more.</p><h3>Restore the gloss.<br />Protect the result.</h3><p>Machine polishing for swirls and haze, followed by professional ceramic protection.</p></div></Link>
-            <Link href="/detailplus" className="next-card next-card-red"><div className="next-card-top"><span>Detail+</span><span>↗</span></div><div><p className="next-kicker">For cars that should stay clean.</p><h3>One schedule.<br />Never start over.</h3><p>Recurring mobile detailing at a predictable rate, built around how often you actually need us.</p></div></Link>
+      <section className="home-next home-next-v158">
+        <div className="container-ed next-v158-wrap">
+          <div className="next-v158-heading">
+            <p className="eyebrow">More than a detail</p>
+            <h2 className="home-display">Take it <span>further.</span></h2>
+            <p>Two ways to go beyond a one-time detail: improve and protect the paint, or put keeping the whole car clean on repeat.</p>
+          </div>
+
+          <div className="upgrade-board upgrade-board-paint">
+            <div className="upgrade-index">01 / PAINT</div>
+            <div className="upgrade-main">
+              <p className="upgrade-label">Paint correction + ceramic coating</p>
+              <h3>Make the paint<br />look better.<br /><span>Keep it that way.</span></h3>
+            </div>
+            <div className="upgrade-side">
+              <p>Machine polishing removes or reduces swirls and haze to bring back gloss. Ceramic coating adds durable protection and makes maintenance easier.</p>
+              <div className="upgrade-chips"><span>SWIRL + HAZE CORRECTION</span><span>GLOSS RESTORATION</span><span>LONG-TERM PROTECTION</span></div>
+              <div className="upgrade-actions">
+                <Link href="/ceramic" className="tactile-link">Explore paint + ceramic <b>↗</b></Link>
+              </div>
+            </div>
+            <div className="upgrade-stamp">PAINT<br />CARE</div>
+          </div>
+
+          <div className="upgrade-board upgrade-board-plus">
+            <div className="upgrade-index">02 / RECURRING CARE</div>
+            <div className="upgrade-main">
+              <p className="upgrade-label">Detail+</p>
+              <h3>Your car stays clean.<br /><span>Automatically.</span></h3>
+            </div>
+            <div className="upgrade-side">
+              <p>Choose how often we come back. Same driveway, same standard, and a car that never has to get far behind again.</p>
+              <div className="plus-steps">
+                <div><b>01</b><span>Book once</span></div>
+                <div><b>02</b><span>We come back</span></div>
+                <div><b>03</b><span>Stay clean</span></div>
+              </div>
+              <div className="upgrade-actions"><Link href="/detailplus" className="tactile-link tactile-link-light">See Detail+ <b>↗</b></Link></div>
+            </div>
+            <div className="upgrade-stamp upgrade-stamp-light">REPEAT<br />CARE</div>
           </div>
         </div>
       </section>
