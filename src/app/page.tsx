@@ -55,26 +55,34 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-work home-work-v155" aria-labelledby="work-heading">
-        <div className="work-v155-shell">
-          <div className="work-v155-head">
-            <p className="eyebrow">Real cars. Real driveways.</p>
+      <section className="home-work home-work-v157" aria-labelledby="work-heading">
+        <div className="work-v157-shell">
+          <div className="work-v157-head">
+            <p className="eyebrow">Real cars. Real driveways. Real crew.</p>
             <h2 id="work-heading" className="home-display">The work speaks <span>for itself.</span></h2>
           </div>
 
-          <figure className="work-v155-main">
-            <Photo id="work-07" sizes="(min-width: 1500px) 1480px, 92vw" ratio="21/9" />
-            <figcaption><span>01 / ON THE JOB</span><strong>Two-tech detail · Decatur, GA</strong></figcaption>
+          <figure className="work-v157-lead">
+            <Photo id="work-mateo-0670" sizes="(min-width: 1500px) 1480px, 94vw" ratio="21/9" />
+            <figcaption><span>01 / ON THE JOB</span><strong>Mateo · Foam wash</strong></figcaption>
           </figure>
 
-          <div className="work-v155-grid">
+          <div className="work-v157-grid">
             <figure>
-              <Photo id="work-06" sizes="(min-width: 900px) 45vw, 92vw" ratio="4/3" />
-              <figcaption><span>02 / EXTERIOR</span><strong>Hand wash · Every panel by hand</strong></figcaption>
+              <Photo id="work-rex-0467" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
+              <figcaption><span>02 / EXTERIOR</span><strong>Rex · Foam wash</strong></figcaption>
             </figure>
             <figure>
-              <Photo id="work-03" sizes="(min-width: 900px) 45vw, 92vw" ratio="4/3" />
-              <figcaption><span>03 / INTERIOR</span><strong>Interior detail · Where the difference shows</strong></figcaption>
+              <Photo id="work-davis-0909" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
+              <figcaption><span>03 / THE DETAILS</span><strong>Davis · Floor mat detail</strong></figcaption>
+            </figure>
+            <figure>
+              <Photo id="work-will-0920" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
+              <figcaption><span>04 / THE RIG</span><strong>Will · Running the job</strong></figcaption>
+            </figure>
+            <figure>
+              <Photo id="work-finished-0771" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
+              <figcaption><span>05 / FINISHED</span><strong>The result</strong></figcaption>
             </figure>
           </div>
         </div>

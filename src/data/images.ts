@@ -131,6 +131,37 @@ export const images: SiteImage[] = [
     category: "interior",
   },
 
+  {
+    id: "work-mateo-0670",
+    file: "/images/work-mateo-0670.jpg",
+    alt: "Every Detail technician Mateo foam washing a vehicle",
+    w: 3, h: 2, category: "work",
+  },
+  {
+    id: "work-rex-0467",
+    file: "/images/work-rex-0467.jpg",
+    alt: "Every Detail technician Rex foam washing a vehicle",
+    w: 2, h: 3, category: "work",
+  },
+  {
+    id: "work-davis-0909",
+    file: "/images/work-davis-0909.jpg",
+    alt: "Every Detail technician Davis detailing a floor mat",
+    w: 2, h: 3, category: "work",
+  },
+  {
+    id: "work-will-0920",
+    file: "/images/work-will-0920.jpg",
+    alt: "Every Detail technician Will using the job iPad inside the mobile detailing van",
+    w: 2, h: 3, category: "team",
+  },
+  {
+    id: "work-finished-0771",
+    file: "/images/work-finished-0771.jpg",
+    alt: "Finished vehicle after an Every Detail mobile detailing service",
+    w: 2, h: 3, category: "exterior",
+  },
+
   // ------------------------------------------------------------
   // TEAM + ABOUT
   // ------------------------------------------------------------
