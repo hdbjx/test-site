@@ -1630,3 +1630,37 @@
 }
 .account-link:hover::after,
 .account-link[aria-current="page"]::after { transform: scaleX(1); }
+
+
+/* V11.5: button motion correction. The face moves; the hard shadow does not collapse toward it. */
+.btn,
+.hero-copy .btn,
+.home-nav-actions .btn-sm,
+.inner-nav-actions .btn-sm {
+  box-shadow: 4px 4px 0 var(--color-ink) !important;
+  transform: translate3d(0,0,0) !important;
+}
+.home-nav-actions .btn-sm,
+.inner-nav-actions .btn-sm { box-shadow: 3px 3px 0 var(--color-ink) !important; }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover,
+  .hero-copy .btn:hover {
+    transform: translate3d(2px,2px,0) !important;
+    box-shadow: 4px 4px 0 var(--color-ink) !important;
+  }
+  .home-nav-actions .btn-sm:hover,
+  .inner-nav-actions .btn-sm:hover {
+    transform: translate3d(1.5px,1.5px,0) !important;
+    box-shadow: 3px 3px 0 var(--color-ink) !important;
+  }
+}
+.btn:active,
+.hero-copy .btn:active {
+  transform: translate3d(3px,3px,0) !important;
+  box-shadow: 4px 4px 0 var(--color-ink) !important;
+}
+.home-nav-actions .btn-sm:active,
+.inner-nav-actions .btn-sm:active {
+  transform: translate3d(2.5px,2.5px,0) !important;
+  box-shadow: 3px 3px 0 var(--color-ink) !important;
+}

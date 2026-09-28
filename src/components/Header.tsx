@@ -139,7 +139,7 @@ export function Header() {
         <div className={onHome ? "home-nav-actions flex items-center gap-3" : "inner-nav-actions flex items-center gap-3"}>
           {supabaseConfigured && (
             <Link
-              href="/account"
+              href="/account/sign-in"
               aria-current={isActive("/account") ? "page" : undefined}
               className={`account-link hidden px-3 py-2 font-display text-[0.9375rem] font-semibold lg:block ${onHome ? "text-white/85 hover:text-white" : "text-ink/80 hover:text-ink"}`}
             >
@@ -184,7 +184,7 @@ export function Header() {
           className="fixed inset-x-0 bottom-0 top-[4.5rem] z-40 overflow-y-auto bg-paper text-ink lg:hidden"
         >
           <nav aria-label="Mobile" className="container-ed flex flex-col py-6">
-            {[...serviceNav, ...primaryNav.filter((item) => item.label !== "Services"), ...moreNav, ...(supabaseConfigured ? [{ label: "Account", href: "/account", external: false }] : [])].map((item) => (
+            {[...serviceNav, ...primaryNav.filter((item) => item.label !== "Services"), ...moreNav, ...(supabaseConfigured ? [{ label: "Account", href: "/account/sign-in", external: false }] : [])].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
