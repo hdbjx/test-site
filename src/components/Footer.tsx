@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { areas } from "@/data/areas";
 import { footerServiceLinks, moreNav, primaryNav } from "@/data/navigation";
@@ -12,7 +13,13 @@ export function Footer() {
     <footer className="bg-oxblood text-paper">
       <div className="container-ed grid gap-12 py-16 md:grid-cols-12 md:py-20">
         <div className="md:col-span-4">
-<Link href="/" className="font-display text-3xl font-semibold tracking-[-0.055em] text-paper">EVERY DETAIL</Link>
+          <Image
+            src="/brand/every-detail-logo.png"
+            alt="Every Detail"
+            width={1000}
+            height={1000}
+            className="h-28 w-28 object-contain"
+          />
           <p className="mt-6 max-w-xs text-paper/80">
             Mobile car detailing in Decatur and nearby Atlanta neighborhoods. {site.tagline}
           </p>

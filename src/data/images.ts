@@ -312,3 +312,22 @@ export const imageById = (id: string): SiteImage => {
  */
 export const imagesIn = (...categories: ImageCategory[]): SiteImage[] =>
   images.filter((image) => categories.includes(image.category));
+
+/**
+ * Every Detail brand assets.
+ *
+ * These files live in /public/brand.
+ */
+export const logo = {
+  mark: {
+    file: "/brand/every-detail-mark.png",
+    w: 520,
+    h: 424,
+  },
+
+  full: {
+    file: "/brand/every-detail-logo.png",
+    w: 420,
+    h: 500,
+  },
+};

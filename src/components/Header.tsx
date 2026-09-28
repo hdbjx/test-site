@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -81,7 +83,7 @@ export function Header() {
       </a>
       <div className="container-ed flex h-[4.5rem] items-center justify-between gap-6">
         <Link href="/" className="flex shrink-0 items-center" aria-label="Every Detail home">
-          <span className="font-display text-xl font-semibold tracking-[-0.03em] text-ink">EVERY DETAIL</span>
+          <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className="h-12 w-12 object-contain" priority />
         </Link>
 
         {/* Desktop */}

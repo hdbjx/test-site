@@ -9,33 +9,41 @@ type Props = {
   ratio?: string;
   fill?: boolean;
   alt?: string;
-  objectPosition?: string;
 };
 
-export function Photo({ id, sizes, priority, className = "", ratio, fill, alt, objectPosition = "center" }: Props) {
+/** Shared responsive photo component. Non-fill images receive real dimensions so Next can render them reliably. */
+export function Photo({ id, sizes, priority, className = "", ratio, fill = false, alt }: Props) {
   const img = imageById(id);
-  const common = {
-    src: img.file,
-    alt: alt ?? img.alt,
-    sizes,
-    priority,
-    className: "object-cover transition-transform duration-700",
-    style: { objectPosition },
-  } as const;
 
   if (fill) {
     return (
       <div className={`absolute inset-0 overflow-hidden ${className}`}>
-        <Image {...common} fill />
+        <Image
+          src={img.file}
+          alt={alt ?? img.alt}
+          fill
+          sizes={sizes}
+          priority={priority}
+          className="object-cover"
+        />
       </div>
     );
   }
 
-  const width = img.w * 800;
-  const height = img.h * 800;
   return (
-    <div className={`relative overflow-hidden bg-paper2 ${className}`} style={{ aspectRatio: ratio ?? `${img.w}/${img.h}` }}>
-      <Image {...common} width={width} height={height} className={`${common.className} h-full w-full`} />
+    <div
+      className={`relative overflow-hidden bg-paper2 ${className}`}
+      style={{ aspectRatio: ratio ?? `${img.w}/${img.h}` }}
+    >
+      <Image
+        src={img.file}
+        alt={alt ?? img.alt}
+        width={img.w * 800}
+        height={img.h * 800}
+        sizes={sizes}
+        priority={priority}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
     </div>
   );
 }
