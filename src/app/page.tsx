@@ -55,32 +55,26 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-work home-work-v154" aria-labelledby="work-heading">
-        <div className="container-ed">
-          <div className="work-v154-head">
-            <div>
-              <p className="eyebrow">Real cars. Real driveways.</p>
-              <h2 id="work-heading" className="home-display">The work speaks<br /><span>for itself.</span></h2>
-            </div>
-            <div className="work-v154-note">
-              <span>NO STOCK PHOTOS</span>
-              <p>Everything here was detailed by our team around Decatur and Atlanta.</p>
-            </div>
+      <section className="home-work home-work-v155" aria-labelledby="work-heading">
+        <div className="work-v155-shell">
+          <div className="work-v155-head">
+            <p className="eyebrow">Real cars. Real driveways.</p>
+            <h2 id="work-heading" className="home-display">The work speaks <span>for itself.</span></h2>
           </div>
 
-          <div className="work-v154-main">
-            <Photo id="work-02" sizes="(min-width: 1216px) 1280px, 100vw" ratio="16/8" />
-            <div className="work-v154-caption"><span>01 / IN THE DRIVEWAY</span><strong>Foam wash · Decatur, GA</strong></div>
-          </div>
+          <figure className="work-v155-main">
+            <Photo id="work-07" sizes="(min-width: 1500px) 1480px, 92vw" ratio="21/9" />
+            <figcaption><span>01 / ON THE JOB</span><strong>Two-tech detail · Decatur, GA</strong></figcaption>
+          </figure>
 
-          <div className="work-v154-pair">
-            <figure className="work-v154-tall">
-              <Photo id="work-01" sizes="(min-width: 900px) 42vw, 92vw" ratio="4/5" />
-              <figcaption><span>02 / FINISHED</span><strong>Black truck · Exterior detail</strong></figcaption>
+          <div className="work-v155-grid">
+            <figure>
+              <Photo id="work-06" sizes="(min-width: 900px) 45vw, 92vw" ratio="4/3" />
+              <figcaption><span>02 / EXTERIOR</span><strong>Hand wash · Every panel by hand</strong></figcaption>
             </figure>
-            <figure className="work-v154-wide">
-              <Photo id="work-08" sizes="(min-width: 900px) 48vw, 92vw" ratio="4/3" />
-              <figcaption><span>03 / INSIDE COUNTS</span><strong>Interior reset · Finished clean</strong></figcaption>
+            <figure>
+              <Photo id="work-03" sizes="(min-width: 900px) 45vw, 92vw" ratio="4/3" />
+              <figcaption><span>03 / INTERIOR</span><strong>Interior detail · Where the difference shows</strong></figcaption>
             </figure>
           </div>
         </div>
