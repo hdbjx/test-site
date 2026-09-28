@@ -79,6 +79,10 @@ export function RouteTransition() {
       const url = new URL(anchor.href, window.location.href);
       if (url.origin !== window.location.origin) return;
 
+      // Auth/account routes rely on server redirects and cookie refreshes. Let the
+      // browser/Next handle them directly instead of delaying them behind the wipe.
+      if (url.pathname.startsWith("/account") || url.pathname.startsWith("/auth")) return;
+
       // Same-page query/hash changes do not need a full-screen branded wipe.
       if (url.pathname === window.location.pathname) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
