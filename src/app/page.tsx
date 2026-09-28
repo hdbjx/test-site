@@ -31,7 +31,7 @@ export default function Home() {
             <p className="hero-kicker">Mobile detailing · Decatur + Atlanta</p>
             <h1 className="hero-title"><span>Your car.</span><span>Back to its best.</span></h1>
             <p className="hero-lede">
-              Professional mobile detailing, brought to your driveway by Decatur&rsquo;s student-run detailing team. We bring the power and water.
+              Premium mobile detailing, brought to your driveway.<br />Power and water included.
             </p>
             <div className="mt-7 flex flex-wrap gap-4">
               <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-primary">
