@@ -3,36 +3,39 @@ import { imageById } from "@/data/images";
 
 type Props = {
   id: string;
-  sizes: string; // required so every image ships responsive srcsets
+  sizes: string;
   priority?: boolean;
-  className?: string; // wrapper classes (radius, etc.)
-  /** Override the stored aspect ratio, e.g. "4/5" for a crop. */
+  className?: string;
   ratio?: string;
-  /** Fill the parent instead of reserving an aspect-ratio box. Parent must be positioned with a size. */
   fill?: boolean;
   alt?: string;
+  objectPosition?: string;
 };
 
-/** Every photo on the site goes through here: reserved space (no layout shift), lazy by default, responsive sizes. */
-export function Photo({ id, sizes, priority, className = "", ratio, fill, alt }: Props) {
+export function Photo({ id, sizes, priority, className = "", ratio, fill, alt, objectPosition = "center" }: Props) {
   const img = imageById(id);
-  const image = (
-    <Image
-      src={img.file}
-      alt={alt ?? img.alt}
-      fill
-      sizes={sizes}
-      priority={priority}
-      className="object-cover"
-    />
-  );
-  if (fill) return <div className={`absolute inset-0 overflow-hidden ${className}`}>{image}</div>;
+  const common = {
+    src: img.file,
+    alt: alt ?? img.alt,
+    sizes,
+    priority,
+    className: "object-cover transition-transform duration-700",
+    style: { objectPosition },
+  } as const;
+
+  if (fill) {
+    return (
+      <div className={`absolute inset-0 overflow-hidden ${className}`}>
+        <Image {...common} fill />
+      </div>
+    );
+  }
+
+  const width = img.w * 800;
+  const height = img.h * 800;
   return (
-    <div
-      className={`relative overflow-hidden bg-paper2 ${className}`}
-      style={{ aspectRatio: ratio ?? `${img.w}/${img.h}` }}
-    >
-      {image}
+    <div className={`relative overflow-hidden bg-paper2 ${className}`} style={{ aspectRatio: ratio ?? `${img.w}/${img.h}` }}>
+      <Image {...common} width={width} height={height} className={`${common.className} h-full w-full`} />
     </div>
   );
 }

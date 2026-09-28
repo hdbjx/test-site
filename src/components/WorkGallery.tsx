@@ -1,31 +1,29 @@
 import { Photo } from "./Photo";
 
-/** Editorial gallery with natural-feeling landscape and portrait groupings. */
+/** A deliberately uneven editorial sequence instead of a thumbnail grid. */
 export function WorkGallery({ ids }: { ids: string[] }) {
   if (!ids.length) return null;
-  const [lead, second, third, fourth, fifth, sixth, ...rest] = ids;
-
+  const [a, b, c, d, e, f, g, h] = ids;
   return (
-    <div className="space-y-3 md:space-y-4">
-      <div className="grid gap-3 md:grid-cols-12 md:gap-4">
-        <Photo id={lead} ratio="3/2" sizes="(min-width: 768px) 58vw, 100vw" className="md:col-span-7 rounded-[var(--radius-photo)]" />
-        {second && <Photo id={second} ratio="4/3" sizes="(min-width: 768px) 42vw, 100vw" className="md:col-span-5 rounded-[var(--radius-photo)]" />}
+    <div className="work-editorial">
+      <div className="work-editorial__lead">
+        {a && <Photo id={a} ratio="4/5" sizes="(min-width: 900px) 42vw, 100vw" />}
       </div>
-
-      {(third || fourth || fifth) && (
-        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-12 md:gap-4">
-          {third && <Photo id={third} ratio="4/3" sizes="(min-width: 768px) 34vw, 50vw" className="md:col-span-4 rounded-[var(--radius-photo)]" />}
-          {fourth && <Photo id={fourth} ratio="4/3" sizes="(min-width: 768px) 34vw, 50vw" className="md:col-span-4 rounded-[var(--radius-photo)]" />}
-          {fifth && <Photo id={fifth} ratio="4/3" sizes="(min-width: 768px) 34vw, 100vw" className="sm:col-span-2 md:col-span-4 rounded-[var(--radius-photo)]" />}
+      <div className="work-editorial__side">
+        {b && <Photo id={b} ratio="3/2" sizes="(min-width: 900px) 52vw, 100vw" />}
+        <div className="work-editorial__pair">
+          {c && <Photo id={c} ratio="4/5" sizes="(min-width: 900px) 25vw, 50vw" />}
+          {d && <Photo id={d} ratio="4/5" sizes="(min-width: 900px) 25vw, 50vw" />}
         </div>
-      )}
-
-      {(sixth || rest.length > 0) && (
-        <div className="grid gap-3 md:grid-cols-2 md:gap-4">
-          {sixth && <Photo id={sixth} ratio="3/2" sizes="(min-width: 768px) 50vw, 100vw" className="rounded-[var(--radius-photo)]" />}
-          {rest.map((id) => <Photo key={id} id={id} ratio="3/2" sizes="(min-width: 768px) 50vw, 100vw" className="rounded-[var(--radius-photo)]" />)}
-        </div>
-      )}
+      </div>
+      {(e || f) && <div className="work-editorial__wide">
+        {e && <Photo id={e} ratio="16/9" sizes="(min-width: 900px) 62vw, 100vw" />}
+        {f && <Photo id={f} ratio="4/5" sizes="(min-width: 900px) 32vw, 100vw" />}
+      </div>}
+      {(g || h) && <div className="work-editorial__tail">
+        {g && <Photo id={g} ratio="3/2" sizes="(min-width: 900px) 48vw, 100vw" />}
+        {h && <Photo id={h} ratio="3/2" sizes="(min-width: 900px) 48vw, 100vw" />}
+      </div>}
     </div>
   );
 }

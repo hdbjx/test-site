@@ -1,7 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
 import { areas } from "@/data/areas";
-import { logo } from "@/data/images";
 import { footerServiceLinks, moreNav, primaryNav } from "@/data/navigation";
 import { reviewCountLabel, site } from "@/data/site";
 import { TrackedLink } from "./TrackedLink";
@@ -14,13 +12,7 @@ export function Footer() {
     <footer className="bg-oxblood text-paper">
       <div className="container-ed grid gap-12 py-16 md:grid-cols-12 md:py-20">
         <div className="md:col-span-4">
-          <Image
-            src={logo.full.file}
-            alt="Every Detail"
-            width={logo.full.w}
-            height={logo.full.h}
-            className="h-24 w-auto brightness-0 invert"
-          />
+<Link href="/" className="font-display text-3xl font-semibold tracking-[-0.055em] text-paper">EVERY DETAIL</Link>
           <p className="mt-6 max-w-xs text-paper/80">
             Mobile car detailing in Decatur and nearby Atlanta neighborhoods. {site.tagline}
           </p>

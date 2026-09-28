@@ -5,9 +5,7 @@ import { FaqList } from "@/components/FaqList";
 import { Photo } from "@/components/Photo";
 import { ReviewGrid } from "@/components/ReviewGrid";
 import { ServicePicker } from "@/components/ServicePicker";
-import { Stars } from "@/components/Stars";
 import { TrackedLink } from "@/components/TrackedLink";
-import { TrustStrip } from "@/components/TrustStrip";
 import { WorkGallery } from "@/components/WorkGallery";
 import { coverages, detailPlusGuarantee, frequencies } from "@/data/detailplus";
 import { homeFaqs } from "@/data/faqs";
@@ -33,64 +31,49 @@ const listJoin = (xs: string[]) => {
 export default function Home() {
   return (
     <>
-      {/* 1. HERO — type first, then the photograph, full width */}
-      <section className="container-ed pt-8 md:pt-12">
-        <h1>
-          <span className="rise block font-display text-base font-semibold text-oxblood md:text-lg">
-            Mobile car detailing in Decatur and Atlanta
-          </span>
-          <span className="t-display rise rise-2 mt-3 block">Mobile detailing, done right.</span>
-        </h1>
-        <div className="rise rise-3 mt-6 grid gap-6 md:mt-8 md:grid-cols-12 md:items-end">
-          <div className="md:col-span-7">
-            <p className="t-lede text-ink/80">
-              A trained student crew brings professional detailing to your driveway, with our own power and water. Pick
-              your vehicle, see the price, book.
-            </p>
-            <div className="mt-7 flex flex-col gap-4 sm:flex-row">
-              <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-primary">
-                Book your detail
-              </TrackedLink>
-              <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "hero" }} className="btn btn-secondary">
-                Get a quote
-              </TrackedLink>
+      {/* HERO */}
+      <section className="container-ed pt-10 md:pt-16">
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-9">
+            <p className="section-label rise">Decatur, Georgia · Mobile auto detailing</p>
+            <h1 className="display-refined rise rise-2 mt-5">Your car, <em>reset.</em><br />Right in your driveway.</h1>
+          </div>
+          <div className="rise rise-3 lg:col-span-3 lg:pb-2">
+            <p className="text-lg leading-relaxed text-ink/75">Professional detailing brought to you with our own power, water, equipment and trained crew.</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-primary">Book a detail</TrackedLink>
+              <Link href="#pricing" className="btn btn-secondary">See pricing</Link>
             </div>
           </div>
-          <a
-            href={site.reviews.googleUrl}
-            target="_blank"
-            rel="noopener"
-            className="group md:col-span-4 md:col-start-9 md:text-right"
-          >
-            <Stars className="h-5 w-5" />
-            <span className="mt-1 block font-numeral text-4xl leading-none tracking-wide">{reviewCountLabel} five-star reviews</span>
-            <span className="text-[0.9375rem] text-muted group-hover:underline">on Google, and {site.award.title}</span>
+        </div>
+
+        <div className="hero-frame rise rise-4 mt-10 md:mt-14">
+          <Photo id="hero" priority fill sizes="(min-width: 1216px) 1152px, 100vw" objectPosition="center 52%" />
+          <span className="hero-caption">Every Detail · Decatur, GA</span>
+        </div>
+
+        <div className="metric-strip mt-8">
+          <a href={site.reviews.googleUrl} target="_blank" rel="noopener" className="group">
+            <div className="metric-value">{reviewCountLabel} five-star reviews</div>
+            <div className="metric-label group-hover:underline">Verified on Google</div>
           </a>
+          <div>
+            <div className="metric-value">We bring everything</div>
+            <div className="metric-label">Power, water and professional equipment</div>
+          </div>
+          <div>
+            <div className="metric-value">{site.award.title}</div>
+            <div className="metric-label">Local, student-run and Decatur-built</div>
+          </div>
         </div>
       </section>
-      <div className="container-ed mt-10 md:mt-12">
-        <Photo
-          id="hero"
-          priority
-          ratio="16/9"
-          sizes="(min-width: 1216px) 1152px, 100vw"
-          className="rounded-[10px] border-2 border-ink"
-        />
-      </div>
-
-      {/* 2. TRUST */}
-      <div className="mt-12 md:mt-16">
-        <TrustStrip />
-      </div>
 
       {/* 3–4. VEHICLE SELECTOR + SERVICES */}
-      <section id="pricing" className="container-ed py-16 md:py-24">
+      <section id="pricing" className="container-ed section-shell">
         <div className="grid gap-4 md:grid-cols-12 md:items-end">
-          <h2 id="vehicle-heading" className="t-h2 md:col-span-7">
-            What type of vehicle do you have?
-          </h2>
+          <div className="md:col-span-7"><p className="section-label">Straightforward pricing</p><h2 id="vehicle-heading" className="t-h2 mt-4">Start with your vehicle.</h2></div>
           <p className="text-lg text-ink/80 md:col-span-5">
-            Tap yours and the prices below update. First time with us? Book Premium.
+            Choose your vehicle and pricing updates instantly. If it is your first visit, Premium is the place to start.
           </p>
         </div>
         <div className="mt-10">
@@ -110,9 +93,7 @@ export default function Home() {
       {/* 5. RESULTS */}
       <section aria-labelledby="work-heading" className="border-t-2 border-ink bg-paper2 py-16 md:py-24">
         <div className="container-ed">
-          <h2 id="work-heading" className="t-h2">
-            Recent work
-          </h2>
+          <div className="grid gap-4 md:grid-cols-12 md:items-end"><div className="md:col-span-7"><p className="section-label">Recent work</p><h2 id="work-heading" className="t-h2 mt-4">The work should speak for itself.</h2></div><p className="text-lg text-ink/70 md:col-span-4 md:col-start-9">Real cars, real driveways, photographed by our team around Decatur.</p></div>
           {beforeAfterPairs.length > 0 && (
             <div className="mt-10 grid gap-8 md:grid-cols-2">
               {beforeAfterPairs.slice(0, 2).map((p) => (
@@ -121,7 +102,7 @@ export default function Home() {
             </div>
           )}
           <div className="mt-10">
-            <WorkGallery ids={["work-01", "work-02", "work-03", "work-04", "work-05", "work-06", "work-07", "work-08"]} />
+            <WorkGallery ids={["work-01", "work-02", "work-03", "work-04", "work-05", "work-06"]} />
           </div>
         </div>
       </section>
@@ -130,7 +111,7 @@ export default function Home() {
       <section className="container-ed py-16 md:py-24">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-6">
-            <h2 className="t-h2">Student-run. Professionally detailed.</h2>
+            <p className="section-label">The Every Detail difference</p><h2 className="t-h2 mt-4">Student-run.<br />Professionally detailed.</h2>
             <p className="mt-6 text-lg text-ink/80">
               Every Detail started as one student with a set of supplies in Decatur. It&rsquo;s now {team.length} people,
               two equipped rigs, and a training program with three technician tiers.
@@ -141,7 +122,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="lg:col-span-5 lg:col-start-8">
-            <Photo id="home-team" ratio="4/3" sizes="(min-width: 1024px) 40vw, 100vw" className="rounded-[10px] border-2 border-ink" />
+            <Photo id="home-team" ratio="4/3" sizes="(min-width: 1024px) 40vw, 100vw" className="feature-photo" />
             <ul className="mt-6 columns-2 gap-6 text-[0.9375rem]">
               {team.map((m) => (
                 <li key={m.name} className="break-inside-avoid border-b border-ink/15 py-2">
@@ -169,7 +150,7 @@ export default function Home() {
               Paint correction &amp; ceramic
             </TrackedLink>
           </div>
-          <ul className="lg:col-span-6 lg:col-start-7">
+          <div className="lg:col-span-6 lg:col-start-7"><Photo id="ceramic-01" ratio="16/10" sizes="(min-width: 1024px) 48vw, 100vw" className="mb-8" /><ul>
             {paintServices.map((p) => (
               <li key={p.id} className="border-b border-paper/20 py-6 first:pt-0">
                 <p className="flex items-baseline gap-3">
@@ -183,7 +164,7 @@ export default function Home() {
                 <p className="mt-2 max-w-md text-[0.9375rem] text-paper/70">{p.summary}</p>
               </li>
             ))}
-          </ul>
+          </ul></div>
         </div>
       </section>
 
@@ -202,7 +183,7 @@ export default function Home() {
               How Detail+ works
             </Link>
           </div>
-          <div className="panel panel-red p-7 md:p-9 lg:col-span-6 lg:col-start-7">
+          <div className="membership-card lg:col-span-6 lg:col-start-7">
             <dl className="space-y-5">
               <div>
                 <dt className="text-sm text-muted">How often</dt>

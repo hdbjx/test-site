@@ -46,7 +46,6 @@ export function localBusinessSchema() {
     telephone: "+1-404-855-0672",
     email: site.email,
     image: abs(imageById("og-default").file),
-    logo: abs("/brand/every-detail-logo.png"),
     priceRange: "$$",
     paymentAccepted: site.paymentMethods.join(", "),
     address: { "@type": "PostalAddress", addressLocality: site.city, addressRegion: site.region, addressCountry: site.country },
