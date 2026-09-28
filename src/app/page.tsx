@@ -47,8 +47,8 @@ export default function Home() {
       <section id="pricing" className="home-services home-services-v14">
         <div className="container-ed">
           <div className="home-section-head v14-service-head">
-            <div><p className="eyebrow">Start your detail</p><h2 id="pricing-heading" className="home-display">What does your car<br />need right now?</h2></div>
-            <p className="home-section-copy">Don’t worry about vehicle size or pricing yet. Pick the detail that sounds most like your car. We’ll handle the rest in two quick steps.</p>
+            <div><p className="eyebrow">Start here</p><h2 id="pricing-heading" className="home-display">Choose what<br />your car needs.</h2></div>
+            <p className="home-section-copy">Three details. No package maze. Pick the level of clean you want, then tell us what you drive.</p>
           </div>
           <HomeBookingFlow />
           <div className="home-text-links v14-service-links"><Link href="/our-services" className="link">Compare every service ↗</Link><Link href="/get-a-quote" className="link">Not sure what you need? Ask us</Link></div>
