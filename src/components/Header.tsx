@@ -82,12 +82,12 @@ export function Header() {
         Skip to content
       </a>
       <div className={onHome ? "home-nav-shell flex items-center justify-between gap-6" : "container-ed flex h-[4.5rem] items-center justify-between gap-6"}>
-        <Link href="/" className="flex shrink-0 items-center" aria-label="Every Detail home">
+        <Link href="/" className={onHome ? "home-logo-control flex shrink-0 items-center" : "flex shrink-0 items-center"} aria-label="Every Detail home">
           <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className={onHome ? "h-[4.15rem] w-[4.15rem] object-contain" : "h-12 w-12 object-contain"} priority />
         </Link>
 
         {/* Desktop */}
-        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+        <nav aria-label="Main" className={onHome ? "home-nav-links hidden items-center gap-1 lg:flex" : "hidden items-center gap-1 lg:flex"}>
           {primaryNav.map((item) => (
             <Link
               key={item.href}
@@ -132,7 +132,7 @@ export function Header() {
           </div>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className={onHome ? "home-nav-actions flex items-center gap-3" : "flex items-center gap-2"}>
           {supabaseConfigured && (
             <Link
               href="/account"

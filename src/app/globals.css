@@ -609,3 +609,110 @@
   .hero-copy .mt-7 { margin-top: 1.1rem; }
   .hero-copy .btn { min-height: 3.35rem; }
 }
+
+/* V7 floating controls: let the photograph breathe. */
+@media (min-width: 1024px) {
+  .home-header { padding-top: 1.35rem; }
+  .home-nav-shell {
+    width: min(1320px, calc(100vw - 4rem));
+    height: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .home-logo-control {
+    width: 5.75rem;
+    height: 5.75rem;
+    padding: .45rem;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / .52);
+    background: rgb(246 242 234 / .82);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / .85), 0 12px 35px rgb(0 0 0 / .18);
+    backdrop-filter: blur(22px) saturate(150%);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+  }
+  .home-nav-shell .home-logo-control img {
+    width: 4.8rem !important;
+    height: 4.8rem !important;
+  }
+  .home-nav-links {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: .55rem .65rem;
+    gap: .1rem !important;
+    border: 1px solid rgb(255 255 255 / .18);
+    border-radius: 999px;
+    background: rgb(10 12 10 / .70);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / .12), 0 14px 40px rgb(0 0 0 / .20);
+    backdrop-filter: blur(20px) saturate(135%);
+    -webkit-backdrop-filter: blur(20px) saturate(135%);
+  }
+  .home-nav-shell .home-nav-links a,
+  .home-nav-shell .home-nav-links button {
+    padding: .78rem 1rem;
+    font-size: 1.08rem !important;
+    color: rgb(255 255 255 / .9);
+  }
+  .home-nav-shell .home-nav-links a:hover,
+  .home-nav-shell .home-nav-links button:hover { color: #fff; }
+  .home-nav-actions > a:not(.btn) {
+    padding: .8rem .25rem !important;
+    font-size: 1.08rem !important;
+    color: white !important;
+    text-shadow: 0 1px 14px rgb(0 0 0 / .7);
+  }
+  .home-nav-actions .btn-sm {
+    min-height: 3.65rem;
+    padding: .9rem 1.45rem;
+    font-size: 1.08rem;
+    border-radius: .65rem;
+    box-shadow: 4px 4px 0 rgb(0 0 0 / .78);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1190px) {
+  .home-nav-shell { width: calc(100vw - 2.5rem); }
+  .home-logo-control { width: 5.15rem; height: 5.15rem; }
+  .home-nav-shell .home-logo-control img { width: 4.25rem !important; height: 4.25rem !important; }
+  .home-nav-shell .home-nav-links a,
+  .home-nav-shell .home-nav-links button { padding: .72rem .72rem; font-size: .98rem !important; }
+  .home-nav-actions > a:not(.btn) { font-size: .98rem !important; }
+  .home-nav-actions .btn-sm { min-height: 3.35rem; padding: .8rem 1.1rem; font-size: 1rem; }
+}
+
+@media (max-width: 1023px) {
+  .home-nav-shell {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .home-logo-control {
+    width: 4.7rem;
+    height: 4.7rem;
+    padding: .38rem;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / .55);
+    background: rgb(246 242 234 / .84);
+    box-shadow: 0 10px 30px rgb(0 0 0 / .18);
+    backdrop-filter: blur(18px) saturate(145%);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+  }
+  .home-nav-shell .home-logo-control img { width: 3.95rem !important; height: 3.95rem !important; }
+  .home-nav-actions {
+    padding: .42rem;
+    border: 1px solid rgb(255 255 255 / .2);
+    border-radius: .9rem;
+    background: rgb(10 12 10 / .66);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+}
