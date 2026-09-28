@@ -117,7 +117,7 @@ export function HomeBookingFlow() {
                   <div className="v15-result-summary">
                     <span>Your detail</span>
                     <strong>{chosenService.name} · {chosenVehicle.label}</strong>
-                    <small>About {durationShort(quote.minutes)} · Power + water included</small>
+                    <small>About {durationShort(quote.minutes)} in your driveway <span>· Power + water included</span></small>
                   </div>
                   <div className="v15-result-price"><span>Total</span><strong>{usd(quote.price)}</strong></div>
                   <TrackedLink href={bookingHref(vehicle!, service)} event="book_click" params={{ location: "home_flow", vehicle: vehicle ?? undefined, service: service ?? undefined }} className="btn btn-primary v15-continue">Choose a time ↗</TrackedLink>
