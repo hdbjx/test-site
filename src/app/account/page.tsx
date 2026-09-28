@@ -46,7 +46,13 @@ export default async function AccountPage() {
   }
 
   const { account, garage, email } = session;
-  const jobs = await getMyJobs();
+  let jobs;
+  try {
+    jobs = await getMyJobs();
+  } catch (error) {
+    console.error("Account jobs failed to load", error);
+    jobs = [];
+  }
   const now = Date.now();
   const upcoming = jobs
     .filter((j) => j.status !== "cancelled" && j.status !== "complete" && Date.parse(j.scheduled_start) > now)

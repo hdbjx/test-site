@@ -1520,3 +1520,113 @@
 @media (prefers-reduced-motion: reduce) {
   .route-transition { display: none !important; }
 }
+
+/* =========================================================
+   V11.4 — interaction correction + unified site header
+   ========================================================= */
+
+/* Physical retro button: the face moves INTO the shadow.
+   The shadow endpoint stays visually fixed as the face moves. */
+.btn {
+  transform: translate(0, 0);
+  box-shadow: 4px 4px 0 var(--color-ink) !important;
+  transition: transform 110ms var(--ease-out), box-shadow 110ms var(--ease-out), background-color 150ms, color 150ms !important;
+}
+.btn-sm { box-shadow: 3px 3px 0 var(--color-ink) !important; }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    transform: translate(2px, 2px) !important;
+    box-shadow: 2px 2px 0 var(--color-ink) !important;
+  }
+  .btn-sm:hover {
+    transform: translate(1.5px, 1.5px) !important;
+    box-shadow: 1.5px 1.5px 0 var(--color-ink) !important;
+  }
+}
+.btn:active,
+.btn-sm:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: 0 0 0 var(--color-ink) !important;
+}
+.hero-copy .btn-primary,
+.home-nav-actions .btn-sm { box-shadow: 4px 4px 0 rgb(0 0 0 / .78) !important; }
+@media (hover: hover) and (pointer: fine) {
+  .hero-copy .btn-primary:hover,
+  .home-nav-actions .btn-sm:hover {
+    transform: translate(2px, 2px) !important;
+    box-shadow: 2px 2px 0 rgb(0 0 0 / .78) !important;
+  }
+}
+.hero-copy .btn-primary:active,
+.home-nav-actions .btn-sm:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: 0 0 0 rgb(0 0 0 / .78) !important;
+}
+
+/* Inner-page header uses the exact same hierarchy as the homepage header,
+   but on a stable ink field so every page stays readable. */
+.inner-header {
+  background: #111;
+  border-bottom: 1px solid rgb(255 255 255 / .12);
+}
+.inner-nav-shell {
+  width: min(1560px, calc(100vw - 9vw));
+  min-height: 8rem;
+  margin-inline: auto;
+}
+.inner-logo { width: 6.5rem; height: 6.5rem; filter: drop-shadow(0 2px 12px rgb(0 0 0 / .25)); }
+.inner-nav-links { margin-left: auto; gap: .75rem !important; }
+.inner-nav-links a,
+.inner-nav-links button,
+.inner-nav-actions > a:not(.btn) {
+  padding: .9rem .9rem !important;
+  color: rgb(255 255 255 / .94) !important;
+  font-size: 1.28rem !important;
+  font-weight: 650 !important;
+  line-height: 1;
+}
+.inner-nav-actions { margin-left: 1rem; gap: 1rem !important; }
+.inner-nav-actions .btn-sm {
+  min-height: 3.75rem;
+  padding: .8rem 1.35rem;
+  font-size: 1.12rem;
+}
+.inner-header .services-dropdown { background: #111 !important; color: #fff !important; border-color: rgb(255 255 255 / .14) !important; }
+.inner-header .services-dropdown a:hover { background: rgb(255 255 255 / .09); }
+.inner-header button[aria-controls="mobile-menu"] { color: white; }
+
+@media (min-width: 1600px) {
+  .inner-nav-shell { min-height: 9.25rem; }
+  .inner-logo { width: 7.5rem; height: 7.5rem; }
+  .inner-nav-links a,
+  .inner-nav-links button,
+  .inner-nav-actions > a:not(.btn) { font-size: 1.48rem !important; }
+  .inner-nav-actions .btn-sm { min-height: 4.15rem; font-size: 1.25rem; padding-inline: 1.55rem; }
+}
+@media (max-width: 1023px) {
+  .inner-nav-shell { width: calc(100vw - 2rem); min-height: 5.5rem; }
+  .inner-logo { width: 4.4rem; height: 4.4rem; }
+  .inner-nav-actions .btn-sm { min-height: 3rem; padding: .65rem .9rem; font-size: .95rem; }
+}
+
+/* Account should read as navigation, not a broken mini-button. */
+.account-link {
+  position: relative;
+  border-radius: 0 !important;
+  opacity: .88;
+  text-decoration: none !important;
+}
+.account-link::after {
+  content: "";
+  position: absolute;
+  left: .75rem;
+  right: .75rem;
+  bottom: .35rem;
+  height: 2px;
+  background: var(--color-red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 160ms var(--ease-out);
+}
+.account-link:hover::after,
+.account-link[aria-current="page"]::after { transform: scaleX(1); }
