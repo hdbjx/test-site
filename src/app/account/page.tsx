@@ -46,7 +46,15 @@ export default async function AccountPage() {
   }
 
   const { account, garage, email } = session;
-  let jobs;
+  let jobs: {
+  id: string;
+  service_name: string | null;
+  vehicle: string | null;
+  scheduled_start: string | null;
+  status: string | null;
+  address: string | null;
+  price: number | null;
+}[] = [];
   try {
     jobs = await getMyJobs();
   } catch (error) {
