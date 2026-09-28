@@ -1,32 +1,75 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { bookingHref } from "@/data/booking";
 import { PRICING, serviceList, services, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { track } from "@/lib/analytics";
 import { durationShort, usd } from "@/lib/format";
 import { TrackedLink } from "./TrackedLink";
 
-const serviceMeta: Record<ServiceId, { number: string; cue: string }> = {
-  maintenance: { number: "01", cue: "Keep it clean" },
-  premium: { number: "02", cue: "Bring it back" },
-  factoryReset: { number: "03", cue: "Start over" },
+const serviceMeta: Record<ServiceId, { number: string; cue: string; subline: string; includes: string; detail: string }> = {
+  maintenance: {
+    number: "01",
+    cue: "Keep it clean",
+    subline: "For regularly detailed vehicles",
+    includes: "Interior refresh · Hand wash · Wheels + tires · Light upkeep",
+    detail: "Best for already clean vehicles",
+  },
+  premium: {
+    number: "02",
+    cue: "Bring it back",
+    subline: "Top-to-bottom clean, inside and out — every corner, every detail.",
+    includes: "Deep interior clean · Hand wash · Wheels + tires · Paint protection",
+    detail: "Full interior + exterior · Most booked",
+  },
+  factoryReset: {
+    number: "03",
+    cue: "Start over",
+    subline: "Like it just rolled off the lot — maybe better.",
+    includes: "Deep interior clean · Extraction · Decontamination · Detailed cracks + crevices",
+    detail: "Deepest clean · Heavy reset",
+  },
 };
 
 export function HomeBookingFlow() {
   const [service, setService] = useState<ServiceId | null>(null);
   const [vehicle, setVehicle] = useState<VehicleId | null>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const chosenService = service ? services[service] : null;
   const chosenVehicle = vehicle ? vehicles.find((v) => v.id === vehicle)! : null;
   const quote = service && vehicle ? PRICING[vehicle][service] : null;
 
+  const easeInOutCubic = (t: number) =>
+    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  const guideToVehicleStep = () => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const offset = window.innerWidth <= 640 ? 112 : window.innerWidth <= 1023 ? 145 : 195;
+    const start = window.scrollY;
+    const target = Math.max(0, stage.getBoundingClientRect().top + window.scrollY - offset);
+    if (reduceMotion) {
+      window.scrollTo(0, target);
+      return;
+    }
+    const distance = target - start;
+    const duration = 500;
+    const startedAt = performance.now();
+    const step = (now: number) => {
+      const progress = Math.min(1, (now - startedAt) / duration);
+      window.scrollTo(0, start + distance * easeInOutCubic(progress));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
   const chooseService = (id: ServiceId) => {
+    const openingForFirstTime = service === null;
     setService(id);
     setVehicle(null);
     track("service_select", { service: id, location: "home_flow" });
-    requestAnimationFrame(() => {
-      document.getElementById("home-config-stage")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
+    if (openingForFirstTime) window.setTimeout(guideToVehicleStep, 110);
   };
 
   const chooseVehicle = (id: VehicleId) => {
@@ -36,7 +79,7 @@ export function HomeBookingFlow() {
 
   return (
     <div className={`v15-flow ${service ? "has-service" : ""} ${quote ? "is-ready" : ""}`}>
-      <div id="home-config-stage" className={`v15-stage ${service ? "is-open" : ""}`} aria-live="polite">
+      <div ref={stageRef} id="home-config-stage" className={`v15-stage ${service ? "is-open" : ""}`} aria-live="polite">
         {service && chosenService && (
           <div className="v15-stage-inner">
             <div className="v15-stage-topline">
@@ -63,7 +106,6 @@ export function HomeBookingFlow() {
                   >
                     <span className="v15-vehicle-num">0{index + 1}</span>
                     <span className="v15-vehicle-name">{v.label}</span>
-                    <span className="v15-vehicle-hint">{v.hint}</span>
                   </button>
                 ))}
               </div>
@@ -100,8 +142,13 @@ export function HomeBookingFlow() {
               <span className="v15-service-num">{meta.number}</span>
               <span className="v15-service-copy">
                 <span className="v15-service-cue">{meta.cue}</span>
-                <strong>{s.name.replace(" Detail", "")}</strong>
+                <span className="v15-service-main">
+                  <strong>{s.name.replace(" Detail", "")}</strong>
+                  <span className="v15-service-subline">{meta.subline}</span>
+                  <span className="v15-service-includes">{meta.includes}</span>
+                </span>
               </span>
+              <span className={`v15-service-detail ${s.id === "maintenance" ? "is-maintenance" : ""}`}>{meta.detail}</span>
               {s.recommended && <span className="v15-most">Most booked</span>}
               <span className="v15-arrow">↗</span>
             </button>
