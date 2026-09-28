@@ -1042,3 +1042,89 @@
   .home-logo-control { width: auto; height: auto; padding: 0; border: 0; background: transparent; box-shadow: none; }
   .home-nav-shell .home-logo-control img { width: 4.5rem !important; height: 4.5rem !important; filter: drop-shadow(0 2px 12px rgb(0 0 0 / .3)); }
 }
+
+/* V11: large-screen scale pass. Intentionally dramatic on 1600px+ displays. */
+@media (min-width: 1600px) {
+  .home-header::before {
+    height: 18rem;
+    background: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / .86) 0%,
+      rgb(0 0 0 / .70) 28%,
+      rgb(0 0 0 / .46) 54%,
+      rgb(0 0 0 / .20) 76%,
+      transparent 100%
+    );
+  }
+  .home-nav-shell {
+    width: min(1560px, calc(100vw - 5rem));
+    height: 9rem;
+    padding-inline: 1.25rem;
+  }
+  .home-nav-shell .home-logo-control img {
+    width: 7.25rem !important;
+    height: 7.25rem !important;
+  }
+  .home-nav-links { gap: 1.25rem !important; }
+  .home-nav-shell .home-nav-links a,
+  .home-nav-shell .home-nav-links button,
+  .home-nav-actions > a:not(.btn) {
+    padding: 1rem 1.05rem;
+    font-size: 1.48rem !important;
+    font-weight: 650;
+  }
+  .home-nav-actions { gap: 1.25rem; }
+  .home-nav-actions .btn-sm {
+    min-height: 4.6rem;
+    padding: 1.15rem 2rem;
+    font-size: 1.35rem;
+    border-radius: .85rem;
+  }
+
+  .hero-inner.container-ed {
+    max-width: 1560px;
+    padding-inline: 3.5rem;
+    padding-top: 10rem;
+    padding-bottom: clamp(3.5rem, 6vh, 5rem);
+  }
+  .hero-copy { width: min(78rem, 72vw); }
+  .hero-kicker {
+    margin-bottom: 1.65rem;
+    font-size: 1.72rem;
+    line-height: 1.15;
+    letter-spacing: .145em;
+  }
+  .hero-title {
+    max-width: 78rem;
+    font-size: 12rem;
+    line-height: .86;
+    letter-spacing: -.058em;
+  }
+  .hero-lede {
+    max-width: 52rem;
+    margin-top: 2rem;
+    font-size: 1.65rem;
+    line-height: 1.4;
+  }
+  .hero-copy .mt-7 { margin-top: 2.1rem; gap: 1.1rem; }
+  .hero-copy .btn {
+    min-height: 4.25rem;
+    padding: 1rem 1.65rem;
+    font-size: 1.25rem;
+    border-radius: .85rem;
+  }
+  .proof-row { font-size: 1rem; }
+  .proof-row > div { min-height: 6rem; }
+}
+
+@media (min-width: 1024px) and (max-width: 1599px) {
+  .home-nav-shell { height: 7.75rem; }
+  .home-nav-shell .home-logo-control img { width: 6.2rem !important; height: 6.2rem !important; }
+  .home-nav-shell .home-nav-links a,
+  .home-nav-shell .home-nav-links button,
+  .home-nav-actions > a:not(.btn) { font-size: 1.25rem !important; }
+  .home-nav-actions .btn-sm { min-height: 4rem; font-size: 1.16rem; }
+  .hero-kicker { font-size: 1.18rem; }
+  .hero-title { font-size: clamp(6.8rem, 7.7vw, 8.5rem); }
+  .hero-lede { font-size: 1.35rem; }
+}
