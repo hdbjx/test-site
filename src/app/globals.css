@@ -1401,3 +1401,122 @@
   .home-nav-shell { width: 100%; margin: 0; padding-left: 24px; padding-right: 24px; }
   .hero-copy .btn { border-width: 1.5px !important; box-shadow: 4px 4px 0 #171717 !important; }
 }
+
+/* =========================================================
+   V11.3 — interaction polish
+   Physical retro buttons + branded route transition.
+   ========================================================= */
+
+/* Keep the hard shadow visually fixed while the button face moves into it. */
+.hero-copy .btn,
+.home-nav-actions .btn-sm {
+  transform: translate(0, 0) !important;
+  box-shadow: 5px 5px 0 #171717 !important;
+}
+.hero-copy .btn:hover,
+.home-nav-actions .btn-sm:hover {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 3px 3px 0 #171717 !important;
+}
+.hero-copy .btn:active,
+.home-nav-actions .btn-sm:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: 1px 1px 0 #171717 !important;
+}
+
+/* Header Book now is intentionally lighter than the hero controls. */
+.home-nav-actions .btn-sm {
+  box-shadow: 4px 4px 0 #171717 !important;
+}
+.home-nav-actions .btn-sm:hover {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 2px 2px 0 #171717 !important;
+}
+.home-nav-actions .btn-sm:active {
+  transform: translate(3px, 3px) !important;
+  box-shadow: 1px 1px 0 #171717 !important;
+}
+
+/* Account: stable hit target, no pseudo-element crossing the text. */
+.home-nav-actions .account-link {
+  display: none;
+  align-items: center;
+  min-height: 2.8rem;
+  padding: .55rem .75rem !important;
+  border: 1px solid transparent;
+  border-radius: .45rem !important;
+  opacity: .92;
+  line-height: 1;
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+@media (min-width: 1024px) {
+  .home-nav-actions .account-link { display: inline-flex !important; }
+}
+.home-nav-actions .account-link::after { display: none !important; }
+.home-header .home-nav-actions .account-link:hover,
+.home-header .home-nav-actions .account-link[aria-current="page"] {
+  color: #fff;
+  background: rgb(255 255 255 / .10);
+  border-color: rgb(255 255 255 / .20);
+}
+
+/* Branded page wipe. The panel covers first, navigation happens behind it,
+   then the same panel continues off-screen. */
+.route-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  visibility: hidden;
+  overflow: hidden;
+}
+.route-transition__panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--color-oxblood);
+  transform: translate3d(-101%, 0, 0);
+  will-change: transform;
+}
+.route-transition__logo {
+  width: clamp(5.5rem, 9vw, 8.5rem);
+  height: auto;
+  opacity: 0;
+  transform: scale(.9) rotate(-3deg);
+  filter: brightness(0) invert(1);
+}
+.route-transition--cover,
+.route-transition--reveal { visibility: visible; }
+.route-transition--cover .route-transition__panel {
+  animation: ed-cover 300ms cubic-bezier(.76,0,.24,1) forwards;
+}
+.route-transition--cover .route-transition__logo {
+  animation: ed-logo-in 180ms 105ms ease-out forwards;
+}
+.route-transition--reveal .route-transition__panel {
+  transform: translate3d(0,0,0);
+  animation: ed-reveal 420ms cubic-bezier(.76,0,.24,1) forwards;
+}
+.route-transition--reveal .route-transition__logo {
+  opacity: 1;
+  transform: scale(1) rotate(0);
+  animation: ed-logo-out 190ms ease-in forwards;
+}
+@keyframes ed-cover {
+  from { transform: translate3d(-101%,0,0); }
+  to { transform: translate3d(0,0,0); }
+}
+@keyframes ed-reveal {
+  from { transform: translate3d(0,0,0); }
+  to { transform: translate3d(101%,0,0); }
+}
+@keyframes ed-logo-in {
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+@keyframes ed-logo-out {
+  to { opacity: 0; transform: scale(1.06) rotate(2deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-transition { display: none !important; }
+}
