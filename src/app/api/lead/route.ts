@@ -1,14 +1,6 @@
 import { NextResponse } from "next/server";
 import { sendLeadEmails } from "@/lib/email";
 
-/**
- * Receives quote, booking and Detail+ requests from the website.
- *
- * The existing Apps Script / Google Sheets pipeline remains intact.
- * Resend is added as a second delivery path for customer confirmations
- * and internal notifications.
- */
-
 const REQUIRED: Record<string, string[]> = {
   quote: [
     "name",
@@ -38,32 +30,37 @@ const REQUIRED: Record<string, string[]> = {
 const MAX_LEN = 2000;
 
 export async function POST(req: Request) {
+  console.info("[lead] request received");
+
   let body: Record<string, unknown>;
 
   try {
     body = await req.json();
   } catch {
+    console.error("[lead] invalid JSON");
+
     return NextResponse.json(
       {
         ok: false,
         error: "Invalid request.",
       },
-      {
-        status: 400,
-      },
+      { status: 400 },
     );
   }
 
-  // Honeypot. Real customers never fill this.
+  // Honeypot
   if (
     typeof body.company === "string" &&
     body.company.trim()
   ) {
+    console.info("[lead] honeypot triggered");
     return NextResponse.json({ ok: true });
   }
 
   const type = String(body.type ?? "");
   const required = REQUIRED[type];
+
+  console.info("[lead] request type:", type);
 
   if (!required) {
     return NextResponse.json(
@@ -71,9 +68,7 @@ export async function POST(req: Request) {
         ok: false,
         error: "Unknown request type.",
       },
-      {
-        status: 400,
-      },
+      { status: 400 },
     );
   }
 
@@ -87,9 +82,7 @@ export async function POST(req: Request) {
     }
   }
 
-  const missing = required.filter(
-    (key) => !fields[key],
-  );
+  const missing = required.filter((key) => !fields[key]);
 
   if (missing.length) {
     return NextResponse.json(
@@ -98,9 +91,7 @@ export async function POST(req: Request) {
         error: "Please fill in the required fields.",
         missing,
       },
-      {
-        status: 422,
-      },
+      { status: 422 },
     );
   }
 
@@ -111,9 +102,7 @@ export async function POST(req: Request) {
         error: "Please enter a 10-digit phone number.",
         missing: ["phone"],
       },
-      {
-        status: 422,
-      },
+      { status: 422 },
     );
   }
 
@@ -127,9 +116,7 @@ export async function POST(req: Request) {
         error: "Please check your email address.",
         missing: ["email"],
       },
-      {
-        status: 422,
-      },
+      { status: 422 },
     );
   }
 
@@ -140,32 +127,28 @@ export async function POST(req: Request) {
     submittedAt: new Date().toISOString(),
     ...fields,
     ...(process.env.LEAD_WEBHOOK_SECRET
-      ? {
-          secret: process.env.LEAD_WEBHOOK_SECRET,
-        }
+      ? { secret: process.env.LEAD_WEBHOOK_SECRET }
       : {}),
   };
 
-  /*
-   * Keep the existing Google Sheets / Apps Script pipeline as the
-   * required lead-delivery system.
-   */
   if (!url) {
     if (process.env.NODE_ENV !== "production") {
       console.info(
-        "[lead] LEAD_WEBHOOK_URL not set — payload:",
-        payload,
+        "[lead] development mode, webhook not configured",
       );
 
-      /*
-       * Still test the email system in development if it is configured.
-       */
-      sendLeadEmails({
-        type,
-        fields,
-      }).catch((emailError) => {
-        console.error("[lead] email", emailError);
-      });
+      try {
+        console.info("[lead] starting email");
+
+        await sendLeadEmails({
+          type,
+          fields,
+        });
+
+        console.info("[lead] email function completed");
+      } catch (emailError) {
+        console.error("[lead] email failed", emailError);
+      }
 
       return NextResponse.json({
         ok: true,
@@ -174,7 +157,7 @@ export async function POST(req: Request) {
     }
 
     console.error(
-      "[lead] LEAD_WEBHOOK_URL is not configured; request not delivered.",
+      "[lead] LEAD_WEBHOOK_URL is not configured",
     );
 
     return NextResponse.json(
@@ -182,22 +165,18 @@ export async function POST(req: Request) {
         ok: false,
         error: "We couldn't send that. Please call or text us.",
       },
-      {
-        status: 503,
-      },
+      { status: 503 },
     );
   }
 
   try {
+    console.info("[lead] sending to lead pipeline");
+
     const response = await fetch(url, {
       method: "POST",
-
-      // text/plain avoids a CORS preflight on Apps Script.
-      // The script parses e.postData.contents.
       headers: {
         "Content-Type": "text/plain;charset=utf-8",
       },
-
       body: JSON.stringify(payload),
       redirect: "follow",
       cache: "no-store",
@@ -209,24 +188,29 @@ export async function POST(req: Request) {
       );
     }
 
+    console.info("[lead] pipeline complete");
+
     /*
-     * At this point the lead is safely in the existing pipeline.
-     *
-     * Email is an additional communication layer, so an email outage
-     * should never make the form tell the customer their request failed.
+     * Email is intentionally secondary.
+     * A Resend outage should not cause a successfully delivered
+     * lead to appear as a failed form submission.
      */
     try {
-  await sendLeadEmails({
-    type,
-    fields,
-  });
-} catch (emailError) {
-  console.error("[lead] email", emailError);
-}
+      console.info("[lead] starting email");
 
-return NextResponse.json({
-  ok: true,
-});
+      await sendLeadEmails({
+        type,
+        fields,
+      });
+
+      console.info("[lead] email function completed");
+    } catch (emailError) {
+      console.error("[lead] email failed", emailError);
+    }
+
+    return NextResponse.json({
+      ok: true,
+    });
   } catch (err) {
     console.error("[lead] delivery failed", err);
 
@@ -235,9 +219,7 @@ return NextResponse.json({
         ok: false,
         error: "We couldn't send that. Please call or text us.",
       },
-      {
-        status: 502,
-      },
+      { status: 502 },
     );
   }
 }
