@@ -4,8 +4,9 @@ export type NavItem = { label: string; href: string; external?: boolean };
 
 export const primaryNav: NavItem[] = [
   { label: "Services", href: "/our-services" },
-  { label: "Paint & Ceramic", href: "/ceramic" },
-  { label: "Detail+", href: "/detailplus" },
+  { label: "Paint Correction", href: "/ceramic#paint-correction" },
+  { label: "Ceramic Coatings", href: "/ceramic#ceramic-coating" },
+  { label: "Membership", href: "/detailplus" },
   { label: "About", href: "/about-us" },
 ];
 

@@ -84,6 +84,7 @@ export function Header() {
       <div className={onHome ? "home-nav-shell flex items-center justify-between gap-6" : "container-ed flex h-[4.5rem] items-center justify-between gap-6"}>
         <Link href="/" className={onHome ? "home-logo-control flex shrink-0 items-center" : "flex shrink-0 items-center"} aria-label="Every Detail home">
           <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className={onHome ? "h-[4.15rem] w-[4.15rem] object-contain" : "h-12 w-12 object-contain"} priority />
+          {onHome && <span className="home-wordmark">Every Detail</span>}
         </Link>
 
         {/* Desktop */}
@@ -98,38 +99,6 @@ export function Header() {
               {item.label}
             </Link>
           ))}
-          <div ref={moreRef} className="relative">
-            <button
-              type="button"
-              aria-expanded={moreOpen}
-              aria-controls="more-menu"
-              onClick={() => setMoreOpen((v) => !v)}
-              className={`flex items-center gap-1 rounded px-3 py-2 font-display text-[0.9375rem] font-semibold ${onHome ? "text-white/85 hover:text-white" : "text-ink/80 hover:text-ink"}`}
-            >
-              More
-              <svg aria-hidden="true" viewBox="0 0 12 12" className={`h-3 w-3 transition-transform ${moreOpen ? "rotate-180" : ""}`}>
-                <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.6" />
-              </svg>
-            </button>
-            {moreOpen && (
-              <ul
-                id="more-menu"
-                className="absolute right-0 top-full mt-2 w-52 rounded-[var(--radius-panel)] border border-line bg-paper p-1.5 text-ink shadow-[0_12px_32px_rgb(17_17_17/0.12)]"
-              >
-                {moreNav.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      {...(item.external ? { target: "_blank", rel: "noopener" } : {})}
-                      className="block rounded px-3 py-2.5 text-[0.9375rem] hover:bg-paper2"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
         </nav>
 
         <div className={onHome ? "home-nav-actions flex items-center gap-3" : "flex items-center gap-2"}>

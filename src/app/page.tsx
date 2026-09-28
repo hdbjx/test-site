@@ -31,13 +31,13 @@ export default function Home() {
             <p className="hero-kicker">Mobile detailing · Decatur + Atlanta</p>
             <h1 className="hero-title"><span>Your car.</span><span>Back to its best.</span></h1>
             <p className="hero-lede">
-              Premium mobile detailing, brought to your driveway.<br />Power and water included.
+              Premium mobile detailing, brought to your driveway.<br />We bring the power and water.
             </p>
             <div className="mt-7 flex flex-wrap gap-4">
               <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-primary">
                 Book a detail ↗
               </TrackedLink>
-              <a href="#pricing" className="btn btn-glass">Explore services</a>
+              <a href="#pricing" className="btn btn-glass">View services</a>
             </div>
           </div>
         </div>
@@ -46,8 +46,8 @@ export default function Home() {
       {/* Quiet proof strip */}
       <section className="proof-row" aria-label="Why people choose Every Detail">
         <div className="container-ed grid gap-3 py-5 text-center sm:grid-cols-2 lg:grid-cols-4">
+          <span className="proof-stars">★★★★★ <strong>{reviewCountLabel}</strong> five-star reviews</span>
           <span>{site.award.title}</span>
-          <span>{reviewCountLabel} five-star reviews</span>
           <span>Power + water included</span>
           <span>100% mobile</span>
         </div>

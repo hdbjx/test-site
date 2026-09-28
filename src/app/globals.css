@@ -845,3 +845,129 @@
     filter: drop-shadow(0 2px 8px rgb(0 0 0 / .65));
   }
 }
+
+/* V9: ruthless first-screen hierarchy. One header, one promise, one action. */
+.home-header::before {
+  height: 10rem;
+  background: linear-gradient(180deg, rgb(0 0 0 / .40) 0%, rgb(0 0 0 / .14) 62%, transparent 100%);
+}
+.home-wordmark {
+  margin-left: .8rem;
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 750;
+  letter-spacing: -.025em;
+  color: #fff;
+  text-shadow: 0 2px 14px rgb(0 0 0 / .55);
+  white-space: nowrap;
+}
+.hero-shade {
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / .60) 0%, rgb(0 0 0 / .32) 32%, rgb(0 0 0 / .04) 60%, transparent 76%),
+    linear-gradient(0deg, rgb(0 0 0 / .32) 0%, transparent 46%);
+}
+.proof-stars { letter-spacing: .035em; }
+.proof-stars::first-letter { color: var(--color-red); }
+
+@media (min-width: 1024px) {
+  .home-header { padding-top: 0; }
+  .home-nav-shell {
+    width: min(1440px, calc(100vw - 6rem));
+    min-height: 5.5rem;
+    padding-inline: 0;
+  }
+  .home-logo-control { min-width: 14.5rem; }
+  .home-nav-shell .home-logo-control img {
+    width: 4.25rem !important;
+    height: 4.25rem !important;
+  }
+  .home-nav-links {
+    position: static;
+    transform: none;
+    margin-left: auto;
+    gap: .15rem !important;
+  }
+  .home-nav-shell .home-nav-links a {
+    padding: .75rem .68rem;
+    font-size: 1rem !important;
+    font-weight: 650;
+  }
+  .home-nav-actions { margin-left: 1rem; gap: .8rem !important; }
+  .home-nav-actions > a:not(.btn) {
+    opacity: .76;
+    font-size: .92rem !important;
+    font-weight: 600;
+  }
+  .home-nav-actions .btn-sm {
+    min-height: 3rem;
+    padding: .72rem 1.15rem;
+    border-radius: .72rem;
+    font-size: .98rem;
+    box-shadow: 2px 2px 0 rgb(0 0 0 / .58);
+  }
+
+  .hero-full { min-height: 0; height: calc(100svh - 5rem); background-position: center 49%; }
+  .hero-inner.container-ed {
+    min-height: 100%;
+    max-width: 1440px;
+    padding: 7.5rem 3rem clamp(3.5rem, 7vh, 5.25rem);
+  }
+  .hero-copy { width: min(52rem, 60vw); }
+  .hero-kicker {
+    margin-bottom: 1.15rem;
+    font-size: .86rem;
+    letter-spacing: .145em;
+  }
+  .hero-title {
+    max-width: 52rem;
+    font-size: clamp(5.1rem, 5.45vw, 6rem);
+    line-height: .92;
+    letter-spacing: -.05em;
+  }
+  .hero-title span { white-space: nowrap; }
+  .hero-lede {
+    max-width: 39rem;
+    margin-top: 1.45rem;
+    font-size: clamp(1.18rem, 1.25vw, 1.3rem);
+    line-height: 1.45;
+    color: rgb(255 255 255 / .88);
+  }
+  .hero-copy .mt-7 { margin-top: 1.75rem; gap: .85rem; }
+  .hero-copy .btn {
+    min-height: 3.35rem;
+    padding: .82rem 1.25rem;
+    border-radius: .75rem;
+    font-size: 1.02rem;
+    font-weight: 700;
+  }
+  .hero-copy .btn-primary { box-shadow: 3px 3px 0 rgb(0 0 0 / .62); }
+  .hero-copy .btn-glass { box-shadow: none; background: rgb(15 15 15 / .28); border-color: rgb(255 255 255 / .38); }
+  .proof-row { font-size: .82rem; letter-spacing: .065em; }
+  .proof-row > div { min-height: 5rem; padding-top: 0; padding-bottom: 0; }
+  .proof-row span + span { border-left: 1px solid rgb(17 17 17 / .16); }
+  .proof-row span { display:flex; min-height:2rem; align-items:center; justify-content:center; padding-inline:1.5rem; }
+}
+
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .home-nav-shell { width: calc(100vw - 3rem); }
+  .home-logo-control { min-width: 11rem; }
+  .home-wordmark { font-size: 1.02rem; }
+  .home-nav-shell .home-nav-links a { padding-inline: .48rem; font-size: .9rem !important; }
+  .home-nav-actions { margin-left: .45rem; }
+  .hero-inner.container-ed { padding-inline: 2rem; }
+  .hero-title { font-size: clamp(4.8rem, 6.3vw, 5.55rem); }
+}
+
+@media (max-width: 1023px) {
+  .home-wordmark { display: none; }
+  .hero-full { min-height: 0; height: calc(100svh - 4.5rem); }
+  .hero-inner.container-ed { min-height: 100%; }
+  .proof-row span { padding-block: .25rem; }
+}
+
+@media (max-width: 767px) {
+  .hero-full { height: calc(100svh - 4rem); }
+  .hero-kicker { font-size: .78rem; }
+  .hero-lede { font-size: 1.08rem; }
+  .proof-row { font-size: .78rem; }
+}
