@@ -215,16 +215,18 @@ export async function POST(req: Request) {
      * Email is an additional communication layer, so an email outage
      * should never make the form tell the customer their request failed.
      */
-    sendLeadEmails({
-      type,
-      fields,
-    }).catch((emailError) => {
-      console.error("[lead] email", emailError);
-    });
+    try {
+  await sendLeadEmails({
+    type,
+    fields,
+  });
+} catch (emailError) {
+  console.error("[lead] email", emailError);
+}
 
-    return NextResponse.json({
-      ok: true,
-    });
+return NextResponse.json({
+  ok: true,
+});
   } catch (err) {
     console.error("[lead] delivery failed", err);
 
