@@ -29,7 +29,7 @@ export default function Home() {
         <div className="container-ed hero-inner">
           <div className="hero-copy rise">
             <p className="hero-kicker">Mobile detailing · Decatur + Atlanta</p>
-            <h1 className="hero-title">Your car.<br />Back to its best.</h1>
+            <h1 className="hero-title"><span>Your car.</span><span>Back to its best.</span></h1>
             <p className="hero-lede">
               Professional mobile detailing, brought to your driveway by Decatur&rsquo;s student-run detailing team. We bring the power and water.
             </p>
@@ -40,10 +40,6 @@ export default function Home() {
               <a href="#pricing" className="btn btn-glass">Explore services</a>
             </div>
           </div>
-          <a href={site.reviews.googleUrl} target="_blank" rel="noopener" className="hero-proof glass-pill">
-            <Stars className="h-4 w-4" />
-            <span>{reviewCountLabel} five-star reviews</span>
-          </a>
         </div>
       </section>
 

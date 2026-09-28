@@ -74,16 +74,16 @@ export function Header() {
   const onHome = pathname === "/";
 
   return (
-    <header className={onHome ? "fixed inset-x-0 top-0 z-40 border-b border-white/15 bg-black/15 text-white backdrop-blur-xl" : "sticky top-0 z-40 border-b border-line bg-paper"}>
+    <header className={onHome ? "fixed inset-x-0 top-0 z-40 text-white home-header" : "sticky top-0 z-40 border-b border-line bg-paper"}>
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
       >
         Skip to content
       </a>
-      <div className="container-ed flex h-[4.5rem] items-center justify-between gap-6">
+      <div className={onHome ? "home-nav-shell flex items-center justify-between gap-6" : "container-ed flex h-[4.5rem] items-center justify-between gap-6"}>
         <Link href="/" className="flex shrink-0 items-center" aria-label="Every Detail home">
-          <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className="h-12 w-12 object-contain" priority />
+          <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className={onHome ? "h-14 w-14 object-contain" : "h-12 w-12 object-contain"} priority />
         </Link>
 
         {/* Desktop */}
