@@ -55,6 +55,20 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="home-arrival" aria-label="How Every Detail works">
+        <div className="container-ed arrival-grid">
+          <div className="arrival-statement">
+            <p className="eyebrow">Detailing without the detour</p>
+            <h2>We bring the shop.<br /><span>You keep your day.</span></h2>
+          </div>
+          <div className="arrival-steps">
+            <div><span>01</span><strong>Book online</strong><p>Choose your vehicle, service, and a time that works.</p></div>
+            <div><span>02</span><strong>We pull up</strong><p>Our rig arrives with its own power, water, tools, and products.</p></div>
+            <div><span>03</span><strong>Get your car back</strong><p>Walk outside to a finished car without rearranging your day.</p></div>
+          </div>
+        </div>
+      </section>
+
       <section className="home-work" aria-labelledby="work-heading">
         <div className="container-ed">
           <div className="home-work-heading"><p className="eyebrow">Recent work</p><h2 id="work-heading" className="home-display home-display-light">No stock photos.<br />Just our work.</h2></div>
