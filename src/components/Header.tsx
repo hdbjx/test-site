@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -72,9 +71,10 @@ export function Header() {
   }, [menuOpen]);
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
+  const onHome = pathname === "/";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper">
+    <header className={onHome ? "fixed inset-x-0 top-0 z-40 border-b border-white/15 bg-black/15 text-white backdrop-blur-xl" : "sticky top-0 z-40 border-b border-line bg-paper"}>
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
@@ -93,7 +93,7 @@ export function Header() {
               key={item.href}
               href={item.href}
               aria-current={isActive(item.href) ? "page" : undefined}
-              className="rounded px-3 py-2 font-display text-[0.9375rem] font-semibold text-ink/80 transition-colors hover:text-ink aria-[current=page]:text-ink aria-[current=page]:underline aria-[current=page]:decoration-red aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8"
+              className={`rounded px-3 py-2 font-display text-[0.9375rem] font-semibold transition-colors aria-[current=page]:underline aria-[current=page]:decoration-red aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8 ${onHome ? "text-white/85 hover:text-white" : "text-ink/80 hover:text-ink aria-[current=page]:text-ink"}`}
             >
               {item.label}
             </Link>
@@ -104,7 +104,7 @@ export function Header() {
               aria-expanded={moreOpen}
               aria-controls="more-menu"
               onClick={() => setMoreOpen((v) => !v)}
-              className="flex items-center gap-1 rounded px-3 py-2 font-display text-[0.9375rem] font-semibold text-ink/80 hover:text-ink"
+              className={`flex items-center gap-1 rounded px-3 py-2 font-display text-[0.9375rem] font-semibold ${onHome ? "text-white/85 hover:text-white" : "text-ink/80 hover:text-ink"}`}
             >
               More
               <svg aria-hidden="true" viewBox="0 0 12 12" className={`h-3 w-3 transition-transform ${moreOpen ? "rotate-180" : ""}`}>
@@ -114,7 +114,7 @@ export function Header() {
             {moreOpen && (
               <ul
                 id="more-menu"
-                className="absolute right-0 top-full mt-2 w-52 rounded-[var(--radius-panel)] border border-line bg-paper p-1.5 shadow-[0_12px_32px_rgb(17_17_17/0.12)]"
+                className="absolute right-0 top-full mt-2 w-52 rounded-[var(--radius-panel)] border border-line bg-paper p-1.5 text-ink shadow-[0_12px_32px_rgb(17_17_17/0.12)]"
               >
                 {moreNav.map((item) => (
                   <li key={item.href}>
@@ -137,7 +137,7 @@ export function Header() {
             <Link
               href="/account"
               aria-current={isActive("/account") ? "page" : undefined}
-              className="hidden rounded px-3 py-2 font-display text-[0.9375rem] font-semibold text-ink/80 hover:text-ink lg:block"
+              className={`hidden rounded px-3 py-2 font-display text-[0.9375rem] font-semibold lg:block ${onHome ? "text-white/85 hover:text-white" : "text-ink/80 hover:text-ink"}`}
             >
               Account
             </Link>
@@ -177,7 +177,7 @@ export function Header() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu"
-          className="fixed inset-x-0 bottom-0 top-[4.5rem] z-40 overflow-y-auto bg-paper lg:hidden"
+          className="fixed inset-x-0 bottom-0 top-[4.5rem] z-40 overflow-y-auto bg-paper text-ink lg:hidden"
         >
           <nav aria-label="Mobile" className="container-ed flex flex-col py-6">
             {[...primaryNav, ...moreNav, ...(supabaseConfigured ? [{ label: "Account", href: "/account", external: false }] : [])].map((item) => (
