@@ -5,7 +5,7 @@ import { CancelJobButton } from "@/components/account/CancelJobButton";
 import { ProfileForm } from "@/components/account/ProfileForm";
 import { VehicleManager } from "@/components/account/VehicleManager";
 import { site } from "@/data/site";
-import { getMyJobs, getSession } from "@/lib/supabase/account";
+import { getMyJobs, getSession, type ClientJob } from "@/lib/supabase/account";
 import { supabaseConfigured } from "@/lib/supabase/config";
 import { usd } from "@/lib/format";
 import { pageMetadata } from "@/lib/seo";
@@ -46,15 +46,7 @@ export default async function AccountPage() {
   }
 
   const { account, garage, email } = session;
-  let jobs: {
-  id: string;
-  service_name: string | null;
-  vehicle: string | null;
-  scheduled_start: string | null;
-  status: string | null;
-  address: string | null;
-  price: number | null;
-}[] = [];
+  let jobs: ClientJob[];
   try {
     jobs = await getMyJobs();
   } catch (error) {
