@@ -1266,3 +1266,138 @@
     padding-right: 24px;
   }
 }
+
+/* =========================================================
+   V11.2 — final above-the-fold UI refinement
+   One responsive left axis, hover services, retro controls.
+   ========================================================= */
+
+/* Retro control language: crisp border + hard offset shadow. */
+.hero-copy .btn,
+.home-nav-actions .btn-sm {
+  border: 2px solid #171717 !important;
+  border-radius: .48rem !important;
+  font-family: var(--font-display);
+  font-weight: 700;
+  box-shadow: 5px 5px 0 #171717 !important;
+  transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease !important;
+}
+.hero-copy .btn:hover,
+.home-nav-actions .btn-sm:hover {
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 7px 7px 0 #171717 !important;
+}
+.hero-copy .btn:active,
+.home-nav-actions .btn-sm:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: 1px 1px 0 #171717 !important;
+}
+.hero-copy .btn-primary,
+.home-nav-actions .btn-primary { background: var(--color-red); color: #fff; }
+.hero-copy .btn-quote {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* Account should read as navigation, not a third CTA. */
+.home-nav-actions .account-link {
+  position: relative;
+  border-radius: 0 !important;
+  padding-inline: .25rem !important;
+  opacity: .88;
+  text-decoration: none;
+}
+.home-nav-actions .account-link::after {
+  content: "";
+  position: absolute;
+  left: .25rem;
+  right: .25rem;
+  bottom: .25rem;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 160ms ease;
+}
+.home-nav-actions .account-link:hover::after,
+.home-nav-actions .account-link[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Remove the hover dead-zone so the Services menu stays open while entering it. */
+.services-dropdown { top: 100% !important; margin-top: 0 !important; }
+.services-menu::after {
+  content: "";
+  position: absolute;
+  left: -1rem;
+  right: -1rem;
+  top: 100%;
+  height: .65rem;
+}
+
+/* Large desktop: logo and hero share the exact same left axis. */
+@media (min-width: 1600px) {
+  .home-nav-shell {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-left: 4.5vw;
+    padding-right: 4.5vw;
+    height: 9.25rem;
+  }
+  .home-nav-shell .home-logo-control img {
+    width: 8.35rem !important;
+    height: 8.35rem !important;
+  }
+  .home-nav-shell .home-nav-links { gap: 1.05rem !important; }
+  .home-nav-shell .home-nav-links a,
+  .home-nav-shell .home-nav-links button {
+    font-size: 1.6rem !important;
+  }
+  .home-nav-actions { gap: 1.6rem; }
+  .home-nav-actions .account-link { font-size: 1.38rem !important; }
+  /* Header CTA is deliberately slimmer than the hero CTA. */
+  .home-nav-actions .btn-sm {
+    min-height: 4.15rem;
+    padding: .82rem 1.8rem;
+    font-size: 1.28rem;
+    box-shadow: 4px 4px 0 #171717 !important;
+  }
+  .home-nav-actions .btn-sm:hover { box-shadow: 6px 6px 0 #171717 !important; }
+
+  .hero-copy .btn {
+    min-height: 4.9rem;
+    padding: 1.08rem 1.9rem;
+    font-size: 1.42rem;
+  }
+  .proof-row { font-size: 1.02rem; }
+  .proof-row > div { grid-template-columns: 1.4fr 1fr 1fr .78fr; }
+  .proof-stars { letter-spacing: .015em; }
+}
+
+/* Normal desktop follows the hero's 5.5vw left axis too. */
+@media (min-width: 1024px) and (max-width: 1599px) {
+  .home-nav-shell {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-left: 5.5vw;
+    padding-right: 5.5vw;
+  }
+  .home-nav-actions .btn-sm {
+    min-height: 3.8rem;
+    padding: .75rem 1.45rem;
+    box-shadow: 4px 4px 0 #171717 !important;
+  }
+  .hero-copy .btn { box-shadow: 5px 5px 0 #171717 !important; }
+}
+
+/* Tablet/mobile: keep the same conceptual alignment without crowding controls. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .home-nav-shell { width: 100%; padding-left: 7vw; padding-right: 7vw; }
+}
+@media (max-width: 767px) {
+  .home-nav-shell { width: 100%; margin: 0; padding-left: 24px; padding-right: 24px; }
+  .hero-copy .btn { border-width: 1.5px !important; box-shadow: 4px 4px 0 #171717 !important; }
+}

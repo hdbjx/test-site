@@ -97,7 +97,14 @@ export function Header() {
 
         {/* Desktop */}
         <nav aria-label="Main" className={onHome ? "home-nav-links hidden items-center gap-1 lg:flex" : "hidden items-center gap-1 lg:flex"}>
-          <div ref={servicesRef} className="services-menu relative">
+          <div
+            ref={servicesRef}
+            className="services-menu relative"
+            onMouseEnter={() => setServicesOpen(true)}
+            onMouseLeave={() => setServicesOpen(false)}
+            onFocus={() => setServicesOpen(true)}
+            onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setServicesOpen(false); }}
+          >
             <button
               type="button"
               className={`rounded px-3 py-2 font-display text-[0.9375rem] font-semibold transition-colors ${onHome ? "text-white/90 hover:text-white" : "text-ink/80 hover:text-ink"}`}
@@ -134,7 +141,7 @@ export function Header() {
             <Link
               href="/account"
               aria-current={isActive("/account") ? "page" : undefined}
-              className={`hidden rounded px-3 py-2 font-display text-[0.9375rem] font-semibold lg:block ${onHome ? "text-white/85 hover:text-white" : "text-ink/80 hover:text-ink"}`}
+              className={`account-link hidden px-3 py-2 font-display text-[0.9375rem] font-semibold lg:block ${onHome ? "text-white/85 hover:text-white" : "text-ink/80 hover:text-ink"}`}
             >
               Account
             </Link>

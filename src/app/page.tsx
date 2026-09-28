@@ -37,7 +37,7 @@ export default function Home() {
               <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-primary">
                 Book a detail ↗
               </TrackedLink>
-              <a href="#pricing" className="btn btn-glass">View services</a>
+              <Link href="/get-a-quote" className="btn btn-quote">Get a quote</Link>
             </div>
           </div>
         </div>
