@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 type Phase = "idle" | "cover" | "reveal";
@@ -9,67 +9,78 @@ type Phase = "idle" | "cover" | "reveal";
 export function RouteTransition() {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [phase, setPhase] = useState<Phase>("idle");
   const pendingHref = useRef<string | null>(null);
   const navTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const failSafe = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const previousLocation = useRef<string | null>(null);
+  const previousPathname = useRef<string | null>(null);
 
   const clearTimers = () => {
     if (navTimer.current) clearTimeout(navTimer.current);
+    if (revealTimer.current) clearTimeout(revealTimer.current);
     if (failSafe.current) clearTimeout(failSafe.current);
     navTimer.current = null;
+    revealTimer.current = null;
     failSafe.current = null;
   };
 
-  // Once the cover is in place, perform the route change. A failsafe always
-  // clears the overlay even if a redirect or route error behaves unexpectedly.
+  const finishTransition = () => {
+    clearTimers();
+    pendingHref.current = null;
+    setPhase("reveal");
+    revealTimer.current = setTimeout(() => setPhase("idle"), 430);
+  };
+
   useEffect(() => {
     if (phase !== "cover" || !pendingHref.current) return;
 
     const href = pendingHref.current;
     navTimer.current = setTimeout(() => router.push(href), 285);
-    failSafe.current = setTimeout(() => {
-      pendingHref.current = null;
-      setPhase("reveal");
-      setTimeout(() => setPhase("idle"), 430);
-    }, 1800);
+    failSafe.current = setTimeout(finishTransition, 1800);
 
     return clearTimers;
   }, [phase, router]);
 
-  // Reveal only after the URL actually changes. This also handles server
-  // redirects such as /account/sign-in -> /account for signed-in customers.
+  // Pathname is sufficient for the site's page-to-page transitions and avoids
+  // making the global layout dependent on useSearchParams during prerendering.
   useEffect(() => {
-    const current = `${pathname}?${searchParams.toString()}`;
-    if (previousLocation.current === null) {
-      previousLocation.current = current;
+    if (previousPathname.current === null) {
+      previousPathname.current = pathname;
       return;
     }
 
-    if (current !== previousLocation.current) {
-      previousLocation.current = current;
-      if (phase === "cover" || pendingHref.current) {
-        clearTimers();
-        pendingHref.current = null;
-        setPhase("reveal");
-        const id = setTimeout(() => setPhase("idle"), 430);
-        return () => clearTimeout(id);
-      }
+    if (pathname !== previousPathname.current) {
+      previousPathname.current = pathname;
+      if (phase === "cover" || pendingHref.current) finishTransition();
     }
-  }, [pathname, searchParams, phase]);
+  }, [pathname, phase]);
 
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
-      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) return;
+
       const target = event.target as Element | null;
       const anchor = target?.closest("a[href]") as HTMLAnchorElement | null;
-      if (!anchor || anchor.target === "_blank" || anchor.hasAttribute("download") || anchor.dataset.noTransition === "true") return;
+      if (
+        !anchor ||
+        anchor.target === "_blank" ||
+        anchor.hasAttribute("download") ||
+        anchor.dataset.noTransition === "true"
+      ) return;
 
       const url = new URL(anchor.href, window.location.href);
       if (url.origin !== window.location.origin) return;
-      if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash === window.location.hash) return;
+
+      // Same-page query/hash changes do not need a full-screen branded wipe.
+      if (url.pathname === window.location.pathname) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
       event.preventDefault();
@@ -88,7 +99,14 @@ export function RouteTransition() {
   return (
     <div className={`route-transition route-transition--${phase}`} aria-hidden="true">
       <div className="route-transition__panel">
-        <Image src="/brand/every-detail-logo.png" alt="" width={1000} height={1000} className="route-transition__logo" priority />
+        <Image
+          src="/brand/every-detail-logo.png"
+          alt=""
+          width={1000}
+          height={1000}
+          className="route-transition__logo"
+          priority
+        />
       </div>
     </div>
   );

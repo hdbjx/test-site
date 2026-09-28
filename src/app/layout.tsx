@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Suspense } from "react";
 import "./globals.css";
 import { Analytics } from "@/components/Analytics";
 import { Footer } from "@/components/Footer";
@@ -31,9 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-dvh">
-        <Suspense fallback={null}>
-          <RouteTransition />
-        </Suspense>
+        <RouteTransition />
         <Header />
         <main id="main" tabIndex={-1} className="outline-none">
           {children}
