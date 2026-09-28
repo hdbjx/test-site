@@ -1,149 +1,131 @@
 import { CtaBand } from "@/components/CtaBand";
-import { PageHeader } from "@/components/PageHeader";
 import { Photo } from "@/components/Photo";
-import { ReviewGrid } from "@/components/ReviewGrid";
-import { RowList } from "@/components/RowList";
-import { TeamGrid } from "@/components/TeamGrid";
 import { TrackedLink } from "@/components/TrackedLink";
-import { WorkGallery } from "@/components/WorkGallery";
-import { areas } from "@/data/areas";
 import { reviewCountLabel, site } from "@/data/site";
-import { leadership, team, technicians } from "@/data/team";
+import { team } from "@/data/team";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "About Every Detail | Student-Run Mobile Detailing in Decatur, GA",
   description:
-    "Every Detail is a student-run mobile detailing company from Decatur, GA. Meet the team, how we train, and the standards behind every car.",
+    "The story behind Every Detail, a student-run mobile detailing company built in Decatur, Georgia.",
   path: "/about-us",
   image: "about-team",
 });
 
 const standards = [
-  {
-    title: "Training",
-    body: "Technicians progress through three tiers of training. Responsibility grows as skill is proven on real cars.",
-  },
-  {
-    title: "Systems",
-    body: "Checklists, scheduling, client notes and follow-up run on tools we built ourselves, so every job runs the same way.",
-  },
-  {
-    title: "Equipment",
-    body: "Two fully equipped rigs with our own power, water and professional products. We don't borrow your hose or outlet.",
-  },
-  {
-    title: "Reviews",
-    body: `${reviewCountLabel} five-star Google reviews. Read them before you book; we want you to.`,
-  },
+  ["01", "Train before touching client cars", "Technicians work through a tiered training system. More responsibility comes with demonstrated skill, consistency and attention to detail."],
+  ["02", "Follow the same process", "Our job checklists, quality checks and operating procedures keep the standard consistent, no matter which technicians are on the driveway."],
+  ["03", "Bring the shop with us", "Our mobile rigs arrive with power, water, professional equipment and products. The client should not have to supply the setup."],
+  ["04", "Finish with accountability", "Every job is checked before we leave. Reviews, client feedback and repeat business are part of how we measure whether the system is actually working."],
+];
+
+const milestones = [
+  ["8TH GRADE", "The beginning", "Every Detail started at the end of 8th grade with a small set of supplies and a simple idea: take the details more seriously."],
+  ["THE TEAM", "One person became a crew", `The company grew into a student team of ${team.length}, with training tiers, managers and systems built around doing the work consistently.`],
+  ["2025", site.award.short, "Decatur readers recognized Every Detail for car cleaning, a milestone that meant a lot for a company built in the community."],
+  ["TODAY", `${reviewCountLabel} five-star reviews`, "Two mobile rigs, recurring clients and a growing operation, while keeping the student-run model at the center of the company."],
 ];
 
 export default function AboutPage() {
   return (
-    <>
-      <PageHeader
-        crumbs={[{ name: "About", path: "/about-us" }]}
-        title="Student-run. Professionally detailed."
-        lede={
-          <p>
-            Every Detail is a mobile detailing company started and run by students in Decatur, Georgia. Here&rsquo;s how
-            it began, how we train, and who&rsquo;ll be working on your car.
-          </p>
-        }
-        aside={<Photo id="about-team" priority ratio="4/3" sizes="(min-width: 1024px) 45vw, 100vw" className="rounded-[var(--radius-photo)]" />}
-      />
-
-      {/* Story */}
-      <section className="border-t border-line bg-paper2 py-16 md:py-24">
-        <div className="container-ed grid gap-10 lg:grid-cols-12">
-          <h2 className="t-h2 lg:col-span-4">How it started</h2>
-          <div className="space-y-5 text-lg text-ink/85 lg:col-span-7 lg:col-start-6">
-            <p>
-              Every Detail started as a small student project with one goal: bring a higher standard of care to car
-              detailing. The name came from how we approach the work, by focusing on the things most people miss. The
-              crumbs in the cupholder seams. The shine on the tires.
-            </p>
-            <p>
-              What began with one person and a set of supplies has grown into a full mobile service with a team of{" "}
-              {team.length}, two rigs, a recurring membership, and clients across {areas.slice(0, 4).map((a) => a.name).join(", ")}{" "}
-              and the rest of our service area.
-            </p>
-            <p>
-              In 2025, Decatur readers named us {site.award.title.replace(" 2025", "")}. We&rsquo;ve earned {reviewCountLabel}{" "}
-              five-star Google reviews, one car at a time.
-            </p>
+    <main className="about-v2">
+      <section className="about-v2-hero">
+        <div className="about-v2-shell about-v2-hero-grid">
+          <div className="about-v2-hero-copy">
+            <p className="about-v2-kicker">ABOUT EVERY DETAIL / DECATUR, GA</p>
+            <h1>Started in 8th grade.<br/><span>Built into something real.</span></h1>
+            <p className="about-v2-lede">Every Detail is a student-run mobile detailing company from Decatur. What started as one student cleaning cars has grown into a trained team, two mobile rigs and a company built around doing the small things right.</p>
+          </div>
+          <div className="about-v2-hero-photo">
+            <Photo id="about-team" priority ratio="3/2" sizes="(min-width: 900px) 48vw, 92vw" />
+            <div className="about-v2-photo-tag">THE CREW / DECATUR, GA</div>
           </div>
         </div>
       </section>
 
-      {/* Standards */}
-      <section className="container-ed py-16 md:py-24">
-        <h2 className="t-h2 max-w-4xl">How a student-run company stays professional</h2>
-        <div className="mt-10">
-          <RowList items={standards} />
-        </div>
-      </section>
-
-      {/* Founder */}
-      <section className="border-t border-line bg-paper2 py-16 md:py-24">
-        <div className="container-ed grid gap-10 lg:grid-cols-12 lg:items-center">
-          <div className="lg:col-span-3">
-            <p className="eyebrow">Founder</p>
-            <p className="mt-3 font-display text-3xl font-semibold">Wiley</p>
-            <p className="mt-1 text-muted">Founder &amp; owner</p>
+      <section className="about-v2-origin">
+        <div className="about-v2-shell about-v2-origin-grid">
+          <div>
+            <p className="about-v2-kicker">HOW IT STARTED</p>
+            <h2>It was never supposed to feel like <span>just a car wash.</span></h2>
           </div>
-          <figure className="lg:col-span-8 lg:col-start-5">
-            <blockquote className="font-display text-2xl font-medium leading-snug tracking-tight md:text-3xl">
-              <p>
-                &ldquo;I believe every vehicle deserves professional-level attention, and every customer should drive away
-                feeling proud of their car.&rdquo;
-              </p>
-            </blockquote>
-            <figcaption className="mt-6">
-              <span className="font-display font-semibold">Wiley</span>
-              <span className="text-muted">, founder and owner</span>
-            </figcaption>
-          </figure>
+          <div className="about-v2-story-copy">
+            <p className="about-v2-story-lead">Every Detail began with a simple obsession: notice what other people miss.</p>
+            <p>At first, that meant the crumbs buried in seams, the dirt around switches, the door jambs and the little areas that change how clean a car actually feels. The name came from that approach.</p>
+            <p>As more people trusted us with their cars, the challenge changed. It was no longer just about learning how to detail well. We had to figure out how to teach other students, schedule jobs, build mobile rigs, communicate with clients and make the quality repeatable.</p>
+            <p>That is what Every Detail is now: still student-run, but supported by real training, systems and standards.</p>
+          </div>
         </div>
       </section>
 
-      {/* Team */}
-      <section id="team" className="container-ed scroll-mt-24 py-16 md:py-24">
-        <h2 className="t-h2">The team</h2>
-        <p className="mt-4 max-w-2xl text-lg text-ink/80">The people running the business and the technicians on your car.</p>
-        <h3 className="mt-12 font-display text-xl font-semibold">Leadership</h3>
-        <div className="mt-6">
-          <TeamGrid members={leadership} />
-        </div>
-        <h3 className="mt-16 font-display text-xl font-semibold">Technicians</h3>
-        <p className="mt-2 max-w-2xl text-ink/75">Tier 3 technicians are our most experienced. Every technician trains up through the tiers.</p>
-        <div className="mt-6">
-          <TeamGrid members={technicians} />
+      <section className="about-v2-proof">
+        <div className="about-v2-shell about-v2-proof-grid">
+          <div><strong>{reviewCountLabel}</strong><span>FIVE-STAR GOOGLE REVIEWS</span></div>
+          <div><strong>2</strong><span>FULLY EQUIPPED MOBILE RIGS</span></div>
+          <div><strong>{team.length}</strong><span>STUDENTS ON THE TEAM</span></div>
+          <div><strong>2025</strong><span>BEST OF DECATURISH</span></div>
         </div>
       </section>
 
-      <section className="border-t border-line bg-paper2 py-16 md:py-24">
-        <div className="container-ed">
-          <p className="eyebrow">On the job</p>
-          <h2 className="t-h2 mt-3 mb-8">Built in driveways around Decatur</h2>
-          <WorkGallery ids={["about-ops-01", "about-ops-02", "about-ops-03", "about-ops-04", "about-ops-05", "about-ops-06"]} />
+      <section className="about-v2-student">
+        <div className="about-v2-shell">
+          <div className="about-v2-section-head">
+            <p className="about-v2-kicker">STUDENT-RUN, ON PURPOSE</p>
+            <h2>Being students is part of the story.<br/><span>The standard still has to hold.</span></h2>
+            <p>We know “student-run” can create a question before it creates confidence. So we built the company to answer that question through the way the work is done.</p>
+          </div>
+          <div className="about-v2-standards">
+            {standards.map(([n,title,body]) => (
+              <article key={n}>
+                <span className="about-v2-num">{n}</span>
+                <div><h3>{title}</h3><p>{body}</p></div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="border-t border-line bg-paper2 py-16 md:py-24">
-        <div className="container-ed">
-          <ReviewGrid />
+      <section className="about-v2-work">
+        <div className="about-v2-shell">
+          <div className="about-v2-work-head">
+            <div><p className="about-v2-kicker">WHAT IT LOOKS LIKE NOW</p><h2>Built in driveways<br/><span>around Decatur.</span></h2></div>
+            <p>The company grew, but the work still happens the same place it started: outside somebody&rsquo;s house, with a team that has to earn the result one car at a time.</p>
+          </div>
+          <div className="about-v2-work-grid">
+            <figure className="about-v2-work-wide"><Photo id="about-ops-05" ratio="3/2" sizes="(min-width: 900px) 60vw, 92vw"/><figcaption>THE TEAM / ON THE JOB</figcaption></figure>
+            <figure><Photo id="about-ops-02" ratio="4/5" sizes="(min-width: 900px) 30vw, 92vw"/><figcaption>THE RIG / BUILT TO BE MOBILE</figcaption></figure>
+            <figure><Photo id="about-ops-01" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>SETUP / EVERY DRIVEWAY</figcaption></figure>
+            <figure><Photo id="about-ops-06" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>THE WORK / DETAIL BY DETAIL</figcaption></figure>
+          </div>
         </div>
       </section>
 
-      <section className="container-ed flex flex-col items-start gap-4 py-12 md:flex-row md:items-center md:justify-between">
-        <p className="text-lg">Want to work with us? We hire students who care about doing things right.</p>
-        <TrackedLink href={`mailto:${site.email}?subject=Joining%20the%20team`} event="phone_click" params={{ location: "about_hiring" }} className="link font-display font-semibold">
-          Email {site.email}
-        </TrackedLink>
+      <section className="about-v2-timeline">
+        <div className="about-v2-shell">
+          <p className="about-v2-kicker">THE STORY SO FAR</p>
+          <h2>Still building.</h2>
+          <div className="about-v2-milestones">
+            {milestones.map(([year,title,body]) => <article key={year}><span>{year}</span><h3>{title}</h3><p>{body}</p></article>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="about-v2-belief">
+        <div className="about-v2-shell about-v2-belief-grid">
+          <p className="about-v2-kicker">WHAT WE CARE ABOUT</p>
+          <blockquote>“The goal is not to look impressive because we&rsquo;re students. <span>The goal is to do work that&rsquo;s impressive, period.</span>”</blockquote>
+        </div>
+      </section>
+
+      <section className="about-v2-join">
+        <div className="about-v2-shell about-v2-join-grid">
+          <div><p className="about-v2-kicker">JOIN THE TEAM</p><h2>Learn to do things <span>the right way.</span></h2></div>
+          <div><p>We hire students who care about the work, can take feedback and want real responsibility. Experience helps, but willingness to learn matters more.</p><TrackedLink href={`mailto:${site.email}?subject=Joining%20the%20team`} event="phone_click" params={{location:"about_hiring"}} className="about-v2-button">Email {site.email} ↗</TrackedLink></div>
+        </div>
       </section>
 
       <CtaBand location="about_final" />
-    </>
+    </main>
   );
 }
