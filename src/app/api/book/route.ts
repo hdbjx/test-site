@@ -10,6 +10,7 @@ import {
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { getSession, vehicleName } from "@/lib/supabase/account";
 import { sendBookingEmails } from "@/lib/email";
+import { upsertWebsiteContact } from "@/lib/website-contact";
 
 export const dynamic = "force-dynamic";
 
@@ -181,6 +182,27 @@ export async function POST(req: Request) {
         status: 422,
       },
     );
+  }
+
+  // Guest bookings should reuse the same canonical contact created by any
+  // earlier quote, recommender or Detail+ submission. Signed-in customers
+  // already have a canonical client id from their account.
+  if (!clientId) {
+    try {
+      clientId = await upsertWebsiteContact({
+        name,
+        phone,
+        email,
+        address,
+        source: "Website Booking",
+      });
+    } catch (contactError) {
+      console.error("[book] contact", contactError);
+      return NextResponse.json(
+        { ok: false, error: "We couldn't save your contact information. Please try again." },
+        { status: 502 },
+      );
+    }
   }
 
   const pricing = PRICING[size][service];

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sendLeadEmails } from "@/lib/email";
+import { upsertWebsiteContact } from "@/lib/website-contact";
 
 const REQUIRED: Record<string, string[]> = {
   quote: ["name", "phone", "vehicleMake", "vehicleModel", "interest"],
@@ -43,7 +44,7 @@ function getQuoteMessage(fields: Record<string, string>) {
   );
 }
 
-async function saveQuoteToCrm(fields: Record<string, string>) {
+async function saveQuoteToCrm(fields: Record<string, string>, clientId: string) {
   const supabaseUrl =
     process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
@@ -79,6 +80,7 @@ async function saveQuoteToCrm(fields: Record<string, string>) {
     text_attempts: 0,
     email_attempts: 0,
     source: nullable(fields.source) ?? "New Website",
+    converted_client_id: clientId,
   };
 
   const headers: Record<string, string> = {
@@ -119,6 +121,11 @@ export async function POST(req: Request) {
   } catch {
     console.error("[lead] invalid JSON");
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
+  }
+
+  // Honeypot. Bots that fill the hidden company field should not create contacts.
+  if (typeof body.company === "string" && body.company.trim()) {
+    return NextResponse.json({ ok: true });
   }
 
   const type = String(body.type ?? "");
@@ -168,13 +175,34 @@ export async function POST(req: Request) {
   }
 
   let crmLeadId: string | null = null;
+  let clientId: string | null = null;
 
-  // Quote requests now enter the Supabase CRM immediately.
+  // Every valid public lead form creates or updates the canonical contact first.
+  // This applies to quote, recommender, booking-request and Detail+ submissions.
+  try {
+    console.info("[lead] saving website contact");
+    clientId = await upsertWebsiteContact({
+      name: fields.name,
+      phone: fields.phone,
+      email: fields.email,
+      address: fields.address,
+      source: fields.source ?? `Website ${type}`,
+    });
+    console.info("[lead] contact save completed", clientId);
+  } catch (contactError) {
+    console.error("[lead] contact save failed", contactError);
+    return NextResponse.json(
+      { ok: false, error: "We couldn't save that request right now. Please try again." },
+      { status: 502 },
+    );
+  }
+
+  // Quote requests also enter the Supabase CRM immediately.
   // Booking and Detail+ behavior remains unchanged in this route.
   if (type === "quote") {
     try {
       console.info("[lead] saving quote to CRM");
-      crmLeadId = await saveQuoteToCrm(fields);
+      crmLeadId = await saveQuoteToCrm(fields, clientId);
       console.info("[lead] CRM save completed", crmLeadId);
     } catch (crmError) {
       console.error("[lead] CRM save failed", crmError);
@@ -201,7 +229,7 @@ export async function POST(req: Request) {
     // If a quote is already safely in the CRM, do not make the customer
     // resubmit and create a duplicate lead just because email delivery failed.
     if (type === "quote" && crmLeadId) {
-      return NextResponse.json({ ok: true, crmLeadId, emailWarning: true });
+      return NextResponse.json({ ok: true, crmLeadId, clientId, emailWarning: true });
     }
 
     return NextResponse.json(
@@ -210,5 +238,5 @@ export async function POST(req: Request) {
     );
   }
 
-  return NextResponse.json({ ok: true, crmLeadId });
+  return NextResponse.json({ ok: true, crmLeadId, clientId });
 }
