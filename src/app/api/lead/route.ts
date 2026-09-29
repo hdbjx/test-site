@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { sendLeadEmails } from "@/lib/email";
 
 const REQUIRED: Record<string, string[]> = {
-  quote: ["name", "phone", "vehicleYear", "vehicleMake", "vehicleModel", "interest"],
+  quote: ["name", "phone", "vehicleMake", "vehicleModel", "interest"],
   booking: ["name", "phone", "vehicle", "service", "address", "preferredDays"],
   detailplus: ["name", "phone", "frequency", "coverage", "vehicle"],
 };
@@ -67,8 +67,10 @@ async function saveQuoteToCrm(fields: Record<string, string>) {
     vehicle_make: nullable(fields.vehicleMake),
     vehicle_model: nullable(fields.vehicleModel),
     vehicle_size: nullable(fields.vehicleSize),
-    requested_service: nullable(fields.interest),
+    requested_service: nullable(fields.service ?? fields.interest),
     message: getQuoteMessage(fields),
+    quote_amount: nullable(fields.quote) ? Number.parseFloat(fields.quote) || null : null,
+    internal_notes: nullable(fields.internalNotes),
     status: "active",
     next_action_type: "Call 1 of 2",
     next_action_due_date: easternDateKey(),
@@ -76,7 +78,7 @@ async function saveQuoteToCrm(fields: Record<string, string>) {
     call_attempts: 0,
     text_attempts: 0,
     email_attempts: 0,
-    source: "New Website",
+    source: nullable(fields.source) ?? "New Website",
   };
 
   const headers: Record<string, string> = {
