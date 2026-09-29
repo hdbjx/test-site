@@ -1,10 +1,8 @@
-import { CtaBand } from "@/components/CtaBand";
+import Link from "next/link";
 import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
-import { PageHeader } from "@/components/PageHeader";
+import { Photo } from "@/components/Photo";
 import { ReviewGrid } from "@/components/ReviewGrid";
-import { RowList } from "@/components/RowList";
-import { TrackedLink } from "@/components/TrackedLink";
 import { DetailPlusForm } from "@/components/forms/DetailPlusForm";
 import { detailPlusBenefits, detailPlusGuarantee, detailPlusSteps, frequencies } from "@/data/detailplus";
 import { detailPlusFaqs } from "@/data/faqs";
@@ -12,131 +10,33 @@ import { pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Detail+ Recurring Car Detailing Membership | Every Detail",
-  description:
-    "Recurring mobile detailing in Decatur and Atlanta. Choose every 2 weeks to quarterly, interior, exterior or both, for one flat rate per visit. No contracts.",
+  description: "Recurring mobile detailing in Decatur and Atlanta. Choose every 2 weeks to quarterly, interior, exterior or both, for one flat rate per visit. No contracts.",
   path: "/detailplus",
 });
 
 export default function DetailPlusPage() {
   return (
-    <>
-      <PageHeader
-        crumbs={[{ name: "Detail+", path: "/detailplus" }]}
-        title={
-          <>
-            Detail<span className="text-red">+</span>
-          </>
-        }
-        lede={
-          <p>
-            Recurring detailing for people who&rsquo;d rather keep the car clean than keep scheduling it. Pick how often
-            and what gets cleaned. We show up on schedule, for the same flat rate, every visit.
-          </p>
-        }
-      >
-        <TrackedLink href="#build" event="detailplus_start" params={{ location: "detailplus_hero" }} className="btn btn-primary">
-          Build your plan
-        </TrackedLink>
-        <a href="#how" className="btn btn-secondary">
-          How it works
-        </a>
-      </PageHeader>
+    <main className="plus-v2">
+      <section className="plus-v2-hero"><div className="plus-v2-shell plus-v2-hero-grid">
+        <div className="plus-v2-hero-copy"><p className="plus-v2-kicker">DETAIL+ / RECURRING CARE</p><h1>Get it clean.<br/><span>Keep it clean.</span></h1><p>Detail+ puts your car on a recurring detailing schedule. Pick how often we come and what gets cleaned. Your rate stays flat, your visits stay on the calendar, and the mess never gets a chance to become a reset.</p><div className="plus-v2-actions"><a href="#build" className="btn btn-primary">Build your plan ↗</a><a href="#how" className="plus-v2-inline">See how it works</a></div></div>
+        <figure className="plus-v2-photo"><Photo id="work-davis-0909" priority ratio="4/5" sizes="(min-width: 900px) 40vw, 94vw"/><figcaption>RECURRING CARE / DONE BY OUR CREW</figcaption></figure>
+      </div></section>
 
-      {/* Who it's for + benefits */}
-      <section className="border-t border-line bg-paper2 py-16 md:py-24">
-        <div className="container-ed grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <h2 className="t-h2">Who it&rsquo;s for</h2>
-            <p className="mt-5 text-lg text-ink/80">
-              People who want the car clean all the time, not just the week after a detail. It works especially well
-              for family cars, pet owners and daily commuters.
-            </p>
-          </div>
-          <div className="lg:col-span-7 lg:col-start-6">
-            <RowList items={detailPlusBenefits} />
-          </div>
-        </div>
-      </section>
+      <section className="plus-v2-strip"><div className="plus-v2-shell"><span>NO CONTRACT</span><span>FLAT RATE PER VISIT</span><span>RECURRING SCHEDULING</span><span>EXTRA MESSES COVERED</span></div></section>
 
-      {/* How it works */}
-      <section id="how" className="container-ed scroll-mt-24 py-16 md:py-24">
-        <h2 className="t-h2">How it works</h2>
-        <ol className="mt-10 grid gap-8 md:grid-cols-3">
-          {detailPlusSteps.map((s, i) => (
-            <li key={s.title} className="border-t-2 border-ink pt-5">
-              <p className="t-numeral text-5xl text-oxblood">{i + 1}</p>
-              <h3 className="mt-3 font-display text-lg font-semibold">{s.title}</h3>
-              <p className="mt-1 text-ink/75">{s.body}</p>
-            </li>
-          ))}
-        </ol>
-        <div className="mt-12 grid gap-6 border-t border-line pt-8 md:grid-cols-2">
-          <div>
-            <h3 className="font-display font-semibold">Visit frequency</h3>
-            <p className="mt-1 text-ink/80">{frequencies.map((f) => f.label).join(", ")}.</p>
-          </div>
-          <div>
-            <h3 className="font-display font-semibold">Pricing</h3>
-            <p className="mt-1 text-ink/80">
-              A flat per-visit rate, quoted for your vehicle, frequency and coverage. It doesn&rsquo;t change based on how
-              dirty the car is that day.
-            </p>
-          </div>
-        </div>
-      </section>
+      <section className="plus-v2-why"><div className="plus-v2-shell"><div className="plus-v2-head"><div><p className="plus-v2-kicker">WHY DETAIL+</p><h2>A clean car is easier<br/><span>to keep than recover.</span></h2></div><p>One-time details solve the buildup. Detail+ is what happens next. We return before the vehicle needs another major catch-up clean.</p></div><div className="plus-v2-benefits">{detailPlusBenefits.map((b,i)=><article key={b.title}><b>{String(i+1).padStart(2,"0")}</b><h3>{b.title}</h3><p>{b.body}</p></article>)}</div></div></section>
 
-      {/* Guarantee */}
-      <section className="bg-ink py-16 text-paper md:py-20">
-        <div className="container-ed grid gap-6 lg:grid-cols-12 lg:items-center">
-          <p className="t-h2 lg:col-span-7">&ldquo;{detailPlusGuarantee}&rdquo;</p>
-          <p className="text-lg text-paper/75 lg:col-span-4 lg:col-start-9">
-            Whatever your plan covers, interior, exterior or both, gets handled every visit. Spills, stains, crumbs and pet
-            hair included. No add-on fees.
-          </p>
-        </div>
-      </section>
+      <section id="how" className="plus-v2-how"><div className="plus-v2-shell"><p className="plus-v2-kicker">HOW IT WORKS</p><h2>Three decisions.<br/><span>Then it runs itself.</span></h2><ol>{detailPlusSteps.map((s,i)=><li key={s.title}><b>{String(i+1).padStart(2,"0")}</b><div><h3>{s.title}</h3><p>{s.body}</p></div></li>)}</ol><div className="plus-v2-frequency"><span>AVAILABLE CADENCES</span><p>{frequencies.map((f)=>f.label).join("  /  ")}</p></div></div></section>
 
-      {/* Builder */}
-      <section id="build" className="container-ed scroll-mt-24 py-16 md:py-24">
-        <div className="grid gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <h2 className="t-h2">Build your plan</h2>
-            <p className="mt-5 text-lg text-ink/80">
-              Choose your schedule, coverage and vehicle. We&rsquo;ll send your flat rate and get the first visit on the
-              calendar.
-            </p>
-          </div>
-          <div className="lg:col-span-8">
-            <DetailPlusForm />
-          </div>
-        </div>
-      </section>
+      <section className="plus-v2-promise"><div className="plus-v2-shell"><p className="plus-v2-kicker">THE SIMPLE RULE</p><blockquote>“{detailPlusGuarantee}”</blockquote><p>Whatever coverage your plan includes gets handled on that visit. Spills, stains, crumbs and pet hair do not turn into surprise add-on charges.</p></div></section>
 
-      <section className="border-t border-line bg-paper2 py-16 md:py-24">
-        <div className="container-ed">
-          <ReviewGrid />
-        </div>
-      </section>
+      <section id="build" className="plus-v2-build"><div className="plus-v2-shell plus-v2-build-grid"><div className="plus-v2-build-copy"><p className="plus-v2-kicker">BUILD YOUR PLAN</p><h2>Tell us what<br/><span>staying clean means.</span></h2><p>Choose the vehicle, frequency and whether you want the interior, exterior or both maintained. We will send the flat per-visit rate and get the first visit on the calendar.</p><div className="plus-v2-build-note"><b>NOT READY FOR RECURRING?</b><p>Start with a one-time detail. You can move into Detail+ after you know the work.</p><Link href="/book">Book one detail first ↗</Link></div></div><div className="plus-v2-form"><DetailPlusForm /></div></div></section>
 
-      <section className="container-ed grid gap-10 py-16 md:py-24 lg:grid-cols-12">
-        <h2 className="t-h2 lg:col-span-4">Detail+ questions</h2>
-        <div className="lg:col-span-8">
-          <FaqList faqs={detailPlusFaqs} />
-        </div>
-      </section>
+      <section className="plus-v2-reviews"><div className="plus-v2-shell"><p className="plus-v2-kicker">WHY PEOPLE COME BACK</p><ReviewGrid /></div></section>
+      <section className="plus-v2-faq"><div className="plus-v2-shell plus-v2-faq-grid"><div><p className="plus-v2-kicker">DETAIL+ QUESTIONS</p><h2>Before you<br/><span>put it on repeat.</span></h2></div><FaqList faqs={detailPlusFaqs}/></div></section>
 
-      <CtaBand
-        location="detailplus_final"
-        title="Rather start with one detail?"
-        body="Book a one-time detail first and see the work. You can join Detail+ anytime after."
-      />
-      <JsonLd
-        data={serviceSchema({
-          name: "Detail+ recurring detailing membership",
-          description: "Recurring mobile car detailing on a set schedule for one flat rate per visit.",
-          path: "/detailplus",
-        })}
-      />
-    </>
+      <section className="plus-v2-final"><div className="plus-v2-shell"><p className="plus-v2-kicker">READY WHEN YOU ARE</p><h2>Make clean<br/><span>the default.</span></h2><a href="#build" className="btn btn-on-dark">Build your Detail+ plan ↗</a></div></section>
+      <JsonLd data={serviceSchema({name:"Detail+ recurring detailing membership",description:"Recurring mobile car detailing on a set schedule for one flat rate per visit.",path:"/detailplus"})}/>
+    </main>
   );
 }
