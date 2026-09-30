@@ -15,6 +15,7 @@ type BookingEmail = {
   start: string;
   price: number;
   notes?: string;
+  lines?: Array<{ vehicle: string; service: string; price: number }>;
 };
 
 type LeadEmail = {
@@ -177,6 +178,17 @@ export async function sendEmail(message: EmailMessage) {
 export async function sendBookingEmails(booking: BookingEmail) {
   const appointment = formatAppointment(booking.start);
   const money = formatMoney(booking.price);
+  const lines = booking.lines?.length
+    ? booking.lines
+    : [{ vehicle: booking.vehicle, service: booking.service, price: booking.price }];
+  const vehicleRows = lines
+    .map((line, index) =>
+      detailRow(
+        lines.length > 1 ? `Vehicle ${index + 1}` : "Vehicle",
+        `${line.vehicle} · ${line.service} · ${formatMoney(line.price)}`,
+      ),
+    )
+    .join("");
 
   const customerHtml = shell(
     `
@@ -193,15 +205,14 @@ export async function sendBookingEmails(booking: BookingEmail) {
       </p>
 
       <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-        ${detailRow("Service", booking.service)}
-        ${detailRow("Vehicle", booking.vehicle)}
+        ${vehicleRows}
         ${detailRow("When", appointment)}
         ${detailRow("Where", booking.address)}
-        ${detailRow("Price", money)}
+        ${detailRow("Total", money)}
       </table>
 
       <div style="margin-top:26px;padding:18px;background:${BRAND.cream};border-left:5px solid ${BRAND.coral};font-size:14px;line-height:1.6;">
-        Please make sure we can access the vehicle at the scheduled time. You do not need to provide power or water.
+        Please make sure we can access ${lines.length > 1 ? "all vehicles" : "the vehicle"} at the scheduled time. You do not need to provide power or water.
       </div>
     `,
     `${booking.service} confirmed for ${appointment}`,
@@ -220,50 +231,42 @@ export async function sendBookingEmails(booking: BookingEmail) {
       <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
         ${detailRow("Customer", booking.name)}
         ${detailRow("Phone", booking.phone)}
-        ${detailRow("Email", booking.email || "Not provided")}
-        ${detailRow("Vehicle", booking.vehicle)}
+        ${detailRow("Email", booking.email)}
+        ${vehicleRows}
         ${detailRow("When", appointment)}
         ${detailRow("Address", booking.address)}
-        ${detailRow("Price", money)}
-        ${
-          booking.notes
-            ? detailRow("Notes", booking.notes)
-            : ""
-        }
+        ${detailRow("Total", money)}
+        ${booking.notes ? detailRow("Notes", booking.notes) : ""}
       </table>
     `,
     `New booking: ${booking.service}`,
   );
 
-  const jobs: Promise<unknown>[] = [];
-
-  if (booking.email) {
-    jobs.push(
-      sendEmail({
-        to: booking.email,
-        subject: `You're booked with Every Detail`,
-        html: customerHtml,
-        replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
-      }),
-    );
-  }
-
-  jobs.push(
+  const [customer, internal] = await Promise.allSettled([
+    sendEmail({
+      to: booking.email,
+      subject: `You're booked with Every Detail`,
+      html: customerHtml,
+      replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
+    }),
     sendEmail({
       to: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
       subject: `New booking · ${booking.service} · ${booking.name}`,
       html: internalHtml,
-      replyTo: booking.email || undefined,
+      replyTo: booking.email,
     }),
-  );
+  ]);
 
-  const results = await Promise.allSettled(jobs);
+  if (customer.status === "rejected") console.error("[email] customer booking confirmation failed", customer.reason);
+  if (internal.status === "rejected") console.error("[email] internal booking notification failed", internal.reason);
 
-  for (const result of results) {
-    if (result.status === "rejected") {
-      console.error("[email] booking email failed", result.reason);
-    }
-  }
+  const sent = (result: PromiseSettledResult<{ ok: boolean; skipped?: boolean }>) =>
+    result.status === "fulfilled" && result.value.ok === true;
+
+  return {
+    customerSent: sent(customer),
+    internalSent: sent(internal),
+  };
 }
 
 function leadTitle(type: string) {

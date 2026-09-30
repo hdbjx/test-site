@@ -46,7 +46,7 @@ export default async function BookPage({
       <PageHeader
         crumbs={[{ name: "Book", path: "/book" }]}
         title="Book your detail"
-        lede={<p>Pick your vehicle, service and an open time. It&rsquo;s booked when you hit the button.</p>}
+        lede={<p>Pick one or two vehicles, choose a service for each, and grab an open time. It&rsquo;s booked when you hit the button.</p>}
       />
       <section className="container-ed pb-24">
         <LiveBooking
