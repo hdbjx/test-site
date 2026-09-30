@@ -5,16 +5,17 @@
  */
 
 export type EventName =
-  | "book_click" // any Book button: { location, vehicle?, service? }
-  | "vehicle_select" // { vehicle, location }
-  | "service_select" // { service, vehicle?, location }
-  | "booking_submit" // booking request sent: { vehicle, service }
-  | "quote_start" // first interaction with the quote form
-  | "quote_submit" // quote sent: { interest }
-  | "phone_click" // { location }
-  | "detailplus_start" // plan builder interaction
-  | "detailplus_submit" // Detail+ request sent
-  | "paint_inquiry"; // any paint/ceramic quote click or submit
+  | "book_click"
+  | "vehicle_select"
+  | "service_select"
+  | "booking_add_vehicle"
+  | "booking_submit"
+  | "quote_start"
+  | "quote_submit"
+  | "phone_click"
+  | "detailplus_start"
+  | "detailplus_submit"
+  | "paint_inquiry";
 
 type Params = Record<string, string | number | undefined>;
 
