@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
-import { bookingHref } from "@/data/booking";
 import { recommenderVehicles, type RecommenderVehicle } from "@/data/recommenderVehicles";
-import { PRICING, services, vehicleLabel, type ServiceId, type VehicleId } from "@/data/services";
+import { PRICING, services, vehicleLabel, type ServiceId } from "@/data/services";
+import { ADDON_PRICES, PAINT_UPGRADES, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { track } from "@/lib/analytics";
 import { submitLead } from "@/lib/submit";
 
@@ -16,45 +16,18 @@ const CONDITIONS = [
   { value: 5, label: "Wrecked", desc: "Heavy use or a serious mess. The kind of job that takes real time and skill." },
 ] as const;
 
-type ConcernId = "pet" | "odor" | "stains" | "exterior" | "headlights" | "selling";
+type ConcernId = "pet" | "odor" | "carpetStains" | "seatStains" | "exterior" | "headlights" | "selling";
 const CONCERNS: Array<{ id: ConcernId; label: string; sub: string }> = [
   { id: "pet", label: "Pet Hair", sub: "Fur on seats or carpet" },
   { id: "odor", label: "Bad Odor", sub: "Smoke, food, pets, mildew" },
-  { id: "stains", label: "Stains", sub: "Seats, carpet, or headliner" },
+  { id: "carpetStains", label: "Carpet Stains", sub: "Stains or spills in the floor carpets" },
+  { id: "seatStains", label: "Seat Stains", sub: "Stains or spills in fabric seats" },
   { id: "exterior", label: "Dull Paint", sub: "Faded, scratched, or oxidized" },
   { id: "headlights", label: "Cloudy Headlights", sub: "Yellowed or foggy lenses" },
   { id: "selling", label: "Selling Soon", sub: "Want top dollar" },
 ];
 
-type AddonId = "Sealant" | "Pet Hair Removal" | "Clay Bar" | "Plastic Restoration" | "Headlight Restoration" | "Engine Bay" | "Extraction" | "Odor Removal";
 type Addon = { id: AddonId; name: string; price: string; recommended: boolean };
-
-const ADDON_PRICES: Record<AddonId, number | null> = {
-  Sealant: 60,
-  "Pet Hair Removal": 40,
-  "Clay Bar": 95,
-  "Plastic Restoration": 40,
-  "Headlight Restoration": 70,
-  "Engine Bay": 70,
-  Extraction: null,
-  "Odor Removal": null,
-};
-
-type PaintUpgradeId = "polish" | "ceramic";
-const PAINT_UPGRADES: Record<PaintUpgradeId, { name: string; tag: string; why: string; prices: Record<VehicleId, number> }> = {
-  polish: {
-    name: "Enhancement Polish",
-    tag: "Paint correction",
-    why: "A single-stage machine polish removes light swirl marks and water spot etching, restoring gloss and optical clarity. Scheduled as a separate appointment after your detail.",
-    prices: { sedan: 395, smallSUV: 445, smallTruck: 445, largeSUV: 525, largeTruck: 525, minivan: 495 },
-  },
-  ceramic: {
-    name: "2-Year Ceramic Coating",
-    tag: "Long-term protection",
-    why: "A nano-ceramic coating bonds to the clear coat to create a durable hydrophobic layer rated for two years. It pairs with the Enhancement Polish for maximum results.",
-    prices: { sedan: 895, smallSUV: 995, smallTruck: 995, largeSUV: 1095, largeTruck: 1095, minivan: 1020 },
-  },
-};
 
 type Recommendation = {
   service: ServiceId;
@@ -69,7 +42,8 @@ function recommendation(condition: number, concerns: Set<ConcernId>): Recommenda
   const selling = concerns.has("selling");
   const hasPet = concerns.has("pet");
   const hasOdor = concerns.has("odor");
-  const hasStain = concerns.has("stains");
+  const hasCarpetStains = concerns.has("carpetStains");
+  const hasSeatStains = concerns.has("seatStains");
   const hasExt = concerns.has("exterior");
   const hasHead = concerns.has("headlights");
   let service: ServiceId;
@@ -87,20 +61,22 @@ function recommendation(condition: number, concerns: Set<ConcernId>): Recommenda
     why = "Your vehicle is in great shape. Surface contamination is minimal and the interior just needs a light refresh. A Maintenance Detail covers a full interior wipe-down, vacuum, and a contact wash with pH-neutral shampoo finished with paint protection. Quick, thorough, and priced to keep clean cars clean.";
     upgradeMessage = "Want to go deeper? Our Premium Detail adds a full two-bucket decontamination wash, APC treatment on all interior panels, and a protective sealant coat.";
     if (hasPet) addons.push({ id: "Pet Hair Removal", name: "Pet Hair Removal", price: "+$40", recommended: true });
-    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Elimination", price: "$130–$200", recommended: true });
-    if (hasStain) addons.push({ id: "Extraction", name: "Hot Water Extraction", price: "$60–$120", recommended: true });
+    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Removal", price: "+$60", recommended: true });
+    if (hasCarpetStains) addons.push({ id: "Carpet Extraction", name: "Floor Carpet Extraction", price: "+$90", recommended: true });
+    if (hasSeatStains) addons.push({ id: "Seat Extraction", name: "Seat Extraction", price: "+$60", recommended: true });
     if (hasHead) addons.push({ id: "Headlight Restoration", name: "Headlight Restoration", price: "+$70", recommended: true });
-    if (hasExt) addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$70–$120", recommended: true });
+    if (hasExt) addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$95", recommended: true });
     if (!hasExt) addons.push({ id: "Sealant", name: "Protective Sealant", price: "+$60", recommended: false });
   } else if (condition === 2) {
     service = "premium";
     why = "Your car is in good shape with normal daily wear. A Premium Detail is the right fit: full two-bucket contact wash, deep interior clean with APC on all surfaces, multi-pass vacuum with drill-brush agitation on mats, seat and door jamb treatment, plus a protective sealant finish.";
     if (hasPet) addons.push({ id: "Pet Hair Removal", name: "Pet Hair Removal", price: "+$40", recommended: true });
-    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Elimination", price: "$130–$200", recommended: true });
-    if (hasStain) addons.push({ id: "Extraction", name: "Hot Water Extraction", price: "$60–$120", recommended: true });
+    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Removal", price: "+$60", recommended: true });
+    if (hasCarpetStains) addons.push({ id: "Carpet Extraction", name: "Floor Carpet Extraction", price: "+$90", recommended: true });
+    if (hasSeatStains) addons.push({ id: "Seat Extraction", name: "Seat Extraction", price: "+$60", recommended: true });
     if (hasHead) addons.push({ id: "Headlight Restoration", name: "Headlight Restoration", price: "+$70", recommended: true });
     if (hasExt) {
-      addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$70–$120", recommended: true });
+      addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$95", recommended: true });
       addons.push({ id: "Plastic Restoration", name: "Trim & Plastic Restoration", price: "+$40", recommended: false });
     }
   } else if (condition === 3) {
@@ -109,11 +85,12 @@ function recommendation(condition: number, concerns: Set<ConcernId>): Recommenda
     why = "With moderate soiling, embedded particulates in carpet fibers, surface oxidation on trim, and general buildup in high-contact areas, a Premium Detail gives us the depth to properly address each surface. APC on all interior panels, multi-pass vacuum, carpet treatment, a full decontamination exterior wash, and protective sealant are included.";
     upgradeMessage = "If you want full stain remediation, odor treatment, clay bar, plastic restoration, and every service in one all-in job, our Factory Reset covers everything with no extras needed.";
     if (hasPet) addons.push({ id: "Pet Hair Removal", name: "Pet Hair Removal", price: "+$40", recommended: true });
-    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Elimination", price: "$130–$200", recommended: true });
-    if (hasStain) addons.push({ id: "Extraction", name: "Hot Water Extraction", price: "$60–$120", recommended: true });
+    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Removal", price: "+$60", recommended: true });
+    if (hasCarpetStains) addons.push({ id: "Carpet Extraction", name: "Floor Carpet Extraction", price: "+$90", recommended: true });
+    if (hasSeatStains) addons.push({ id: "Seat Extraction", name: "Seat Extraction", price: "+$60", recommended: true });
     if (hasHead) addons.push({ id: "Headlight Restoration", name: "Headlight Restoration", price: "+$70", recommended: true });
     if (hasExt) {
-      addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$70–$120", recommended: true });
+      addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$95", recommended: true });
       addons.push({ id: "Plastic Restoration", name: "Trim & Plastic Restoration", price: "+$40", recommended: false });
     }
   } else {
@@ -281,6 +258,18 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function selectedBookingHref() {
+    if (!vehicle || !service || !result) return "/book";
+    const q = new URLSearchParams();
+    q.set("vehicle", vehicle.vehicle);
+    q.set("service", service);
+    const addonIds = result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.id);
+    if (addonIds.length) q.set("addons", addonIds.join(","));
+    if (paint.size) q.set("paint", [...paint].join(","));
+    q.set("from", "quote");
+    return `/book?${q.toString()}`;
+  }
+
   async function sendBuild() {
     if (!vehicle || !condition || !service || !result) return;
     if (!name.trim()) { setError("Enter your name so we know who the build belongs to."); return; }
@@ -400,10 +389,10 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
               <div className="quote-rec-book-actions">
                 <Link
                   className="btn btn-primary"
-                  href={bookingHref(vehicle.vehicle, service)}
+                  href={selectedBookingHref()}
                   onClick={() => track("book_click", { location: "saved_quote", vehicle: vehicle.vehicle, service })}
                 >
-                  Book this detail ↗
+                  Book selected services ↗
                 </Link>
                 <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>
                   {customizeExpanded ? "Hide customization ↑" : "Customize your detail +"}

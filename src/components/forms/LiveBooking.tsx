@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { PRICING, serviceList, services, vehicleIdFromSize, vehicles, type ServiceId, type VehicleId } from "@/data/services";
+import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { duration, usd } from "@/lib/format";
@@ -21,6 +22,9 @@ type Props = {
   garage?: GarageVehicle[];
   initialVehicle?: VehicleId;
   initialService?: ServiceId;
+  initialAddons?: AddonId[];
+  initialPaint?: PaintUpgradeId[];
+  fromQuote?: boolean;
 };
 
 type BookingLine = {
@@ -40,7 +44,7 @@ type Booked = {
   confirmationEmailSent: boolean;
 };
 
-export function LiveBooking({ account, email, garage = [], initialVehicle, initialService }: Props) {
+export function LiveBooking({ account, email, garage = [], initialVehicle, initialService, initialAddons = [], initialPaint = [], fromQuote = false }: Props) {
   const signedIn = !!account;
   const primary = garage.find((g) => g.is_primary) ?? garage[0];
   const nextKey = useRef(2);
@@ -72,6 +76,12 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const totalPrice = allVehiclesReady
     ? resolved.reduce((sum, line) => sum + PRICING[line.vehicle!][line.service].price, 0)
     : null;
+  const quoteVehicle = resolved[0]?.vehicle;
+  const fixedAddonTotal = initialAddons.reduce((sum, id) => sum + (ADDON_PRICES[id] ?? 0), 0);
+  const hasVariableAddons = initialAddons.some((id) => ADDON_PRICES[id] === null);
+  const paintTotal = quoteVehicle ? initialPaint.reduce((sum, id) => sum + PAINT_UPGRADES[id].prices[quoteVehicle], 0) : 0;
+  const quotedExtrasTotal = fixedAddonTotal + paintTotal;
+  const displayTotal = totalPrice === null ? null : totalPrice + quotedExtrasTotal;
   const appointmentMinutes = allVehiclesReady
     ? Math.max(...resolved.map((line) => PRICING[line.vehicle!][line.service].minutes))
     : null;
@@ -154,10 +164,12 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     setError(null);
     setBadField(null);
 
-    const bookingVehicles = resolved.map((line) => ({
+    const bookingVehicles = resolved.map((line, index) => ({
       service: line.service,
       vehicle: line.vehicle,
       vehicleId: line.saved?.id ?? null,
+      addons: index === 0 ? initialAddons : [],
+      paint: index === 0 ? initialPaint : [],
     }));
 
     const res = await fetch("/api/book", {
@@ -348,6 +360,28 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           {badField === "vehicle" && <p className="field-error mt-3">Check each vehicle and service.</p>}
         </section>
 
+        {(fromQuote && (initialAddons.length > 0 || initialPaint.length > 0)) && (
+          <section className="panel p-5 sm:p-6">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-red">From your saved quote</p>
+            <h2 className="t-h3 mt-1">Selected services &amp; add-ons</h2>
+            <div className="mt-4 space-y-2">
+              {initialAddons.map((id) => (
+                <p key={id} className="flex items-baseline gap-2 text-sm">
+                  <span className="font-display font-semibold">{ADDON_LABELS[id]}</span><span className="leader" aria-hidden="true" />
+                  <span>{ADDON_PRICES[id] === null ? "Price confirmed before service" : usd(ADDON_PRICES[id]!)}</span>
+                </p>
+              ))}
+              {initialPaint.map((id) => (
+                <p key={id} className="flex items-baseline gap-2 text-sm">
+                  <span className="font-display font-semibold">{PAINT_UPGRADES[id].name}</span><span className="leader" aria-hidden="true" />
+                  <span>{quoteVehicle ? usd(PAINT_UPGRADES[id].prices[quoteVehicle]) : "Quoted by vehicle"}</span>
+                </p>
+              ))}
+            </div>
+            {initialPaint.length > 0 && <p className="mt-4 text-sm text-muted">Paint correction and coating work is attached to this booking request. Because paint work can require a separate appointment, our team will confirm the production schedule with you.</p>}
+          </section>
+        )}
+
         <fieldset>
           <legend className="t-h3">2. Pick a time</legend>
           {!allVehiclesReady ? (
@@ -401,7 +435,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       <aside className="lg:col-span-4">
         <div className="panel p-6 lg:sticky lg:top-24">
           <h2 className="font-display text-lg font-semibold">Your appointment</h2>
-          {allVehiclesReady && totalPrice !== null ? (
+          {allVehiclesReady && displayTotal !== null ? (
             <div className="mt-4 space-y-4">
               {resolved.map((line, index) => {
                 const p = PRICING[line.vehicle!][line.service];
@@ -416,10 +450,16 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                   </div>
                 );
               })}
+              {(initialAddons.length > 0 || initialPaint.length > 0) && (
+                <div className="border-t border-line pt-4 text-sm text-muted">
+                  {initialAddons.map((id) => <p key={id}>+ {ADDON_LABELS[id]}</p>)}
+                  {initialPaint.map((id) => <p key={id}>+ {PAINT_UPGRADES[id].name}</p>)}
+                </div>
+              )}
               <p className="flex items-baseline gap-2 border-t-2 border-ink pt-4">
                 <span className="font-display font-semibold">Total</span>
                 <span className="leader" aria-hidden="true" />
-                <span className="t-numeral text-4xl">{usd(totalPrice)}</span>
+                <span className="t-numeral text-4xl">{usd(displayTotal)}{hasVariableAddons ? "+" : ""}</span>
               </p>
               {appointmentMinutes && <p className="text-sm text-muted">About {duration(appointmentMinutes)} on site. Multi-vehicle appointments are staffed to work on the vehicles together.</p>}
             </div>

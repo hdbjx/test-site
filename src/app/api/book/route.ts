@@ -10,6 +10,7 @@ import {
   type VehicleId,
 } from "@/data/services";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, isAddonId, isPaintUpgradeId, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { getSession, vehicleName, type GarageVehicle } from "@/lib/supabase/account";
 import { sendBookingEmails } from "@/lib/email";
 import { upsertWebsiteContact } from "@/lib/website-contact";
@@ -23,6 +24,8 @@ type RawBookingItem = {
   vehicle?: unknown;
   service?: unknown;
   vehicleId?: unknown;
+  addons?: unknown;
+  paint?: unknown;
 };
 
 type BookingLine = {
@@ -35,6 +38,8 @@ type BookingLine = {
   price: number;
   minutes: number;
   crew: number;
+  addons: AddonId[];
+  paint: PaintUpgradeId[];
 };
 
 function rawItems(body: Record<string, unknown>): RawBookingItem[] {
@@ -107,6 +112,8 @@ export async function POST(req: Request) {
     const service = str(item.service);
     let vehicle = str(item.vehicle);
     const savedVehicleId = str(item.vehicleId, 80) || null;
+    const addons = Array.isArray(item.addons) ? item.addons.filter(isAddonId).slice(0, 8) : [];
+    const paint = Array.isArray(item.paint) ? item.paint.filter(isPaintUpgradeId).slice(0, 1) : [];
     let label = "";
 
     if (!isServiceId(service)) {
@@ -139,6 +146,8 @@ export async function POST(req: Request) {
 
     const pricing = PRICING[vehicle][service];
     const serviceInfo = services[service];
+    const addonPrice = addons.reduce((sum, id) => sum + (ADDON_PRICES[id] ?? 0), 0);
+    const paintPrice = paint.reduce((sum, id) => sum + PAINT_UPGRADES[id].prices[vehicle], 0);
     lines.push({
       vehicle,
       service,
@@ -146,9 +155,11 @@ export async function POST(req: Request) {
       vehicleLabel: label || vehicleLabel(vehicle),
       vehicleSize: vehicleLabel(vehicle),
       serviceName: serviceInfo.name,
-      price: pricing.price,
+      price: pricing.price + addonPrice + paintPrice,
       minutes: pricing.minutes,
       crew: serviceInfo.crew,
+      addons,
+      paint,
     });
   }
 
@@ -167,6 +178,21 @@ export async function POST(req: Request) {
   const crew = baseCrew + Math.max(0, lines.length - 1);
   const appointmentService = lines.length === 1 ? lines[0].serviceName : `${lines.length}-vehicle appointment`;
   const appointmentVehicle = lines.length === 1 ? lines[0].vehicleLabel : `${lines.length} vehicles`;
+  const selectedExtras = lines.flatMap((line, index) => {
+    const names = [
+      ...line.addons.map((id) => ADDON_LABELS[id]),
+      ...line.paint.map((id) => PAINT_UPGRADES[id].name),
+    ];
+    return names.length ? [`Vehicle ${index + 1} selected extras: ${names.join(", ")}`] : [];
+  });
+  const variablePricing = lines.flatMap((line) => line.addons.filter((id) => ADDON_PRICES[id] === null).map((id) => ADDON_LABELS[id]));
+  const hasPaintWork = lines.some((line) => line.paint.length > 0);
+  const operationalNotes = [
+    notes,
+    ...selectedExtras,
+    variablePricing.length ? `Price to confirm before service: ${[...new Set(variablePricing)].join(", ")}` : "",
+    hasPaintWork ? "Paint correction/coating selected from website quote. Confirm separate paint-production scheduling with client." : "",
+  ].filter(Boolean).join(" | ");
 
   const { data, error } = await supabaseAdmin().rpc("book_multi_vehicle_job", {
     p_client_id: clientId,
@@ -184,7 +210,7 @@ export async function POST(req: Request) {
       minutes: line.minutes,
       crew: line.crew,
     })),
-    p_notes: notes || null,
+    p_notes: operationalNotes || null,
     p_source: "website",
   });
 
@@ -217,7 +243,7 @@ export async function POST(req: Request) {
     vehicle: appointmentVehicle,
     start: new Date(start).toISOString(),
     price: totalPrice,
-    notes,
+    notes: operationalNotes,
     lines: lines.map((line) => ({ vehicle: line.vehicleLabel, service: line.serviceName, price: line.price })),
   }).catch((emailError) => {
     console.error("[book] email", emailError);
@@ -236,7 +262,7 @@ export async function POST(req: Request) {
         phone,
         email,
         address,
-        notes,
+        notes: operationalNotes,
         service: appointmentService,
         vehicle: appointmentVehicle,
         vehicles: lines.map((line) => ({ vehicle: line.vehicleLabel, service: line.serviceName, price: line.price })),
