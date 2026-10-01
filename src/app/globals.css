@@ -427,8 +427,11 @@
 
 /* V6 ICONIC ABOVE THE FOLD
    Responsive art direction, not proportional shrinking. */
+/* Keep the transparent homepage header from blocking the hero, while restoring
+   pointer events for both interactive header controls and the mobile drawer. */
 .home-header { pointer-events: none; }
 .home-nav-shell { pointer-events: auto; }
+.home-header .mobile-menu-panel { pointer-events: auto; }
 
 @media (min-width: 1440px) {
   .home-header { padding-top: 1.5rem; }
