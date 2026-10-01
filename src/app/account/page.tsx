@@ -45,9 +45,11 @@ export default async function AccountPage() {
   const { account, garage, email } = session;
   let jobs: ClientJob[] = [];
   let portalJobs: PortalJob[] = [];
+  let portalLoadFailed = false;
   try {
     [jobs, portalJobs] = await Promise.all([getMyJobs(), getMyPortalJobs()]);
   } catch (error) {
+    portalLoadFailed = true;
     console.error("Account data failed to load", error);
     try {
       jobs = await getMyJobs();
@@ -73,7 +75,7 @@ export default async function AccountPage() {
 
       <section className="container-ed grid gap-16 pb-24 lg:grid-cols-12">
         <div className="space-y-16 lg:col-span-7">
-          <LiveJobPortal initialJobs={portalJobs} />
+          <LiveJobPortal initialJobs={portalJobs} initialLoadFailed={portalLoadFailed} />
 
           <div>
             <h2 className="t-h2">Your vehicles</h2>

@@ -182,9 +182,9 @@ function JobCard({ job, primary }: { job: PortalJob; primary: boolean }) {
   );
 }
 
-export function LiveJobPortal({ initialJobs }: { initialJobs: PortalJob[] }) {
+export function LiveJobPortal({ initialJobs, initialLoadFailed = false }: { initialJobs: PortalJob[]; initialLoadFailed?: boolean }) {
   const [jobs, setJobs] = useState(initialJobs);
-  const [refreshError, setRefreshError] = useState(false);
+  const [refreshError, setRefreshError] = useState(initialLoadFailed);
 
   useEffect(() => {
     setJobs(initialJobs);
@@ -218,7 +218,14 @@ export function LiveJobPortal({ initialJobs }: { initialJobs: PortalJob[] }) {
     return (
       <div>
         <h2 className="t-h2">Upcoming</h2>
-        <p className="mt-4 text-ink/80">Nothing booked right now.</p>
+        {refreshError ? (
+          <div className="panel mt-5 p-5">
+            <p className="font-display font-semibold">We could not load your bookings.</p>
+            <p className="mt-2 text-sm text-muted">Your account is signed in, but the live booking feed is unavailable. Refresh the page in a moment. If this keeps happening, contact Every Detail.</p>
+          </div>
+        ) : (
+          <p className="mt-4 text-ink/80">Nothing booked right now.</p>
+        )}
       </div>
     );
   }
