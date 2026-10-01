@@ -9,6 +9,7 @@ export type EventName =
   | "vehicle_select" // { vehicle, location }
   | "service_select" // { service, vehicle?, location }
   | "booking_submit" // booking request sent: { vehicle, service }
+  | "booking_add_vehicle" // second vehicle added to a booking: { count }
   | "quote_start" // first interaction with the quote form
   | "quote_submit" // quote sent: { interest }
   | "phone_click" // { location }
