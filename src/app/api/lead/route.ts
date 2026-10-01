@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { sendLeadEmails } from "@/lib/email";
 import { upsertWebsiteContact } from "@/lib/website-contact";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const REQUIRED: Record<string, string[]> = {
   quote: ["name", "phone", "vehicleMake", "vehicleModel", "interest"],
@@ -45,70 +46,28 @@ function getQuoteMessage(fields: Record<string, string>) {
 }
 
 async function saveQuoteToCrm(fields: Record<string, string>, clientId: string) {
-  const supabaseUrl =
-    process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
-
-  if (!supabaseUrl) {
-    throw new Error("Missing SUPABASE_URL or NEXT_PUBLIC_SUPABASE_URL.");
-  }
-
-  if (!supabaseSecretKey) {
-    throw new Error("Missing SUPABASE_SECRET_KEY.");
-  }
-
   const parsedYear = Number.parseInt(fields.vehicleYear, 10);
-
-  const lead = {
-    full_name: fields.name,
-    phone: nullable(fields.phone),
-    email: nullable(fields.email),
-    address: nullable(fields.address),
-    vehicle_year: Number.isFinite(parsedYear) ? parsedYear : null,
-    vehicle_make: nullable(fields.vehicleMake),
-    vehicle_model: nullable(fields.vehicleModel),
-    vehicle_size: nullable(fields.vehicleSize),
-    requested_service: nullable(fields.service ?? fields.interest),
-    message: getQuoteMessage(fields),
-    quote_amount: nullable(fields.quote) ? Number.parseFloat(fields.quote) || null : null,
-    internal_notes: nullable(fields.internalNotes),
-    status: "active",
-    next_action_type: "Call 1 of 2",
-    next_action_due_date: easternDateKey(),
-    answered: false,
-    call_attempts: 0,
-    text_attempts: 0,
-    email_attempts: 0,
-    source: nullable(fields.source) ?? "New Website",
-    converted_client_id: clientId,
-  };
-
-  const headers: Record<string, string> = {
-    apikey: supabaseSecretKey,
-    "Content-Type": "application/json",
-    Prefer: "return=representation",
-  };
-
-  // Legacy service_role keys are JWTs and also use the Authorization header.
-  // New sb_secret_* keys should be sent as the apikey only.
-  if (supabaseSecretKey.startsWith("eyJ")) {
-    headers.Authorization = `Bearer ${supabaseSecretKey}`;
-  }
-
-  const response = await fetch(`${supabaseUrl}/rest/v1/crm_leads`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(lead),
-    cache: "no-store",
+  const { data, error } = await supabaseAdmin().rpc("crm_upsert_website_quote", {
+    p_full_name: fields.name,
+    p_phone: fields.phone,
+    p_email: nullable(fields.email),
+    p_address: nullable(fields.address),
+    p_vehicle_year: Number.isFinite(parsedYear) ? parsedYear : null,
+    p_vehicle_make: nullable(fields.vehicleMake),
+    p_vehicle_model: nullable(fields.vehicleModel),
+    p_vehicle_size: nullable(fields.vehicleSize),
+    p_requested_service: nullable(fields.service ?? fields.interest),
+    p_message: getQuoteMessage(fields),
   });
+  if (error) throw error;
+  const leadId = typeof data === "string" ? data : String(data ?? "");
+  if (!leadId) throw new Error("CRM quote upsert returned no lead id.");
 
-  if (!response.ok) {
-    const detail = await response.text();
-    throw new Error(`CRM insert failed (${response.status}): ${detail.slice(0, 500)}`);
-  }
-
-  const rows = (await response.json()) as Array<{ id?: string }>;
-  return rows[0]?.id ?? null;
+  // The CRM RPC owns deduplication and sales workflow. The canonical website
+  // contact is linked afterward so CRM conversion never has to create a copy.
+  const linked = await supabaseAdmin().from("crm_leads").update({ converted_client_id: clientId }).eq("id", leadId);
+  if (linked.error) throw linked.error;
+  return leadId;
 }
 
 export async function POST(req: Request) {

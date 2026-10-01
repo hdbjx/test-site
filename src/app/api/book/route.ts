@@ -196,6 +196,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "We couldn't book that. Please call or text us." }, { status: 500 });
   }
 
+  // A confirmed website booking closes any open CRM opportunity for the same
+  // person. Booking remains valid even if CRM cleanup fails.
+  const crmMatch = await supabaseAdmin().rpc("crm_mark_booked_by_identity", {
+    p_phone: phone,
+    p_email: email,
+    p_actor: "Website booking",
+  });
+  if (crmMatch.error) console.error("[book] CRM match", crmMatch.error);
+
   // Await delivery before returning so serverless runtimes cannot terminate the
   // confirmation send after the HTTP response. Email failure never rolls back a
   // valid appointment, but it is surfaced for logs/observability.
