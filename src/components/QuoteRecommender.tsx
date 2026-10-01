@@ -54,7 +54,9 @@ function recommendation(condition: number, concerns: Set<ConcernId>): Recommenda
 
   if (selling) {
     service = "factoryReset";
-    why = "Pre-sale preparation is one of the highest-ROI details we offer. A Factory Reset is fully inclusive: intensive interior restoration with hot water extraction, odor treatment, stain removal, pet hair removal, and APC breakdown of every panel, plus a complete decontamination exterior wash, clay bar, protective sealant, and plastic restoration. A vehicle that looks and smells clean commands more at sale and moves faster.";
+    why = "Pre-sale preparation is one of the highest-ROI details we offer. A Factory Reset includes intensive interior restoration with hot water extraction, stain removal, pet hair removal, and APC breakdown of every panel, plus a complete decontamination exterior wash, clay bar, protective sealant, and plastic restoration. Odor Removal is available separately when needed.";
+    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Removal", price: "+$60", recommended: true });
+    addons.push({ id: "Engine Bay", name: "Engine Bay", price: "+$70", recommended: false });
   } else if (condition === 1) {
     service = "maintenance";
     upgradeService = "premium";
@@ -83,7 +85,7 @@ function recommendation(condition: number, concerns: Set<ConcernId>): Recommenda
     service = "premium";
     upgradeService = "factoryReset";
     why = "With moderate soiling, embedded particulates in carpet fibers, surface oxidation on trim, and general buildup in high-contact areas, a Premium Detail gives us the depth to properly address each surface. APC on all interior panels, multi-pass vacuum, carpet treatment, a full decontamination exterior wash, and protective sealant are included.";
-    upgradeMessage = "If you want full stain remediation, odor treatment, clay bar, plastic restoration, and every service in one all-in job, our Factory Reset covers everything with no extras needed.";
+    upgradeMessage = "If you want full stain remediation, extraction, clay bar, plastic restoration, and our deepest overall clean, Factory Reset is the right step up. Odor Removal and Engine Bay remain optional add-ons.";
     if (hasPet) addons.push({ id: "Pet Hair Removal", name: "Pet Hair Removal", price: "+$40", recommended: true });
     if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Removal", price: "+$60", recommended: true });
     if (hasCarpetStains) addons.push({ id: "Carpet Extraction", name: "Floor Carpet Extraction", price: "+$90", recommended: true });
@@ -96,8 +98,10 @@ function recommendation(condition: number, concerns: Set<ConcernId>): Recommenda
   } else {
     service = "factoryReset";
     why = condition === 5
-      ? "At this level of buildup, heavy contamination, biological matter in seams, deeply embedded staining, and significant exterior oxidation, only a Factory Reset has the scope to do the job right. Full hot water extraction, drill-brush agitation on all fabric, APC breakdown of every interior surface, odor treatment, pet hair removal, pre-wash, two-bucket contact wash, clay bar, protective sealant, and plastic restoration are included."
-      : "Your car needs a proper reset. A Factory Reset is our most comprehensive service: intensive interior restoration with hot water extraction, odor treatment, stain and pet hair removal, APC on every surface, plus a full decontamination exterior wash, clay bar, protective sealant, and plastic restoration. Everything is included, with no add-ons needed.";
+      ? "At this level of buildup, only a Factory Reset has the scope to do the job right. Full hot water extraction, drill-brush agitation on fabric, APC breakdown of interior surfaces, pet hair removal, pre-wash, two-bucket contact wash, clay bar, protective sealant, and plastic restoration are included. Odor Removal is available separately when needed."
+      : "Your car needs a proper reset. A Factory Reset is our most comprehensive service: intensive interior restoration with hot water extraction, stain and pet hair removal, APC on interior surfaces, plus a full decontamination exterior wash, clay bar, protective sealant, and plastic restoration. Odor Removal and Engine Bay are the only optional add-ons.";
+    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Removal", price: "+$60", recommended: true });
+    addons.push({ id: "Engine Bay", name: "Engine Bay", price: "+$70", recommended: false });
   }
 
   return { service, why, addons, upgradeService, upgradeMessage, preSelectPaint: hasExt && !selling };

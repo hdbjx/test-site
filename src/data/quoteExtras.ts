@@ -44,7 +44,11 @@ const FACTORY_RESET_INCLUDED_ADDONS = new Set<AddonId>([
   "Plastic Restoration",
   "Carpet Extraction",
   "Seat Extraction",
+]);
+
+const FACTORY_RESET_PURCHASABLE_ADDONS = new Set<AddonId>([
   "Odor Removal",
+  "Engine Bay",
 ]);
 
 export function isAddonIncludedInService(service: ServiceId, addon: AddonId) {
@@ -54,6 +58,9 @@ export function isAddonIncludedInService(service: ServiceId, addon: AddonId) {
 }
 
 export function purchasableAddonIds(service: ServiceId) {
+  if (service === "factoryReset") {
+    return addonIds.filter((addon) => FACTORY_RESET_PURCHASABLE_ADDONS.has(addon));
+  }
   return addonIds.filter((addon) => !isAddonIncludedInService(service, addon));
 }
 

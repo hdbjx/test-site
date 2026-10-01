@@ -370,7 +370,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                         <p className="field-label">Add-ons for vehicle {index + 1}</p>
                         <p className="mt-1 text-sm text-muted">Optional services you can add to this appointment.</p>
                         {line.service === "premium" && <p className="mt-1 text-xs text-muted">Protective sealant is already included in Premium.</p>}
-                        {line.service === "factoryReset" && <p className="mt-1 text-xs text-muted">Factory Reset already includes extraction, odor treatment, pet hair removal, clay, sealant and plastic restoration.</p>}
+                        {line.service === "factoryReset" && <p className="mt-1 text-xs text-muted">Factory Reset already includes extraction, pet hair removal, clay, sealant and plastic restoration. Odor Removal and Engine Bay are the only available add-ons.</p>}
                       </div>
                       {line.addons.length > 0 && (
                         <button type="button" className="text-sm font-semibold text-red underline underline-offset-4" onClick={() => updateLine(line.key, { addons: [] })}>Clear add-ons</button>

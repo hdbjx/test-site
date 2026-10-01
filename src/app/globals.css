@@ -1701,8 +1701,24 @@
 .story-stats div { display:flex;flex-direction:column;gap:.25rem; }
 .story-stats strong { font-family:var(--font-numeral);font-size:clamp(2rem,3vw,3.2rem);font-weight:500;line-height:1; }
 .story-stats span { font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgb(17 17 17/.55); }
-.story-photo { transform:rotate(1.2deg); }
-.story-photo img { border-radius:2px!important;box-shadow:18px 20px 0 rgb(89 13 7/.12)!important; }
+/* Homepage story photo: treat the real job photo like a physical sticker/card. */
+.story-photo {
+  position:relative;
+  transform:rotate(1.2deg);
+  padding:clamp(.5rem,.75vw,.8rem);
+  background:#f7f3ea;
+  border:2px solid #171717;
+  box-shadow:clamp(.55rem,1vw,.9rem) clamp(.65rem,1.15vw,1.05rem) 0 #171717;
+}
+.story-photo::after {
+  content:"";
+  position:absolute;
+  inset:clamp(.5rem,.75vw,.8rem);
+  border:1px solid rgb(17 17 17/.12);
+  pointer-events:none;
+  z-index:2;
+}
+.story-photo img { border-radius:0!important;box-shadow:none!important; }
 
 .home-next { padding:clamp(6rem,10vw,10rem) 0;background:var(--color-paper); }
 .next-grid { display:grid;grid-template-columns:1fr 1fr;gap:1rem; }
@@ -1999,15 +2015,15 @@
 .work-v157-lead figcaption strong, .work-v157-grid figcaption strong { font-size:.9rem; font-weight:650; }
 .work-v157-grid {
   display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:clamp(3.25rem,4vw,4.75rem) clamp(2rem,3vw,3.5rem);
-  margin-top:clamp(4rem,5vw,5.5rem);
+  gap:clamp(1.75rem,2.25vw,2.5rem) clamp(1rem,1.5vw,1.5rem);
+  margin-top:clamp(2.25rem,3vw,3rem);
 }
 .work-v157-grid figure > div:first-child { aspect-ratio:4/3 !important; }
 @media (max-width:800px) {
   .work-v157-shell { width:min(92vw,680px); }
   .work-v157-head { margin-bottom:2.5rem; }
   .work-v157-lead > div:first-child { aspect-ratio:4/3 !important; box-shadow:6px 6px 0 var(--color-oxblood) !important; }
-  .work-v157-grid { grid-template-columns:1fr; gap:3.5rem; margin-top:3.5rem; }
+  .work-v157-grid { grid-template-columns:1fr; gap:2rem; margin-top:2.25rem; }
   .work-v157-lead figcaption, .work-v157-grid figcaption { flex-direction:column; align-items:flex-start; gap:.3rem; }
 }
 
@@ -2128,7 +2144,7 @@
   .work-v157-shell { width: calc(100% - 2rem) !important; }
   .work-v157-head { margin-bottom: 2rem !important; }
   .work-v157-lead > div:first-child { aspect-ratio: 4 / 3 !important; }
-  .work-v157-grid { margin-top: 3rem !important; gap: 3rem !important; }
+  .work-v157-grid { margin-top: 2rem !important; gap: 1.75rem !important; }
   .work-v157-lead figcaption, .work-v157-grid figcaption { padding-top: .7rem; }
   .work-v157-lead figcaption strong, .work-v157-grid figcaption strong { font-size: .84rem; }
 
