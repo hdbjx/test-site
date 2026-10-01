@@ -7,8 +7,6 @@ import { supabaseBrowser } from "@/lib/supabase/browser";
 import { FormError, Success, TextField } from "@/components/forms/parts";
 
 type Mode = "signin" | "signup" | "reset";
-type SocialProvider = "google" | "apple";
-
 const friendly = (m: string) =>
   /invalid login/i.test(m)
     ? "That email and password don't match."
@@ -32,7 +30,6 @@ export function SignInForm({
   const router = useRouter();
   const [mode, setMode] = useState<Mode>(initialMode);
   const [busy, setBusy] = useState(false);
-  const [socialBusy, setSocialBusy] = useState<SocialProvider | null>(null);
   const [error, setError] = useState<string | null>(
     linkError
       ? "That link expired or was already used. Sign in, or request a new one."
@@ -42,27 +39,6 @@ export function SignInForm({
 
   const callback = (to: string) =>
     `${window.location.origin}/auth/callback?next=${encodeURIComponent(to)}`;
-
-  async function socialSignIn(provider: SocialProvider) {
-    setError(null);
-    setSocialBusy(provider);
-
-    const supabase = supabaseBrowser();
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: callback(next),
-      },
-    });
-
-    if (error) {
-      setSocialBusy(null);
-      setError(
-        `We couldn't connect to ${provider === "google" ? "Google" : "Apple"}. ${friendly(error.message)}`,
-      );
-    }
-  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -157,75 +133,6 @@ export function SignInForm({
     <div>
       {mode !== "reset" && (
         <>
-          <div className="grid gap-3">
-            <button
-              type="button"
-              onClick={() => socialSignIn("google")}
-              disabled={Boolean(socialBusy)}
-              className="choice flex min-h-14 w-full items-center justify-center gap-3 font-display font-semibold disabled:opacity-60"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  fill="currentColor"
-                  d="M21.35 12.2c0-.71-.06-1.23-.2-1.77H12v3.32h5.37a4.58 4.58 0 0 1-1.99 3.01v2.16h3.22c1.88-1.73 2.75-4.29 2.75-6.72Z"
-                />
-                <path
-                  fill="currentColor"
-                  d="M12 21.7c2.69 0 4.94-.89 6.59-2.42l-3.22-2.16c-.89.6-2.03.96-3.37.96-2.59 0-4.79-1.75-5.58-4.1H3.09v2.23A9.96 9.96 0 0 0 12 21.7Z"
-                  opacity=".78"
-                />
-                <path
-                  fill="currentColor"
-                  d="M6.42 13.98A5.98 5.98 0 0 1 6.1 12c0-.69.12-1.36.32-1.98V7.79H3.09A9.95 9.95 0 0 0 2 12c0 1.51.36 2.94 1.09 4.21l3.33-2.23Z"
-                  opacity=".56"
-                />
-                <path
-                  fill="currentColor"
-                  d="M12 5.92c1.46 0 2.77.5 3.8 1.49l2.86-2.86C16.93 2.94 14.69 2 12 2a9.96 9.96 0 0 0-8.91 5.79l3.33 2.23c.79-2.35 2.99-4.1 5.58-4.1Z"
-                  opacity=".9"
-                />
-              </svg>
-
-              {socialBusy === "google"
-                ? "Connecting…"
-                : "Continue with Google"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => socialSignIn("apple")}
-              disabled={Boolean(socialBusy)}
-              className="choice flex min-h-14 w-full items-center justify-center gap-3 font-display font-semibold disabled:opacity-60"
-            >
-              <svg
-                width="19"
-                height="23"
-                viewBox="0 0 24 29"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path d="M19.67 15.43c.03 3.28 2.88 4.37 2.91 4.39-.02.08-.45 1.56-1.5 3.08-.91 1.31-1.85 2.61-3.34 2.64-1.46.03-1.93-.86-3.6-.86-1.67 0-2.19.83-3.57.89-1.43.05-2.52-1.43-3.44-2.73-1.87-2.67-3.3-7.55-1.38-10.84.95-1.64 2.66-2.68 4.52-2.71 1.41-.03 2.74.95 3.6.95.86 0 2.47-1.18 4.17-1.01.71.03 2.71.28 3.99 2.15-.1.06-2.39 1.39-2.36 4.05ZM16.93 7.45c.76-.92 1.27-2.2 1.13-3.48-1.1.04-2.43.73-3.22 1.65-.71.81-1.33 2.11-1.16 3.36 1.23.1 2.49-.62 3.25-1.53Z" />
-              </svg>
-
-              {socialBusy === "apple"
-                ? "Connecting…"
-                : "Continue with Apple"}
-            </button>
-          </div>
-
-          <div className="my-7 flex items-center gap-4" aria-hidden="true">
-            <div className="h-px flex-1 bg-ink/15" />
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/45">
-              or
-            </span>
-            <div className="h-px flex-1 bg-ink/15" />
-          </div>
-
           <div role="tablist" className="mb-8 grid grid-cols-2 gap-2">
             {(["signin", "signup"] as const).map((m) => (
               <button

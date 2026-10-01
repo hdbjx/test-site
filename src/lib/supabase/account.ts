@@ -1,5 +1,6 @@
 import { createClient } from "./server";
 import { supabaseConfigured } from "./config";
+import type { PortalJob } from "@/lib/client-portal";
 
 export type AccountInfo = { client_id: string; full_name: string; phone: string | null; email: string | null; address: string | null };
 export type GarageVehicle = {
@@ -62,6 +63,13 @@ export async function getMyJobs(): Promise<ClientJob[]> {
   const { data, error } = await supabase.rpc("get_my_client_jobs");
   if (error) throw error;
   return (data as ClientJob[]) ?? [];
+}
+
+export async function getMyPortalJobs(): Promise<PortalJob[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("get_my_client_portal_jobs");
+  if (error) throw error;
+  return (data as PortalJob[]) ?? [];
 }
 
 export const vehicleName = (v: Pick<GarageVehicle, "year" | "make" | "model">) =>
