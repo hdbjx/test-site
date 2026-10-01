@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FaqList } from "@/components/FaqList";
 import { Photo } from "@/components/Photo";
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
+import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { Stars } from "@/components/Stars";
 import { TrackedLink } from "@/components/TrackedLink";
 import { homeFaqs } from "@/data/faqs";
@@ -39,7 +40,7 @@ export default function Home() {
 
       <section className="proof-row" aria-label="Why people choose Every Detail">
         <div className="container-ed grid gap-3 py-5 text-center sm:grid-cols-2 lg:grid-cols-4">
-          <span className="proof-stars">★★★★★ <strong>{reviewCountLabel}</strong> five-star reviews</span>
+          <span className="proof-stars">★★★★★ <strong><LiveReviewCount /></strong> five-star reviews <GoogleMapsAttribution /></span>
           <span>{site.award.title}</span><span>Power + water included</span><span>100% mobile</span>
         </div>
       </section>
@@ -94,7 +95,7 @@ export default function Home() {
             <p className="eyebrow">The people behind the polish</p>
             <h2 className="home-display">Built by students.<br /><span>Driven by detail.</span></h2>
             <p>Every Detail started with one student, a set of supplies, and a driveway in Decatur. Today, our trained crew runs equipped mobile rigs across Atlanta without losing the thing that made the company work in the first place: caring about every part of the job.</p>
-            <div className="story-stats"><div><strong>3</strong><span>training tiers</span></div><div><strong>2</strong><span>equipped rigs</span></div><div><strong>{reviewCountLabel}</strong><span>five-star reviews</span></div></div>
+            <div className="story-stats"><div><strong>3</strong><span>training tiers</span></div><div><strong>2</strong><span>equipped rigs</span></div><div><strong><LiveReviewCount /></strong><span>five-star reviews · <GoogleMapsAttribution /></span></div></div>
             <Link href="/about-us" className="btn btn-secondary">Meet Every Detail ↗</Link>
           </div>
           <div className="story-photo"><Photo id="home-team" sizes="(min-width: 1024px) 52vw, 100vw" ratio="4/5" /></div>
@@ -147,9 +148,9 @@ export default function Home() {
 
       <section className="home-review">
         <div className="container-ed review-stage">
-          <div className="review-label"><Stars className="h-5 w-5" /><span>Google review</span></div>
+          <div className="review-label"><Stars className="h-5 w-5" /><span>Google review · <GoogleMapsAttribution /></span></div>
           <blockquote>&ldquo;{featuredReview.text}&rdquo;</blockquote>
-          <div className="review-bottom"><strong>{featuredReview.author}</strong><a href={site.reviews.googleUrl} target="_blank" rel="noopener" className="link">Read {reviewCountLabel}+ reviews ↗</a></div>
+          <div className="review-bottom"><strong>{featuredReview.author}</strong><a href={site.reviews.googleUrl} target="_blank" rel="noopener" className="link">Read <LiveReviewCount plus={false} /> reviews ↗</a></div>
         </div>
       </section>
 

@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { areas } from "@/data/areas";
 import { footerServiceLinks, moreNav, primaryNav } from "@/data/navigation";
-import { reviewCountLabel, site } from "@/data/site";
+import { site } from "@/data/site";
+import { GoogleMapsAttribution, LiveReviewCount } from "./GoogleReviewStats";
 import { TrackedLink } from "./TrackedLink";
 
 export function Footer() {
@@ -26,7 +27,7 @@ export function Footer() {
           <p className="mt-3 text-paper/80">
             {site.award.title}
             <br />
-            {reviewCountLabel} five-star Google reviews
+            <LiveReviewCount /> five-star reviews · <GoogleMapsAttribution className="google-maps-attribution-on-dark" />
           </p>
           <TrackedLink href="/book" event="book_click" params={{ location: "footer" }} className="btn btn-on-dark mt-8">
             Book your detail

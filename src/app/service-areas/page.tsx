@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CtaBand } from "@/components/CtaBand";
+import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { Photo } from "@/components/Photo";
 import { areas } from "@/data/areas";
 import { reviewCountLabel, site } from "@/data/site";
@@ -26,7 +27,7 @@ export default function ServiceAreas() {
         </div>
       </section>
 
-      <section className="areas-v2-proof"><div className="areas-v2-shell"><span>BASED IN DECATUR</span><span>{reviewCountLabel} FIVE-STAR REVIEWS</span><span>POWER + WATER INCLUDED</span><span>100% MOBILE</span></div></section>
+      <section className="areas-v2-proof"><div className="areas-v2-shell"><span>BASED IN DECATUR</span><span><LiveReviewCount /> FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span><span>POWER + WATER INCLUDED</span><span>100% MOBILE</span></div></section>
 
       <section className="areas-v2-list">
         <div className="areas-v2-shell">

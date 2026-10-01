@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CtaBand } from "@/components/CtaBand";
+import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { ReviewGrid } from "@/components/ReviewGrid";
 import { ServicePicker } from "@/components/ServicePicker";
 import { areasWithPages } from "@/data/areas";
-import { reviewCountLabel } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -32,7 +32,7 @@ export default async function AreaPage({ params }: Params) {
         <div className="area-v2-hero-bottom"><p>{page.intro}</p><div><Link href="/book" className="btn btn-primary">Book your detail ↗</Link><Link href="/get-a-quote" className="area-v2-inline">Get a recommendation</Link></div></div>
       </div></section>
 
-      <section className="area-v2-proof"><div className="area-v2-shell"><span>{reviewCountLabel} FIVE-STAR REVIEWS</span><span>POWER + WATER INCLUDED</span><span>TRAINED CREW</span><span>ONLINE PRICING</span></div></section>
+      <section className="area-v2-proof"><div className="area-v2-shell"><span><LiveReviewCount /> FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span><span>POWER + WATER INCLUDED</span><span>TRAINED CREW</span><span>ONLINE PRICING</span></div></section>
 
       <section className="area-v2-local"><div className="area-v2-shell area-v2-local-grid"><div><p className="area-v2-kicker">HOW IT WORKS</p><h2>Your parking spot.<br/><span>Our setup.</span></h2></div><div className="area-v2-notes">{page.localNotes.map((n,i)=><article key={n}><b>{String(i+1).padStart(2,"0")}</b><p>{n}</p></article>)}</div></div></section>
 

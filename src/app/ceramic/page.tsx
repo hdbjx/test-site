@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BeforeAfter } from "@/components/BeforeAfter";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
@@ -10,7 +11,7 @@ import { WorkGallery } from "@/components/WorkGallery";
 import { paintFaqs } from "@/data/faqs";
 import { beforeAfterPairs, imagesIn } from "@/data/images";
 import { ceramicDoes, ceramicDoesNot, paintDefects, paintProcess, paintServices } from "@/data/paint";
-import { reviewCountLabel, site } from "@/data/site";
+import { site } from "@/data/site";
 import { usd } from "@/lib/format";
 import { pageMetadata, serviceSchema } from "@/lib/seo";
 
@@ -52,7 +53,7 @@ export default function CeramicPage() {
                 </a>
               </div>
               <p className="mt-8 text-[0.9375rem] text-paper/65">
-                {reviewCountLabel} five-star Google reviews · {site.award.title}
+                <LiveReviewCount /> five-star reviews · <GoogleMapsAttribution className="google-maps-attribution-on-dark" /> · {site.award.title}
               </p>
             </div>
             {paintPhotos[0] && (

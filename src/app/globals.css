@@ -2653,3 +2653,19 @@
   .quote-rec-customize-footer { align-items: stretch; flex-direction: column; }
   .quote-rec-customize-footer .btn { width: 100%; }
 }
+
+/* Google Maps attribution for live Places API review-count content. */
+.google-maps-attribution {
+  display: inline-block;
+  margin-left: .35em;
+  white-space: nowrap;
+  font-family: Arial, sans-serif;
+  font-size: max(.72rem, 12px);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  color: #5e5e5e;
+  vertical-align: baseline;
+}
+.google-maps-attribution-on-dark { color: rgba(255,255,255,.78); }
