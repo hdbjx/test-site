@@ -4,7 +4,7 @@ import { upsertWebsiteContact } from "@/lib/website-contact";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const REQUIRED: Record<string, string[]> = {
-  quote: ["name", "phone", "vehicleMake", "vehicleModel", "interest"],
+  quote: ["name", "phone", "email", "vehicleMake", "vehicleModel", "interest"],
   booking: ["name", "phone", "vehicle", "service", "address", "preferredDays"],
   detailplus: ["name", "phone", "frequency", "coverage", "vehicle"],
 };

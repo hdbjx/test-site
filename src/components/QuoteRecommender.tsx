@@ -139,7 +139,8 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
   const [service, setService] = useState<ServiceId | null>(null);
   const [checkedAddons, setCheckedAddons] = useState<Set<AddonId>>(new Set());
   const [paint, setPaint] = useState<Set<PaintUpgradeId>>(new Set());
-  const [whyExpanded, setWhyExpanded] = useState(false);
+  const [customizeExpanded, setCustomizeExpanded] = useState(false);
+  const [quoteDirty, setQuoteDirty] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -227,7 +228,8 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
           ? new Set<PaintUpgradeId>(["polish", "ceramic"])
           : new Set<PaintUpgradeId>();
     setPaint(initialPaint);
-    setWhyExpanded(false);
+    setCustomizeExpanded(false);
+    setQuoteDirty(false);
     setError(null);
     window.setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
   }
@@ -236,6 +238,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     if (!result?.upgradeService) return;
     setService(result.upgradeService);
     setResult({ ...result, upgradeService: null, upgradeMessage: null });
+    if (sent) setQuoteDirty(true);
   }
 
   function toggleAddon(id: AddonId) {
@@ -245,6 +248,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       else next.add(id);
       return next;
     });
+    if (sent) setQuoteDirty(true);
   }
 
   function togglePaint(id: PaintUpgradeId) {
@@ -254,6 +258,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       if (!wasSelected) next.add(id);
       return next;
     });
+    if (sent) setQuoteDirty(true);
   }
 
   function reset() {
@@ -265,7 +270,8 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     setService(null);
     setCheckedAddons(new Set());
     setPaint(new Set());
-    setWhyExpanded(false);
+    setCustomizeExpanded(false);
+    setQuoteDirty(false);
     setName("");
     setPhone("");
     setEmail("");
@@ -279,6 +285,8 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     if (!vehicle || !condition || !service || !result) return;
     if (!name.trim()) { setError("Enter your name so we know who the build belongs to."); return; }
     if ((phone.match(/\d/g) ?? []).length < 10) { setError("Enter a 10-digit phone number so we can follow up."); return; }
+    if (!email.trim()) { setError("Enter your email so we can save your quote."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setError("Check your email address and try again."); return; }
 
     const selectedAddonNames = result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.name);
     const paintNames = [...paint].map((id) => PAINT_UPGRADES[id].name);
@@ -286,7 +294,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     const conditionLabel = CONDITIONS.find((item) => item.value === condition)?.label ?? "Not specified";
     const concernNames = [...concerns].map(concernLabel);
     const message = [
-      `Interior condition: ${conditionLabel}`,
+      `Vehicle condition: ${conditionLabel}`,
       concernNames.length ? `Specific concerns: ${concernNames.join(", ")}` : "",
     ].filter(Boolean).join(" | ");
     const internalNotes = [
@@ -317,6 +325,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
     if (response.ok) {
       setSent(true);
+      setQuoteDirty(false);
       track("quote_submit", { interest: service, source: "recommender" });
       if (paint.size) track("paint_inquiry", { location: "recommender", interest: [...paint].join(",") });
     } else {
@@ -326,107 +335,145 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
   }
 
   if (result && vehicle && service && activeService) {
+    const included = activeService.includes.slice(0, 4);
+    const selectedAddonNames = result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.name);
+    const selectedPaintNames = [...paint].map((id) => PAINT_UPGRADES[id].name);
+    const extrasSummary = [...selectedAddonNames, ...selectedPaintNames];
+
     return (
       <div ref={resultRef} className="quote-rec-result">
         <button type="button" onClick={reset} className="quote-rec-back">← Start over</button>
-        <div className="quote-rec-result-grid">
+
+        <div className="quote-rec-result-grid quote-rec-result-grid-conversion">
           <section className="quote-rec-result-main">
-            <p className="eyebrow">Our recommendation</p>
+            <p className="eyebrow">We&rsquo;d recommend</p>
             <h2>{activeService.name}</h2>
-            <p className={`quote-rec-why ${whyExpanded ? "is-expanded" : ""}`}>{result.why}</p>
-            <button type="button" className="quote-rec-read" onClick={() => setWhyExpanded((value) => !value)}>
-              {whyExpanded ? "Show less ↑" : "Read why ↓"}
-            </button>
-            <div className="quote-rec-base-price">
-              <span>For your {vehicleLabel(vehicle.vehicle).toLowerCase()}</span>
-              <strong>${basePrice}</strong>
+            <p className="quote-rec-result-summary">{activeService.summary}</p>
+
+            <div className="quote-rec-includes" aria-label="What is included">
+              {included.map((item) => <span key={item}>✓ {item}</span>)}
             </div>
+
+            <details className="quote-rec-why-details">
+              <summary>Why we recommend this</summary>
+              <p>{result.why}</p>
+            </details>
           </section>
 
-          <aside className="quote-rec-build-summary">
-            <span>Your vehicle</span>
-            <strong>{vehicle.make} {vehicle.model}</strong>
-            <small>{vehicleLabel(vehicle.vehicle)}</small>
+          <aside className="quote-rec-price-card">
+            <span>Your price</span>
+            <strong>{totalDisplay}</strong>
+            <small>{vehicle.make} {vehicle.model} · {vehicleLabel(vehicle.vehicle)}</small>
+            {extrasSummary.length > 0 && <p>Includes recommended: {extrasSummary.join(", ")}</p>}
+            <b>Upfront pricing. We&rsquo;ll confirm everything before your appointment.</b>
           </aside>
         </div>
 
-        {result.upgradeMessage && result.upgradeService && (
-          <button type="button" className="quote-rec-upgrade" onClick={applyUpgrade}>
-            <span>Consider upgrading</span>
-            <strong>{result.upgradeMessage}</strong>
-            <b>Upgrade to {services[result.upgradeService].name} ↗</b>
-          </button>
-        )}
-
-        {result.addons.length > 0 && (
-          <section className="quote-rec-options">
-            <div className="quote-rec-options-head"><p className="eyebrow">Recommended add-ons</p><span>Tap to add or remove</span></div>
-            <div className="quote-rec-addon-list">
-              {result.addons.map((addon) => {
-                const checked = checkedAddons.has(addon.id);
-                return (
-                  <button key={addon.id} type="button" className={`quote-rec-addon ${checked ? "is-selected" : ""}`} onClick={() => toggleAddon(addon.id)} aria-pressed={checked}>
-                    <span className="quote-rec-check">{checked ? "✓" : ""}</span>
-                    <strong>{addon.name}</strong>
-                    {addon.recommended && <small>Recommended</small>}
-                    <b>{addon.price}</b>
-                  </button>
-                );
-              })}
+        {!sent ? (
+          <section className="quote-rec-save-card">
+            <div className="quote-rec-save-copy">
+              <p className="eyebrow">Save your quote</p>
+              <h3>Keep this recommendation and choose what you want to do next.</h3>
+              <p>We&rsquo;ll save your vehicle, recommendation and price so our team can help if you have questions or want to book later.</p>
             </div>
-          </section>
-        )}
-
-        <section className="quote-rec-options quote-rec-paint">
-          <div className="quote-rec-options-head">
-            <div><p className="eyebrow">{result.preSelectPaint ? "Recommended for dull paint" : "Take your paint further"}</p><h3>Paint correction + protection</h3></div>
-            <span>Separate appointment</span>
-          </div>
-          <div className="quote-rec-paint-grid">
-            {(Object.keys(PAINT_UPGRADES) as PaintUpgradeId[]).map((id) => {
-              const item = PAINT_UPGRADES[id];
-              const selected = paint.has(id);
-              return (
-                <button key={id} type="button" className={`quote-rec-paint-card ${selected ? "is-selected" : ""}`} onClick={() => togglePaint(id)} aria-pressed={selected}>
-                  <span>{item.tag}</span>
-                  <strong>{item.name}</strong>
-                  <b>${item.prices[vehicle.vehicle]}</b>
-                  <p>{item.why}</p>
-                </button>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="quote-rec-checkout">
-          <div className="quote-rec-total">
-            <span>Estimated total</span>
-            <strong>{totalDisplay}</strong>
-            <p>{totalNote}</p>
-          </div>
-
-          {sent ? (
-            <div className="quote-rec-sent" role="status">
-              <span>Build sent</span>
-              <h3>We&rsquo;ve got it.</h3>
-              <p>Your exact build is now with the Every Detail team. We&rsquo;ll follow up directly.</p>
-            </div>
-          ) : (
             <div className="quote-rec-contact">
               <div className="quote-rec-contact-grid">
-                <label><span>Name</span><input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" /></label>
-                <label><span>Phone</span><input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" /></label>
-                <label><span>Email <small>(optional)</small></span><input className="field" value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="email" /></label>
+                <label><span>Name</span><input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" required /></label>
+                <label><span>Phone</span><input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" required /></label>
+                <label><span>Email</span><input className="field" value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="email" required /></label>
               </div>
               {error && <p className="quote-rec-error" role="alert">{error}</p>}
-              <div className="quote-rec-actions">
-                <button type="button" className="btn btn-primary" onClick={sendBuild} disabled={sending}>{sending ? "Sending..." : "Send us your build ↗"}</button>
-                <Link className="btn btn-secondary" href={bookingHref(vehicle.vehicle, service)}>Book now ↗</Link>
-              </div>
-              <div className="quote-rec-trust"><span>✓ We follow up quickly</span><span>✓ Mobile, we come to you</span><span>✓ No commitment required</span></div>
+              <button type="button" className="btn btn-primary quote-rec-save-button" onClick={sendBuild} disabled={sending}>
+                {sending ? "Saving..." : "Save my quote ↗"}
+              </button>
+              <p className="quote-rec-save-note">No commitment required. Your quote goes directly to the Every Detail team.</p>
             </div>
-          )}
-        </section>
+          </section>
+        ) : (
+          <>
+            <section className="quote-rec-book-card" role="status">
+              <div>
+                <span>Quote saved</span>
+                <h3>Your {activeService.name} quote is ready.</h3>
+                <p>Ready to get it on the calendar? Choose a time that works for you.</p>
+              </div>
+              <div className="quote-rec-book-actions">
+                <Link
+                  className="btn btn-primary"
+                  href={bookingHref(vehicle.vehicle, service)}
+                  onClick={() => track("book_click", { location: "saved_quote", vehicle: vehicle.vehicle, service })}
+                >
+                  Book this detail ↗
+                </Link>
+                <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>
+                  {customizeExpanded ? "Hide customization ↑" : "Customize your detail +"}
+                </button>
+              </div>
+            </section>
+
+            {customizeExpanded && (
+              <section className="quote-rec-customize-panel">
+                <div className="quote-rec-options-head">
+                  <div><p className="eyebrow">Optional</p><h3>Customize your saved quote</h3></div>
+                  <span>Changes are saved to the same lead</span>
+                </div>
+
+                {result.upgradeMessage && result.upgradeService && (
+                  <button type="button" className="quote-rec-upgrade" onClick={applyUpgrade}>
+                    <span>Consider upgrading</span>
+                    <strong>{result.upgradeMessage}</strong>
+                    <b>Upgrade to {services[result.upgradeService].name} ↗</b>
+                  </button>
+                )}
+
+                {result.addons.length > 0 && (
+                  <div className="quote-rec-customize-group">
+                    <h4>Add-ons</h4>
+                    <div className="quote-rec-addon-list">
+                      {result.addons.map((addon) => {
+                        const checked = checkedAddons.has(addon.id);
+                        return (
+                          <button key={addon.id} type="button" className={`quote-rec-addon ${checked ? "is-selected" : ""}`} onClick={() => toggleAddon(addon.id)} aria-pressed={checked}>
+                            <span className="quote-rec-check">{checked ? "✓" : ""}</span>
+                            <strong>{addon.name}</strong>
+                            {addon.recommended && <small>Recommended</small>}
+                            <b>{addon.price}</b>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                <div className="quote-rec-customize-group">
+                  <h4>Paint correction + protection</h4>
+                  <div className="quote-rec-paint-grid">
+                    {(Object.keys(PAINT_UPGRADES) as PaintUpgradeId[]).map((id) => {
+                      const item = PAINT_UPGRADES[id];
+                      const selected = paint.has(id);
+                      return (
+                        <button key={id} type="button" className={`quote-rec-paint-card ${selected ? "is-selected" : ""}`} onClick={() => togglePaint(id)} aria-pressed={selected}>
+                          <span>{item.tag}</span>
+                          <strong>{item.name}</strong>
+                          <b>${item.prices[vehicle.vehicle]}</b>
+                          <p>{item.why}</p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="quote-rec-customize-footer">
+                  <div><span>Updated estimate</span><strong>{totalDisplay}</strong><p>{totalNote}</p></div>
+                  <button type="button" className="btn btn-primary" onClick={sendBuild} disabled={sending || !quoteDirty}>
+                    {sending ? "Saving..." : quoteDirty ? "Save changes ↗" : "Saved ✓"}
+                  </button>
+                </div>
+                {error && <p className="quote-rec-error" role="alert">{error}</p>}
+              </section>
+            )}
+          </>
+        )}
       </div>
     );
   }
@@ -472,7 +519,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
         <div className="quote-rec-step-number">02</div>
         <div className="quote-rec-step-content">
           <p className="eyebrow">Current condition</p>
-          <h2>How&rsquo;s the interior looking?</h2>
+          <h2>What shape is your car in?</h2>
           <div className="quote-rec-condition-grid">
             {CONDITIONS.map((item, index) => (
               <button key={item.value} type="button" disabled={!vehicle} className={condition === item.value ? "is-selected" : ""} onClick={() => chooseCondition(item.value)} aria-pressed={condition === item.value}>
@@ -500,7 +547,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
               );
             })}
           </div>
-          <button type="button" className="btn btn-primary quote-rec-build" disabled={!vehicle || !condition} onClick={buildResult}>See my recommendation ↗</button>
+          <button type="button" className="btn btn-primary quote-rec-build" disabled={!vehicle || !condition} onClick={buildResult}>See my price ↗</button>
         </div>
       </section>
     </div>

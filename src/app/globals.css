@@ -2592,3 +2592,48 @@
     padding-right: .5rem;
   }
 }
+
+/* Quote conversion funnel v1.2.3 */
+.quote-rec-result-grid-conversion { grid-template-columns: minmax(0, 1.45fr) minmax(18rem, .72fr); }
+.quote-rec-result-summary { max-width: 43rem; margin-top: 1rem; color: rgb(17 17 17 / .72); font-size: 1rem; line-height: 1.65; }
+.quote-rec-includes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem 1rem; margin-top: 1.35rem; }
+.quote-rec-includes span { color: rgb(17 17 17 / .78); font-size: .88rem; line-height: 1.4; }
+.quote-rec-why-details { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--color-line); }
+.quote-rec-why-details summary { width: fit-content; color: var(--color-red); font-family: var(--font-display); font-size: .84rem; font-weight: 650; cursor: pointer; }
+.quote-rec-why-details p { max-width: 45rem; margin-top: .75rem; color: var(--color-muted); font-size: .86rem; line-height: 1.6; }
+.quote-rec-price-card { display: flex; flex-direction: column; justify-content: center; padding: clamp(1.6rem, 3vw, 2.4rem); background: var(--color-oxblood); color: #fff; }
+.quote-rec-price-card > span { color: var(--color-sand); font-family: var(--font-display); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; }
+.quote-rec-price-card > strong { margin-top: .5rem; font-family: var(--font-numeral); font-size: clamp(4.5rem, 8vw, 6.6rem); font-weight: 400; line-height: .82; }
+.quote-rec-price-card > small { margin-top: .8rem; color: rgb(255 255 255 / .72); font-size: .82rem; }
+.quote-rec-price-card > p { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgb(255 255 255 / .18); color: rgb(255 255 255 / .76); font-size: .78rem; line-height: 1.45; }
+.quote-rec-price-card > b { margin-top: 1rem; color: #fff; font-family: var(--font-display); font-size: .78rem; font-weight: 600; line-height: 1.45; }
+.quote-rec-save-card { display: grid; grid-template-columns: minmax(15rem, .72fr) minmax(0, 1.28fr); overflow: hidden; margin-top: 1rem; border: 1px solid var(--color-line); border-radius: 1rem; background: #fff; }
+.quote-rec-save-copy { padding: clamp(1.5rem, 3vw, 2.2rem); background: var(--color-sand); }
+.quote-rec-save-copy h3 { margin-top: .35rem; max-width: 24rem; font-size: clamp(1.45rem, 2.5vw, 2rem); line-height: 1.05; letter-spacing: -.035em; }
+.quote-rec-save-copy > p:last-child { margin-top: .8rem; color: rgb(17 17 17 / .65); font-size: .88rem; line-height: 1.55; }
+.quote-rec-save-button { width: 100%; margin-top: 1rem; }
+.quote-rec-save-note { margin-top: .7rem; color: var(--color-muted); font-size: .72rem; text-align: center; }
+.quote-rec-book-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2rem; margin-top: 1rem; padding: clamp(1.5rem, 3vw, 2.2rem); border: 1px solid rgb(89 13 7 / .2); border-radius: 1rem; background: var(--color-sand); }
+.quote-rec-book-card span { color: var(--color-red); font-family: var(--font-display); font-size: .72rem; font-weight: 750; text-transform: uppercase; letter-spacing: .09em; }
+.quote-rec-book-card h3 { margin-top: .3rem; font-size: clamp(1.6rem, 3vw, 2.25rem); line-height: 1; letter-spacing: -.04em; }
+.quote-rec-book-card p { margin-top: .55rem; color: rgb(17 17 17 / .65); font-size: .9rem; }
+.quote-rec-book-actions { display: grid; gap: .7rem; min-width: 14rem; }
+.quote-rec-customize-toggle { color: var(--color-oxblood); font-family: var(--font-display); font-size: .82rem; font-weight: 650; text-align: center; cursor: pointer; }
+.quote-rec-customize-panel { margin-top: 1rem; padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid var(--color-line); border-radius: 1rem; background: rgb(255 255 255 / .58); }
+.quote-rec-customize-group { margin-top: 1.35rem; }
+.quote-rec-customize-group h4 { margin-bottom: .6rem; font-family: var(--font-display); font-size: .92rem; }
+.quote-rec-customize-footer { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-top: 1.35rem; padding-top: 1.25rem; border-top: 1px solid var(--color-line); }
+.quote-rec-customize-footer > div { display: grid; gap: .2rem; }
+.quote-rec-customize-footer span { color: var(--color-muted); font-family: var(--font-display); font-size: .72rem; font-weight: 650; text-transform: uppercase; letter-spacing: .07em; }
+.quote-rec-customize-footer strong { font-family: var(--font-numeral); font-size: 2.8rem; font-weight: 400; line-height: .9; }
+.quote-rec-customize-footer p { color: var(--color-muted); font-size: .72rem; }
+.quote-rec-customize-footer .btn:disabled { opacity: .55; cursor: default; }
+
+@media (max-width: 760px) {
+  .quote-rec-result-grid-conversion, .quote-rec-save-card, .quote-rec-book-card { grid-template-columns: 1fr; }
+  .quote-rec-includes { grid-template-columns: 1fr; }
+  .quote-rec-price-card { min-height: 14rem; }
+  .quote-rec-book-actions { min-width: 0; }
+  .quote-rec-customize-footer { align-items: stretch; flex-direction: column; }
+  .quote-rec-customize-footer .btn { width: 100%; }
+}

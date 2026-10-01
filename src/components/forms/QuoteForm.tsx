@@ -37,7 +37,7 @@ export function QuoteForm({ defaultInterest }: { defaultInterest?: string }) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = formToObject(form);
-    const missing = ["name", "phone", "vehicleYear", "vehicleMake", "vehicleModel", "interest"].filter((k) => !data[k]?.trim());
+    const missing = ["name", "phone", "email", "vehicleYear", "vehicleMake", "vehicleModel", "interest"].filter((k) => !data[k]?.trim());
     if (missing.length) {
       setInvalid(missing);
       setError("Fill in the highlighted fields.");
@@ -87,7 +87,7 @@ export function QuoteForm({ defaultInterest }: { defaultInterest?: string }) {
           errorText="Enter a 10-digit phone number."
         />
       </div>
-      <TextField label="Email" name="email" type="email" autoComplete="email" optional error={bad("email")} errorText="Check your email address." />
+      <TextField label="Email" name="email" type="email" autoComplete="email" error={bad("email")} errorText="Check your email address." />
 
       <fieldset>
         <legend className="field-label">Vehicle</legend>
