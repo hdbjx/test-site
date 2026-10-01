@@ -1,4 +1,4 @@
-import type { VehicleId } from "./services";
+import type { ServiceId, VehicleId } from "./services";
 
 export const addonIds = [
   "Sealant",
@@ -36,6 +36,26 @@ export const ADDON_LABELS: Record<AddonId, string> = {
   "Seat Extraction": "Seat Extraction",
   "Odor Removal": "Odor Removal",
 };
+
+const FACTORY_RESET_INCLUDED_ADDONS = new Set<AddonId>([
+  "Sealant",
+  "Pet Hair Removal",
+  "Clay Bar",
+  "Plastic Restoration",
+  "Carpet Extraction",
+  "Seat Extraction",
+  "Odor Removal",
+]);
+
+export function isAddonIncludedInService(service: ServiceId, addon: AddonId) {
+  if (service === "factoryReset") return FACTORY_RESET_INCLUDED_ADDONS.has(addon);
+  if (service === "premium") return addon === "Sealant";
+  return false;
+}
+
+export function purchasableAddonIds(service: ServiceId) {
+  return addonIds.filter((addon) => !isAddonIncludedInService(service, addon));
+}
 
 export const paintUpgradeIds = ["polish", "ceramic"] as const;
 export type PaintUpgradeId = (typeof paintUpgradeIds)[number];

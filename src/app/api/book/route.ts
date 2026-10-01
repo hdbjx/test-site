@@ -10,7 +10,7 @@ import {
   type VehicleId,
 } from "@/data/services";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, isAddonId, isPaintUpgradeId, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
+import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, isAddonId, isAddonIncludedInService, isPaintUpgradeId, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { getSession, vehicleName, type GarageVehicle } from "@/lib/supabase/account";
 import { sendBookingEmails } from "@/lib/email";
 import { upsertWebsiteContact } from "@/lib/website-contact";
@@ -112,13 +112,16 @@ export async function POST(req: Request) {
     const service = str(item.service);
     let vehicle = str(item.vehicle);
     const savedVehicleId = str(item.vehicleId, 80) || null;
-    const addons = Array.isArray(item.addons) ? item.addons.filter(isAddonId).slice(0, 8) : [];
+    let addons = Array.isArray(item.addons) ? item.addons.filter(isAddonId).slice(0, 8) : [];
     const paint = Array.isArray(item.paint) ? item.paint.filter(isPaintUpgradeId).slice(0, 1) : [];
     let label = "";
 
     if (!isServiceId(service)) {
       return NextResponse.json({ ok: false, error: `Choose a service for vehicle ${index + 1}.`, field: "vehicle" }, { status: 422 });
     }
+
+    // Never charge separately for an add-on already included in the selected package.
+    addons = addons.filter((addon) => !isAddonIncludedInService(service, addon));
 
     if (savedVehicleId) {
       if (session.state !== "customer") {

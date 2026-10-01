@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { PRICING, serviceList, services, vehicleIdFromSize, vehicles, type ServiceId, type VehicleId } from "@/data/services";
-import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
+import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, isAddonIncludedInService, purchasableAddonIds, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { duration, usd } from "@/lib/format";
@@ -32,6 +32,8 @@ type BookingLine = {
   savedId: string | "size";
   size?: VehicleId;
   service: ServiceId;
+  addons: AddonId[];
+  paint: PaintUpgradeId[];
 };
 
 type Booked = {
@@ -55,6 +57,8 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       savedId: primary ? primary.id : "size",
       size: initialVehicle ?? initialSavedSize,
       service: initialService ?? "premium",
+      addons: initialAddons.filter((addon) => !isAddonIncludedInService(initialService ?? "premium", addon)),
+      paint: initialPaint,
     },
   ]);
   const [slots, setSlots] = useState<Date[] | null>(null);
@@ -74,14 +78,15 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   });
   const allVehiclesReady = resolved.every((line) => !!line.vehicle);
   const totalPrice = allVehiclesReady
-    ? resolved.reduce((sum, line) => sum + PRICING[line.vehicle!][line.service].price, 0)
+    ? resolved.reduce((sum, line) => {
+        const base = PRICING[line.vehicle!][line.service].price;
+        const addons = line.addons.reduce((addonSum, id) => addonSum + (ADDON_PRICES[id] ?? 0), 0);
+        const paint = line.paint.reduce((paintSum, id) => paintSum + PAINT_UPGRADES[id].prices[line.vehicle!], 0);
+        return sum + base + addons + paint;
+      }, 0)
     : null;
-  const quoteVehicle = resolved[0]?.vehicle;
-  const fixedAddonTotal = initialAddons.reduce((sum, id) => sum + (ADDON_PRICES[id] ?? 0), 0);
-  const hasVariableAddons = initialAddons.some((id) => ADDON_PRICES[id] === null);
-  const paintTotal = quoteVehicle ? initialPaint.reduce((sum, id) => sum + PAINT_UPGRADES[id].prices[quoteVehicle], 0) : 0;
-  const quotedExtrasTotal = fixedAddonTotal + paintTotal;
-  const displayTotal = totalPrice === null ? null : totalPrice + quotedExtrasTotal;
+  const hasVariableAddons = resolved.some((line) => line.addons.some((id) => ADDON_PRICES[id] === null));
+  const displayTotal = totalPrice;
   const appointmentMinutes = allVehiclesReady
     ? Math.max(...resolved.map((line) => PRICING[line.vehicle!][line.service].minutes))
     : null;
@@ -102,6 +107,8 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         savedId: nextSaved?.id ?? "size",
         size: nextSaved ? vehicleIdFromSize(nextSaved.vehicle_size) : undefined,
         service: "premium",
+        addons: [],
+        paint: [],
       },
     ]);
     track("booking_add_vehicle", { count: lines.length + 1 });
@@ -164,12 +171,12 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     setError(null);
     setBadField(null);
 
-    const bookingVehicles = resolved.map((line, index) => ({
+    const bookingVehicles = resolved.map((line) => ({
       service: line.service,
       vehicle: line.vehicle,
       vehicleId: line.saved?.id ?? null,
-      addons: index === 0 ? initialAddons : [],
-      paint: index === 0 ? initialPaint : [],
+      addons: line.addons,
+      paint: line.paint,
     }));
 
     const res = await fetch("/api/book", {
@@ -333,7 +340,10 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                             name={`service-${line.key}`}
                             checked={line.service === s.id}
                             onChange={() => {
-                              updateLine(line.key, { service: s.id });
+                              updateLine(line.key, {
+                                service: s.id,
+                                addons: line.addons.filter((addon) => !isAddonIncludedInService(s.id, addon)),
+                              });
                               track("service_select", { service: s.id, vehicle: line.vehicle, location: "book", vehicleNumber: index + 1 });
                             }}
                             className="sr-only"
@@ -353,6 +363,39 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                       );
                     })}
                   </div>
+
+                  <div className="mt-6 border-t border-line pt-5">
+                    <div className="flex flex-wrap items-end justify-between gap-2">
+                      <div>
+                        <p className="field-label">Add-ons for vehicle {index + 1}</p>
+                        <p className="mt-1 text-sm text-muted">Optional services you can add to this appointment.</p>
+                        {line.service === "premium" && <p className="mt-1 text-xs text-muted">Protective sealant is already included in Premium.</p>}
+                        {line.service === "factoryReset" && <p className="mt-1 text-xs text-muted">Factory Reset already includes extraction, odor treatment, pet hair removal, clay, sealant and plastic restoration.</p>}
+                      </div>
+                      {line.addons.length > 0 && (
+                        <button type="button" className="text-sm font-semibold text-red underline underline-offset-4" onClick={() => updateLine(line.key, { addons: [] })}>Clear add-ons</button>
+                      )}
+                    </div>
+                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                      {purchasableAddonIds(line.service).map((id) => {
+                        const checked = line.addons.includes(id);
+                        return (
+                          <label key={id} className="choice flex-row items-center justify-between gap-4 py-3">
+                            <span className="flex min-w-0 items-center gap-3">
+                              <input
+                                type="checkbox"
+                                checked={checked}
+                                onChange={() => updateLine(line.key, { addons: checked ? line.addons.filter((item) => item !== id) : [...line.addons, id] })}
+                                className="h-4 w-4 shrink-0 accent-current"
+                              />
+                              <span className="font-display font-semibold">{ADDON_LABELS[id]}</span>
+                            </span>
+                            <span className="shrink-0 text-sm font-semibold">{ADDON_PRICES[id] === null ? "Confirm price" : `+${usd(ADDON_PRICES[id]!)}`}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </fieldset>
               );
             })}
@@ -360,25 +403,22 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           {badField === "vehicle" && <p className="field-error mt-3">Check each vehicle and service.</p>}
         </section>
 
-        {(fromQuote && (initialAddons.length > 0 || initialPaint.length > 0)) && (
+        {fromQuote && (initialAddons.length > 0 || initialPaint.length > 0) && (
           <section className="panel p-5 sm:p-6">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-red">From your saved quote</p>
-            <h2 className="t-h3 mt-1">Selected services &amp; add-ons</h2>
-            <div className="mt-4 space-y-2">
-              {initialAddons.map((id) => (
-                <p key={id} className="flex items-baseline gap-2 text-sm">
-                  <span className="font-display font-semibold">{ADDON_LABELS[id]}</span><span className="leader" aria-hidden="true" />
-                  <span>{ADDON_PRICES[id] === null ? "Price confirmed before service" : usd(ADDON_PRICES[id]!)}</span>
-                </p>
-              ))}
-              {initialPaint.map((id) => (
-                <p key={id} className="flex items-baseline gap-2 text-sm">
-                  <span className="font-display font-semibold">{PAINT_UPGRADES[id].name}</span><span className="leader" aria-hidden="true" />
-                  <span>{quoteVehicle ? usd(PAINT_UPGRADES[id].prices[quoteVehicle]) : "Quoted by vehicle"}</span>
-                </p>
-              ))}
-            </div>
-            {initialPaint.length > 0 && <p className="mt-4 text-sm text-muted">Paint correction and coating work is attached to this booking request. Because paint work can require a separate appointment, our team will confirm the production schedule with you.</p>}
+            <h2 className="t-h3 mt-1">Your selections are already loaded</h2>
+            <p className="mt-2 text-sm text-muted">Your quoted add-ons are preselected under Vehicle 1. You can change them before booking.</p>
+            {initialPaint.length > 0 && (
+              <div className="mt-4 border-t border-line pt-4">
+                {initialPaint.map((id) => (
+                  <p key={id} className="flex items-baseline gap-2 text-sm">
+                    <span className="font-display font-semibold">{PAINT_UPGRADES[id].name}</span><span className="leader" aria-hidden="true" />
+                    <span>{resolved[0]?.vehicle ? usd(PAINT_UPGRADES[id].prices[resolved[0].vehicle!]) : "Quoted by vehicle"}</span>
+                  </p>
+                ))}
+                <p className="mt-3 text-sm text-muted">Paint correction and coating work is attached to this booking request. Because paint work can require a separate appointment, our team will confirm the production schedule with you.</p>
+              </div>
+            )}
           </section>
         )}
 
@@ -450,10 +490,17 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                   </div>
                 );
               })}
-              {(initialAddons.length > 0 || initialPaint.length > 0) && (
+              {resolved.some((line) => line.addons.length > 0 || line.paint.length > 0) && (
                 <div className="border-t border-line pt-4 text-sm text-muted">
-                  {initialAddons.map((id) => <p key={id}>+ {ADDON_LABELS[id]}</p>)}
-                  {initialPaint.map((id) => <p key={id}>+ {PAINT_UPGRADES[id].name}</p>)}
+                  {resolved.map((line, index) => (
+                    (line.addons.length > 0 || line.paint.length > 0) ? (
+                      <div key={line.key} className={index ? "mt-3" : ""}>
+                        {resolved.length > 1 && <p className="mb-1 font-semibold text-ink">Vehicle {index + 1}</p>}
+                        {line.addons.map((id) => <p key={id}>+ {ADDON_LABELS[id]} {ADDON_PRICES[id] === null ? "" : `(${usd(ADDON_PRICES[id]!)})`}</p>)}
+                        {line.paint.map((id) => <p key={id}>+ {PAINT_UPGRADES[id].name}</p>)}
+                      </div>
+                    ) : null
+                  ))}
                 </div>
               )}
               <p className="flex items-baseline gap-2 border-t-2 border-ink pt-4">
