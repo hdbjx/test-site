@@ -151,9 +151,10 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       .then(({ ok, j }) => {
         if (cancelled) return;
         if (!ok) throw new Error(j.error);
-        const list = (Array.isArray(j.slots) ? j.slots : [])
+        const rawSlots: unknown[] = Array.isArray(j.slots) ? j.slots : [];
+        const list: Date[] = rawSlots
           .filter((s): s is string => typeof s === "string")
-          .map((s) => new Date(s))
+          .map((s: string) => new Date(s))
           .filter(isValidDate);
         setSlots(list);
         const first = list[0] ? dayKey(list[0]) : null;
