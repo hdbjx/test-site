@@ -81,6 +81,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const [slots, setSlots] = useState<Date[] | null>(null);
   const [slotsError, setSlotsError] = useState<string | null>(null);
   const [day, setDay] = useState<string | null>(null);
+  const [calendarMonthKey, setCalendarMonthKey] = useState<string | null>(null);
   const [start, setStart] = useState<Date | null>(null);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -196,6 +197,12 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     });
   }, [days]);
   const selectedDayDate = daySlots[0] ?? availableDayMap.get(day ?? "")?.[0] ?? null;
+  const activeCalendarIndex = Math.max(0, calendarMonths.findIndex((cal) => cal.monthKey === calendarMonthKey));
+  const activeCalendarMonth = calendarMonths[activeCalendarIndex] ?? calendarMonths[0] ?? null;
+
+  useEffect(() => {
+    if (day) setCalendarMonthKey(day.slice(0, 7));
+  }, [day]);
 
   function infoValue(name: string) {
     if (!formRef.current) return "";
@@ -535,71 +542,76 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           ) : (
             <>
               <div className="booking-calendar-wrap mt-4">
-                <div className="booking-calendar-intro">
-                  <div>
-                    <p className="booking-calendar-eyebrow">Choose your date</p>
-                    <p className="booking-calendar-help">Available dates are highlighted. Tap a date, then choose an arrival time.</p>
-                  </div>
-                  <div className="booking-calendar-legend" aria-label="Calendar legend"><span aria-hidden="true" /> Available</div>
-                </div>
+                {activeCalendarMonth && (
+                  <section className="booking-calendar-month" aria-label={activeCalendarMonth.label}>
+                    <div className="booking-calendar-header">
+                      <button
+                        type="button"
+                        aria-label="Previous month"
+                        disabled={activeCalendarIndex <= 0}
+                        onClick={() => setCalendarMonthKey(calendarMonths[activeCalendarIndex - 1]?.monthKey ?? null)}
+                      >
+                        ‹
+                      </button>
+                      <h3>{activeCalendarMonth.label}</h3>
+                      <button
+                        type="button"
+                        aria-label="Next month"
+                        disabled={activeCalendarIndex >= calendarMonths.length - 1}
+                        onClick={() => setCalendarMonthKey(calendarMonths[activeCalendarIndex + 1]?.monthKey ?? null)}
+                      >
+                        ›
+                      </button>
+                    </div>
+                    <div className="booking-calendar-weekdays" aria-hidden="true">
+                      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((weekday) => <span key={weekday}>{weekday}</span>)}
+                    </div>
+                    <div className="booking-calendar-grid" role="radiogroup" aria-label="Available appointment date">
+                      {Array.from({ length: activeCalendarMonth.firstWeekday }).map((_, index) => <span className="booking-calendar-blank" key={`blank-${index}`} aria-hidden="true" />)}
+                      {Array.from({ length: activeCalendarMonth.daysInMonth }, (_, index) => index + 1).map((dateNumber) => {
+                        const key = `${activeCalendarMonth.year}-${String(activeCalendarMonth.month).padStart(2, '0')}-${String(dateNumber).padStart(2, '0')}`;
+                        const available = availableDayMap.get(key);
+                        const selected = day === key;
+                        const ariaLabel = available?.[0]
+                          ? fmtDay(available[0], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+                          : `${activeCalendarMonth.label} ${dateNumber}, unavailable`;
+                        return (
+                          <button
+                            key={key}
+                            type="button"
+                            role="radio"
+                            aria-checked={selected}
+                            aria-label={ariaLabel}
+                            disabled={!available}
+                            onClick={() => { setDay(key); setStart(null); }}
+                            className="booking-calendar-day"
+                          >
+                            {dateNumber}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
+                )}
 
-                <div className="booking-calendar-months" role="radiogroup" aria-label="Available appointment date">
-                  {calendarMonths.map((cal) => (
-                    <section className="booking-calendar-month" key={cal.monthKey} aria-label={cal.label}>
-                      <h3>{cal.label}</h3>
-                      <div className="booking-calendar-weekdays" aria-hidden="true">
-                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((weekday) => <span key={weekday}>{weekday}</span>)}
-                      </div>
-                      <div className="booking-calendar-grid">
-                        {Array.from({ length: cal.firstWeekday }).map((_, index) => <span className="booking-calendar-blank" key={`blank-${index}`} aria-hidden="true" />)}
-                        {Array.from({ length: cal.daysInMonth }, (_, index) => index + 1).map((dateNumber) => {
-                          const key = `${cal.year}-${String(cal.month).padStart(2, '0')}-${String(dateNumber).padStart(2, '0')}`;
-                          const available = availableDayMap.get(key);
-                          const selected = day === key;
-                          const ariaLabel = available?.[0]
-                            ? fmtDay(available[0], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
-                            : `${cal.label} ${dateNumber}, unavailable`;
-                          return (
-                            <button
-                              key={key}
-                              type="button"
-                              role="radio"
-                              aria-checked={selected}
-                              aria-label={ariaLabel}
-                              disabled={!available}
-                              onClick={() => { setDay(key); setStart(null); }}
-                              className="booking-calendar-day"
-                            >
-                              <span>{dateNumber}</span>
-                              {available && <i aria-hidden="true" />}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </section>
-                  ))}
-                </div>
+                {selectedDayDate && (
+                  <div className="booking-time-panel">
+                    <div className="booking-time-heading">
+                      <h3>{fmtDay(selectedDayDate, { weekday: "long", month: "long", day: "numeric" })}</h3>
+                      <span>{daySlots.length} {daySlots.length === 1 ? "time" : "times"}</span>
+                    </div>
+                    <div role="radiogroup" aria-label="Start time" className="booking-time-grid">
+                      {daySlots.map((s) => (
+                        <button key={s.toISOString()} type="button" role="radio" aria-checked={start?.getTime() === s.getTime()} onClick={() => setStart(s)} className="choice booking-time-choice">
+                          {fmtTime(s)}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="booking-time-zone">Arrival times · Eastern</p>
+                  </div>
+                )}
               </div>
 
-              {selectedDayDate && (
-                <div className="booking-time-panel">
-                  <div className="booking-time-heading">
-                    <div>
-                      <p className="booking-calendar-eyebrow">Selected date</p>
-                      <h3>{fmtDay(selectedDayDate, { weekday: "long", month: "long", day: "numeric" })}</h3>
-                    </div>
-                    <span>{daySlots.length} {daySlots.length === 1 ? "time" : "times"} available</span>
-                  </div>
-                  <div role="radiogroup" aria-label="Start time" className="booking-time-grid">
-                    {daySlots.map((s) => (
-                      <button key={s.toISOString()} type="button" role="radio" aria-checked={start?.getTime() === s.getTime()} onClick={() => setStart(s)} className="choice booking-time-choice">
-                        {fmtTime(s)}
-                      </button>
-                    ))}
-                  </div>
-                  <p className="booking-time-zone">Times are arrival times, Eastern.</p>
-                </div>
-              )}
             </>
           )}
         </fieldset>
