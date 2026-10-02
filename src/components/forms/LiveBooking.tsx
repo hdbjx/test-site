@@ -8,7 +8,7 @@ import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { duration, usd } from "@/lib/format";
 import type { AccountInfo, GarageVehicle } from "@/lib/supabase/account";
-import { FormError, Honeypot, Success, TextArea, TextField } from "./parts";
+import { FormError, Success, TextArea, TextField } from "./parts";
 
 const TZ = "America/New_York";
 const isValidDate = (d: Date) => Number.isFinite(d.getTime());
@@ -211,24 +211,40 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         email: get("email"),
         address: get("address"),
         notes: get("notes"),
-        company: get("company"),
       }),
     }).catch(() => null);
     const json = res ? await res.json().catch(() => ({})) : {};
     setSending(false);
 
-    if (res?.ok && json.ok) {
+    const confirmed =
+      res?.ok === true &&
+      json.ok === true &&
+      typeof json.jobId === "string" &&
+      json.jobId.length > 0 &&
+      typeof json.start === "string" &&
+      !Number.isNaN(Date.parse(json.start)) &&
+      Number.isFinite(Number(json.price)) &&
+      Number.isFinite(Number(json.minutes)) &&
+      Array.isArray(json.vehicles) &&
+      json.vehicles.length > 0;
+
+    if (confirmed) {
       track("booking_submit", { vehicleCount: lines.length, services: lines.map((line) => line.service).join(",") });
       setBooked({
-        service: json.service,
-        vehicle: json.vehicle,
-        vehicles: json.vehicles ?? [],
+        service: String(json.service ?? ""),
+        vehicle: String(json.vehicle ?? ""),
+        vehicles: json.vehicles,
         start: json.start,
-        price: json.price,
-        minutes: json.minutes,
+        price: Number(json.price),
+        minutes: Number(json.minutes),
         confirmationEmailSent: json.confirmationEmailSent === true,
       });
       window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (res?.ok && json.ok) {
+      setError("We couldn't verify that your booking was created. Nothing has been confirmed. Please try again or call/text us.");
       return;
     }
     if (json.code === "slot_taken") {
@@ -269,7 +285,6 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
 
   return (
     <form noValidate onSubmit={onSubmit} className="relative grid gap-10 lg:grid-cols-12">
-      <Honeypot />
       <div className="min-w-0 space-y-12 lg:col-span-8">
         {!signedIn && (
           <p className="text-ink/80">

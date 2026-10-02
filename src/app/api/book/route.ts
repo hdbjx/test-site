@@ -66,8 +66,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
   }
 
-  if (str(body.company)) return NextResponse.json({ ok: true });
-
   const start = str(body.start);
   const address = str(body.address);
   const notes = str(body.notes, 2000);
@@ -223,6 +221,11 @@ export async function POST(req: Request) {
     }
     console.error("[book]", error);
     return NextResponse.json({ ok: false, error: "We couldn't book that. Please call or text us." }, { status: 500 });
+  }
+
+  if (typeof data !== "string" || !data) {
+    console.error("[book] booking RPC returned no job id", data);
+    return NextResponse.json({ ok: false, error: "We couldn't verify that your booking was created. Please try again or call/text us." }, { status: 500 });
   }
 
   // A confirmed website booking closes any open CRM opportunity for the same
