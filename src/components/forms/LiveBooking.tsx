@@ -11,9 +11,24 @@ import type { AccountInfo, GarageVehicle } from "@/lib/supabase/account";
 import { FormError, Honeypot, Success, TextArea, TextField } from "./parts";
 
 const TZ = "America/New_York";
-const dayKey = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
-const fmtTime = (d: Date) => new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(d);
-const fmtDay = (d: Date, opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat("en-US", { timeZone: TZ, ...opts }).format(d);
+const isValidDate = (d: Date) => Number.isFinite(d.getTime());
+const dayKey = (d: Date) => {
+  if (!isValidDate(d)) return "";
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(d);
+  const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+  return `${get("year")}-${get("month")}-${get("day")}`;
+};
+const fmtTime = (d: Date) => isValidDate(d)
+  ? new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(d)
+  : "";
+const fmtDay = (d: Date, opts: Intl.DateTimeFormatOptions) => isValidDate(d)
+  ? new Intl.DateTimeFormat("en-US", { timeZone: TZ, ...opts }).format(d)
+  : "";
 const vName = (v: GarageVehicle) => [v.year, v.make, v.model].filter(Boolean).join(" ") || "Vehicle";
 
 type Props = {
@@ -136,7 +151,10 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       .then(({ ok, j }) => {
         if (cancelled) return;
         if (!ok) throw new Error(j.error);
-        const list = (j.slots as string[]).map((s) => new Date(s));
+        const list = (Array.isArray(j.slots) ? j.slots : [])
+          .filter((s): s is string => typeof s === "string")
+          .map((s) => new Date(s))
+          .filter(isValidDate);
         setSlots(list);
         const first = list[0] ? dayKey(list[0]) : null;
         setDay((d) => (d && list.some((s) => dayKey(s) === d) ? d : first));
@@ -152,7 +170,9 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const days = useMemo(() => {
     const map = new Map<string, Date[]>();
     (slots ?? []).forEach((s) => {
+      if (!isValidDate(s)) return;
       const k = dayKey(s);
+      if (!k) return;
       map.set(k, [...(map.get(k) ?? []), s]);
     });
     return [...map.entries()];
