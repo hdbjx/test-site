@@ -1,4 +1,10 @@
-export const usd = (n: number) => `$${n.toLocaleString("en-US")}`;
+const usdFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
+
+/** Format a dollar amount without allowing missing runtime data to crash the UI. */
+export const usd = (n: number | null | undefined) => {
+  const value = Number(n);
+  return Number.isFinite(value) ? `$${usdFormatter.format(value)}` : "—";
+};
 
 export function duration(minutes: number) {
   const h = Math.floor(minutes / 60);

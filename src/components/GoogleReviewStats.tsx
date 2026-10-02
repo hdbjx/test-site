@@ -47,9 +47,13 @@ export function GoogleReviewStatsProvider({ children }: { children: React.ReactN
   return <ReviewStatsContext.Provider value={value}>{children}</ReviewStatsContext.Provider>;
 }
 
+const reviewCountFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
+
 export function LiveReviewCount({ plus = true }: { plus?: boolean }) {
   const { count } = useContext(ReviewStatsContext);
-  return <>{count.toLocaleString("en-US")}{plus ? "+" : ""}</>;
+  const numericCount = Number(count);
+  const safeCount = Number.isFinite(numericCount) ? numericCount : site.reviews.count;
+  return <>{reviewCountFormatter.format(safeCount)}{plus ? "+" : ""}</>;
 }
 
 export function GoogleMapsAttribution({ className = "" }: { className?: string }) {
