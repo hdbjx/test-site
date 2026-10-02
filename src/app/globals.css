@@ -2929,3 +2929,17 @@
   }
   .client-info-panel .btn { min-height:3.25rem; }
 }
+
+/* V1.4.7: notes editor is intentionally not a textarea so iOS Safari cannot
+   misclassify it as another address field during contact/address AutoFill. */
+.autofill-safe-notes {
+  min-height: 7.5rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  cursor: text;
+}
+.autofill-safe-notes:empty::before {
+  content: attr(data-placeholder);
+  color: var(--color-muted);
+  pointer-events: none;
+}

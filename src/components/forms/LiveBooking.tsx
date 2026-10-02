@@ -8,7 +8,8 @@ import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { duration, usd } from "@/lib/format";
 import type { AccountInfo, GarageVehicle } from "@/lib/supabase/account";
-import { FormError, Success, TextArea, TextField } from "./parts";
+import { FormError, Success, TextField } from "./parts";
+import { AutofillSafeNotes } from "./AutofillSafeNotes";
 import { AddressFields } from "./AddressFields";
 
 const TZ = "America/New_York";
@@ -595,7 +596,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
               <AddressFields defaultValue={account?.address ?? ""} error={badField === "address"} />
             </div>
             <div className="mt-6">
-              <TextArea label="Anything we should know?" name="service_notes" autoComplete="off" optional hint="Gate codes, parking, pet hair, stains, or a spot you care about." />
+              <AutofillSafeNotes label="Anything we should know?" name="service_notes" hint="Gate codes, parking, pet hair, stains, or a spot you care about." />
             </div>
             <button type="button" onClick={() => setInfoStep(2)} className="btn btn-secondary mt-6">Back</button>
           </div>

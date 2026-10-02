@@ -8,7 +8,8 @@ import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { duration, usd } from "@/lib/format";
 import { submitLead } from "@/lib/submit";
-import { FormError, formToObject, Honeypot, SelectField, Success, TextArea, TextField } from "./parts";
+import { FormError, formToObject, Honeypot, SelectField, Success, TextField } from "./parts";
+import { AutofillSafeNotes } from "./AutofillSafeNotes";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -150,7 +151,7 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
             <TextField label="Phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" error={bad("phone")} errorText="Enter a 10-digit phone number." />
           </div>
           <TextField label="Email" name="email" type="email" autoComplete="email" optional error={bad("email")} errorText="Check your email address." />
-          <TextArea label="Anything we should know?" name="notes" autoComplete="off" optional hint="Gate codes, parking, pet hair, stains, a specific spot you care about." />
+          <AutofillSafeNotes label="Anything we should know?" name="notes" hint="Gate codes, parking, pet hair, stains, or a specific spot you care about." />
           <div>
             <p className="field-label">Service address</p>
             <p className="mb-4 mt-1 text-sm text-muted">Where should our team meet the vehicle?</p>
