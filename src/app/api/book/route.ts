@@ -80,6 +80,10 @@ export async function POST(req: Request) {
   if (!address) {
     return NextResponse.json({ ok: false, error: "Add the address where the cars will be.", field: "address" }, { status: 422 });
   }
+  const structuredAddress = [str(body.addressStreet), str(body.addressCity), str(body.addressState), str(body.addressZip)];
+  if (structuredAddress.some(Boolean) && structuredAddress.some((part) => !part)) {
+    return NextResponse.json({ ok: false, error: "Enter the full service address.", field: "address" }, { status: 422 });
+  }
 
   const session = await getSession();
   let clientId: string | null = null;

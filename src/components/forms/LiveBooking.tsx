@@ -9,6 +9,7 @@ import { track } from "@/lib/analytics";
 import { duration, usd } from "@/lib/format";
 import type { AccountInfo, GarageVehicle } from "@/lib/supabase/account";
 import { FormError, Honeypot, Success, TextArea, TextField } from "./parts";
+import { AddressFields } from "./AddressFields";
 
 const TZ = "America/New_York";
 const dayKey = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
@@ -167,6 +168,13 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     }
     const fd = new FormData(e.currentTarget);
     const get = (k: string) => String(fd.get(k) ?? "").trim();
+    const addressIncomplete = ["addressStreet", "addressCity", "addressState", "addressZip"].some((k) => !get(k));
+    if (addressIncomplete) {
+      setBadField("address");
+      setError("Enter the full service address.");
+      e.currentTarget.querySelector<HTMLElement>("#addressStreet")?.focus();
+      return;
+    }
     setSending(true);
     setError(null);
     setBadField(null);
@@ -189,6 +197,11 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         phone: get("phone"),
         email: get("email"),
         address: get("address"),
+        addressStreet: get("addressStreet"),
+        addressUnit: get("addressUnit"),
+        addressCity: get("addressCity"),
+        addressState: get("addressState"),
+        addressZip: get("addressZip"),
         notes: get("notes"),
         company: get("company"),
       }),
@@ -459,7 +472,10 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
 
         <fieldset className="space-y-6">
           <legend className="t-h3">3. Your details</legend>
-          <TextField label="Address where the vehicles will be" name="address" autoComplete="street-address" defaultValue={account?.address ?? ""} hint="Home, apartment or office. Include the city." error={badField === "address"} />
+          <div>
+            <p className="mb-4 font-display text-lg font-semibold">Service address</p>
+            <AddressFields defaultAddress={account?.address} error={badField === "address"} />
+          </div>
           <div className="grid gap-6 sm:grid-cols-2">
             <TextField label="Name" name="name" autoComplete="name" defaultValue={account?.full_name ?? ""} error={badField === "name"} />
             <TextField label="Phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" defaultValue={account?.phone ?? ""} error={badField === "phone"} errorText="Enter a 10-digit phone number." />

@@ -2669,3 +2669,13 @@
   vertical-align: baseline;
 }
 .google-maps-attribution-on-dark { color: rgba(255,255,255,.78); }
+
+/* Booking address autocomplete */
+.address-search-status{position:absolute;right:1rem;bottom:1rem;font-size:.72rem;color:var(--color-muted);pointer-events:none}
+.address-suggestions{position:absolute;z-index:40;left:0;right:0;top:calc(100% + .4rem);overflow:hidden;border:2px solid var(--color-ink);background:var(--color-paper);box-shadow:5px 5px 0 rgba(17,17,17,.18)}
+.address-suggestion{display:flex;width:100%;flex-direction:column;gap:.15rem;padding:.85rem 1rem;text-align:left;border-bottom:1px solid var(--color-line);background:transparent;color:var(--color-ink);cursor:pointer}
+.address-suggestion:hover,.address-suggestion:focus-visible{background:#eee5d8;outline:none}
+.address-suggestion strong{font-family:var(--font-display);font-size:.95rem;font-weight:700}
+.address-suggestion span{font-size:.78rem;color:var(--color-muted);line-height:1.3}
+.address-google-attribution{display:flex;align-items:center;justify-content:flex-end;padding:.45rem .7rem;background:#fff}
+.address-google-attribution img{display:block;width:112px;height:auto}
