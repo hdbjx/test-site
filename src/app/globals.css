@@ -2708,3 +2708,5 @@
 @media (max-width:800px) {
   .work-instagram-cta { align-items:stretch; flex-direction:column; gap:1.25rem; box-shadow:6px 6px 0 var(--color-red); }
   .work-instagram-link { width:100%; justify-content:center; }
+
+}
