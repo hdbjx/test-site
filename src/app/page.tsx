@@ -27,7 +27,7 @@ export default function Home() {
         <div className="hero-shade" />
         <div className="container-ed hero-inner">
           <div className="hero-copy rise">
-            <p className="hero-kicker">Mobile detailing · Decatur + Atlanta</p>
+            <p className="hero-kicker">Mobile detailing / Decatur + Atlanta</p>
             <h1 className="hero-title"><span>Your car.</span><span>Back to its best.</span></h1>
             <p className="hero-lede">Professional detailing at your driveway.<br />We bring the power and water.</p>
             <div className="mt-7 flex flex-wrap gap-4">
