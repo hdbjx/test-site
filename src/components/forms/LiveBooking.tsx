@@ -85,6 +85,8 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const [error, setError] = useState<string | null>(null);
   const [badField, setBadField] = useState<string | null>(null);
   const [booked, setBooked] = useState<Booked | null>(null);
+  const [infoStep, setInfoStep] = useState<1 | 2 | 3>(1);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const resolved = lines.map((line) => {
     const saved = line.savedId === "size" ? undefined : garage.find((g) => g.id === line.savedId);
@@ -181,6 +183,41 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   }, [slots]);
   const daySlots = days.find(([k]) => k === day)?.[1] ?? [];
 
+  function infoValue(name: string) {
+    if (!formRef.current) return "";
+    return String(new FormData(formRef.current).get(name) ?? "").trim();
+  }
+
+  function goToContactInfo() {
+    const name = infoValue("name");
+    if (!name) {
+      setBadField("name");
+      setError("Enter your name to continue.");
+      return;
+    }
+    setBadField(null);
+    setError(null);
+    setInfoStep(2);
+  }
+
+  function goToAddressInfo() {
+    const phone = infoValue("phone").replace(/\D/g, "");
+    const contactEmail = infoValue("email");
+    if (phone.length !== 10) {
+      setBadField("phone");
+      setError("Enter a 10-digit phone number to continue.");
+      return;
+    }
+    if (!signedIn && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) {
+      setBadField("email");
+      setError("Enter a valid email so we can send your confirmation.");
+      return;
+    }
+    setBadField(null);
+    setError(null);
+    setInfoStep(3);
+  }
+
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!allVehiclesReady || !start) {
@@ -211,7 +248,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         phone: get("phone"),
         email: get("email"),
         address: get("address"),
-        notes: get("notes"),
+        notes: get("service_notes"),
       }),
     }).catch(() => null);
     const json = res ? await res.json().catch(() => ({})) : {};
@@ -252,7 +289,11 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       setSlots((s) => (s ?? []).filter((x) => x.getTime() !== start.getTime()));
       setStart(null);
     }
-    setBadField(json.field ?? null);
+    const field = json.field ?? null;
+    setBadField(field);
+    if (field === "name") setInfoStep(1);
+    if (field === "phone" || field === "email") setInfoStep(2);
+    if (field === "address") setInfoStep(3);
     setError(json.error ?? "No connection. Try again, or call us.");
   }
 
@@ -285,7 +326,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   }
 
   return (
-    <form noValidate onSubmit={onSubmit} className="relative grid gap-10 lg:grid-cols-12">
+    <form ref={formRef} noValidate onSubmit={onSubmit} className="relative grid gap-10 lg:grid-cols-12">
       <div className="min-w-0 space-y-12 lg:col-span-8">
         {!signedIn && (
           <p className="text-ink/80">
@@ -496,16 +537,51 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
 
         <fieldset className="space-y-6">
           <legend className="t-h3">3. Your details</legend>
-          <AddressFields defaultValue={account?.address ?? ""} error={badField === "address"} />
-          <div className="grid gap-6 sm:grid-cols-2">
-            <TextField label="Name" name="name" autoComplete="name" defaultValue={account?.full_name ?? ""} error={badField === "name"} />
-            <TextField label="Phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" defaultValue={account?.phone ?? ""} error={badField === "phone"} errorText="Enter a 10-digit phone number." />
+
+          <div className="client-info-progress" aria-label="Your information progress">
+            <button type="button" onClick={() => setInfoStep(1)} className={infoStep === 1 ? "is-active" : infoStep > 1 ? "is-done" : ""}>
+              <b>{infoStep > 1 ? "✓" : "01"}</b><span>Name</span>
+            </button>
+            <i />
+            <button type="button" onClick={() => infoStep >= 2 && setInfoStep(2)} className={infoStep === 2 ? "is-active" : infoStep > 2 ? "is-done" : ""}>
+              <b>{infoStep > 2 ? "✓" : "02"}</b><span>Phone & email</span>
+            </button>
+            <i />
+            <button type="button" onClick={() => infoStep >= 3 && setInfoStep(3)} className={infoStep === 3 ? "is-active" : ""}>
+              <b>03</b><span>Address</span>
+            </button>
           </div>
-          {!signedIn && (
-            <TextField label="Email" name="email" type="email" autoComplete="email" hint="Required so we can send your booking confirmation." error={badField === "email"} errorText="Enter a valid email for your confirmation." />
-          )}
-          {signedIn && <input type="hidden" name="email" value={email ?? ""} />}
-          <TextArea label="Anything we should know?" name="notes" optional hint="Gate codes, parking, pet hair, stains, or a spot you care about." />
+
+          <div hidden={infoStep !== 1} className="client-info-panel">
+            <TextField label="Full name" name="name" autoComplete="name" defaultValue={account?.full_name ?? ""} error={badField === "name"} />
+            <button type="button" onClick={goToContactInfo} className="btn btn-primary mt-6 w-full sm:w-auto">Continue to contact info ↗</button>
+          </div>
+
+          <div hidden={infoStep !== 2} className="client-info-panel">
+            <div className="grid gap-6 sm:grid-cols-2">
+              <TextField label="Phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" defaultValue={account?.phone ?? ""} error={badField === "phone"} errorText="Enter a 10-digit phone number." />
+              {!signedIn && (
+                <TextField label="Email" name="email" type="email" autoComplete="email" hint="Required for your confirmation." error={badField === "email"} errorText="Enter a valid email for your confirmation." />
+              )}
+              {signedIn && <input type="hidden" name="email" value={email ?? ""} />}
+            </div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button type="button" onClick={() => setInfoStep(1)} className="btn btn-secondary">Back</button>
+              <button type="button" onClick={goToAddressInfo} className="btn btn-primary">Continue to address ↗</button>
+            </div>
+          </div>
+
+          <div hidden={infoStep !== 3} className="client-info-panel">
+            <div className="booking-address-block">
+              <p className="field-label">Service address</p>
+              <p className="mb-4 mt-1 text-sm text-muted">Where should our team meet the vehicle?</p>
+              <AddressFields defaultValue={account?.address ?? ""} error={badField === "address"} />
+            </div>
+            <div className="mt-6">
+              <TextArea label="Anything we should know?" name="service_notes" autoComplete="off" optional hint="Gate codes, parking, pet hair, stains, or a spot you care about." />
+            </div>
+            <button type="button" onClick={() => setInfoStep(2)} className="btn btn-secondary mt-6">Back</button>
+          </div>
         </fieldset>
       </div>
 
@@ -559,7 +635,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
             <li>Confirmation is emailed immediately after booking</li>
           </ul>
           <div className="mt-5"><FormError message={error} /></div>
-          <button type="submit" disabled={sending || !start || !allVehiclesReady} className="btn btn-primary mt-4 w-full disabled:cursor-not-allowed disabled:opacity-50">
+          <button type="submit" disabled={sending || !start || !allVehiclesReady || infoStep !== 3} className="btn btn-primary mt-4 w-full disabled:cursor-not-allowed disabled:opacity-50">
             {sending ? "Booking…" : lines.length > 1 ? `Book ${lines.length} vehicles` : "Book it"}
           </button>
         </div>

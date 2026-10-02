@@ -30,7 +30,7 @@ export function AddressFields({ defaultValue = "", error = false, optional = fal
   return (
     <div className="space-y-4">
       <input type="hidden" name="address" value={full} />
-      <TextField label="Street address" name="address_street" autoComplete="street-address" placeholder="123 Main St" optional={optional} value={address.street} onChange={update("street")} error={error && !address.street} />
+      <TextField label="Street address" name="address_street" autoComplete="address-line1" placeholder="123 Main St" optional={optional} value={address.street} onChange={update("street")} error={error && !address.street} />
       <TextField label="Apt / Unit" name="address_unit" autoComplete="address-line2" placeholder="Apt 2B" optional value={address.unit} onChange={update("unit")} />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1.4fr_.65fr_.8fr]">
         <TextField label="City" name="address_city" autoComplete="address-level2" placeholder="Decatur" optional={optional} value={address.city} onChange={update("city")} error={error && !address.city} />

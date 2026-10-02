@@ -78,6 +78,9 @@ export function TextArea(p: Base & TextareaHTMLAttributes<HTMLTextAreaElement>) 
         required={!optional}
         aria-invalid={error || undefined}
         aria-describedby={error ? `${name}-error` : undefined}
+        autoComplete={rest.autoComplete ?? "off"}
+        data-1p-ignore="true"
+        data-lpignore="true"
         {...rest}
       />
       <Err label={label} name={name} error={error} errorText={errorText} />

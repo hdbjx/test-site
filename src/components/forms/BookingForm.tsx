@@ -144,8 +144,18 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
         </fieldset>
 
         <fieldset className="space-y-6">
-          <legend className="t-h3">3. When and where</legend>
-          <AddressFields error={bad("address")} />
+          <legend className="t-h3">3. Your details & timing</legend>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <TextField label="Name" name="name" autoComplete="name" error={bad("name")} />
+            <TextField label="Phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" error={bad("phone")} errorText="Enter a 10-digit phone number." />
+          </div>
+          <TextField label="Email" name="email" type="email" autoComplete="email" optional error={bad("email")} errorText="Check your email address." />
+          <TextArea label="Anything we should know?" name="notes" autoComplete="off" optional hint="Gate codes, parking, pet hair, stains, a specific spot you care about." />
+          <div>
+            <p className="field-label">Service address</p>
+            <p className="mb-4 mt-1 text-sm text-muted">Where should our team meet the vehicle?</p>
+            <AddressFields error={bad("address")} />
+          </div>
           <div>
             <p id="days-label" className="field-label">
               Days that work for you
@@ -168,15 +178,6 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
           </SelectField>
         </fieldset>
 
-        <fieldset className="space-y-6">
-          <legend className="t-h3">4. Your details</legend>
-          <div className="grid gap-6 sm:grid-cols-2">
-            <TextField label="Name" name="name" autoComplete="name" error={bad("name")} />
-            <TextField label="Phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" error={bad("phone")} errorText="Enter a 10-digit phone number." />
-          </div>
-          <TextField label="Email" name="email" type="email" autoComplete="email" optional error={bad("email")} errorText="Check your email address." />
-          <TextArea label="Anything we should know?" name="notes" optional hint="Gate codes, parking, pet hair, stains, a specific spot you care about." />
-        </fieldset>
       </div>
 
       {/* Summary: sticky on desktop, inline before submit on mobile */}
