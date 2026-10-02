@@ -29,7 +29,7 @@ export default function Home() {
           <div className="hero-copy rise">
             <p className="hero-kicker">Mobile detailing · Decatur + Atlanta</p>
             <h1 className="hero-title"><span>Your car.</span><span>Back to its best.</span></h1>
-            <p className="hero-lede">Premium mobile detailing, brought to your driveway.<br />We bring the power and water.</p>
+            <p className="hero-lede">Professional detailing at your driveway.<br />We bring the power and water.</p>
             <div className="mt-7 flex flex-wrap gap-4">
               <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-primary">Book a detail ↗</TrackedLink>
               <Link href="/get-a-quote" className="btn btn-quote">Get a quote</Link>
@@ -40,7 +40,7 @@ export default function Home() {
 
       <section className="proof-row" aria-label="Why people choose Every Detail">
         <div className="container-ed grid gap-3 py-5 text-center sm:grid-cols-2 lg:grid-cols-4">
-          <span className="proof-stars">★★★★★ <strong><LiveReviewCount /></strong> five-star reviews <GoogleMapsAttribution /></span>
+          <span className="proof-stars">★★★★★ <strong><LiveReviewCount /></strong> five-star reviews</span>
           <span>{site.award.title}</span><span>Power + water included</span><span>100% mobile</span>
         </div>
       </section>

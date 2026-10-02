@@ -2710,3 +2710,98 @@
   .work-instagram-link { width:100%; justify-content:center; }
 
 }
+
+
+/* V1.4.1: mobile landing polish */
+@media (max-width: 767px) {
+  /* Bring the conversion message into the first visual beat while preserving the car. */
+  .hero-inner.container-ed {
+    align-items: flex-start;
+    padding-top: clamp(22rem, 49svh, 31rem);
+    padding-bottom: 2rem;
+  }
+  .hero-copy { margin-top: 0; }
+  .hero-title {
+    font-size: clamp(3.55rem, 15.5vw, 4.85rem) !important;
+    line-height: .88 !important;
+  }
+  .hero-lede { font-size: 1.05rem; line-height: 1.4; }
+
+  /* Trust proof: compact, balanced 2x2 grid with no Maps attribution. */
+  .proof-row > div {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+  .proof-row span {
+    min-height: 3.9rem !important;
+    padding: .7rem .65rem !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    white-space: normal !important;
+    line-height: 1.22;
+  }
+  .proof-row span:nth-child(odd) { border-right: 1px solid rgb(17 17 17 / .18) !important; }
+  .proof-row span:nth-child(-n+2) { border-bottom: 1px solid rgb(17 17 17 / .18) !important; }
+  .proof-stars { flex-direction: row !important; flex-wrap: wrap; column-gap: .3rem; row-gap: .12rem; }
+
+  /* Service cards: give all three equal breathing room and never clip detail copy. */
+  .v15-services { overflow: visible !important; }
+  .v15-service {
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 1.35rem .85rem 1.45rem !important;
+    grid-template-columns: 2rem minmax(0, 1fr) 2rem !important;
+    gap: .65rem !important;
+    align-items: start !important;
+  }
+  .v15-service:hover,
+  .v15-service.is-active {
+    padding: 1.35rem .85rem 1.45rem !important;
+  }
+  .v15-service-copy { min-width: 0; }
+  .v15-service-main { min-width: 0; overflow: visible !important; }
+  .v15-service-copy strong {
+    font-size: clamp(2.35rem, 11.5vw, 3.15rem) !important;
+    line-height: .9 !important;
+    overflow-wrap: anywhere;
+  }
+  .v15-service:hover .v15-service-copy strong,
+  .v15-service.is-active .v15-service-copy strong { transform: none !important; }
+  .v15-service-subline {
+    max-width: none !important;
+    margin-top: .55rem !important;
+    font-size: .8rem !important;
+    line-height: 1.38 !important;
+  }
+  .v15-service-includes {
+    display: block !important;
+    max-width: none !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin-top: .6rem !important;
+    opacity: .82 !important;
+    transform: none !important;
+    font-size: .72rem !important;
+    line-height: 1.42 !important;
+  }
+  .v15-service:hover .v15-service-includes,
+  .v15-service.is-active .v15-service-includes {
+    max-height: none !important;
+    margin-top: .6rem !important;
+    opacity: 1 !important;
+  }
+  .v15-arrow { grid-column: 3 !important; grid-row: 1 !important; align-self: start; }
+}
+
+@media (max-width: 420px) {
+  .hero-inner.container-ed { padding-top: clamp(20rem, 46svh, 27rem); }
+  .proof-row { font-size: .72rem !important; letter-spacing: .035em !important; }
+  .proof-row span { min-height: 3.75rem !important; padding: .6rem .45rem !important; }
+}
