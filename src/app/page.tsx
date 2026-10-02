@@ -86,6 +86,29 @@ export default function Home() {
               <figcaption><span>05 / FINISHED</span><strong>The result</strong></figcaption>
             </figure>
           </div>
+
+          <div className="work-instagram-cta">
+            <div>
+              <span className="work-instagram-label">MORE OF THE WORK</span>
+              <strong>Follow the crew on Instagram.</strong>
+              <p>Fresh details, before-and-afters, and what the team is working on around Atlanta.</p>
+            </div>
+            <a
+              href="https://www.instagram.com/everydetail.atl/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="work-instagram-link"
+              aria-label="Follow Every Detail on Instagram at @everydetail.atl"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" className="instagram-dot" />
+              </svg>
+              <span>Follow @everydetail.atl</span>
+              <b>↗</b>
+            </a>
+          </div>
         </div>
       </section>
 

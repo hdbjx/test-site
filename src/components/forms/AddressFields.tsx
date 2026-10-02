@@ -35,11 +35,21 @@ export function AddressFields({ defaultAddress, error = false }: { defaultAddres
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchEnabled, setSearchEnabled] = useState(!initial.street);
-  const sessionToken = useRef(typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
+  const sessionToken = useRef("");
   const requestId = useRef(0);
 
   function set<K extends keyof Parts>(key: K, value: Parts[K]) {
     setParts((current) => ({ ...current, [key]: value }));
+  }
+
+  function getSessionToken() {
+    if (!sessionToken.current) {
+      sessionToken.current =
+        typeof window !== "undefined" && window.crypto && "randomUUID" in window.crypto
+          ? window.crypto.randomUUID()
+          : `${Date.now()}-${Math.random()}`;
+    }
+    return sessionToken.current;
   }
 
   useEffect(() => {
@@ -55,7 +65,7 @@ export function AddressFields({ defaultAddress, error = false }: { defaultAddres
         const response = await fetch("/api/address-autocomplete", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ input: parts.street, sessionToken: sessionToken.current }),
+          body: JSON.stringify({ input: parts.street, sessionToken: getSessionToken() }),
         });
         const json = await response.json().catch(() => ({}));
         if (id !== requestId.current) return;
@@ -81,7 +91,7 @@ export function AddressFields({ defaultAddress, error = false }: { defaultAddres
       const response = await fetch("/api/address-details", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ placeId: suggestion.placeId, sessionToken: sessionToken.current }),
+        body: JSON.stringify({ placeId: suggestion.placeId, sessionToken: getSessionToken() }),
       });
       const json = await response.json().catch(() => ({}));
       if (response.ok && json.ok && json.address) {
@@ -93,7 +103,7 @@ export function AddressFields({ defaultAddress, error = false }: { defaultAddres
           zip: json.address.zip || current.zip,
         }));
         setSearchEnabled(false);
-        sessionToken.current = typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
+        sessionToken.current = "";
       }
     } finally {
       setLoading(false);
