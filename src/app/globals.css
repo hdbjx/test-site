@@ -2864,6 +2864,8 @@
 
 /* V1.4.5: keep the booking flow intact; step only the client-info section */
 .client-info-progress {
+  width:100%;
+  max-width:46rem;
   display:grid;
   grid-template-columns:auto 1fr auto 1fr auto;
   align-items:center;
@@ -2902,7 +2904,7 @@
 .client-info-progress button.is-done { color:var(--color-oxblood);cursor:pointer; }
 .client-info-progress button.is-done b { border-color:var(--color-oxblood);background:var(--color-oxblood);color:#fff; }
 .client-info-progress i { height:1px;background:var(--color-line); }
-.client-info-panel { min-width:0; }
+.client-info-panel { width:100%;max-width:46rem;min-width:0; }
 .booking-address-block { padding-top:.1rem; }
 
 @media (max-width:640px) {

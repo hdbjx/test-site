@@ -188,6 +188,12 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     return String(new FormData(formRef.current).get(name) ?? "").trim();
   }
 
+  function nationalPhone(value: string) {
+    let digits = value.replace(/\D/g, "");
+    if (digits.length === 11 && digits.startsWith("1")) digits = digits.slice(1);
+    return digits.slice(0, 10);
+  }
+
   function goToContactInfo() {
     const name = infoValue("name");
     if (!name) {
@@ -201,7 +207,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   }
 
   function goToAddressInfo() {
-    const phone = infoValue("phone").replace(/\D/g, "");
+    const phone = nationalPhone(infoValue("phone"));
     const contactEmail = infoValue("email");
     if (phone.length !== 10) {
       setBadField("phone");
@@ -245,7 +251,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         vehicles: bookingVehicles,
         start: start.toISOString(),
         name: get("name"),
-        phone: get("phone"),
+        phone: nationalPhone(get("phone")),
         email: get("email"),
         address: get("address"),
         notes: get("service_notes"),
@@ -554,12 +560,23 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
 
           <div hidden={infoStep !== 1} className="client-info-panel">
             <TextField label="Full name" name="name" autoComplete="name" defaultValue={account?.full_name ?? ""} error={badField === "name"} />
-            <button type="button" onClick={goToContactInfo} className="btn btn-primary mt-6 w-full sm:w-auto">Continue to contact info ↗</button>
+            <button type="button" onClick={goToContactInfo} className="btn btn-primary mt-6 w-full sm:w-auto">Continue to contact info</button>
           </div>
 
           <div hidden={infoStep !== 2} className="client-info-panel">
             <div className="grid gap-6 sm:grid-cols-2">
-              <TextField label="Phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" defaultValue={account?.phone ?? ""} error={badField === "phone"} errorText="Enter a 10-digit phone number." />
+              <TextField
+                label="Phone"
+                name="phone"
+                type="tel"
+                inputMode="numeric"
+                autoComplete="tel-national"
+                maxLength={10}
+                defaultValue={nationalPhone(account?.phone ?? "")}
+                onInput={(event) => { event.currentTarget.value = nationalPhone(event.currentTarget.value); }}
+                error={badField === "phone"}
+                errorText="Enter a 10-digit phone number."
+              />
               {!signedIn && (
                 <TextField label="Email" name="email" type="email" autoComplete="email" hint="Required for your confirmation." error={badField === "email"} errorText="Enter a valid email for your confirmation." />
               )}
@@ -567,7 +584,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
               <button type="button" onClick={() => setInfoStep(1)} className="btn btn-secondary">Back</button>
-              <button type="button" onClick={goToAddressInfo} className="btn btn-primary">Continue to address ↗</button>
+              <button type="button" onClick={goToAddressInfo} className="btn btn-primary">Continue to address</button>
             </div>
           </div>
 

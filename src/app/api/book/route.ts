@@ -101,9 +101,12 @@ export async function POST(req: Request) {
   if (!name) {
     return NextResponse.json({ ok: false, error: "Add your name.", field: "name" }, { status: 422 });
   }
-  if ((phone.match(/\d/g) ?? []).length < 10) {
+  let phoneDigits = phone.replace(/\D/g, "");
+  if (phoneDigits.length === 11 && phoneDigits.startsWith("1")) phoneDigits = phoneDigits.slice(1);
+  if (phoneDigits.length !== 10) {
     return NextResponse.json({ ok: false, error: "Enter a 10-digit phone number.", field: "phone" }, { status: 422 });
   }
+  phone = phoneDigits;
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
     return NextResponse.json({ ok: false, error: "Enter a valid email for your booking confirmation.", field: "email" }, { status: 422 });
   }
