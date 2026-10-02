@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { FormError, Success, TextField } from "./parts";
+import { AddressFields } from "./AddressFields";
 
 type ContactResponse = {
   ok?: boolean;
@@ -99,15 +100,7 @@ export function InfoForm() {
         error={bad("email")}
         errorText="Check your email address."
       />
-      <TextField
-        label="Full service address"
-        name="address"
-        autoComplete="street-address"
-        placeholder="123 Main St, Decatur, GA 30030"
-        hint="Include street, city, state and ZIP code. Add an apartment or unit number if needed."
-        error={bad("address")}
-        errorText="Enter the full address, including street, city, state and ZIP code."
-      />
+      <AddressFields error={bad("address")} />
 
       <FormError message={error} />
 

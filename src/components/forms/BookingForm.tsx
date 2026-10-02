@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { AddressFields } from "./AddressFields";
 import { useState, type FormEvent } from "react";
 import { PRICING, serviceList, services, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { site } from "@/data/site";
@@ -144,14 +145,7 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
 
         <fieldset className="space-y-6">
           <legend className="t-h3">3. When and where</legend>
-          <TextField
-            label="Full service address"
-            name="address"
-            autoComplete="street-address"
-            placeholder="123 Main St, Decatur, GA 30030"
-            hint="Include street, city, state and ZIP code. Add an apartment or unit number if needed."
-            error={bad("address")}
-          />
+          <AddressFields error={bad("address")} />
           <div>
             <p id="days-label" className="field-label">
               Days that work for you

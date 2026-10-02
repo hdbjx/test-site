@@ -5,6 +5,7 @@ import { useState, type FormEvent } from "react";
 import type { AccountInfo } from "@/lib/supabase/account";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import { FormError, TextField } from "@/components/forms/parts";
+import { AddressFields } from "@/components/forms/AddressFields";
 
 export function ProfileForm({ account, email }: { account: AccountInfo; email: string }) {
   const router = useRouter();
@@ -42,7 +43,7 @@ export function ProfileForm({ account, email }: { account: AccountInfo; email: s
         <TextField label="Name" name="name" autoComplete="name" defaultValue={account.full_name} />
         <TextField label="Phone" name="phone" type="tel" autoComplete="tel" defaultValue={account.phone ?? ""} />
       </div>
-      <TextField label="Full service address" name="address" autoComplete="street-address" optional defaultValue={account.address ?? ""} placeholder="123 Main St, Decatur, GA 30030" hint="Street, city, state and ZIP code. Add an apartment or unit number if needed." />
+      <AddressFields defaultValue={account.address ?? ""} optional />
       <p className="text-sm text-muted">Signed in as {email}</p>
       <FormError message={error} />
       <div className="flex items-center gap-4">

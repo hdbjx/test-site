@@ -2805,3 +2805,59 @@
   .proof-row { font-size: .72rem !important; letter-spacing: .035em !important; }
   .proof-row span { min-height: 3.75rem !important; padding: .6rem .45rem !important; }
 }
+
+/* V1.4.3: iOS address autofill + mobile legibility/wrapping polish */
+@media (max-width: 767px) {
+  /* Keep the small hero context line readable against bright areas of the photo. */
+  .hero-eyebrow,
+  .hero-copy .eyebrow {
+    color: #fff !important;
+    font-size: .72rem !important;
+    line-height: 1.25 !important;
+    letter-spacing: .12em !important;
+    text-shadow: 0 1px 5px rgb(0 0 0 / .8), 0 0 14px rgb(0 0 0 / .55);
+    opacity: 1 !important;
+  }
+  .hero-lede {
+    color: #fff !important;
+    text-shadow: 0 1px 5px rgb(0 0 0 / .8), 0 0 14px rgb(0 0 0 / .45);
+    opacity: 1 !important;
+  }
+
+  /* Service names must wrap by words only. Never split Maintenance mid-word. */
+  .v15-service {
+    grid-template-columns: 2rem minmax(0, 1fr) 2.35rem !important;
+    column-gap: .7rem !important;
+    row-gap: .45rem !important;
+    padding: 1.45rem .8rem 1.55rem !important;
+  }
+  .v15-service:hover,
+  .v15-service.is-active { padding: 1.45rem .8rem 1.55rem !important; }
+  .v15-service-copy strong {
+    font-size: clamp(2.15rem, 9.4vw, 2.9rem) !important;
+    line-height: .92 !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+  }
+  .v15-service-cue {
+    margin-bottom: .5rem !important;
+    font-size: .68rem !important;
+    line-height: 1.2 !important;
+  }
+  .v15-service-subline {
+    margin-top: .7rem !important;
+    font-size: .82rem !important;
+    line-height: 1.42 !important;
+  }
+  .v15-service-includes {
+    margin-top: .7rem !important;
+    font-size: .74rem !important;
+    line-height: 1.48 !important;
+  }
+  .v15-arrow {
+    width: 2.25rem;
+    min-width: 2.25rem;
+    justify-self: end;
+  }
+}
