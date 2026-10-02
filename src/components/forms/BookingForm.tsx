@@ -32,6 +32,12 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
       form.querySelector<HTMLElement>(`[name="${missing[0]}"]`)?.focus();
       return;
     }
+    if (!/\d/.test(data.address ?? "") || !/\b(?:GA|Georgia)\b/i.test(data.address ?? "") || !/\b\d{5}(?:-\d{4})?\b/.test(data.address ?? "")) {
+      setInvalid(["address"]);
+      setError("Enter the full service address, including street, city, state and ZIP code.");
+      form.querySelector<HTMLElement>('[name="address"]')?.focus();
+      return;
+    }
     setStatus("sending");
     setError(null);
     setInvalid([]);
@@ -139,10 +145,11 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
         <fieldset className="space-y-6">
           <legend className="t-h3">3. When and where</legend>
           <TextField
-            label="Address where the car will be"
+            label="Full service address"
             name="address"
             autoComplete="street-address"
-            hint="Home, apartment or office. Include the city."
+            placeholder="123 Main St, Decatur, GA 30030"
+            hint="Include street, city, state and ZIP code. Add an apartment or unit number if needed."
             error={bad("address")}
           />
           <div>

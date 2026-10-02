@@ -495,7 +495,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
 
         <fieldset className="space-y-6">
           <legend className="t-h3">3. Your details</legend>
-          <TextField label="Address where the vehicles will be" name="address" autoComplete="street-address" defaultValue={account?.address ?? ""} hint="Home, apartment or office. Include the city." error={badField === "address"} />
+          <TextField label="Full service address" name="address" autoComplete="street-address" defaultValue={account?.address ?? ""} placeholder="123 Main St, Decatur, GA 30030" hint="Include street, city, state and ZIP code. Add an apartment or unit number if needed." error={badField === "address"} errorText="Enter the full address, including street, city, state and ZIP code." />
           <div className="grid gap-6 sm:grid-cols-2">
             <TextField label="Name" name="name" autoComplete="name" defaultValue={account?.full_name ?? ""} error={badField === "name"} />
             <TextField label="Phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" defaultValue={account?.phone ?? ""} error={badField === "phone"} errorText="Enter a 10-digit phone number." />

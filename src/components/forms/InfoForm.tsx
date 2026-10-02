@@ -36,6 +36,13 @@ export function InfoForm() {
       return;
     }
 
+    if (!/\d/.test(fields.address) || !/\b(?:GA|Georgia)\b/i.test(fields.address) || !/\b\d{5}(?:-\d{4})?\b/.test(fields.address)) {
+      setInvalid(["address"]);
+      setError("Enter the full service address, including street, city, state and ZIP code.");
+      form.querySelector<HTMLElement>('[name="address"]')?.focus();
+      return;
+    }
+
     setStatus("sending");
     setError(null);
     setInvalid([]);
@@ -93,11 +100,13 @@ export function InfoForm() {
         errorText="Check your email address."
       />
       <TextField
-        label="Service address"
+        label="Full service address"
         name="address"
         autoComplete="street-address"
         placeholder="123 Main St, Decatur, GA 30030"
+        hint="Include street, city, state and ZIP code. Add an apartment or unit number if needed."
         error={bad("address")}
+        errorText="Enter the full address, including street, city, state and ZIP code."
       />
 
       <FormError message={error} />

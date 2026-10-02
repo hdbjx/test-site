@@ -16,13 +16,19 @@ export function ProfileForm({ account, email }: { account: AccountInfo; email: s
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const get = (k: string) => String(fd.get(k) ?? "").trim();
-    setBusy(true);
+    const address = get("address");
     setSaved(false);
     setError(null);
+    if (address && (!/\d/.test(address) || !/\b(?:GA|Georgia)\b/i.test(address) || !/\b\d{5}(?:-\d{4})?\b/.test(address))) {
+      setError("Enter the full service address, including street, city, state and ZIP code.");
+      e.currentTarget.querySelector<HTMLElement>('[name="address"]')?.focus();
+      return;
+    }
+    setBusy(true);
     const { error } = await supabaseBrowser().rpc("update_my_account", {
       p_full_name: get("name"),
       p_phone: get("phone"),
-      p_address: get("address"),
+      p_address: address,
     });
     setBusy(false);
     if (error) return setError("Couldn't save. Try again.");
@@ -36,7 +42,7 @@ export function ProfileForm({ account, email }: { account: AccountInfo; email: s
         <TextField label="Name" name="name" autoComplete="name" defaultValue={account.full_name} />
         <TextField label="Phone" name="phone" type="tel" autoComplete="tel" defaultValue={account.phone ?? ""} />
       </div>
-      <TextField label="Address" name="address" autoComplete="street-address" optional defaultValue={account.address ?? ""} hint="Where we usually detail your car." />
+      <TextField label="Full service address" name="address" autoComplete="street-address" optional defaultValue={account.address ?? ""} placeholder="123 Main St, Decatur, GA 30030" hint="Street, city, state and ZIP code. Add an apartment or unit number if needed." />
       <p className="text-sm text-muted">Signed in as {email}</p>
       <FormError message={error} />
       <div className="flex items-center gap-4">

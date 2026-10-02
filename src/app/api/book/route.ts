@@ -76,7 +76,13 @@ export async function POST(req: Request) {
   }
 
   if (!address) {
-    return NextResponse.json({ ok: false, error: "Add the address where the cars will be.", field: "address" }, { status: 422 });
+    return NextResponse.json({ ok: false, error: "Add the full service address.", field: "address" }, { status: 422 });
+  }
+  if (!/\d/.test(address) || !/\b(?:GA|Georgia)\b/i.test(address) || !/\b\d{5}(?:-\d{4})?\b/.test(address)) {
+    return NextResponse.json(
+      { ok: false, error: "Enter the full address, including street, city, state and ZIP code.", field: "address" },
+      { status: 422 },
+    );
   }
 
   const session = await getSession();
