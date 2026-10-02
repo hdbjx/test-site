@@ -8,7 +8,6 @@ import { track } from "@/lib/analytics";
 import { duration, usd } from "@/lib/format";
 import { submitLead } from "@/lib/submit";
 import { FormError, formToObject, Honeypot, SelectField, Success, TextArea, TextField } from "./parts";
-import { AddressFields } from "./AddressFields";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -26,14 +25,11 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
     e.preventDefault();
     const form = e.currentTarget;
     const data = formToObject(form);
-    const addressIncomplete = ["addressStreet", "addressCity", "addressState", "addressZip"].some((k) => !data[k]?.trim());
-    const missing = ["vehicle", "service", "name", "phone", "preferredDays"].filter((k) => !data[k]?.trim());
-    if (addressIncomplete) missing.push("address");
+    const missing = ["vehicle", "service", "name", "phone", "address", "preferredDays"].filter((k) => !data[k]?.trim());
     if (missing.length) {
       setInvalid(missing);
       setError("Fill in the highlighted fields.");
-      const firstMissing = missing[0];
-      form.querySelector<HTMLElement>(firstMissing === "address" ? "#addressStreet" : `[name="${firstMissing}"]`)?.focus();
+      form.querySelector<HTMLElement>(`[name="${missing[0]}"]`)?.focus();
       return;
     }
     setStatus("sending");
@@ -142,10 +138,13 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
 
         <fieldset className="space-y-6">
           <legend className="t-h3">3. When and where</legend>
-          <div>
-            <p className="mb-4 font-display text-lg font-semibold">Service address</p>
-            <AddressFields error={bad("address")} />
-          </div>
+          <TextField
+            label="Address where the car will be"
+            name="address"
+            autoComplete="street-address"
+            hint="Home, apartment or office. Include the city."
+            error={bad("address")}
+          />
           <div>
             <p id="days-label" className="field-label">
               Days that work for you

@@ -44,9 +44,9 @@ export const site = {
     giftCards: null as string | null, // e.g. a Square/Stripe gift card page
   },
 
-  // Official social profiles. These also feed LocalBusiness schema sameAs.
+  // Add real profile URLs, e.g. { label: "Instagram", href: "https://www.instagram.com/<handle>" }
   social: [
-    { label: "Instagram · @everydetail.atl", href: "https://www.instagram.com/everydetail.atl/" },
+    { label: "Instagram", href: "https://www.instagram.com/everydetail.atl/" },
   ] as { label: string; href: string }[],
 
   // Google Business Profile URL for schema sameAs (CONFIRM).
