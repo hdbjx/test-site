@@ -183,6 +183,19 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     return [...map.entries()];
   }, [slots]);
   const daySlots = days.find(([k]) => k === day)?.[1] ?? [];
+  const availableDayMap = useMemo(() => new Map(days), [days]);
+  const calendarMonths = useMemo(() => {
+    const monthKeys: string[] = Array.from(new Set(days.map(([key]) => key.slice(0, 7))));
+    return monthKeys.map((monthKey) => {
+      const [year, month] = monthKey.split("-").map(Number);
+      const firstWeekday = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
+      const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+      const label = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
+        .format(new Date(Date.UTC(year, month - 1, 15, 12)));
+      return { monthKey, year, month, firstWeekday, daysInMonth, label };
+    });
+  }, [days]);
+  const selectedDayDate = daySlots[0] ?? availableDayMap.get(day ?? "")?.[0] ?? null;
 
   function infoValue(name: string) {
     if (!formRef.current) return "";
@@ -521,23 +534,72 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
             </p>
           ) : (
             <>
-              <div role="radiogroup" aria-label="Day" className="-mx-1 mt-4 flex gap-2 overflow-x-auto px-1 pb-2">
-                {days.map(([k, list]) => (
-                  <button key={k} type="button" role="radio" aria-checked={day === k} onClick={() => { setDay(k); setStart(null); }} className="choice min-w-[4.75rem] shrink-0 items-center px-3 py-2 text-center">
-                    <span className="text-sm text-muted">{fmtDay(list[0], { weekday: "short" })}</span>
-                    <span className="t-numeral text-3xl">{fmtDay(list[0], { day: "numeric" })}</span>
-                    <span className="text-xs text-muted">{fmtDay(list[0], { month: "short" })}</span>
-                  </button>
-                ))}
+              <div className="booking-calendar-wrap mt-4">
+                <div className="booking-calendar-intro">
+                  <div>
+                    <p className="booking-calendar-eyebrow">Choose your date</p>
+                    <p className="booking-calendar-help">Available dates are highlighted. Tap a date, then choose an arrival time.</p>
+                  </div>
+                  <div className="booking-calendar-legend" aria-label="Calendar legend"><span aria-hidden="true" /> Available</div>
+                </div>
+
+                <div className="booking-calendar-months" role="radiogroup" aria-label="Available appointment date">
+                  {calendarMonths.map((cal) => (
+                    <section className="booking-calendar-month" key={cal.monthKey} aria-label={cal.label}>
+                      <h3>{cal.label}</h3>
+                      <div className="booking-calendar-weekdays" aria-hidden="true">
+                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((weekday) => <span key={weekday}>{weekday}</span>)}
+                      </div>
+                      <div className="booking-calendar-grid">
+                        {Array.from({ length: cal.firstWeekday }).map((_, index) => <span className="booking-calendar-blank" key={`blank-${index}`} aria-hidden="true" />)}
+                        {Array.from({ length: cal.daysInMonth }, (_, index) => index + 1).map((dateNumber) => {
+                          const key = `${cal.year}-${String(cal.month).padStart(2, '0')}-${String(dateNumber).padStart(2, '0')}`;
+                          const available = availableDayMap.get(key);
+                          const selected = day === key;
+                          const ariaLabel = available?.[0]
+                            ? fmtDay(available[0], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+                            : `${cal.label} ${dateNumber}, unavailable`;
+                          return (
+                            <button
+                              key={key}
+                              type="button"
+                              role="radio"
+                              aria-checked={selected}
+                              aria-label={ariaLabel}
+                              disabled={!available}
+                              onClick={() => { setDay(key); setStart(null); }}
+                              className="booking-calendar-day"
+                            >
+                              <span>{dateNumber}</span>
+                              {available && <i aria-hidden="true" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </section>
+                  ))}
+                </div>
               </div>
-              <div role="radiogroup" aria-label="Start time" className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
-                {daySlots.map((s) => (
-                  <button key={s.toISOString()} type="button" role="radio" aria-checked={start?.getTime() === s.getTime()} onClick={() => setStart(s)} className="choice min-h-12 items-center px-2 py-2 font-display font-semibold">
-                    {fmtTime(s)}
-                  </button>
-                ))}
-              </div>
-              <p className="mt-3 text-sm text-muted">Times are arrival times, Eastern.</p>
+
+              {selectedDayDate && (
+                <div className="booking-time-panel">
+                  <div className="booking-time-heading">
+                    <div>
+                      <p className="booking-calendar-eyebrow">Selected date</p>
+                      <h3>{fmtDay(selectedDayDate, { weekday: "long", month: "long", day: "numeric" })}</h3>
+                    </div>
+                    <span>{daySlots.length} {daySlots.length === 1 ? "time" : "times"} available</span>
+                  </div>
+                  <div role="radiogroup" aria-label="Start time" className="booking-time-grid">
+                    {daySlots.map((s) => (
+                      <button key={s.toISOString()} type="button" role="radio" aria-checked={start?.getTime() === s.getTime()} onClick={() => setStart(s)} className="choice booking-time-choice">
+                        {fmtTime(s)}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="booking-time-zone">Times are arrival times, Eastern.</p>
+                </div>
+              )}
             </>
           )}
         </fieldset>
