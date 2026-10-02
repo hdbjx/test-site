@@ -52,13 +52,12 @@ export const images: SiteImage[] = [
   },
 
   // Default Open Graph / social sharing image.
-  // Uses the existing hero image so no duplicate file is required.
   {
     id: "og-default",
-    file: "/images/hero.jpg",
-    alt: "Every Detail mobile auto detailing in Decatur, Georgia",
-    w: 3,
-    h: 2,
+    file: "/images/every-detail-social.png",
+    alt: "Every Detail mobile car detailing in Decatur, Georgia",
+    w: 1230,
+    h: 630,
     category: "brand",
   },
 

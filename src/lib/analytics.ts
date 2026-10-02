@@ -13,6 +13,7 @@ export type EventName =
   | "quote_start" // first interaction with the quote form
   | "quote_submit" // quote sent: { interest }
   | "phone_click" // { location }
+  | "text_click" // { location }
   | "detailplus_start" // plan builder interaction
   | "detailplus_submit" // Detail+ request sent
   | "paint_inquiry"; // any paint/ceramic quote click or submit

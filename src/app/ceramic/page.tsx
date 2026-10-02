@@ -289,7 +289,10 @@ export default function CeramicPage() {
             <TrackedLink href={quoteHref} event="paint_inquiry" params={{ location: "ceramic_final" }} className="btn btn-on-dark">
               Get a paint quote
             </TrackedLink>
-            <TrackedLink href={site.phone.href} event="phone_click" params={{ location: "ceramic_final" }} className="btn btn-outline-on-dark">
+            <TrackedLink href={site.phone.sms} event="text_click" params={{ location: "ceramic_final" }} className="btn btn-outline-on-dark sm:hidden">
+              Text {site.phone.display}
+            </TrackedLink>
+            <TrackedLink href={site.phone.href} event="phone_click" params={{ location: "ceramic_final" }} className="btn btn-outline-on-dark hidden sm:inline-flex">
               Call {site.phone.display}
             </TrackedLink>
           </div>

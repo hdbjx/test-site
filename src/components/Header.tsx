@@ -209,7 +209,7 @@ export function Header() {
 
             <div className="mobile-menu-actions">
               <Link href="/book" className="btn btn-primary" onClick={() => track("book_click", { location: "mobile_menu" })}>Book your detail</Link>
-              <a href={site.phone.href} className="mobile-menu-phone" onClick={() => track("phone_click", { location: "mobile_menu" })}>Call {site.phone.display}</a>
+              <a href={site.phone.sms} className="mobile-menu-phone" onClick={() => track("text_click", { location: "mobile_menu" })}>Text {site.phone.display}</a>
             </div>
           </nav>
         </div>

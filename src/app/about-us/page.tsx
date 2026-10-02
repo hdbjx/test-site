@@ -11,7 +11,6 @@ export const metadata = pageMetadata({
   description:
     "The story behind Every Detail, a student-run mobile detailing company built in Decatur, Georgia.",
   path: "/about-us",
-  image: "about-team",
 });
 
 const standards = [

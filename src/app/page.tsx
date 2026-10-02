@@ -11,10 +11,10 @@ import { reviewCountLabel, site } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Mobile Car Detailing in Decatur, GA | Every Detail",
-  description: `Professional mobile car detailing in Decatur and nearby Atlanta. We bring our own power and water. ${reviewCountLabel} five-star reviews. See prices for your vehicle and book online.`,
+  title: "Book Mobile Car Detailing in Decatur, GA | Every Detail",
+  description: `Professional mobile detailing at your driveway in Decatur + Atlanta. We bring power and water. ${reviewCountLabel} five-star reviews. See pricing and book online.`,
   path: "/",
-  image: "hero",
+  image: "og-default",
 });
 
 export default function Home() {
