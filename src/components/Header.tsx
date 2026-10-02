@@ -14,6 +14,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [availabilityOpen, setAvailabilityOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -24,6 +25,7 @@ export function Header() {
     setMenuOpen(false);
     setMoreOpen(false);
     setServicesOpen(false);
+    setAvailabilityOpen(false);
   }, [pathname]);
 
   // Desktop dropdowns: close on outside click / Escape
@@ -79,6 +81,20 @@ export function Header() {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!availabilityOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setAvailabilityOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [availabilityOpen]);
+
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
   const onHome = pathname === "/";
 
@@ -90,6 +106,19 @@ export function Header() {
       >
         Skip to content
       </a>
+
+      <button
+        type="button"
+        className="availability-banner"
+        onClick={() => setAvailabilityOpen(true)}
+        aria-haspopup="dialog"
+      >
+        <span className="availability-banner-track" aria-hidden="true">
+          <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+          <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+        </span>
+        <span className="sr-only">View scheduling information for our student-run team</span>
+      </button>
       <div className={onHome ? "home-nav-shell flex items-center justify-between gap-6" : "inner-nav-shell flex items-center justify-between gap-6"}>
         <Link href="/" className={onHome ? "home-logo-control flex shrink-0 items-center" : "inner-logo-control flex shrink-0 items-center"} aria-label="Every Detail home">
           <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className={onHome ? "h-[4.15rem] w-[4.15rem] object-contain" : "inner-logo object-contain"} priority />
@@ -212,6 +241,22 @@ export function Header() {
               <a href={site.phone.sms} className="mobile-menu-phone" onClick={() => track("text_click", { location: "mobile_menu" })}>Text {site.phone.display}</a>
             </div>
           </nav>
+        </div>
+      )}
+
+      {availabilityOpen && (
+        <div className="availability-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAvailabilityOpen(false); }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="availability-title" className="availability-modal">
+            <button type="button" className="availability-modal-close" aria-label="Close scheduling information" onClick={() => setAvailabilityOpen(false)}>×</button>
+            <p className="availability-modal-kicker">OUR AVAILABILITY</p>
+            <h2 id="availability-title">Student-run, professionally scheduled.</h2>
+            <p>Every Detail is operated by a student team. During the school year, weekday appointments are generally available in the afternoon and early evening, with broader availability on weekends.</p>
+            <p>Our booking calendar shows the appointment times we can currently support. If you need a time that is not listed, contact us and we&rsquo;ll let you know what we can accommodate.</p>
+            <div className="availability-modal-actions">
+              <Link href="/book" className="btn btn-primary" onClick={() => setAvailabilityOpen(false)}>View open appointments</Link>
+              <a href={site.phone.sms} onClick={() => { track("text_click", { location: "availability_notice" }); setAvailabilityOpen(false); }}>Text us about a time</a>
+            </div>
+          </section>
         </div>
       )}
     </header>

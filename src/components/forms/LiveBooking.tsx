@@ -162,8 +162,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           .map((s: string) => new Date(s))
           .filter(isValidDate);
         setSlots(list);
-        const first = list[0] ? dayKey(list[0]) : null;
-        setDay((d) => (d && list.some((s) => dayKey(s) === d) ? d : first));
+        setDay((d) => (d && list.some((s) => dayKey(s) === d) ? d : null));
       })
       .catch(() => !cancelled && setSlotsError("We couldn't load open times. Refresh, or call us to book."));
     return () => {
@@ -185,8 +184,10 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   }, [slots]);
   const daySlots = days.find(([k]) => k === day)?.[1] ?? [];
   const availableDayMap = useMemo(() => new Map(days), [days]);
+  const todayKey = dayKey(new Date());
   const calendarMonths = useMemo(() => {
-    const monthKeys: string[] = Array.from(new Set(days.map(([key]) => key.slice(0, 7))));
+    const rangeKeys = [dayKey(new Date()), dayKey(new Date(Date.now() + 31 * 86_400_000))];
+    const monthKeys: string[] = Array.from(new Set(rangeKeys.filter(Boolean).map((key) => key.slice(0, 7))));
     return monthKeys.map((monthKey) => {
       const [year, month] = monthKey.split("-").map(Number);
       const firstWeekday = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
@@ -195,14 +196,15 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         .format(new Date(Date.UTC(year, month - 1, 15, 12)));
       return { monthKey, year, month, firstWeekday, daysInMonth, label };
     });
-  }, [days]);
+  }, []);
   const selectedDayDate = daySlots[0] ?? availableDayMap.get(day ?? "")?.[0] ?? null;
   const activeCalendarIndex = Math.max(0, calendarMonths.findIndex((cal) => cal.monthKey === calendarMonthKey));
   const activeCalendarMonth = calendarMonths[activeCalendarIndex] ?? calendarMonths[0] ?? null;
 
   useEffect(() => {
     if (day) setCalendarMonthKey(day.slice(0, 7));
-  }, [day]);
+    else if (!calendarMonthKey && todayKey) setCalendarMonthKey(todayKey.slice(0, 7));
+  }, [day, calendarMonthKey, todayKey]);
 
   function infoValue(name: string) {
     if (!formRef.current) return "";
@@ -572,9 +574,10 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                         const key = `${activeCalendarMonth.year}-${String(activeCalendarMonth.month).padStart(2, '0')}-${String(dateNumber).padStart(2, '0')}`;
                         const available = availableDayMap.get(key);
                         const selected = day === key;
+                        const isToday = key === todayKey;
                         const ariaLabel = available?.[0]
-                          ? fmtDay(available[0], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
-                          : `${activeCalendarMonth.label} ${dateNumber}, unavailable`;
+                          ? `${fmtDay(available[0], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}${isToday ? ', today' : ''}, available`
+                          : `${activeCalendarMonth.label} ${dateNumber}${isToday ? ', today' : ''}, unavailable`;
                         return (
                           <button
                             key={key}
@@ -582,11 +585,15 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                             role="radio"
                             aria-checked={selected}
                             aria-label={ariaLabel}
+                            data-available={available ? "true" : "false"}
+                            data-today={isToday ? "true" : "false"}
                             disabled={!available}
                             onClick={() => { setDay(key); setStart(null); }}
                             className="booking-calendar-day"
                           >
-                            {dateNumber}
+                            <span className="booking-calendar-number">{dateNumber}</span>
+                            {available && <span className="booking-calendar-dot" aria-hidden="true" />}
+                            {isToday && <span className="booking-calendar-today" aria-hidden="true">Today</span>}
                           </button>
                         );
                       })}
