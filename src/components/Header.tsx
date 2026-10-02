@@ -114,8 +114,8 @@ export function Header() {
         aria-haspopup="dialog"
       >
         <span className="availability-banner-track" aria-hidden="true">
-          <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-          <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+          <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;PHONE AVAILABILITY IS LIMITED DURING SCHOOL HOURS&nbsp;&nbsp;•&nbsp;&nbsp;TEXTING IS BEST DURING THE SCHOOL DAY&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+          <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;PHONE AVAILABILITY IS LIMITED DURING SCHOOL HOURS&nbsp;&nbsp;•&nbsp;&nbsp;TEXTING IS BEST DURING THE SCHOOL DAY&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
         </span>
         <span className="sr-only">View scheduling information for our student-run team</span>
       </button>
@@ -251,7 +251,8 @@ export function Header() {
             <p className="availability-modal-kicker">OUR AVAILABILITY</p>
             <h2 id="availability-title">Student-run, professionally scheduled.</h2>
             <p>Every Detail is operated by a student team. During the school year, weekday appointments are generally available in the afternoon and early evening, with broader availability on weekends.</p>
-            <p>Our booking calendar shows the appointment times we can currently support. If you need a time that is not listed, contact us and we&rsquo;ll let you know what we can accommodate.</p>
+            <p>Because our team is in class during the school day, we cannot answer phone calls during school hours. Texting is the best way to reach us during the day, and we&rsquo;ll respond as soon as we&rsquo;re available.</p>
+            <p>Our booking calendar shows the appointment times we can currently support. If you need a time that is not listed, text us and we&rsquo;ll let you know what we can accommodate.</p>
             <div className="availability-modal-actions">
               <Link href="/book" className="btn btn-primary" onClick={() => setAvailabilityOpen(false)}>View open appointments</Link>
               <a href={site.phone.sms} onClick={() => { track("text_click", { location: "availability_notice" }); setAvailabilityOpen(false); }}>Text us about a time</a>

@@ -31,6 +31,11 @@ const fmtTime = (d: Date) => isValidDate(d)
 const fmtDay = (d: Date, opts: Intl.DateTimeFormatOptions) => isValidDate(d)
   ? new Intl.DateTimeFormat("en-US", { timeZone: TZ, ...opts }).format(d)
   : "";
+const dateFromDayKey = (key: string | null) => {
+  if (!key || !/^\d{4}-\d{2}-\d{2}$/.test(key)) return null;
+  const date = new Date(`${key}T12:00:00Z`);
+  return isValidDate(date) ? date : null;
+};
 const vName = (v: GarageVehicle) => [v.year, v.make, v.model].filter(Boolean).join(" ") || "Vehicle";
 
 type Props = {
@@ -185,6 +190,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const daySlots = days.find(([k]) => k === day)?.[1] ?? [];
   const availableDayMap = useMemo(() => new Map(days), [days]);
   const todayKey = dayKey(new Date());
+  const bookingEndKey = dayKey(new Date(Date.now() + 31 * 86_400_000));
   const calendarMonths = useMemo(() => {
     const rangeKeys = [dayKey(new Date()), dayKey(new Date(Date.now() + 31 * 86_400_000))];
     const monthKeys: string[] = Array.from(new Set(rangeKeys.filter(Boolean).map((key) => key.slice(0, 7))));
@@ -197,7 +203,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       return { monthKey, year, month, firstWeekday, daysInMonth, label };
     });
   }, []);
-  const selectedDayDate = daySlots[0] ?? availableDayMap.get(day ?? "")?.[0] ?? null;
+  const selectedDayDate = day ? (daySlots[0] ?? dateFromDayKey(day)) : null;
   const activeCalendarIndex = Math.max(0, calendarMonths.findIndex((cal) => cal.monthKey === calendarMonthKey));
   const activeCalendarMonth = calendarMonths[activeCalendarIndex] ?? calendarMonths[0] ?? null;
 
@@ -575,9 +581,12 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                         const available = availableDayMap.get(key);
                         const selected = day === key;
                         const isToday = key === todayKey;
+                        const isPast = key < todayKey;
+                        const isOutsideWindow = key > bookingEndKey;
+                        const selectable = !isPast && !isOutsideWindow;
                         const ariaLabel = available?.[0]
-                          ? `${fmtDay(available[0], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}${isToday ? ', today' : ''}, available`
-                          : `${activeCalendarMonth.label} ${dateNumber}${isToday ? ', today' : ''}, unavailable`;
+                          ? `${fmtDay(available[0], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}${isToday ? ', today' : ''}, appointments available`
+                          : `${activeCalendarMonth.label} ${dateNumber}${isToday ? ', today' : ''}${selectable ? ', no availability' : ''}`;
                         return (
                           <button
                             key={key}
@@ -587,7 +596,9 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                             aria-label={ariaLabel}
                             data-available={available ? "true" : "false"}
                             data-today={isToday ? "true" : "false"}
-                            disabled={!available}
+                            data-past={isPast ? "true" : "false"}
+                            data-outside={isOutsideWindow ? "true" : "false"}
+                            disabled={!selectable}
                             onClick={() => { setDay(key); setStart(null); }}
                             className="booking-calendar-day"
                           >
@@ -605,16 +616,25 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                   <div className="booking-time-panel">
                     <div className="booking-time-heading">
                       <h3>{fmtDay(selectedDayDate, { weekday: "long", month: "long", day: "numeric" })}</h3>
-                      <span>{daySlots.length} {daySlots.length === 1 ? "time" : "times"}</span>
+                      <span>{daySlots.length > 0 ? `${daySlots.length} ${daySlots.length === 1 ? "time" : "times"}` : "No availability"}</span>
                     </div>
-                    <div role="radiogroup" aria-label="Start time" className="booking-time-grid">
-                      {daySlots.map((s) => (
-                        <button key={s.toISOString()} type="button" role="radio" aria-checked={start?.getTime() === s.getTime()} onClick={() => setStart(s)} className="choice booking-time-choice">
-                          {fmtTime(s)}
-                        </button>
-                      ))}
-                    </div>
-                    <p className="booking-time-zone">Arrival times · Eastern</p>
+                    {daySlots.length > 0 ? (
+                      <>
+                        <div role="radiogroup" aria-label="Start time" className="booking-time-grid">
+                          {daySlots.map((s) => (
+                            <button key={s.toISOString()} type="button" role="radio" aria-checked={start?.getTime() === s.getTime()} onClick={() => setStart(s)} className="choice booking-time-choice">
+                              {fmtTime(s)}
+                            </button>
+                          ))}
+                        </div>
+                        <p className="booking-time-zone">Arrival times · Eastern</p>
+                      </>
+                    ) : (
+                      <div className="booking-no-availability">
+                        <p>No appointments are available on this date.</p>
+                        <p>Choose another day, or <a href={site.phone.sms}>text us</a> and we&rsquo;ll let you know if anything opens up.</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
