@@ -3389,3 +3389,52 @@
   }
   .hero-kicker { font-size: .76rem; }
 }
+
+/* V19 quote conversion: earn the contact before revealing exact price. */
+.quote-rec-result-grid.is-gated{grid-template-columns:minmax(0,1.45fr) minmax(17rem,.75fr)}
+.quote-rec-ready-card{display:flex;flex-direction:column;justify-content:center;padding:clamp(1.5rem,3vw,2.25rem);background:var(--color-ink);color:#fff}
+.quote-rec-ready-card>span{color:var(--color-sand);font-family:var(--font-display);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.quote-rec-ready-card>strong{margin-top:.45rem;font-family:var(--font-numeral);font-size:clamp(4rem,7vw,6.5rem);font-weight:400;line-height:.82}
+.quote-rec-ready-card>p{margin-top:1rem;color:rgb(255 255 255/.7);font-size:.88rem;line-height:1.55}
+.quote-rec-ready-lock{margin-top:1.25rem;padding-top:1rem;border-top:1px solid rgb(255 255 255/.2);font-family:var(--font-display);font-size:.78rem;font-weight:700}
+.quote-rec-unlock-card{align-items:stretch}
+.quote-rec-value-list{display:grid;gap:.45rem;margin-top:1.1rem;color:rgb(17 17 17/.72);font-size:.82rem}
+.quote-rec-year-field{display:block;margin-bottom:.85rem}
+.quote-rec-year-field>span{display:block;margin-bottom:.3rem;font-family:var(--font-display);font-size:.82rem;font-weight:600}
+.quote-rec-year-field small{color:var(--color-muted);font-family:var(--font-body);font-weight:400}
+.quote-rec-price-reveal{animation:quotePriceReveal .42s ease-out both}
+@keyframes quotePriceReveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.quote-rec-result-grid.is-gated{grid-template-columns:1fr}.quote-rec-ready-card{min-height:16rem}.quote-rec-contact-grid{grid-template-columns:1fr}.quote-rec-contact-grid label:last-child{grid-column:auto}}
+
+/* V20 homepage hero spacing polish
+   Keep the hero copy clear of the floating logo and give the headline,
+   supporting copy, and CTAs a more deliberate vertical rhythm. */
+@media (min-width: 1024px) {
+  .hero-inner.container-ed {
+    padding-top: 12.25rem;
+    padding-bottom: clamp(3.15rem, 5.25vh, 4.75rem);
+  }
+  .hero-kicker {
+    margin-bottom: 1.05rem;
+  }
+  .hero-title {
+    line-height: .9;
+  }
+  .hero-lede {
+    margin-top: 1.35rem;
+    line-height: 1.48;
+  }
+  .hero-copy .mt-7 {
+    margin-top: 1.65rem;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .hero-inner.container-ed {
+    padding-top: 11.5rem;
+    padding-bottom: 3.25rem;
+  }
+  .hero-title {
+    font-size: clamp(5.45rem, 7.15vw, 7.25rem);
+  }
+}
