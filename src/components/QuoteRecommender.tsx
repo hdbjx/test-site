@@ -245,7 +245,6 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
   function reset() {
     setVehicle(null);
-    setVehicleYear("");
     setSearch("");
     setCondition(null);
     setConcerns(new Set());
@@ -507,16 +506,16 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
           {vehicle ? (
             <div className="quote-rec-selected">
               <div><strong>{vehicle.make} {vehicle.model}</strong><span>{vehicleLabel(vehicle.vehicle)}</span></div>
-              <button type="button" onClick={() => { setVehicle(null); setVehicleYear(""); setCondition(null); setResult(null); }}>Change</button>
+              <button type="button" onClick={() => { setVehicle(null); setCondition(null); setResult(null); }}>Change</button>
             </div>
           ) : (
             <div className="quote-rec-search-wrap">
-              <input className="field quote-rec-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search 2024 RAV4, Honda Pilot, F-150..." autoComplete="off" aria-label="Search vehicle make or model" />
+              <input className="field quote-rec-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search RAV4, Honda Pilot, F-150..." autoComplete="off" aria-label="Search vehicle make or model" />
               {search.trim().length >= 2 && (
                 <div className="quote-rec-search-results">
                   {matches.length ? matches.map((item, index) => (
                     <button key={`${item.make}-${item.model}-${index}`} type="button" onClick={() => selectVehicle(item)}>
-                      <span><strong>{search.match(/\b(?:19|20)\d{2}\b/)?.[0] ? `${search.match(/\b(?:19|20)\d{2}\b/)?.[0]} ` : ""}{item.make}</strong> {item.model}</span><small>{vehicleLabel(item.vehicle)}</small>
+                      <span><strong>{item.make}</strong> {item.model}</span><small>{vehicleLabel(item.vehicle)}</small>
                     </button>
                   )) : <p>No matches. Try another make or model.</p>}
                 </div>
