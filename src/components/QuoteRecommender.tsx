@@ -113,7 +113,6 @@ function concernLabel(id: ConcernId) {
 
 export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string }) {
   const [vehicle, setVehicle] = useState<RecommenderVehicle | null>(null);
-  const [vehicleYear, setVehicleYear] = useState("");
   const [search, setSearch] = useState("");
   const [condition, setCondition] = useState<number | null>(null);
   const [concerns, setConcerns] = useState<Set<ConcernId>>(new Set());
@@ -142,10 +141,9 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
   const matches = useMemo(() => {
     const query = search.trim().toLowerCase();
-    const vehicleQuery = query.replace(/\b(?:19|20)\d{2}\b/g, "").replace(/\s+/g, " ").trim();
-    if (vehicleQuery.length < 2 || vehicle) return [];
+    if (query.length < 2 || vehicle) return [];
     return recommenderVehicles
-      .filter((item) => `${item.make} ${item.model}`.toLowerCase().includes(vehicleQuery) || item.make.toLowerCase().startsWith(vehicleQuery) || item.model.toLowerCase().startsWith(vehicleQuery))
+      .filter((item) => `${item.make} ${item.model}`.toLowerCase().includes(query) || item.make.toLowerCase().startsWith(query) || item.model.toLowerCase().startsWith(query))
       .slice(0, 10);
   }, [search, vehicle]);
 
@@ -170,8 +168,6 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
   function selectVehicle(item: RecommenderVehicle) {
     start();
-    const yearMatch = search.match(/\b((?:19|20)\d{2})\b/);
-    if (yearMatch) setVehicleYear(yearMatch[1]);
     setVehicle(item);
     setSearch("");
     setCondition(null);
@@ -248,7 +244,6 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
   function reset() {
     setVehicle(null);
-    setVehicleYear("");
     setSearch("");
     setCondition(null);
     setConcerns(new Set());
@@ -281,7 +276,6 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
   async function sendBuild() {
     if (!vehicle || !condition || !service || !result) return;
-    if (!/^(19|20)\d{2}$/.test(vehicleYear.trim())) { setError("Enter the 4-digit year for your vehicle."); return; }
     if (!name.trim()) { setError("Enter your name so we know who the build belongs to."); return; }
     if ((phone.match(/\d/g) ?? []).length < 10) { setError("Enter a 10-digit phone number so we can follow up."); return; }
     if (!email.trim()) { setError("Enter your email so we can save your quote."); return; }
@@ -310,7 +304,6 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       name: name.trim(),
       phone: phone.trim(),
       email: email.trim(),
-      vehicleYear: vehicleYear.trim(),
       vehicleMake: vehicle.make,
       vehicleModel: vehicle.model,
       vehicleSize: vehicleLabel(vehicle.vehicle),
@@ -327,7 +320,6 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       setSent(true);
       setQuoteDirty(false);
       track("quote_submit", { interest: service, source: "recommender" });
-      track("quote_price_reveal", { vehicle: vehicle.vehicle, service, total });
       if (paint.size) track("paint_inquiry", { location: "recommender", interest: [...paint].join(",") });
     } else {
       setError(response.error);
@@ -340,15 +332,14 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     const selectedAddonNames = result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.name);
     const selectedPaintNames = [...paint].map((id) => PAINT_UPGRADES[id].name);
     const extrasSummary = [...selectedAddonNames, ...selectedPaintNames];
-    const vehicleName = `${vehicleYear ? `${vehicleYear} ` : ""}${vehicle.make} ${vehicle.model}`;
 
     return (
       <div ref={resultRef} className="quote-rec-result">
         <button type="button" onClick={reset} className="quote-rec-back">← Start over</button>
 
-        <div className={`quote-rec-result-grid quote-rec-result-grid-conversion ${sent ? "is-revealed" : "is-gated"}`}>
+        <div className="quote-rec-result-grid quote-rec-result-grid-conversion">
           <section className="quote-rec-result-main">
-            <p className="eyebrow">Recommended for your {vehicle.model}</p>
+            <p className="eyebrow">We&rsquo;d recommend</p>
             <h2>{activeService.name}</h2>
             <p className="quote-rec-result-summary">{activeService.summary}</p>
 
@@ -357,64 +348,47 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
             </div>
 
             <details className="quote-rec-why-details">
-              <summary>Why this fits your {vehicle.model}</summary>
+              <summary>Why we recommend this</summary>
               <p>{result.why}</p>
             </details>
           </section>
 
-          {sent ? (
-            <aside className="quote-rec-price-card quote-rec-price-reveal" aria-live="polite">
-              <span>Your exact quote</span>
-              <strong>{totalDisplay}</strong>
-              <small>{vehicleName} · {vehicleLabel(vehicle.vehicle)}</small>
-              {extrasSummary.length > 0 && <p>Includes recommended: {extrasSummary.join(", ")}</p>}
-              <b>Upfront pricing. We&rsquo;ll confirm everything before your appointment.</b>
-            </aside>
-          ) : (
-            <aside className="quote-rec-ready-card">
-              <span>Your personalized quote</span>
-              <strong>Ready</strong>
-              <p>We&rsquo;ve matched your {vehicle.model} to the service we&rsquo;d recommend. Your exact price is ready to reveal.</p>
-              <div className="quote-rec-ready-lock">Exact price · Ready now</div>
-            </aside>
-          )}
+          <aside className="quote-rec-price-card">
+            <span>Your price</span>
+            <strong>{totalDisplay}</strong>
+            <small>{vehicle.make} {vehicle.model} · {vehicleLabel(vehicle.vehicle)}</small>
+            {extrasSummary.length > 0 && <p>Includes recommended: {extrasSummary.join(", ")}</p>}
+            <b>Upfront pricing. We&rsquo;ll confirm everything before your appointment.</b>
+          </aside>
         </div>
 
         {!sent ? (
-          <section className="quote-rec-save-card quote-rec-unlock-card">
+          <section className="quote-rec-save-card">
             <div className="quote-rec-save-copy">
-              <p className="eyebrow">Your quote is ready</p>
-              <h3>Where should we send your {vehicle.model} quote?</h3>
-              <p>Enter your info once. We&rsquo;ll show your exact price immediately on this page and save the recommendation in case you want help later.</p>
-              <div className="quote-rec-value-list">
-                <span>✓ Exact price for your vehicle</span>
-                <span>✓ Personalized service recommendation</span>
-                <span>✓ Instant booking after you see the price</span>
-              </div>
+              <p className="eyebrow">Save your quote</p>
+              <h3>Keep this recommendation and choose what you want to do next.</h3>
+              <p>We&rsquo;ll save your vehicle, recommendation and price so our team can help if you have questions or want to book later.</p>
             </div>
             <div className="quote-rec-contact">
-              {!vehicleYear && (
-                <label className="quote-rec-year-field"><span>Vehicle year <small>so we can save the exact vehicle</small></span><input className="field" value={vehicleYear} onChange={(e) => setVehicleYear(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" placeholder="2024" autoComplete="off" /></label>
-              )}
               <div className="quote-rec-contact-grid">
-                <label><span>First name</span><input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" required /></label>
-                <label><span>Mobile number</span><input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" required /></label>
+                <label><span>Name</span><input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" required /></label>
+                <label><span>Phone</span><input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" required /></label>
                 <label><span>Email</span><input className="field" value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="email" required /></label>
               </div>
               {error && <p className="quote-rec-error" role="alert">{error}</p>}
               <button type="button" className="btn btn-primary quote-rec-save-button" onClick={sendBuild} disabled={sending}>
-                {sending ? "Building your quote..." : "Show my exact price ↗"}
+                {sending ? "Saving..." : "Save my quote ↗"}
               </button>
-              <p className="quote-rec-save-note">No spam and no commitment. We&rsquo;ll only use this to help with your detail.</p>
+              <p className="quote-rec-save-note">No commitment required. Your quote goes directly to the Every Detail team.</p>
             </div>
           </section>
         ) : (
           <>
             <section className="quote-rec-book-card" role="status">
               <div>
-                <span>Quote ready</span>
-                <h3>Your {vehicle.model} is matched with {activeService.name}.</h3>
-                <p>Your exact price is above. If it looks good, the next step is simply choosing a time.</p>
+                <span>Quote saved</span>
+                <h3>Your {activeService.name} quote is ready.</h3>
+                <p>Ready to get it on the calendar? Choose a time that works for you.</p>
               </div>
               <div className="quote-rec-book-actions">
                 <Link
@@ -422,10 +396,10 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
                   href={selectedBookingHref()}
                   onClick={() => track("book_click", { location: "saved_quote", vehicle: vehicle.vehicle, service })}
                 >
-                  See available times ↗
+                  Book selected services ↗
                 </Link>
                 <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>
-                  {customizeExpanded ? "Hide customization ↑" : "Customize my detail +"}
+                  {customizeExpanded ? "Hide customization ↑" : "Customize your detail +"}
                 </button>
               </div>
             </section>
@@ -514,17 +488,17 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
           <h2>What are you driving?</h2>
           {vehicle ? (
             <div className="quote-rec-selected">
-              <div><strong>{vehicleYear ? `${vehicleYear} ` : ""}{vehicle.make} {vehicle.model}</strong><span>{vehicleLabel(vehicle.vehicle)}</span></div>
-              <button type="button" onClick={() => { setVehicle(null); setVehicleYear(""); setCondition(null); setResult(null); }}>Change</button>
+              <div><strong>{vehicle.make} {vehicle.model}</strong><span>{vehicleLabel(vehicle.vehicle)}</span></div>
+              <button type="button" onClick={() => { setVehicle(null); setCondition(null); setResult(null); }}>Change</button>
             </div>
           ) : (
             <div className="quote-rec-search-wrap">
-              <input className="field quote-rec-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search 2024 RAV4, Honda Pilot, F-150..." autoComplete="off" aria-label="Search vehicle make or model" />
+              <input className="field quote-rec-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search Honda, F-150, RAV4..." autoComplete="off" aria-label="Search vehicle make or model" />
               {search.trim().length >= 2 && (
                 <div className="quote-rec-search-results">
                   {matches.length ? matches.map((item, index) => (
                     <button key={`${item.make}-${item.model}-${index}`} type="button" onClick={() => selectVehicle(item)}>
-                      <span><strong>{search.match(/\b(?:19|20)\d{2}\b/)?.[0] ? `${search.match(/\b(?:19|20)\d{2}\b/)?.[0]} ` : ""}{item.make}</strong> {item.model}</span><small>{vehicleLabel(item.vehicle)}</small>
+                      <span><strong>{item.make}</strong> {item.model}</span><small>{vehicleLabel(item.vehicle)}</small>
                     </button>
                   )) : <p>No matches. Try another make or model.</p>}
                 </div>
@@ -566,7 +540,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
               );
             })}
           </div>
-          <button type="button" className="btn btn-primary quote-rec-build" disabled={!vehicle || !condition} onClick={buildResult}>Build my recommendation ↗</button>
+          <button type="button" className="btn btn-primary quote-rec-build" disabled={!vehicle || !condition} onClick={buildResult}>See my price ↗</button>
         </div>
       </section>
     </div>
