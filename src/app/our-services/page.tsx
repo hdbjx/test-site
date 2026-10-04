@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
@@ -65,6 +66,7 @@ export default function ServicesPage() {
       <main className="services-v161">
         <section className="edu-hero">
           <div className="svc-shell">
+            <div className="mb-6"><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
             <p className="svc-eyebrow">MOBILE DETAILING / DECATUR, GA</p>
             <div className="edu-hero-grid">
               <h1>A detail is more than<br/><span>a car wash.</span></h1>
