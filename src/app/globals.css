@@ -3438,3 +3438,29 @@
     font-size: clamp(5.45rem, 7.15vw, 7.25rem);
   }
 }
+
+
+/* V22 homepage hero rhythm: keep the full CTA row comfortably above the proof bar. */
+@media (min-width: 1024px) and (max-width: 1599px) {
+  .hero-inner.container-ed {
+    padding-bottom: clamp(5.25rem, 9.5vh, 6.5rem);
+  }
+  .hero-copy {
+    width: min(58rem, 69vw);
+  }
+  .hero-kicker {
+    margin-bottom: 1.15rem;
+  }
+  .hero-title {
+    font-size: clamp(5.8rem, 6.05vw, 6.65rem);
+    line-height: .9;
+  }
+  .hero-lede {
+    margin-top: 1.55rem;
+    font-size: clamp(1.35rem, 1.52vw, 1.55rem);
+    line-height: 1.42;
+  }
+  .hero-copy .mt-7 {
+    margin-top: 1.65rem;
+  }
+}

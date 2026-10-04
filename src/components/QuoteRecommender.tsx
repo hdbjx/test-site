@@ -113,7 +113,6 @@ function concernLabel(id: ConcernId) {
 
 export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string }) {
   const [vehicle, setVehicle] = useState<RecommenderVehicle | null>(null);
-  const [vehicleYear, setVehicleYear] = useState("");
   const [search, setSearch] = useState("");
   const [condition, setCondition] = useState<number | null>(null);
   const [concerns, setConcerns] = useState<Set<ConcernId>>(new Set());
@@ -170,8 +169,6 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
   function selectVehicle(item: RecommenderVehicle) {
     start();
-    const yearMatch = search.match(/\b((?:19|20)\d{2})\b/);
-    if (yearMatch) setVehicleYear(yearMatch[1]);
     setVehicle(item);
     setSearch("");
     setCondition(null);
@@ -281,7 +278,6 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
   async function sendBuild() {
     if (!vehicle || !condition || !service || !result) return;
-    if (!/^(19|20)\d{2}$/.test(vehicleYear.trim())) { setError("Enter the 4-digit year for your vehicle."); return; }
     if (!name.trim()) { setError("Enter your name so we know who the build belongs to."); return; }
     if ((phone.match(/\d/g) ?? []).length < 10) { setError("Enter a 10-digit phone number so we can follow up."); return; }
     if (!email.trim()) { setError("Enter your email so we can save your quote."); return; }
@@ -310,7 +306,6 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       name: name.trim(),
       phone: phone.trim(),
       email: email.trim(),
-      vehicleYear: vehicleYear.trim(),
       vehicleMake: vehicle.make,
       vehicleModel: vehicle.model,
       vehicleSize: vehicleLabel(vehicle.vehicle),
@@ -340,7 +335,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     const selectedAddonNames = result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.name);
     const selectedPaintNames = [...paint].map((id) => PAINT_UPGRADES[id].name);
     const extrasSummary = [...selectedAddonNames, ...selectedPaintNames];
-    const vehicleName = `${vehicleYear ? `${vehicleYear} ` : ""}${vehicle.make} ${vehicle.model}`;
+    const vehicleName = `${vehicle.make} ${vehicle.model}`;
 
     return (
       <div ref={resultRef} className="quote-rec-result">
@@ -393,9 +388,6 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
               </div>
             </div>
             <div className="quote-rec-contact">
-              {!vehicleYear && (
-                <label className="quote-rec-year-field"><span>Vehicle year <small>so we can save the exact vehicle</small></span><input className="field" value={vehicleYear} onChange={(e) => setVehicleYear(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" placeholder="2024" autoComplete="off" /></label>
-              )}
               <div className="quote-rec-contact-grid">
                 <label><span>First name</span><input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" required /></label>
                 <label><span>Mobile number</span><input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" required /></label>
@@ -514,7 +506,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
           <h2>What are you driving?</h2>
           {vehicle ? (
             <div className="quote-rec-selected">
-              <div><strong>{vehicleYear ? `${vehicleYear} ` : ""}{vehicle.make} {vehicle.model}</strong><span>{vehicleLabel(vehicle.vehicle)}</span></div>
+              <div><strong>{vehicle.make} {vehicle.model}</strong><span>{vehicleLabel(vehicle.vehicle)}</span></div>
               <button type="button" onClick={() => { setVehicle(null); setVehicleYear(""); setCondition(null); setResult(null); }}>Change</button>
             </div>
           ) : (
