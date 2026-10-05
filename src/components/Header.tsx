@@ -128,9 +128,10 @@ export function Header() {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
   const onHome = pathname === "/";
+  const onDarkHero = onHome || pathname === "/paint-correction" || pathname === "/ceramic";
 
   return (
-    <header className={onHome ? "fixed inset-x-0 top-0 z-40 text-white home-header" : "sticky inset-x-0 top-0 z-40 text-white inner-header"}>
+    <header className={onDarkHero ? "fixed inset-x-0 top-0 z-40 text-white home-header" : "sticky inset-x-0 top-0 z-40 text-white inner-header"}>
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
@@ -152,13 +153,13 @@ export function Header() {
           <span className="sr-only">View scheduling information for our student-run team</span>
         </button>
       )}
-      <div className={onHome ? "home-nav-shell flex items-center justify-between gap-6" : "inner-nav-shell flex items-center justify-between gap-6"}>
-        <Link href="/" className={onHome ? "home-logo-control flex shrink-0 items-center" : "inner-logo-control flex shrink-0 items-center"} aria-label="Every Detail home">
-          <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className={onHome ? "h-[4.15rem] w-[4.15rem] object-contain" : "inner-logo object-contain"} priority />
+      <div className={onDarkHero ? "home-nav-shell flex items-center justify-between gap-6" : "inner-nav-shell flex items-center justify-between gap-6"}>
+        <Link href="/" className={onDarkHero ? "home-logo-control flex shrink-0 items-center" : "inner-logo-control flex shrink-0 items-center"} aria-label="Every Detail home">
+          <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className={onDarkHero ? "h-[4.15rem] w-[4.15rem] object-contain" : "inner-logo object-contain"} priority />
         </Link>
 
         {/* Desktop */}
-        <nav aria-label="Main" className={onHome ? "home-nav-links hidden items-center gap-1 lg:flex" : "inner-nav-links hidden items-center gap-1 lg:flex"}>
+        <nav aria-label="Main" className={onDarkHero ? "home-nav-links hidden items-center gap-1 lg:flex" : "inner-nav-links hidden items-center gap-1 lg:flex"}>
           <div
             ref={servicesRef}
             className="services-menu relative"
@@ -169,7 +170,7 @@ export function Header() {
           >
             <button
               type="button"
-              className={`rounded px-3 py-2 font-display text-[0.9375rem] font-semibold transition-colors ${onHome ? "text-white/90 hover:text-white" : "text-ink/80 hover:text-ink"}`}
+              className={`rounded px-3 py-2 font-display text-[0.9375rem] font-semibold transition-colors ${onDarkHero ? "text-white/90 hover:text-white" : "text-ink/80 hover:text-ink"}`}
               aria-expanded={servicesOpen}
               aria-haspopup="menu"
               onClick={() => setServicesOpen((v) => !v)}
@@ -177,7 +178,7 @@ export function Header() {
               Services <span aria-hidden="true" className="ml-1 text-[.7em]">▾</span>
             </button>
             {servicesOpen && (
-              <div role="menu" className={`services-dropdown absolute left-1/2 top-[calc(100%+.75rem)] min-w-[14rem] -translate-x-1/2 overflow-hidden rounded-xl border p-2 shadow-2xl ${onHome ? "border-white/15 bg-[#111]/95 text-white" : "border-line bg-paper text-ink"}`}>
+              <div role="menu" className={`services-dropdown absolute left-1/2 top-[calc(100%+.75rem)] min-w-[14rem] -translate-x-1/2 overflow-hidden rounded-xl border p-2 shadow-2xl ${onDarkHero ? "border-white/15 bg-[#111]/95 text-white" : "border-line bg-paper text-ink"}`}>
                 {serviceNav.map((item) => (
                   <Link key={item.href} role="menuitem" href={item.href} className="block rounded-lg px-4 py-3 font-display text-[.98rem] font-semibold transition-colors hover:bg-white/10">
                     {item.label}
@@ -191,20 +192,20 @@ export function Header() {
               key={item.href}
               href={item.href}
               aria-current={isActive(item.href) ? "page" : undefined}
-              className={`rounded px-3 py-2 font-display text-[0.9375rem] font-semibold transition-colors aria-[current=page]:underline aria-[current=page]:decoration-red aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8 ${onHome ? "text-white/90 hover:text-white" : "text-ink/80 hover:text-ink aria-[current=page]:text-ink"}`}
+              className={`rounded px-3 py-2 font-display text-[0.9375rem] font-semibold transition-colors aria-[current=page]:underline aria-[current=page]:decoration-red aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8 ${onDarkHero ? "text-white/90 hover:text-white" : "text-ink/80 hover:text-ink aria-[current=page]:text-ink"}`}
             >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <div className={onHome ? "home-nav-actions flex items-center gap-3" : "inner-nav-actions flex items-center gap-3"}>
+        <div className={onDarkHero ? "home-nav-actions flex items-center gap-3" : "inner-nav-actions flex items-center gap-3"}>
           {supabaseConfigured && (
             <a
               href="/account"
               data-no-transition="true"
               aria-current={isActive("/account") ? "page" : undefined}
-              className={`account-link hidden px-3 py-2 font-display text-[0.9375rem] font-semibold lg:block ${onHome ? "text-white/85 hover:text-white" : "text-ink/80 hover:text-ink"}`}
+              className={`account-link hidden px-3 py-2 font-display text-[0.9375rem] font-semibold lg:block ${onDarkHero ? "text-white/85 hover:text-white" : "text-ink/80 hover:text-ink"}`}
             >
               Account
             </a>

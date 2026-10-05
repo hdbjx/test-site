@@ -30,6 +30,8 @@ export default function PaintCorrectionPage(){
       </div>
     </section>
 
+    <section className="paint-problem-section"><div className="container-ed"><div className="paint-section-head"><p className="eyebrow">Does your car need it?</p><h2>Look for these in direct light.</h2></div><div className="paint-problem-grid">{paintDefects.map((d,i)=><article key={d.name}><span>0{i+1}</span><h3>{d.name}</h3><p>{d.detail}</p></article>)}</div></div></section>
+
     <section id="how-it-works" className="paint-sequence">
       <div className="container-ed">
         <div className="paint-sequence-intro"><p className="eyebrow">What happens</p><h2>Three steps.<br/>One clearer finish.</h2><p>Correction is easier to understand when you separate the problem from the process.</p></div>
@@ -41,9 +43,7 @@ export default function PaintCorrectionPage(){
       </div>
     </section>
 
-    <section className="paint-single-proof"><div className="container-ed paint-single-proof-grid"><div className="paint-proof-image"><Image src="/images/red-paint-detail.jpg" alt="Glossy red vehicle paint after detailing" fill sizes="(max-width: 800px) 100vw, 48vw"/></div><div><p className="eyebrow">The result</p><h2>Correction changes the paint itself.</h2><p>A wash makes clean paint. Correction makes damaged-looking paint look clear again. That distinction is why this service starts with an inspection, not a one-size-fits-all package.</p></div></div></section>
-
-    <section className="paint-problem-section"><div className="container-ed"><div className="paint-section-head"><p className="eyebrow">Does your car need it?</p><h2>Look for these in direct light.</h2></div><div className="paint-problem-grid">{paintDefects.map((d,i)=><article key={d.name}><span>0{i+1}</span><h3>{d.name}</h3><p>{d.detail}</p></article>)}</div></div></section>
+    <section className="paint-single-proof"><div className="container-ed paint-single-proof-grid"><div className="paint-proof-image"><Image src="/images/red-audi-finished.jpg" alt="Red Audi with a clear glossy finish after paint correction" fill sizes="(max-width: 800px) 100vw, 48vw"/></div><div><p className="eyebrow">The result</p><h2>Correction changes the paint itself.</h2><p>A wash makes clean paint. Correction makes damaged-looking paint look clear again. That distinction is why this service starts with an inspection, not a one-size-fits-all package.</p></div></div></section>
 
     <section id="correction-options" className="paint-options-simple"><div className="container-ed"><div className="paint-section-head"><p className="eyebrow">Choose the level</p><h2>Start with the condition of your paint.</h2><p>Most cars fall into one of these two correction levels. We confirm the right one before work begins.</p></div><div className="paint-option-list">{[enhancement,correction].map((p,i)=><article key={p.id}><div className="paint-option-main"><span className="paint-option-num">0{i+1}</span><div><p className="eyebrow">{i===0?"LIGHT DEFECTS":"VISIBLE / HEAVIER DEFECTS"}</p><h3>{p.name}</h3><p>{p.summary}</p></div></div><div className="paint-option-detail"><p className="paint-option-price">from <strong>{usd(p.startingAt)}</strong></p><p><b>Best for:</b> {p.bestFor}</p><ul>{p.includes.map(x=><li key={x}>{x}</li>)}</ul><TrackedLink href={quote} event="paint_inquiry" params={{location:`correction_${p.id}`}} className="btn btn-secondary">Get a quote</TrackedLink></div></article>)}</div></div></section>
 

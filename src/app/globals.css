@@ -3758,3 +3758,66 @@
 
 /* v36 dedicated paint-service lead forms */
 .paint-lead-section{background:#f4f1eb;border-top:1px solid rgba(31,25,22,.12);padding:clamp(4.5rem,8vw,8rem) 0}.paint-lead-shell{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(3rem,7vw,7rem);align-items:start}.paint-lead-intro{position:sticky;top:clamp(9rem,17vh,12rem);max-width:34rem}.paint-lead-intro h2{font-family:var(--font-display,inherit);font-size:clamp(2.7rem,5vw,5.3rem);line-height:.92;letter-spacing:-.055em;margin:.8rem 0 1.35rem}.paint-lead-intro>p:last-of-type{max-width:30rem;font-size:1.05rem;line-height:1.65;color:rgba(31,25,22,.72)}.paint-lead-meta{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:2rem}.paint-lead-meta span{border:1px solid rgba(31,25,22,.16);border-radius:999px;padding:.55rem .8rem;font-size:.72rem;font-weight:700;letter-spacing:.045em;text-transform:uppercase}.paint-lead-form{background:#fff;border:1px solid rgba(31,25,22,.12);border-radius:1.4rem;padding:clamp(1.35rem,3vw,2.4rem);box-shadow:0 18px 60px rgba(31,25,22,.07);display:grid;gap:1.15rem}.paint-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.paint-lead-form label{display:grid;gap:.48rem}.paint-lead-form label>span{font-size:.72rem;font-weight:800;letter-spacing:.075em;text-transform:uppercase;color:rgba(31,25,22,.68)}.paint-lead-form label em{font-style:normal;font-weight:500;letter-spacing:0;text-transform:none;color:rgba(31,25,22,.45)}.paint-lead-form input,.paint-lead-form select,.paint-lead-form textarea{width:100%;border:1px solid rgba(31,25,22,.16);border-radius:.85rem;background:#faf9f6;color:#1f1916;font:inherit;padding:.92rem 1rem;outline:none;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}.paint-lead-form textarea{resize:vertical;min-height:7rem}.paint-lead-form input:focus,.paint-lead-form select:focus,.paint-lead-form textarea:focus{background:#fff;border-color:rgba(110,22,31,.68);box-shadow:0 0 0 3px rgba(110,22,31,.09)}.paint-lead-submit{width:100%;min-height:3.4rem;margin-top:.25rem}.paint-lead-submit:disabled{opacity:.65;cursor:wait}.paint-lead-fine{font-size:.75rem;line-height:1.45;text-align:center;color:rgba(31,25,22,.5);margin:0}.paint-lead-error{background:#fff0f0;border:1px solid rgba(154,31,31,.18);border-radius:.8rem;padding:.8rem .9rem;color:#821c1c;font-size:.88rem;margin:0}.paint-hp{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;opacity:0!important}.paint-lead-success{max-width:48rem;margin:0 auto;text-align:center;background:#fff;border:1px solid rgba(31,25,22,.12);border-radius:1.4rem;padding:clamp(2.5rem,6vw,5rem);box-shadow:0 18px 60px rgba(31,25,22,.07)}.paint-lead-success-mark{display:grid;place-items:center;width:3rem;height:3rem;margin:0 auto 1.4rem;border-radius:999px;background:#6e161f;color:#fff;font-size:1.25rem}.paint-lead-success h3{font-family:var(--font-display,inherit);font-size:clamp(2.4rem,5vw,4.5rem);line-height:.95;letter-spacing:-.05em;margin:.65rem 0 1rem}.paint-lead-success>p:last-child{max-width:35rem;margin:0 auto;color:rgba(31,25,22,.68);line-height:1.6}@media(max-width:800px){.paint-lead-section{padding:4.25rem 0}.paint-lead-shell{grid-template-columns:1fr;gap:2.1rem}.paint-lead-intro{position:static}.paint-lead-intro h2{font-size:clamp(2.65rem,13vw,4.3rem)}.paint-field-grid{grid-template-columns:1fr}.paint-lead-form{border-radius:1.1rem;padding:1.15rem}.paint-lead-meta{gap:.4rem}.paint-lead-meta span{font-size:.65rem}}
+
+/* v37 paint pages: deliberate sequential rhythm, dark-hero header integration, no gallery sprawl */
+.paint-simple-hero{
+  min-height:min(780px,86svh);
+  margin:0;
+  border:0;
+}
+.paint-simple-hero-inner{
+  min-height:min(780px,86svh);
+  padding-top:clamp(9.75rem,16vh,12.25rem);
+  padding-bottom:clamp(3.25rem,6vh,4.75rem);
+}
+.paint-simple-hero-copy{max-width:880px}
+.paint-simple-hero-copy h1{margin:.75rem 0 1.25rem;font-size:clamp(4rem,7vw,8rem)}
+.paint-hero-actions{margin-top:1.8rem}
+.paint-hero-proof{margin-top:2.25rem;padding-top:1.25rem}
+
+.paint-problem-section,.ceramic-explainer{padding:clamp(5.25rem,7vw,7rem) 0}
+.paint-sequence{padding:clamp(5.5rem,7.5vw,7.5rem) 0}
+.paint-sequence-intro{padding-bottom:clamp(2.5rem,4vw,3.5rem)}
+.paint-sequence-intro h2{font-size:clamp(3.35rem,5.5vw,6rem)}
+.paint-steps article{padding:clamp(2.5rem,4vw,3.75rem) 0}
+.paint-steps article>div{gap:clamp(2rem,4vw,4.5rem)}
+
+.paint-single-proof{padding:clamp(4.75rem,6.5vw,6.5rem) 0}
+.paint-single-proof-grid{gap:clamp(3rem,6vw,6rem)}
+.paint-proof-image{aspect-ratio:5/4}
+.paint-single-proof h2{font-size:clamp(3rem,4.8vw,5.25rem)}
+
+.paint-options-simple,.ceramic-package-simple{padding:clamp(5.5rem,7.5vw,7.5rem) 0}
+.paint-option-list,.ceramic-package-row{margin-top:clamp(2.75rem,4vw,3.75rem)}
+.paint-option-list article{padding:clamp(2.75rem,4vw,3.75rem) 0}
+.paint-section-head h2{font-size:clamp(3.2rem,5.1vw,5.7rem)}
+.paint-next-step{padding:clamp(5rem,6.5vw,6.5rem) 0}
+.coating-maintenance{padding:clamp(5rem,7vw,7rem) 0}
+.paint-lead-section{padding:clamp(5rem,7vw,6.75rem) 0}
+.paint-final-cta{padding-top:clamp(4.75rem,6.5vw,6.5rem);padding-bottom:clamp(4.75rem,6.5vw,6.5rem)}
+
+/* Keep the first pixel beneath the fixed paint-page header dark. */
+body:has(.paint-simple-hero) #main{background:#111}
+body:has(.paint-simple-hero) .paint-simple-hero{margin-top:0}
+
+@media(max-width:800px){
+  .paint-simple-hero{min-height:78svh}
+  .paint-simple-hero-inner{min-height:78svh;padding-top:8.25rem;padding-bottom:2.5rem}
+  .paint-simple-hero-copy h1{font-size:clamp(3.35rem,14.5vw,5rem);line-height:.88}
+  .paint-simple-hero-copy>p:not(.eyebrow){font-size:1rem;line-height:1.55}
+  .paint-hero-actions{margin-top:1.45rem}
+  .paint-hero-proof{margin-top:1.8rem}
+  .paint-problem-section,.ceramic-explainer,.paint-sequence,.paint-options-simple,.ceramic-package-simple{padding:4.5rem 0}
+  .paint-sequence-intro{padding-bottom:2rem}
+  .paint-sequence-intro h2,.paint-section-head h2{font-size:clamp(2.85rem,12.5vw,4.25rem);line-height:.92}
+  .paint-steps article{padding:2.25rem 0}
+  .paint-single-proof{padding:4rem 0}
+  .paint-single-proof-grid{gap:2rem}
+  .paint-proof-image{aspect-ratio:4/3}
+  .paint-single-proof h2{font-size:clamp(2.75rem,12vw,4rem)}
+  .paint-problem-grid{margin-top:2.5rem}
+  .paint-option-list,.ceramic-package-row{margin-top:2.5rem}
+  .paint-option-list article{padding:2.5rem 0;gap:2rem}
+  .paint-next-step,.coating-maintenance,.paint-lead-section{padding:4.25rem 0}
+  .paint-final-cta{padding-top:4.25rem;padding-bottom:4.25rem}
+}
