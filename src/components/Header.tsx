@@ -15,10 +15,41 @@ export function Header() {
   const [moreOpen, setMoreOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [availabilityOpen, setAvailabilityOpen] = useState(false);
+  const [showAvailabilityBanner, setShowAvailabilityBanner] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  // The school-hours scheduling ticker is only relevant while the team is in school.
+  // Evaluate in Every Detail’s local timezone so visitors elsewhere see the same schedule.
+  useEffect(() => {
+    const updateAvailabilityBanner = () => {
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York",
+        weekday: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+      }).formatToParts(new Date());
+
+      const value = (type: Intl.DateTimeFormatPartTypes) =>
+        parts.find((part) => part.type === type)?.value ?? "";
+      const weekday = value("weekday");
+      const hour = Number(value("hour"));
+      const minute = Number(value("minute"));
+      const minutesAfterMidnight = hour * 60 + minute;
+      const isWeekday = ["Mon", "Tue", "Wed", "Thu", "Fri"].includes(weekday);
+
+      setShowAvailabilityBanner(
+        isWeekday && minutesAfterMidnight >= 7 * 60 + 30 && minutesAfterMidnight < 16 * 60,
+      );
+    };
+
+    updateAvailabilityBanner();
+    const timer = window.setInterval(updateAvailabilityBanner, 30_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   // Close menus on navigation
   useEffect(() => {
@@ -107,18 +138,20 @@ export function Header() {
         Skip to content
       </a>
 
-      <button
-        type="button"
-        className="availability-banner"
-        onClick={() => setAvailabilityOpen(true)}
-        aria-haspopup="dialog"
-      >
-        <span className="availability-banner-track" aria-hidden="true">
-          <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;PHONE AVAILABILITY IS LIMITED DURING SCHOOL HOURS&nbsp;&nbsp;•&nbsp;&nbsp;TEXTING IS BEST DURING THE SCHOOL DAY&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-          <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;PHONE AVAILABILITY IS LIMITED DURING SCHOOL HOURS&nbsp;&nbsp;•&nbsp;&nbsp;TEXTING IS BEST DURING THE SCHOOL DAY&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-        </span>
-        <span className="sr-only">View scheduling information for our student-run team</span>
-      </button>
+      {showAvailabilityBanner && (
+        <button
+          type="button"
+          className="availability-banner"
+          onClick={() => setAvailabilityOpen(true)}
+          aria-haspopup="dialog"
+        >
+          <span className="availability-banner-track" aria-hidden="true">
+            <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;PHONE AVAILABILITY IS LIMITED DURING SCHOOL HOURS&nbsp;&nbsp;•&nbsp;&nbsp;TEXTING IS BEST DURING THE SCHOOL DAY&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+            <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;PHONE AVAILABILITY IS LIMITED DURING SCHOOL HOURS&nbsp;&nbsp;•&nbsp;&nbsp;TEXTING IS BEST DURING THE SCHOOL DAY&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+          </span>
+          <span className="sr-only">View scheduling information for our student-run team</span>
+        </button>
+      )}
       <div className={onHome ? "home-nav-shell flex items-center justify-between gap-6" : "inner-nav-shell flex items-center justify-between gap-6"}>
         <Link href="/" className={onHome ? "home-logo-control flex shrink-0 items-center" : "inner-logo-control flex shrink-0 items-center"} aria-label="Every Detail home">
           <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className={onHome ? "h-[4.15rem] w-[4.15rem] object-contain" : "inner-logo object-contain"} priority />

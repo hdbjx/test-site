@@ -6,19 +6,16 @@ import Link from "next/link";
 const chapters = [
   {
     kicker: "Trust over the upsell",
-    title: "We’d rather lose the upsell than your trust.",
     quote: "Before they were done Wiley came to me and, being totally transparent, said my car didn't need the premium detail and they would only charge me for the maintenance detail…",
     author: "Vincent Madrigal",
   },
   {
     kicker: "Back to brand new",
-    title: "The work still has to speak for itself.",
     quote: "My 2018 car looks brand new after a thorough detail by Aidan and Wiley! … All the dog hair is gone!",
     author: "Leigh Potts",
   },
   {
     kicker: "Serious standards",
-    title: "Rain wasn’t going to stop the job.",
     quote: "It was raining when they arrived, but instead of postponing, they took their own initiative to set up a tent over the car and got right to work.",
     author: "Max Galipeau",
   },
@@ -122,8 +119,7 @@ export function ReviewStoryScroll({ reviewCount }: { reviewCount: ReactNode }) {
                 <article key={item.author} className="review-story-chapter" data-mobile-story style={style} aria-hidden={visibility < 0.05}>
                   <div className="review-story-copy">
                     <p className="eyebrow">0{index + 1} / {item.kicker}</p>
-                    <h2>{item.title}</h2>
-                    <blockquote>“{item.quote}”</blockquote>
+                    <blockquote className="review-story-feature-quote">“{item.quote}”</blockquote>
                     <footer>{item.author} <span>· Google Review · ★★★★★</span></footer>
                   </div>
                 </article>
