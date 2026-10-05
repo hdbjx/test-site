@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FaqList } from "@/components/FaqList";
 import { Photo } from "@/components/Photo";
 import { ReviewStoryScroll } from "@/components/ReviewStoryScroll";
+import { ServicePicker } from "@/components/ServicePicker";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { TrackedLink } from "@/components/TrackedLink";
 import { homeFaqs } from "@/data/faqs";
@@ -42,17 +43,16 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="pricing" className="home-services home-services-v14 home-guided-quote">
-        <div className="container-ed guided-quote-grid">
-          <div>
-            <p className="eyebrow">Start here</p>
-            <h2 className="home-display">Tell us about your car.<br /><span>We’ll recommend the detail.</span></h2>
+      <section id="pricing" className="home-services home-services-v14">
+        <div className="container-ed">
+          <div className="v14-service-head">
+            <div>
+              <p className="eyebrow">Choose what your car needs</p>
+              <h2 id="home-pricing" className="home-display">Three levels.<br /><span>One standard.</span></h2>
+            </div>
+            <p className="home-section-copy">Pick your vehicle to see exact pricing for Maintenance, Premium, and Factory Reset. Premium is the right starting point for most first-time clients.</p>
           </div>
-          <div className="guided-quote-side">
-            <p>Choose your vehicle and tell us what it needs. We’ll recommend the right service and give you an exact price before you book.</p>
-            <Link href="/get-a-quote" className="btn btn-primary">Build my quote ↗</Link>
-            <Link href="/our-services" className="guided-service-link">Already know what you need? Explore services ↗</Link>
-          </div>
+          <ServicePicker location="home" headingId="home-pricing" />
         </div>
       </section>
 

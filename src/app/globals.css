@@ -3546,3 +3546,35 @@
 @media(prefers-reduced-motion:reduce){
   .review-story{height:auto;padding:5rem 0}.review-story-sticky{position:relative;height:auto;overflow:visible}.review-story-stage{height:auto}.review-story-intro,.review-story-chapters,.review-story-reveal{position:relative!important;inset:auto!important;opacity:1!important;transform:none!important;filter:none!important}.review-story-intro{padding:2rem 5vw 4rem}.review-story-chapters{display:grid;gap:4rem;padding:0 5vw 5rem}.review-story-chapter{position:relative;inset:auto;display:block;opacity:1!important;filter:none!important;transform:none!important;padding:0}.review-story-reveal{min-height:90vh;--reveal-copy:1!important;--stats-in:1!important;--standard-in:1!important}.review-story-reveal-copy,.review-story-stats,.review-story-standard,.review-story-link{opacity:1!important;transform:none!important}
 }
+
+/* v28: keep the desktop cinematic story clear of the persistent announcement/nav header. */
+@media (min-width: 801px) {
+  .review-story-sticky {
+    --story-header-safe: clamp(9.75rem, 16vh, 11.5rem);
+  }
+  .review-story-intro,
+  .review-story-chapter,
+  .review-story-reveal {
+    box-sizing: border-box;
+    padding-top: calc(var(--story-header-safe) + 1.25rem);
+    padding-bottom: clamp(2rem, 5vh, 4.5rem);
+  }
+  .review-story-intro {
+    justify-content: center;
+  }
+  .review-story-chapter,
+  .review-story-reveal {
+    align-items: center;
+  }
+}
+
+/* Short laptop screens need a little more explicit breathing room under the nav. */
+@media (min-width: 801px) and (max-height: 820px) {
+  .review-story-sticky { --story-header-safe: 10.5rem; }
+  .review-story-intro h2,
+  .review-story-chapter h2,
+  .review-story-reveal h2 { font-size: clamp(3rem, 6.2vw, 6.25rem); }
+  .review-story-chapter h2 { margin-bottom: clamp(1.35rem, 3vh, 2.5rem); }
+  .review-story-stats { margin-top: 1.65rem; margin-bottom: 1.25rem; }
+  .review-story-stats div { padding-top: 1rem; padding-bottom: 1rem; }
+}
