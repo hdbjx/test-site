@@ -28,6 +28,26 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
+  const testEmail = request.nextUrl.searchParams.get("testEmail")?.trim();
+
+  if (testEmail) {
+    const result = await sendJobReminderEmail({
+      name: "Wiley",
+      email: testEmail,
+      address: "123 Example Drive, Decatur, GA",
+      service: "Premium Detail",
+      vehicle: "Toyota RAV4",
+      start: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    });
+
+    if (!result.ok) {
+      console.error("[job-reminders] test email failed", result);
+      return NextResponse.json({ ok: false, test: true, error: "Email provider did not confirm delivery request" }, { status: 502 });
+    }
+
+    return NextResponse.json({ ok: true, test: true, sent: 1 });
+  }
+
   const admin = supabaseAdmin();
   const { data, error } = await admin.rpc("claim_customer_email_reminders", {
     p_limit: MAX_PER_RUN,
