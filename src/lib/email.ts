@@ -379,3 +379,53 @@ export async function sendLeadEmails({ type, fields }: LeadEmail) {
     }
   }
 }
+
+export type JobReminderEmail = {
+  name: string;
+  email: string;
+  address: string;
+  service: string;
+  vehicle: string;
+  start: string;
+};
+
+/** Send the single customer reminder used roughly 24 hours before a job. */
+export async function sendJobReminderEmail(booking: JobReminderEmail) {
+  const appointment = formatAppointment(booking.start);
+  const firstName = booking.name.trim().split(/\s+/)[0] || booking.name;
+
+  const html = shell(
+    `
+      <div style="font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:700;">
+        Appointment reminder
+      </div>
+
+      <h1 style="margin:10px 0 14px;font-size:34px;line-height:1.05;color:${BRAND.black};">
+        We'll see you tomorrow${firstName ? `, ${escapeHtml(firstName)}` : ""}.
+      </h1>
+
+      <p style="margin:0 0 26px;font-size:16px;line-height:1.65;color:${BRAND.gray};">
+        Just a reminder that your Every Detail appointment is coming up. We'll bring the power, water, equipment, and products needed for the detail.
+      </p>
+
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+        ${detailRow("When", appointment)}
+        ${detailRow("Vehicle", booking.vehicle)}
+        ${detailRow("Service", booking.service)}
+        ${detailRow("Where", booking.address)}
+      </table>
+
+      <div style="margin-top:26px;padding:18px;background:${BRAND.cream};border-left:5px solid ${BRAND.coral};font-size:14px;line-height:1.6;">
+        Please make sure we can access the vehicle at the scheduled time. You do not need to provide power or water. If anything has changed, reply to this email and we'll help.
+      </div>
+    `,
+    `Reminder: your Every Detail appointment is ${appointment}`,
+  );
+
+  return sendEmail({
+    to: booking.email,
+    subject: `Reminder: your Every Detail appointment is tomorrow`,
+    html,
+    replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
+  });
+}
