@@ -18,18 +18,21 @@ export default function DetailPlusPage() {
   return (
     <main className="plus-brand">
       <section className="plus-brand-hero">
-        <div className="plus-brand-shell plus-brand-hero-grid">
-          <div className="plus-brand-hero-copy">
-            <div className="plus-brand-stamp">DETAIL+<br/>REPEAT CARE</div>
-            <p className="plus-brand-kicker">01 / THE MEMBERSHIP</p>
-            <h1>Your car stays clean.<br/><span>Automatically.</span></h1>
-            <p className="plus-brand-lede">A recurring detailing plan built around your car. Choose how often we come back, choose what we maintain, and stop waiting until the car needs another reset.</p>
-            <div className="plus-brand-actions"><a href="#build" className="plus-brand-btn plus-brand-btn-light">Build my plan ↗</a><a href="#how" className="plus-brand-text-link">See how it works ↓</a></div>
+        <div className="plus-brand-shell">
+          <div className="plus-brand-hero-grid">
+            <div className="plus-brand-hero-copy">
+              <p className="plus-brand-kicker">DETAIL+ / RECURRING CARE</p>
+              <h1>Your car stays clean.<br/><span>Automatically.</span></h1>
+              <p className="plus-brand-lede">Book once. We come back on your schedule, with the same mobile service and the same standard every time.</p>
+              <div className="plus-brand-actions"><a href="#build" className="plus-brand-btn plus-brand-btn-light">Build my plan ↗</a><a href="#how" className="plus-brand-text-link">How it works ↓</a></div>
+            </div>
+            <figure className="plus-brand-photo">
+              <Photo id="work-davis-0909" priority ratio="4/5" sizes="(min-width: 900px) 34vw, 94vw"/>
+              <div className="plus-brand-stamp plus-brand-hero-stamp">DETAIL+<br/>REPEAT CARE</div>
+              <figcaption>YOUR DRIVEWAY / OUR STANDARD / ON REPEAT</figcaption>
+            </figure>
           </div>
-          <div className="plus-brand-hero-side">
-            <div className="plus-brand-rule"><span>BOOK ONCE</span><span>WE COME BACK</span><span>STAY CLEAN</span></div>
-            <figure className="plus-brand-photo"><Photo id="work-davis-0909" priority ratio="4/5" sizes="(min-width: 900px) 35vw, 94vw"/><figcaption>YOUR DRIVEWAY / OUR STANDARD / ON REPEAT</figcaption></figure>
-          </div>
+          <div className="plus-brand-rule" aria-label="How Detail Plus works"><span>01 / BOOK ONCE</span><span>02 / WE COME BACK</span><span>03 / STAY CLEAN</span></div>
         </div>
       </section>
 

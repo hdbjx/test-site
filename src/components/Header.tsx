@@ -128,7 +128,7 @@ export function Header() {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
   const onHome = pathname === "/";
-  const onDarkHero = onHome || pathname === "/paint-correction" || pathname === "/ceramic";
+  const onDarkHero = onHome || pathname === "/paint-correction" || pathname === "/ceramic" || pathname === "/detailplus";
 
   return (
     <header className={onDarkHero ? "fixed inset-x-0 top-0 z-40 text-white home-header" : "sticky inset-x-0 top-0 z-40 text-white inner-header"}>

@@ -14,7 +14,7 @@ export const metadata = pageMetadata({
 
 export default function MobileCarDetailingPage() {
   return (
-    <main className="services-v161">
+    <main className="services-v161 mobile-detailing-page">
       <section className="edu-hero"><div className="svc-shell">
         <div className="mb-6"><Breadcrumbs items={[{ name: "Mobile Car Detailing", path: "/mobile-car-detailing" }]} /></div>
         <p className="svc-eyebrow">MOBILE CAR DETAILING / DECATUR + ATLANTA</p>

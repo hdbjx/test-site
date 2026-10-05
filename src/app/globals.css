@@ -3851,3 +3851,75 @@ body:has(.paint-simple-hero) .paint-simple-hero{margin-top:0}
 .plus-brand-final{padding:clamp(5rem,8vw,8rem) 0;background:var(--plus-ox-dark);color:var(--plus-cream);text-align:center;border-top:3px solid var(--plus-black)}.plus-brand-final .plus-brand-stamp{margin:0 auto 1.5rem}.plus-brand-final .plus-brand-kicker{color:var(--plus-coral)}.plus-brand-final h2{margin:.8rem auto 2rem;font-size:clamp(4rem,7.5vw,8rem)}
 @media(max-width:900px){.plus-brand-shell{width:min(92vw,1340px)}.plus-brand-hero-grid,.plus-brand-build-grid,.plus-brand-faq-grid,.plus-brand-section-head{grid-template-columns:1fr}.plus-brand-section-head>p:last-child{grid-column:auto;grid-row:auto}.plus-brand-hero-side{margin-top:1rem}.plus-brand-how-intro{grid-template-columns:1fr}.plus-brand-how ol{grid-template-columns:1fr}.plus-brand-how li{min-height:0;border-right:0;border-bottom:1px solid rgb(243 241 236/.4)}.plus-brand-how li:last-child{border-bottom:0}.plus-brand-benefits article{grid-template-columns:4rem 1fr}.plus-brand-cadence{display:block}.plus-brand-cadence p{margin-top:.65rem;line-height:1.7}.plus-brand-form-wrap{margin-top:1rem}}
 @media(max-width:620px){.plus-brand-hero{padding-top:8.5rem}.plus-brand-hero h1{font-size:clamp(3.4rem,16vw,5rem)}.plus-brand-actions{align-items:stretch;flex-direction:column}.plus-brand-btn{width:100%}.plus-brand-text-link{text-align:center}.plus-brand-ticker>div{grid-template-columns:1fr 1fr}.plus-brand-ticker span:nth-child(2){border-right:0}.plus-brand-ticker span:nth-child(-n+2){border-bottom:1px solid rgb(243 241 236/.25)}.plus-brand-rule{grid-template-columns:1fr}.plus-brand-rule span{border-right:0;border-bottom:1px solid rgb(243 241 236/.3)}.plus-brand-rule span:last-child{border-bottom:0}.plus-brand-benefits article{grid-template-columns:3.2rem 1fr;gap:1rem}.plus-brand-form-wrap{padding:1rem;box-shadow:6px 6px 0 var(--plus-ox)}}
+
+/* v41: first-screen audit + Detail+ hero composition */
+.plus-brand-hero{
+  min-height:0;
+  padding:clamp(7.2rem,9vh,8.4rem) 0 0;
+  background:var(--plus-ox);
+}
+.plus-brand-hero-grid{
+  min-height:clamp(31rem,60vh,39rem);
+  grid-template-columns:minmax(0,1.65fr) minmax(19rem,.72fr);
+  gap:clamp(2.5rem,5vw,5.5rem);
+  align-items:center;
+}
+.plus-brand-hero-copy{padding:clamp(2rem,4vh,3.5rem) 0}
+.plus-brand-hero .plus-brand-kicker{color:var(--plus-coral)}
+.plus-brand-hero h1{
+  max-width:900px;
+  margin-top:1rem;
+  font-size:clamp(4rem,6.7vw,7.2rem);
+  line-height:.84;
+}
+.plus-brand-lede{max-width:39rem;margin-top:1.35rem;font-size:clamp(1rem,1.1vw,1.12rem)}
+.plus-brand-actions{margin-top:1.65rem}
+.plus-brand-photo{
+  align-self:stretch;
+  min-height:29rem;
+  margin-right:calc((100vw - min(88vw,1340px))/ -2);
+  border:0;
+  border-left:3px solid var(--plus-black);
+  box-shadow:none;
+  overflow:hidden;
+}
+.plus-brand-photo>div:first-child{height:100%!important}
+.plus-brand-photo img{height:100%!important;object-fit:cover;object-position:center 55%}
+.plus-brand-hero-stamp{position:absolute;left:-2.4rem;top:2.1rem;z-index:2;background:var(--plus-ox)}
+.plus-brand-photo figcaption{right:auto;left:0}
+.plus-brand-rule{margin-top:0;border-top:2px solid var(--plus-coral);border-bottom:0}
+.plus-brand-rule span{padding:1rem .6rem;font-size:.62rem}
+
+/* Inner-page first screens: sticky header already occupies its own height. Do not add another header-sized void. */
+.services-v161 .edu-hero{padding-top:clamp(4.2rem,6vw,6.5rem);padding-bottom:clamp(4rem,5.5vw,5.5rem)}
+.services-v161 .edu-hero-grid{gap:clamp(3rem,6vw,7rem)}
+.services-v161 .edu-hero h1{font-size:clamp(4rem,6.5vw,7.3rem)}
+.mobile-detailing-page .edu-hero{padding-top:clamp(4.2rem,6vw,6.5rem)}
+.areas-v2-hero,.area-v2-hero,.blog-v2-hero{padding-top:clamp(5rem,7vw,7rem)}
+.about-v2-hero{padding-top:clamp(5rem,7vw,7rem)}
+
+/* Paint pages use an overlay header, but the proposition should still land above the fold. */
+.paint-service-hero,.paint-service-hero-inner{min-height:min(820px,84svh)}
+.paint-service-hero-copy{padding-top:clamp(7.5rem,13vh,10rem)}
+
+@media(max-width:900px){
+  .plus-brand-hero{padding-top:6.8rem}
+  .plus-brand-hero-grid{min-height:0;grid-template-columns:1fr;gap:2rem}
+  .plus-brand-hero-copy{padding:2.2rem 0 0}
+  .plus-brand-photo{min-height:24rem;margin-right:0;border:3px solid var(--plus-black);box-shadow:7px 7px 0 var(--plus-black)}
+  .plus-brand-hero-stamp{left:1rem;top:1rem}
+  .plus-brand-rule{margin-top:2rem}
+}
+@media(max-width:620px){
+  .plus-brand-hero{padding-top:5.4rem}
+  .plus-brand-hero h1{font-size:clamp(3.45rem,15vw,4.8rem)}
+  .plus-brand-lede{margin-top:1rem}
+  .plus-brand-photo{min-height:19rem}
+  .plus-brand-rule{grid-template-columns:1fr 1fr 1fr}
+  .plus-brand-rule span{padding:.8rem .3rem;border-right:1px solid rgb(243 241 236/.35);border-bottom:0;font-size:.49rem}
+  .services-v161 .edu-hero{padding-top:3.2rem;padding-bottom:3.6rem}
+  .services-v161 .edu-hero h1{font-size:clamp(3.5rem,15vw,5rem)}
+  .areas-v2-hero,.area-v2-hero,.blog-v2-hero,.about-v2-hero{padding-top:4rem}
+  .paint-service-hero,.paint-service-hero-inner{min-height:82svh}
+  .paint-service-hero-copy{padding-top:7rem}
+}
