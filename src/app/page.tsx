@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FaqList } from "@/components/FaqList";
 import { Photo } from "@/components/Photo";
 import { ReviewStoryScroll } from "@/components/ReviewStoryScroll";
+import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { TrackedLink } from "@/components/TrackedLink";
 import { homeFaqs } from "@/data/faqs";
 import { reviewCountLabel, site } from "@/data/site";
