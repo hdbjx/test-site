@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FaqList } from "@/components/FaqList";
 import { Photo } from "@/components/Photo";
 import { ReviewStoryScroll } from "@/components/ReviewStoryScroll";
-import { ServicePicker } from "@/components/ServicePicker";
+import { HomeBookingFlow } from "@/components/HomeBookingFlow";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { TrackedLink } from "@/components/TrackedLink";
 import { homeFaqs } from "@/data/faqs";
@@ -45,14 +45,12 @@ export default function Home() {
 
       <section id="pricing" className="home-services home-services-v14">
         <div className="container-ed">
-          <div className="v14-service-head">
-            <div>
-              <p className="eyebrow">Choose what your car needs</p>
-              <h2 id="home-pricing" className="home-display">Three levels.<br /><span>One standard.</span></h2>
-            </div>
-            <p className="home-section-copy">Pick your vehicle to see exact pricing for Maintenance, Premium, and Factory Reset. Premium is the right starting point for most first-time clients.</p>
+          <div className="home-section-head v14-service-head">
+            <div><p className="eyebrow">Start here</p><h2 id="pricing-heading" className="home-display">Choose what<br />your car needs.</h2></div>
+            <p className="home-section-copy">Three details. No package maze. Pick the level of clean you want, then tell us what you drive.</p>
           </div>
-          <ServicePicker location="home" headingId="home-pricing" />
+          <HomeBookingFlow />
+          <div className="home-text-links v14-service-links"><Link href="/our-services" className="link">Compare every service ↗</Link><Link href="/get-a-quote" className="link">Not sure what you need? Ask us</Link></div>
         </div>
       </section>
 

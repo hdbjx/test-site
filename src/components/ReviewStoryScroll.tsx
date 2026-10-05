@@ -40,10 +40,34 @@ export function ReviewStoryScroll({ reviewCount }: { reviewCount: ReactNode }) {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => {
       rafRef.current = null;
-      if (!sectionRef.current || reduced.matches || window.innerWidth <= 800) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const travel = Math.max(1, sectionRef.current.offsetHeight - window.innerHeight);
-      setProgress(clamp(-rect.top / travel));
+      if (!sectionRef.current || reduced.matches) return;
+      const section = sectionRef.current;
+      if (window.innerWidth > 800) {
+        const rect = section.getBoundingClientRect();
+        const travel = Math.max(1, section.offsetHeight - window.innerHeight);
+        setProgress(clamp(-rect.top / travel));
+        return;
+      }
+
+      // Mobile stays in normal document flow, but every story beat is still
+      // continuously driven by its position in the viewport.
+      const viewport = window.innerHeight;
+      section.querySelectorAll<HTMLElement>("[data-mobile-story]").forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const raw = clamp((viewport * 0.92 - rect.top) / (viewport * 0.62));
+        const exit = clamp((viewport * 0.18 - rect.bottom) / (viewport * 0.28));
+        const presence = clamp(raw * (1 - exit * 0.72));
+        el.style.setProperty("--mobile-in", String(raw));
+        el.style.setProperty("--mobile-presence", String(presence));
+        el.style.setProperty("--mobile-exit", String(exit));
+      });
+
+      const reveal = section.querySelector<HTMLElement>(".review-story-reveal");
+      if (reveal) {
+        const rect = reveal.getBoundingClientRect();
+        const revealProgress = clamp((viewport - rect.top) / Math.max(viewport * 0.9, rect.height));
+        reveal.style.setProperty("--mobile-reveal", String(revealProgress));
+      }
     };
     const requestUpdate = () => {
       if (rafRef.current === null) rafRef.current = window.requestAnimationFrame(update);
@@ -74,7 +98,7 @@ export function ReviewStoryScroll({ reviewCount }: { reviewCount: ReactNode }) {
       <div className="review-story-sticky">
         <div className="review-story-stage">
           <div
-            className="review-story-intro"
+            className="review-story-intro" data-mobile-story
             style={{ opacity: 1 - introOut, transform: `translate3d(0, ${-52 * introOut}px, 0) scale(${1 - introOut * 0.025})`, filter: `blur(${introOut * 8}px)` }}
           >
             <p className="eyebrow">The people who already said yes</p>
@@ -95,7 +119,7 @@ export function ReviewStoryScroll({ reviewCount }: { reviewCount: ReactNode }) {
                 "--chapter-blur": `${(1 - visibility) * 9}px`,
               } as CSSProperties;
               return (
-                <article key={item.author} className="review-story-chapter" style={style} aria-hidden={visibility < 0.05}>
+                <article key={item.author} className="review-story-chapter" data-mobile-story style={style} aria-hidden={visibility < 0.05}>
                   <div className="review-story-copy">
                     <p className="eyebrow">0{index + 1} / {item.kicker}</p>
                     <h2>{item.title}</h2>
@@ -108,7 +132,7 @@ export function ReviewStoryScroll({ reviewCount }: { reviewCount: ReactNode }) {
           </div>
 
           <div
-            className="review-story-reveal"
+            className="review-story-reveal" data-mobile-story
             style={{ opacity: revealIn, transform: `scale(${1.045 - revealIn * 0.045})`, "--reveal-copy": revealCopy, "--stats-in": statsIn, "--standard-in": standardIn } as CSSProperties}
           >
             <div className="review-story-team-photo" aria-hidden="true" />
