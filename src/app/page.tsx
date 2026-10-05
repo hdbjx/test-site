@@ -1,12 +1,9 @@
 import Link from "next/link";
 import { FaqList } from "@/components/FaqList";
 import { Photo } from "@/components/Photo";
-import { HomeBookingFlow } from "@/components/HomeBookingFlow";
-import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
-import { Stars } from "@/components/Stars";
+import { ReviewStoryScroll } from "@/components/ReviewStoryScroll";
 import { TrackedLink } from "@/components/TrackedLink";
 import { homeFaqs } from "@/data/faqs";
-import { reviews } from "@/data/reviews";
 import { reviewCountLabel, site } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
 
@@ -18,8 +15,7 @@ export const metadata = pageMetadata({
 });
 
 export default function Home() {
-  const featuredFaqs = homeFaqs.slice(0, 3);
-  const featuredReview = reviews[0];
+  const featuredFaqs = [homeFaqs[2], homeFaqs[4], homeFaqs[7], homeFaqs[5], homeFaqs[8]];
 
   return (
     <>
@@ -31,8 +27,8 @@ export default function Home() {
             <h1 className="hero-title"><span>Your car.</span><span>Back to its best.</span></h1>
             <p className="hero-lede">Professional mobile car detailing in Decatur and Atlanta, right at your driveway.<br />We bring the power and water.</p>
             <div className="mt-7 flex flex-wrap gap-4">
-              <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-primary">Book a detail ↗</TrackedLink>
-              <Link href="/get-a-quote" className="btn btn-quote">Get a quote</Link>
+              <Link href="/get-a-quote" className="btn btn-primary">Get my quote ↗</Link>
+              <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-quote">Book a detail</TrackedLink>
             </div>
           </div>
         </div>
@@ -45,14 +41,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="pricing" className="home-services home-services-v14">
-        <div className="container-ed">
-          <div className="home-section-head v14-service-head">
-            <div><p className="eyebrow">Start here</p><h2 id="pricing-heading" className="home-display">Choose what<br />your car needs.</h2></div>
-            <p className="home-section-copy">Three details. No package maze. Pick the level of clean you want, then tell us what you drive.</p>
+      <section id="pricing" className="home-services home-services-v14 home-guided-quote">
+        <div className="container-ed guided-quote-grid">
+          <div>
+            <p className="eyebrow">Start here</p>
+            <h2 className="home-display">Tell us about your car.<br /><span>We’ll recommend the detail.</span></h2>
           </div>
-          <HomeBookingFlow />
-          <div className="home-text-links v14-service-links"><Link href="/our-services" className="link">Compare every service ↗</Link><Link href="/get-a-quote" className="link">Not sure what you need? Ask us</Link></div>
+          <div className="guided-quote-side">
+            <p>Choose your vehicle and tell us what it needs. We’ll recommend the right service and give you an exact price before you book.</p>
+            <Link href="/get-a-quote" className="btn btn-primary">Build my quote ↗</Link>
+            <Link href="/our-services" className="guided-service-link">Already know what you need? Explore services ↗</Link>
+          </div>
         </div>
       </section>
 
@@ -60,7 +59,8 @@ export default function Home() {
         <div className="work-v157-shell">
           <div className="work-v157-head">
             <p className="eyebrow">Real cars. Real driveways. Real crew.</p>
-            <h2 id="work-heading" className="home-display">The work speaks <span>for itself.</span></h2>
+            <h2 id="work-heading" className="home-display">This is what the work <span>actually looks like.</span></h2>
+            <p className="work-proof-copy">No stock photos and no mystery shop. Just our crew, our rigs, and real jobs around Decatur and Atlanta.</p>
           </div>
 
           <figure className="work-v157-lead">
@@ -112,16 +112,18 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-story">
-        <div className="container-ed story-grid">
-          <div className="story-copy">
-            <p className="eyebrow">The people behind the polish</p>
-            <h2 className="home-display">Built by students.<br /><span>Driven by detail.</span></h2>
-            <p>Every Detail started with one student, a set of supplies, and a driveway in Decatur. Today, our trained crew runs equipped mobile rigs across Atlanta without losing the thing that made the company work in the first place: caring about every part of the job.</p>
-            <div className="story-stats"><div><strong>3</strong><span>training tiers</span></div><div><strong>2</strong><span>equipped rigs</span></div><div><strong><LiveReviewCount /></strong><span>five-star reviews · <GoogleMapsAttribution /></span></div></div>
-            <Link href="/about-us" className="btn btn-secondary">Meet Every Detail ↗</Link>
+      <ReviewStoryScroll reviewCount={<LiveReviewCount />} />
+
+      <section className="home-how" aria-labelledby="how-heading">
+        <div className="container-ed">
+          <div className="how-head"><p className="eyebrow">How it works</p><h2 id="how-heading" className="home-display">We make detailing<br /><span>the easy part.</span></h2></div>
+          <div className="how-grid">
+            <article><b>01</b><h3>Get your quote</h3><p>Tell us what you drive and what it needs. We’ll recommend the right detail and show you the price.</p></article>
+            <article><b>02</b><h3>Pick a time</h3><p>Choose an available appointment that works for you. No back-and-forth required.</p></article>
+            <article><b>03</b><h3>We come to you</h3><p>Our mobile rig arrives with its own water, power, tools, and products. You provide the driveway.</p></article>
+            <article><b>04</b><h3>Get your car back</h3><p>We work through the detail and let you know when your car is ready to get back on the road.</p></article>
           </div>
-          <div className="story-photo"><Photo id="home-team" sizes="(min-width: 1024px) 52vw, 100vw" ratio="4/5" /></div>
+          <Link href="/get-a-quote" className="btn btn-primary how-cta">Get my quote ↗</Link>
         </div>
       </section>
 
@@ -169,24 +171,16 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-review">
-        <div className="container-ed review-stage">
-          <div className="review-label"><Stars className="h-5 w-5" /><span>Google review · <GoogleMapsAttribution /></span></div>
-          <blockquote>&ldquo;{featuredReview.text}&rdquo;</blockquote>
-          <div className="review-bottom"><strong>{featuredReview.author}</strong><a href={site.reviews.googleUrl} target="_blank" rel="noopener" className="link">Read <LiveReviewCount plus={false} /> reviews ↗</a></div>
-        </div>
-      </section>
-
       <section className="home-faq">
-        <div className="container-ed faq-layout"><div className="faq-title"><p className="eyebrow">Before we pull up</p><h2 className="home-display">Three things<br />people ask.</h2><p>Still wondering about something? Call or text us and a real person will answer.</p></div><div className="faq-list-home"><FaqList faqs={featuredFaqs} /><Link href="/our-services" className="link">See all service details ↗</Link></div></div>
+        <div className="container-ed faq-layout"><div className="faq-title"><p className="eyebrow">Before you book</p><h2 className="home-display">The stuff you’re<br />probably wondering.</h2><p>We’d rather answer the question before it becomes a reason not to book. Still unsure about something? Call or text us and a real person will answer.</p></div><div className="faq-list-home"><FaqList faqs={featuredFaqs} /><Link href="/our-services" className="link">See all service details ↗</Link></div></div>
       </section>
 
       <section className="final-book final-book-v12">
         <div className="container-ed final-inner">
           <p className="eyebrow">We come to you</p>
           <h2 className="final-title">Your driveway.<br /><span>Our detail shop.</span></h2>
-          <p>Pick your vehicle, choose a service, and we’ll bring everything else.</p>
-          <div className="final-actions"><TrackedLink href="/book" event="book_click" params={{ location: "home_final" }} className="btn btn-primary">Book your detail ↗</TrackedLink><Link href="/get-a-quote" className="final-quote">Get a quote</Link></div>
+          <p>Tell us what you drive. We’ll recommend the right detail, show you the exact price, and bring everything else.</p>
+          <div className="final-actions"><Link href="/get-a-quote" className="btn btn-primary">Get my quote ↗</Link><TrackedLink href="/book" event="book_click" params={{ location: "home_final" }} className="final-quote">Already know what you want? Book now</TrackedLink></div>
         </div>
       </section>
     </>
