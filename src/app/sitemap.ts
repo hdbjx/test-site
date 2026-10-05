@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ["/", 1],
     ["/our-services", 0.9],
     ["/mobile-car-detailing", 0.9],
+    ["/paint-correction", 0.9],
     ["/ceramic", 0.9],
     ["/detailplus", 0.8],
     ["/book", 0.8],
