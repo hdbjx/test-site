@@ -4,6 +4,21 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
+// Van HQ is a separate web app and reads this same public availability feed so
+// technicians see the exact slots shown on everydetail.co. This endpoint only
+// returns open appointment timestamps; it does not expose Supabase credentials
+// or permit writes.
+const availabilityHeaders = {
+  "Cache-Control": "no-store",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+export function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: availabilityHeaders });
+}
+
 const isoDate = (s: string | null) => (s && /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : null);
 
 type AvailabilityItem = { vehicle: VehicleId; service: ServiceId };
@@ -35,6 +50,7 @@ function parseItems(q: URLSearchParams): AvailabilityItem[] | null {
 
 /**
  * GET /api/availability?items=[{"vehicle":"sedan","service":"premium"}]&from=...&to=...
+ * GET /api/availability?preset=detailplus&from=...&to=...
  *
  * Multi-vehicle appointments use the normal crew requirement plus one additional
  * technician for the second vehicle, while reserving one rig by default. Davis
@@ -43,22 +59,26 @@ function parseItems(q: URLSearchParams): AvailabilityItem[] | null {
  */
 export async function GET(req: Request) {
   const q = new URL(req.url).searchParams;
-  const items = parseItems(q);
+  const preset = q.get("preset");
+  const isDetailPlus = preset === "detailplus";
+  const items = isDetailPlus ? [] : parseItems(q);
   const from = isoDate(q.get("from"));
   const to = isoDate(q.get("to"));
 
-  if (!items || !from || !to) {
-    return NextResponse.json({ error: "Bad request" }, { status: 400 });
+  if ((!isDetailPlus && !items) || !from || !to) {
+    return NextResponse.json({ error: "Bad request" }, { status: 400, headers: availabilityHeaders });
   }
 
   const days = (Date.parse(to) - Date.parse(from)) / 86_400_000;
   if (days < 0 || days > 35) {
-    return NextResponse.json({ error: "Range too large" }, { status: 400 });
+    return NextResponse.json({ error: "Range too large" }, { status: 400, headers: availabilityHeaders });
   }
 
-  const minutes = Math.max(...items.map(({ vehicle, service }) => PRICING[vehicle][service].minutes));
-  const baseCrew = Math.max(...items.map(({ service }) => services[service].crew));
-  const crew = baseCrew + Math.max(0, items.length - 1);
+  // Detail+ uses the same scheduler/capacity model as the public booking calendar,
+  // but has its own visit length instead of impersonating a longer public service.
+  const minutes = isDetailPlus ? 75 : Math.max(...items!.map(({ vehicle, service }) => PRICING[vehicle][service].minutes));
+  const baseCrew = isDetailPlus ? 2 : Math.max(...items!.map(({ service }) => services[service].crew));
+  const crew = isDetailPlus ? 2 : baseCrew + Math.max(0, items!.length - 1);
   const rigs = 1;
 
   try {
@@ -73,10 +93,10 @@ export async function GET(req: Request) {
     const slots = ((data as { slot_start: string }[]) ?? []).map((r) => new Date(r.slot_start).toISOString());
     return NextResponse.json(
       { slots, minutes, crew, rigs },
-      { headers: { "Cache-Control": "no-store" } },
+      { headers: availabilityHeaders },
     );
   } catch (err) {
     console.error("[availability]", err);
-    return NextResponse.json({ error: "Availability is unavailable right now." }, { status: 503 });
+    return NextResponse.json({ error: "Availability is unavailable right now." }, { status: 503, headers: availabilityHeaders });
   }
 }
