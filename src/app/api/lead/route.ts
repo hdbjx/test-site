@@ -117,6 +117,13 @@ export async function POST(req: Request) {
     );
   }
 
+  if (type === "booking" && fields.address && (!/\d/.test(fields.address) || !/\b(?:GA|Georgia)\b/i.test(fields.address) || !/\b\d{5}(?:-\d{4})?\b/.test(fields.address))) {
+    return NextResponse.json(
+      { ok: false, error: "Please enter the full service address, including street, city, state and ZIP code.", missing: ["address"] },
+      { status: 422 },
+    );
+  }
+
   if ((fields.phone.match(/\d/g) ?? []).length < 10) {
     console.warn("[lead] invalid phone");
     return NextResponse.json(

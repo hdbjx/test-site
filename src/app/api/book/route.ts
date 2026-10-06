@@ -10,6 +10,7 @@ import {
   type VehicleId,
 } from "@/data/services";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, isAddonId, isAddonIncludedInService, isPaintUpgradeId, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { getSession, vehicleName, type GarageVehicle } from "@/lib/supabase/account";
 import { sendBookingEmails } from "@/lib/email";
 import { upsertWebsiteContact } from "@/lib/website-contact";
@@ -23,6 +24,8 @@ type RawBookingItem = {
   vehicle?: unknown;
   service?: unknown;
   vehicleId?: unknown;
+  addons?: unknown;
+  paint?: unknown;
 };
 
 type BookingLine = {
@@ -35,6 +38,8 @@ type BookingLine = {
   price: number;
   minutes: number;
   crew: number;
+  addons: AddonId[];
+  paint: PaintUpgradeId[];
 };
 
 function rawItems(body: Record<string, unknown>): RawBookingItem[] {
@@ -61,8 +66,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
   }
 
-  if (str(body.company)) return NextResponse.json({ ok: true });
-
   const start = str(body.start);
   const address = str(body.address);
   const notes = str(body.notes, 2000);
@@ -73,7 +76,13 @@ export async function POST(req: Request) {
   }
 
   if (!address) {
-    return NextResponse.json({ ok: false, error: "Add the address where the cars will be.", field: "address" }, { status: 422 });
+    return NextResponse.json({ ok: false, error: "Add the full service address.", field: "address" }, { status: 422 });
+  }
+  if (!/\d/.test(address) || !/\b(?:GA|Georgia)\b/i.test(address) || !/\b\d{5}(?:-\d{4})?\b/.test(address)) {
+    return NextResponse.json(
+      { ok: false, error: "Enter the full address, including street, city, state and ZIP code.", field: "address" },
+      { status: 422 },
+    );
   }
 
   const session = await getSession();
@@ -92,9 +101,12 @@ export async function POST(req: Request) {
   if (!name) {
     return NextResponse.json({ ok: false, error: "Add your name.", field: "name" }, { status: 422 });
   }
-  if ((phone.match(/\d/g) ?? []).length < 10) {
+  let phoneDigits = phone.replace(/\D/g, "");
+  if (phoneDigits.length === 11 && phoneDigits.startsWith("1")) phoneDigits = phoneDigits.slice(1);
+  if (phoneDigits.length !== 10) {
     return NextResponse.json({ ok: false, error: "Enter a 10-digit phone number.", field: "phone" }, { status: 422 });
   }
+  phone = phoneDigits;
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
     return NextResponse.json({ ok: false, error: "Enter a valid email for your booking confirmation.", field: "email" }, { status: 422 });
   }
@@ -107,11 +119,16 @@ export async function POST(req: Request) {
     const service = str(item.service);
     let vehicle = str(item.vehicle);
     const savedVehicleId = str(item.vehicleId, 80) || null;
+    let addons = Array.isArray(item.addons) ? item.addons.filter(isAddonId).slice(0, 8) : [];
+    const paint = Array.isArray(item.paint) ? item.paint.filter(isPaintUpgradeId).slice(0, 1) : [];
     let label = "";
 
     if (!isServiceId(service)) {
       return NextResponse.json({ ok: false, error: `Choose a service for vehicle ${index + 1}.`, field: "vehicle" }, { status: 422 });
     }
+
+    // Never charge separately for an add-on already included in the selected package.
+    addons = addons.filter((addon) => !isAddonIncludedInService(service, addon));
 
     if (savedVehicleId) {
       if (session.state !== "customer") {
@@ -139,6 +156,8 @@ export async function POST(req: Request) {
 
     const pricing = PRICING[vehicle][service];
     const serviceInfo = services[service];
+    const addonPrice = addons.reduce((sum, id) => sum + (ADDON_PRICES[id] ?? 0), 0);
+    const paintPrice = paint.reduce((sum, id) => sum + PAINT_UPGRADES[id].prices[vehicle], 0);
     lines.push({
       vehicle,
       service,
@@ -146,9 +165,11 @@ export async function POST(req: Request) {
       vehicleLabel: label || vehicleLabel(vehicle),
       vehicleSize: vehicleLabel(vehicle),
       serviceName: serviceInfo.name,
-      price: pricing.price,
+      price: pricing.price + addonPrice + paintPrice,
       minutes: pricing.minutes,
       crew: serviceInfo.crew,
+      addons,
+      paint,
     });
   }
 
@@ -167,6 +188,21 @@ export async function POST(req: Request) {
   const crew = baseCrew + Math.max(0, lines.length - 1);
   const appointmentService = lines.length === 1 ? lines[0].serviceName : `${lines.length}-vehicle appointment`;
   const appointmentVehicle = lines.length === 1 ? lines[0].vehicleLabel : `${lines.length} vehicles`;
+  const selectedExtras = lines.flatMap((line, index) => {
+    const names = [
+      ...line.addons.map((id) => ADDON_LABELS[id]),
+      ...line.paint.map((id) => PAINT_UPGRADES[id].name),
+    ];
+    return names.length ? [`Vehicle ${index + 1} selected extras: ${names.join(", ")}`] : [];
+  });
+  const variablePricing = lines.flatMap((line) => line.addons.filter((id) => ADDON_PRICES[id] === null).map((id) => ADDON_LABELS[id]));
+  const hasPaintWork = lines.some((line) => line.paint.length > 0);
+  const operationalNotes = [
+    notes,
+    ...selectedExtras,
+    variablePricing.length ? `Price to confirm before service: ${[...new Set(variablePricing)].join(", ")}` : "",
+    hasPaintWork ? "Paint correction/coating selected from website quote. Confirm separate paint-production scheduling with client." : "",
+  ].filter(Boolean).join(" | ");
 
   const { data, error } = await supabaseAdmin().rpc("book_multi_vehicle_job", {
     p_client_id: clientId,
@@ -184,7 +220,7 @@ export async function POST(req: Request) {
       minutes: line.minutes,
       crew: line.crew,
     })),
-    p_notes: notes || null,
+    p_notes: operationalNotes || null,
     p_source: "website",
   });
 
@@ -194,6 +230,11 @@ export async function POST(req: Request) {
     }
     console.error("[book]", error);
     return NextResponse.json({ ok: false, error: "We couldn't book that. Please call or text us." }, { status: 500 });
+  }
+
+  if (typeof data !== "string" || !data) {
+    console.error("[book] booking RPC returned no job id", data);
+    return NextResponse.json({ ok: false, error: "We couldn't verify that your booking was created. Please try again or call/text us." }, { status: 500 });
   }
 
   // A confirmed website booking closes any open CRM opportunity for the same
@@ -217,7 +258,7 @@ export async function POST(req: Request) {
     vehicle: appointmentVehicle,
     start: new Date(start).toISOString(),
     price: totalPrice,
-    notes,
+    notes: operationalNotes,
     lines: lines.map((line) => ({ vehicle: line.vehicleLabel, service: line.serviceName, price: line.price })),
   }).catch((emailError) => {
     console.error("[book] email", emailError);
@@ -236,7 +277,7 @@ export async function POST(req: Request) {
         phone,
         email,
         address,
-        notes,
+        notes: operationalNotes,
         service: appointmentService,
         vehicle: appointmentVehicle,
         vehicles: lines.map((line) => ({ vehicle: line.vehicleLabel, service: line.serviceName, price: line.price })),

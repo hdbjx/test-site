@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
-import { bookingHref } from "@/data/booking";
 import { recommenderVehicles, type RecommenderVehicle } from "@/data/recommenderVehicles";
-import { PRICING, services, vehicleLabel, type ServiceId, type VehicleId } from "@/data/services";
+import { PRICING, services, vehicleLabel, type ServiceId } from "@/data/services";
+import { ADDON_PRICES, PAINT_UPGRADES, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { track } from "@/lib/analytics";
 import { submitLead } from "@/lib/submit";
 
@@ -16,45 +16,18 @@ const CONDITIONS = [
   { value: 5, label: "Wrecked", desc: "Heavy use or a serious mess. The kind of job that takes real time and skill." },
 ] as const;
 
-type ConcernId = "pet" | "odor" | "stains" | "exterior" | "headlights" | "selling";
+type ConcernId = "pet" | "odor" | "carpetStains" | "seatStains" | "exterior" | "headlights" | "selling";
 const CONCERNS: Array<{ id: ConcernId; label: string; sub: string }> = [
   { id: "pet", label: "Pet Hair", sub: "Fur on seats or carpet" },
   { id: "odor", label: "Bad Odor", sub: "Smoke, food, pets, mildew" },
-  { id: "stains", label: "Stains", sub: "Seats, carpet, or headliner" },
+  { id: "carpetStains", label: "Carpet Stains", sub: "Stains or spills in the floor carpets" },
+  { id: "seatStains", label: "Seat Stains", sub: "Stains or spills in fabric seats" },
   { id: "exterior", label: "Dull Paint", sub: "Faded, scratched, or oxidized" },
   { id: "headlights", label: "Cloudy Headlights", sub: "Yellowed or foggy lenses" },
   { id: "selling", label: "Selling Soon", sub: "Want top dollar" },
 ];
 
-type AddonId = "Sealant" | "Pet Hair Removal" | "Clay Bar" | "Plastic Restoration" | "Headlight Restoration" | "Engine Bay" | "Extraction" | "Odor Removal";
 type Addon = { id: AddonId; name: string; price: string; recommended: boolean };
-
-const ADDON_PRICES: Record<AddonId, number | null> = {
-  Sealant: 60,
-  "Pet Hair Removal": 40,
-  "Clay Bar": 95,
-  "Plastic Restoration": 40,
-  "Headlight Restoration": 70,
-  "Engine Bay": 70,
-  Extraction: null,
-  "Odor Removal": null,
-};
-
-type PaintUpgradeId = "polish" | "ceramic";
-const PAINT_UPGRADES: Record<PaintUpgradeId, { name: string; tag: string; why: string; prices: Record<VehicleId, number> }> = {
-  polish: {
-    name: "Enhancement Polish",
-    tag: "Paint correction",
-    why: "A single-stage machine polish removes light swirl marks and water spot etching, restoring gloss and optical clarity. Scheduled as a separate appointment after your detail.",
-    prices: { sedan: 395, smallSUV: 445, smallTruck: 445, largeSUV: 525, largeTruck: 525, minivan: 495 },
-  },
-  ceramic: {
-    name: "2-Year Ceramic Coating",
-    tag: "Long-term protection",
-    why: "A nano-ceramic coating bonds to the clear coat to create a durable hydrophobic layer rated for two years. It pairs with the Enhancement Polish for maximum results.",
-    prices: { sedan: 895, smallSUV: 995, smallTruck: 995, largeSUV: 1095, largeTruck: 1095, minivan: 1020 },
-  },
-};
 
 type Recommendation = {
   service: ServiceId;
@@ -69,7 +42,8 @@ function recommendation(condition: number, concerns: Set<ConcernId>): Recommenda
   const selling = concerns.has("selling");
   const hasPet = concerns.has("pet");
   const hasOdor = concerns.has("odor");
-  const hasStain = concerns.has("stains");
+  const hasCarpetStains = concerns.has("carpetStains");
+  const hasSeatStains = concerns.has("seatStains");
   const hasExt = concerns.has("exterior");
   const hasHead = concerns.has("headlights");
   let service: ServiceId;
@@ -80,47 +54,54 @@ function recommendation(condition: number, concerns: Set<ConcernId>): Recommenda
 
   if (selling) {
     service = "factoryReset";
-    why = "Pre-sale preparation is one of the highest-ROI details we offer. A Factory Reset is fully inclusive: intensive interior restoration with hot water extraction, odor treatment, stain removal, pet hair removal, and APC breakdown of every panel, plus a complete decontamination exterior wash, clay bar, protective sealant, and plastic restoration. A vehicle that looks and smells clean commands more at sale and moves faster.";
+    why = "Pre-sale preparation is one of the highest-ROI details we offer. A Factory Reset includes intensive interior restoration with hot water extraction, stain removal, pet hair removal, and APC breakdown of every panel, plus a complete decontamination exterior wash, clay bar, protective sealant, and plastic restoration. Odor Removal is available separately when needed.";
+    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Removal", price: "+$60", recommended: true });
+    addons.push({ id: "Engine Bay", name: "Engine Bay", price: "+$70", recommended: false });
   } else if (condition === 1) {
     service = "maintenance";
     upgradeService = "premium";
     why = "Your vehicle is in great shape. Surface contamination is minimal and the interior just needs a light refresh. A Maintenance Detail covers a full interior wipe-down, vacuum, and a contact wash with pH-neutral shampoo finished with paint protection. Quick, thorough, and priced to keep clean cars clean.";
     upgradeMessage = "Want to go deeper? Our Premium Detail adds a full two-bucket decontamination wash, APC treatment on all interior panels, and a protective sealant coat.";
     if (hasPet) addons.push({ id: "Pet Hair Removal", name: "Pet Hair Removal", price: "+$40", recommended: true });
-    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Elimination", price: "$130–$200", recommended: true });
-    if (hasStain) addons.push({ id: "Extraction", name: "Hot Water Extraction", price: "$60–$120", recommended: true });
+    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Removal", price: "+$60", recommended: true });
+    if (hasCarpetStains) addons.push({ id: "Carpet Extraction", name: "Floor Carpet Extraction", price: "+$90", recommended: true });
+    if (hasSeatStains) addons.push({ id: "Seat Extraction", name: "Seat Extraction", price: "+$60", recommended: true });
     if (hasHead) addons.push({ id: "Headlight Restoration", name: "Headlight Restoration", price: "+$70", recommended: true });
-    if (hasExt) addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$70–$120", recommended: true });
+    if (hasExt) addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$95", recommended: true });
     if (!hasExt) addons.push({ id: "Sealant", name: "Protective Sealant", price: "+$60", recommended: false });
   } else if (condition === 2) {
     service = "premium";
     why = "Your car is in good shape with normal daily wear. A Premium Detail is the right fit: full two-bucket contact wash, deep interior clean with APC on all surfaces, multi-pass vacuum with drill-brush agitation on mats, seat and door jamb treatment, plus a protective sealant finish.";
     if (hasPet) addons.push({ id: "Pet Hair Removal", name: "Pet Hair Removal", price: "+$40", recommended: true });
-    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Elimination", price: "$130–$200", recommended: true });
-    if (hasStain) addons.push({ id: "Extraction", name: "Hot Water Extraction", price: "$60–$120", recommended: true });
+    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Removal", price: "+$60", recommended: true });
+    if (hasCarpetStains) addons.push({ id: "Carpet Extraction", name: "Floor Carpet Extraction", price: "+$90", recommended: true });
+    if (hasSeatStains) addons.push({ id: "Seat Extraction", name: "Seat Extraction", price: "+$60", recommended: true });
     if (hasHead) addons.push({ id: "Headlight Restoration", name: "Headlight Restoration", price: "+$70", recommended: true });
     if (hasExt) {
-      addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$70–$120", recommended: true });
+      addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$95", recommended: true });
       addons.push({ id: "Plastic Restoration", name: "Trim & Plastic Restoration", price: "+$40", recommended: false });
     }
   } else if (condition === 3) {
     service = "premium";
     upgradeService = "factoryReset";
     why = "With moderate soiling, embedded particulates in carpet fibers, surface oxidation on trim, and general buildup in high-contact areas, a Premium Detail gives us the depth to properly address each surface. APC on all interior panels, multi-pass vacuum, carpet treatment, a full decontamination exterior wash, and protective sealant are included.";
-    upgradeMessage = "If you want full stain remediation, odor treatment, clay bar, plastic restoration, and every service in one all-in job, our Factory Reset covers everything with no extras needed.";
+    upgradeMessage = "If you want full stain remediation, extraction, clay bar, plastic restoration, and our deepest overall clean, Factory Reset is the right step up. Odor Removal and Engine Bay remain optional add-ons.";
     if (hasPet) addons.push({ id: "Pet Hair Removal", name: "Pet Hair Removal", price: "+$40", recommended: true });
-    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Elimination", price: "$130–$200", recommended: true });
-    if (hasStain) addons.push({ id: "Extraction", name: "Hot Water Extraction", price: "$60–$120", recommended: true });
+    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Removal", price: "+$60", recommended: true });
+    if (hasCarpetStains) addons.push({ id: "Carpet Extraction", name: "Floor Carpet Extraction", price: "+$90", recommended: true });
+    if (hasSeatStains) addons.push({ id: "Seat Extraction", name: "Seat Extraction", price: "+$60", recommended: true });
     if (hasHead) addons.push({ id: "Headlight Restoration", name: "Headlight Restoration", price: "+$70", recommended: true });
     if (hasExt) {
-      addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$70–$120", recommended: true });
+      addons.push({ id: "Clay Bar", name: "Clay Bar Decontamination", price: "+$95", recommended: true });
       addons.push({ id: "Plastic Restoration", name: "Trim & Plastic Restoration", price: "+$40", recommended: false });
     }
   } else {
     service = "factoryReset";
     why = condition === 5
-      ? "At this level of buildup, heavy contamination, biological matter in seams, deeply embedded staining, and significant exterior oxidation, only a Factory Reset has the scope to do the job right. Full hot water extraction, drill-brush agitation on all fabric, APC breakdown of every interior surface, odor treatment, pet hair removal, pre-wash, two-bucket contact wash, clay bar, protective sealant, and plastic restoration are included."
-      : "Your car needs a proper reset. A Factory Reset is our most comprehensive service: intensive interior restoration with hot water extraction, odor treatment, stain and pet hair removal, APC on every surface, plus a full decontamination exterior wash, clay bar, protective sealant, and plastic restoration. Everything is included, with no add-ons needed.";
+      ? "At this level of buildup, only a Factory Reset has the scope to do the job right. Full hot water extraction, drill-brush agitation on fabric, APC breakdown of interior surfaces, pet hair removal, pre-wash, two-bucket contact wash, clay bar, protective sealant, and plastic restoration are included. Odor Removal is available separately when needed."
+      : "Your car needs a proper reset. A Factory Reset is our most comprehensive service: intensive interior restoration with hot water extraction, stain and pet hair removal, APC on interior surfaces, plus a full decontamination exterior wash, clay bar, protective sealant, and plastic restoration. Odor Removal and Engine Bay are the only optional add-ons.";
+    if (hasOdor) addons.push({ id: "Odor Removal", name: "Odor Removal", price: "+$60", recommended: true });
+    addons.push({ id: "Engine Bay", name: "Engine Bay", price: "+$70", recommended: false });
   }
 
   return { service, why, addons, upgradeService, upgradeMessage, preSelectPaint: hasExt && !selling };
@@ -160,9 +141,10 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
   const matches = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (query.length < 2 || vehicle) return [];
+    const vehicleQuery = query.replace(/\b(?:19|20)\d{2}\b/g, "").replace(/\s+/g, " ").trim();
+    if (vehicleQuery.length < 2 || vehicle) return [];
     return recommenderVehicles
-      .filter((item) => `${item.make} ${item.model}`.toLowerCase().includes(query) || item.make.toLowerCase().startsWith(query) || item.model.toLowerCase().startsWith(query))
+      .filter((item) => `${item.make} ${item.model}`.toLowerCase().includes(vehicleQuery) || item.make.toLowerCase().startsWith(vehicleQuery) || item.model.toLowerCase().startsWith(vehicleQuery))
       .slice(0, 10);
   }, [search, vehicle]);
 
@@ -281,6 +263,18 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function selectedBookingHref() {
+    if (!vehicle || !service || !result) return "/book";
+    const q = new URLSearchParams();
+    q.set("vehicle", vehicle.vehicle);
+    q.set("service", service);
+    const addonIds = result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.id);
+    if (addonIds.length) q.set("addons", addonIds.join(","));
+    if (paint.size) q.set("paint", [...paint].join(","));
+    q.set("from", "quote");
+    return `/book?${q.toString()}`;
+  }
+
   async function sendBuild() {
     if (!vehicle || !condition || !service || !result) return;
     if (!name.trim()) { setError("Enter your name so we know who the build belongs to."); return; }
@@ -327,6 +321,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       setSent(true);
       setQuoteDirty(false);
       track("quote_submit", { interest: service, source: "recommender" });
+      track("quote_price_reveal", { vehicle: vehicle.vehicle, service, total });
       if (paint.size) track("paint_inquiry", { location: "recommender", interest: [...paint].join(",") });
     } else {
       setError(response.error);
@@ -339,14 +334,15 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     const selectedAddonNames = result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.name);
     const selectedPaintNames = [...paint].map((id) => PAINT_UPGRADES[id].name);
     const extrasSummary = [...selectedAddonNames, ...selectedPaintNames];
+    const vehicleName = `${vehicle.make} ${vehicle.model}`;
 
     return (
       <div ref={resultRef} className="quote-rec-result">
         <button type="button" onClick={reset} className="quote-rec-back">← Start over</button>
 
-        <div className="quote-rec-result-grid quote-rec-result-grid-conversion">
+        <div className={`quote-rec-result-grid quote-rec-result-grid-conversion ${sent ? "is-revealed" : "is-gated"}`}>
           <section className="quote-rec-result-main">
-            <p className="eyebrow">We&rsquo;d recommend</p>
+            <p className="eyebrow">Recommended for your {vehicle.model}</p>
             <h2>{activeService.name}</h2>
             <p className="quote-rec-result-summary">{activeService.summary}</p>
 
@@ -355,58 +351,72 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
             </div>
 
             <details className="quote-rec-why-details">
-              <summary>Why we recommend this</summary>
+              <summary>Why this fits your {vehicle.model}</summary>
               <p>{result.why}</p>
             </details>
           </section>
 
-          <aside className="quote-rec-price-card">
-            <span>Your price</span>
-            <strong>{totalDisplay}</strong>
-            <small>{vehicle.make} {vehicle.model} · {vehicleLabel(vehicle.vehicle)}</small>
-            {extrasSummary.length > 0 && <p>Includes recommended: {extrasSummary.join(", ")}</p>}
-            <b>Upfront pricing. We&rsquo;ll confirm everything before your appointment.</b>
-          </aside>
+          {sent ? (
+            <aside className="quote-rec-price-card quote-rec-price-reveal" aria-live="polite">
+              <span>Your exact quote</span>
+              <strong>{totalDisplay}</strong>
+              <small>{vehicleName} · {vehicleLabel(vehicle.vehicle)}</small>
+              {extrasSummary.length > 0 && <p>Includes recommended: {extrasSummary.join(", ")}</p>}
+              <b>Upfront pricing. We&rsquo;ll confirm everything before your appointment.</b>
+            </aside>
+          ) : (
+            <aside className="quote-rec-ready-card">
+              <span>Your personalized quote</span>
+              <strong>Ready</strong>
+              <p>We&rsquo;ve matched your {vehicle.model} to the service we&rsquo;d recommend. Your exact price is ready to reveal.</p>
+              <div className="quote-rec-ready-lock">Exact price · Ready now</div>
+            </aside>
+          )}
         </div>
 
         {!sent ? (
-          <section className="quote-rec-save-card">
+          <section className="quote-rec-save-card quote-rec-unlock-card">
             <div className="quote-rec-save-copy">
-              <p className="eyebrow">Save your quote</p>
-              <h3>Keep this recommendation and choose what you want to do next.</h3>
-              <p>We&rsquo;ll save your vehicle, recommendation and price so our team can help if you have questions or want to book later.</p>
+              <p className="eyebrow">Your quote is ready</p>
+              <h3>Where should we send your {vehicle.model} quote?</h3>
+              <p>Enter your info once. We&rsquo;ll show your exact price immediately on this page and save the recommendation in case you want help later.</p>
+              <div className="quote-rec-value-list">
+                <span>✓ Exact price for your vehicle</span>
+                <span>✓ Personalized service recommendation</span>
+                <span>✓ Instant booking after you see the price</span>
+              </div>
             </div>
             <div className="quote-rec-contact">
               <div className="quote-rec-contact-grid">
-                <label><span>Name</span><input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" required /></label>
-                <label><span>Phone</span><input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" required /></label>
+                <label><span>First name</span><input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" required /></label>
+                <label><span>Mobile number</span><input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" required /></label>
                 <label><span>Email</span><input className="field" value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="email" required /></label>
               </div>
               {error && <p className="quote-rec-error" role="alert">{error}</p>}
               <button type="button" className="btn btn-primary quote-rec-save-button" onClick={sendBuild} disabled={sending}>
-                {sending ? "Saving..." : "Save my quote ↗"}
+                {sending ? "Building your quote..." : "Show my exact price ↗"}
               </button>
-              <p className="quote-rec-save-note">No commitment required. Your quote goes directly to the Every Detail team.</p>
+              <p className="quote-rec-save-note">No spam and no commitment. We&rsquo;ll only use this to help with your detail.</p>
             </div>
           </section>
         ) : (
           <>
             <section className="quote-rec-book-card" role="status">
               <div>
-                <span>Quote saved</span>
-                <h3>Your {activeService.name} quote is ready.</h3>
-                <p>Ready to get it on the calendar? Choose a time that works for you.</p>
+                <span>Quote ready</span>
+                <h3>Your {vehicle.model} is matched with {activeService.name}.</h3>
+                <p>Your exact price is above. If it looks good, the next step is simply choosing a time.</p>
               </div>
               <div className="quote-rec-book-actions">
                 <Link
                   className="btn btn-primary"
-                  href={bookingHref(vehicle.vehicle, service)}
+                  href={selectedBookingHref()}
                   onClick={() => track("book_click", { location: "saved_quote", vehicle: vehicle.vehicle, service })}
                 >
-                  Book this detail ↗
+                  See available times ↗
                 </Link>
                 <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>
-                  {customizeExpanded ? "Hide customization ↑" : "Customize your detail +"}
+                  {customizeExpanded ? "Hide customization ↑" : "Customize my detail +"}
                 </button>
               </div>
             </section>
@@ -500,7 +510,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
             </div>
           ) : (
             <div className="quote-rec-search-wrap">
-              <input className="field quote-rec-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search Honda, F-150, RAV4..." autoComplete="off" aria-label="Search vehicle make or model" />
+              <input className="field quote-rec-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search RAV4, Honda Pilot, F-150..." autoComplete="off" aria-label="Search vehicle make or model" />
               {search.trim().length >= 2 && (
                 <div className="quote-rec-search-results">
                   {matches.length ? matches.map((item, index) => (
@@ -547,7 +557,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
               );
             })}
           </div>
-          <button type="button" className="btn btn-primary quote-rec-build" disabled={!vehicle || !condition} onClick={buildResult}>See my price ↗</button>
+          <button type="button" className="btn btn-primary quote-rec-build" disabled={!vehicle || !condition} onClick={buildResult}>Build my recommendation ↗</button>
         </div>
       </section>
     </div>

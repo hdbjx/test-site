@@ -56,7 +56,7 @@ export function localBusinessSchema() {
   };
 }
 
-export function serviceSchema(s: { name: string; description: string; path: string; lowPrice?: number; highPrice?: number }) {
+export function serviceSchema(s: { name: string; description: string; path: string; lowPrice?: number; highPrice?: number; areaServed?: string[] }) {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -65,7 +65,7 @@ export function serviceSchema(s: { name: string; description: string; path: stri
     serviceType: s.name,
     url: abs(s.path),
     provider: { "@id": businessId },
-    areaServed: areas.map((a) => `${a.name}, GA`),
+    areaServed: (s.areaServed ?? areas.map((a) => `${a.name}, GA`)).map((name) => ({ "@type": "Place", name })),
     ...(s.lowPrice
       ? {
           offers: {

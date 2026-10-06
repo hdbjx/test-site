@@ -9,9 +9,10 @@ export const primaryNav: NavItem[] = [
 ];
 
 export const serviceNav: NavItem[] = [
+  { label: "Mobile Car Detailing", href: "/mobile-car-detailing" },
   { label: "Detailing Services", href: "/our-services" },
-  { label: "Paint Correction", href: "/ceramic#paint-correction" },
-  { label: "Ceramic Coatings", href: "/ceramic#ceramic-coating" },
+  { label: "Paint Correction", href: "/paint-correction" },
+  { label: "Ceramic Coatings", href: "/ceramic" },
 ];
 
 export const moreNav: NavItem[] = [
@@ -26,7 +27,7 @@ export const footerServiceLinks: NavItem[] = [
   { label: "Maintenance Detail", href: "/our-services#maintenance-detail" },
   { label: "Premium Detail", href: "/our-services#premium-detail" },
   { label: "Factory Reset", href: "/our-services#factory-reset" },
-  { label: "Paint Correction", href: "/ceramic#paint-correction" },
-  { label: "Ceramic Coating", href: "/ceramic#ceramic-coating" },
+  { label: "Paint Correction", href: "/paint-correction" },
+  { label: "Ceramic Coating", href: "/ceramic" },
   { label: "Detail+ Membership", href: "/detailplus" },
 ];

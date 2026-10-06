@@ -1,7 +1,8 @@
 import { CtaBand } from "@/components/CtaBand";
+import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
-import { reviewCountLabel, site } from "@/data/site";
+import { site } from "@/data/site";
 import { team } from "@/data/team";
 import { pageMetadata } from "@/lib/seo";
 
@@ -10,7 +11,6 @@ export const metadata = pageMetadata({
   description:
     "The story behind Every Detail, a student-run mobile detailing company built in Decatur, Georgia.",
   path: "/about-us",
-  image: "about-team",
 });
 
 const standards = [
@@ -24,7 +24,7 @@ const milestones = [
   ["8TH GRADE", "The beginning", "Every Detail started at the end of 8th grade with a small set of supplies and a simple idea: take the details more seriously."],
   ["THE TEAM", "One person became a crew", `The company grew into a student team of ${team.length}, with training tiers, managers and systems built around doing the work consistently.`],
   ["2025", site.award.short, "Decatur readers recognized Every Detail for car cleaning, a milestone that meant a lot for a company built in the community."],
-  ["TODAY", `${reviewCountLabel} five-star reviews`, "Two mobile rigs, recurring clients and a growing operation, while keeping the student-run model at the center of the company."],
+  ["TODAY", "__LIVE_REVIEWS__", "Two mobile rigs, recurring clients and a growing operation, while keeping the student-run model at the center of the company."],
 ];
 
 export default function AboutPage() {
@@ -61,8 +61,8 @@ export default function AboutPage() {
 
       <section className="about-v2-proof">
         <div className="about-v2-shell about-v2-proof-grid">
-          <div><strong>{reviewCountLabel}</strong><span>FIVE-STAR GOOGLE REVIEWS</span></div>
-          <div><strong>2</strong><span>FULLY EQUIPPED MOBILE RIGS</span></div>
+          <div><strong><LiveReviewCount /></strong><span>FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span></div>
+          <div><strong>2</strong><span>100% ELECTRIC MOBILE RIGS</span></div>
           <div><strong>{team.length}</strong><span>STUDENTS ON THE TEAM</span></div>
           <div><strong>2025</strong><span>BEST OF DECATURISH</span></div>
         </div>
@@ -106,7 +106,7 @@ export default function AboutPage() {
           <p className="about-v2-kicker">THE STORY SO FAR</p>
           <h2>Still building.</h2>
           <div className="about-v2-milestones">
-            {milestones.map(([year,title,body]) => <article key={year}><span>{year}</span><h3>{title}</h3><p>{body}</p></article>)}
+            {milestones.map(([year,title,body]) => <article key={year}><span>{year}</span><h3>{title === "__LIVE_REVIEWS__" ? <><LiveReviewCount /> five-star reviews <GoogleMapsAttribution /></> : title}</h3><p>{body}</p></article>)}
           </div>
         </div>
       </section>

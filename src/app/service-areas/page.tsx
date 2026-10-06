@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CtaBand } from "@/components/CtaBand";
+import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { Photo } from "@/components/Photo";
 import { areas } from "@/data/areas";
 import { reviewCountLabel, site } from "@/data/site";
@@ -7,7 +8,7 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Mobile Car Detailing Service Areas Near Decatur, GA | Every Detail",
-  description: `Every Detail brings mobile car detailing to Decatur and nearby Atlanta neighborhoods. Own power and water, online pricing and ${reviewCountLabel} five-star reviews.`,
+  description: `Every Detail brings mobile car detailing to Decatur and nearby Atlanta neighborhoods. 100% electric mobile rigs with their own power and water, online pricing and ${reviewCountLabel} five-star reviews.`,
   path: "/service-areas",
 });
 
@@ -26,7 +27,7 @@ export default function ServiceAreas() {
         </div>
       </section>
 
-      <section className="areas-v2-proof"><div className="areas-v2-shell"><span>BASED IN DECATUR</span><span>{reviewCountLabel} FIVE-STAR REVIEWS</span><span>POWER + WATER INCLUDED</span><span>100% MOBILE</span></div></section>
+      <section className="areas-v2-proof"><div className="areas-v2-shell"><span>BASED IN DECATUR</span><span><LiveReviewCount /> FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span><span>POWER + WATER INCLUDED</span><span>100% ELECTRIC RIGS</span></div></section>
 
       <section className="areas-v2-list">
         <div className="areas-v2-shell">

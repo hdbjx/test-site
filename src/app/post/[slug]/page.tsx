@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
 import { PostCta } from "@/components/PostCta";
 import { formatDate, getAllPosts, getPost, relatedPosts } from "@/lib/blog";
@@ -29,7 +30,7 @@ export default async function PostPage({ params }: Params) {
   return (
     <main className="post-v2">
       <article>
-        <header className="post-v2-hero"><div className="post-v2-shell"><Link href="/blog" className="post-v2-back">← SHINE ON</Link><p className="post-v2-meta">{post.category} / <time dateTime={post.date}>{formatDate(post.date)}</time> / {post.readingMinutes} MIN READ</p><h1>{post.title}</h1>{post.description && <p className="post-v2-deck">{post.description}</p>}</div></header>
+        <header className="post-v2-hero"><div className="post-v2-shell"><div className="mb-5"><Breadcrumbs items={[{ name: "Shine On", path: "/blog" }, { name: post.title, path: `/post/${slug}` }]} /></div><Link href="/blog" className="post-v2-back">← SHINE ON</Link><p className="post-v2-meta">{post.category} / <time dateTime={post.date}>{formatDate(post.date)}</time> / {post.readingMinutes} MIN READ</p><h1>{post.title}</h1>{post.description && <p className="post-v2-deck">{post.description}</p>}</div></header>
         <div className="post-v2-shell post-v2-body"><aside><span>SHINE ON</span><p>Field notes from the Every Detail crew.</p></aside><div><div className="prose-ed" dangerouslySetInnerHTML={{ __html: first }} />{second && <><PostCta cta={post.cta}/><div className="prose-ed" dangerouslySetInnerHTML={{ __html: second }} /></>}{!second && <PostCta cta={post.cta}/>}</div></div>
       </article>
       {related.length>0 && <section className="post-v2-related"><div className="post-v2-shell"><p className="post-v2-label">KEEP READING</p><div>{related.map((p,i)=><Link href={`/post/${p.slug}`} key={p.slug}><span>{String(i+1).padStart(2,"0")}</span><div><small>{p.category}</small><h2>{p.title}</h2></div><b>↗</b></Link>)}</div></div></section>}
