@@ -47,6 +47,9 @@ function getQuoteMessage(fields: Record<string, string>) {
 
 async function saveQuoteToCrm(fields: Record<string, string>, clientId: string) {
   const parsedYear = Number.parseInt(fields.vehicleYear, 10);
+  const parsedQuote = Number(fields.quote);
+  const quoteAmount = Number.isFinite(parsedQuote) && parsedQuote >= 0 ? parsedQuote : null;
+
   const { data, error } = await supabaseAdmin().rpc("crm_upsert_website_quote", {
     p_full_name: fields.name,
     p_phone: fields.phone,
@@ -58,6 +61,11 @@ async function saveQuoteToCrm(fields: Record<string, string>, clientId: string) 
     p_vehicle_size: nullable(fields.vehicleSize),
     p_requested_service: nullable(fields.service ?? fields.interest),
     p_message: getQuoteMessage(fields),
+    // Persist the exact total the customer saw. Do not recalculate pricing here.
+    p_quote_amount: quoteAmount,
+    // The recommender already supplies the selected add-ons / paint upgrades here,
+    // which gives CRM managers the context behind the final quoted total.
+    p_internal_notes: nullable(fields.internalNotes),
   });
   if (error) throw error;
   const leadId = typeof data === "string" ? data : String(data ?? "");
@@ -65,20 +73,7 @@ async function saveQuoteToCrm(fields: Record<string, string>, clientId: string) 
 
   // The CRM RPC owns deduplication and sales workflow. The canonical website
   // contact is linked afterward so CRM conversion never has to create a copy.
-  // Persist the exact customer-visible quote from the recommender. Do not
-  // recalculate it here, because CRM must show the same amount the customer saw.
-  const parsedQuote = fields.quote ? Number(fields.quote) : null;
-  const quoteAmount = parsedQuote !== null && Number.isFinite(parsedQuote) && parsedQuote >= 0
-    ? parsedQuote
-    : null;
-
-  const linked = await supabaseAdmin()
-    .from("crm_leads")
-    .update({
-      converted_client_id: clientId,
-      ...(quoteAmount !== null ? { quote_amount: quoteAmount } : {}),
-    })
-    .eq("id", leadId);
+  const linked = await supabaseAdmin().from("crm_leads").update({ converted_client_id: clientId }).eq("id", leadId);
   if (linked.error) throw linked.error;
   return leadId;
 }
