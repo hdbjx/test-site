@@ -9,7 +9,7 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://www.everydetail.co",
   tagline: "Student-run. Professionally detailed.",
   description:
-    "Mobile car detailing in Decatur, GA and nearby Atlanta neighborhoods. A trained, student-run team that brings its own power and water to your driveway.",
+    "Mobile car detailing in Decatur, GA and nearby Atlanta neighborhoods. A trained, student-run team with 100% electric mobile rigs that bring their own power and water to your driveway.",
 
   phone: {
     display: "(404) 855-0672",

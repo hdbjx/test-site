@@ -27,7 +27,7 @@ export default function DetailPlusPage() {
               <div className="plus-brand-actions"><a href="#build" className="plus-brand-btn plus-brand-btn-light">Build my plan ↗</a><a href="#how" className="plus-brand-text-link">How it works ↓</a></div>
             </div>
             <figure className="plus-brand-photo">
-              <Photo id="work-davis-0909" priority ratio="4/5" sizes="(min-width: 900px) 34vw, 94vw"/>
+              <Photo id="work-davis-0909" priority sizes="(min-width: 900px) 34vw, 94vw"/>
               <div className="plus-brand-stamp plus-brand-hero-stamp">DETAIL+<br/>REPEAT CARE</div>
               <figcaption>YOUR DRIVEWAY / OUR STANDARD / ON REPEAT</figcaption>
             </figure>

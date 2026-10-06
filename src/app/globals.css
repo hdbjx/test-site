@@ -3875,20 +3875,26 @@ body:has(.paint-simple-hero) .paint-simple-hero{margin-top:0}
 .plus-brand-lede{max-width:39rem;margin-top:1.35rem;font-size:clamp(1rem,1.1vw,1.12rem)}
 .plus-brand-actions{margin-top:1.65rem}
 .plus-brand-photo{
-  align-self:stretch;
-  min-height:29rem;
+  align-self:center;
+  min-height:0;
   margin-right:calc((100vw - min(88vw,1340px))/ -2);
   border:0;
   border-left:3px solid var(--plus-black);
   box-shadow:none;
   overflow:hidden;
 }
-.plus-brand-photo>div:first-child{height:100%!important}
-.plus-brand-photo img{height:100%!important;object-fit:cover;object-position:center 55%}
+.plus-brand-photo>div:first-child{height:auto!important;aspect-ratio:2/3!important}
+.plus-brand-photo img{height:100%!important;object-fit:cover;object-position:center center}
 .plus-brand-hero-stamp{position:absolute;left:-2.4rem;top:2.1rem;z-index:2;background:var(--plus-ox)}
 .plus-brand-photo figcaption{right:auto;left:0}
 .plus-brand-rule{margin-top:0;border-top:2px solid var(--plus-coral);border-bottom:0}
 .plus-brand-rule span{padding:1rem .6rem;font-size:.62rem}
+
+
+@media(max-width:900px){
+  .plus-brand-photo>div:first-child{height:100%!important;aspect-ratio:auto!important}
+  .plus-brand-photo img{object-position:center 55%}
+}
 
 /* Inner-page first screens: sticky header already occupies its own height. Do not add another header-sized void. */
 .services-v161 .edu-hero{padding-top:clamp(4.2rem,6vw,6.5rem);padding-bottom:clamp(4rem,5.5vw,5.5rem)}

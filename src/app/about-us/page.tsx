@@ -62,7 +62,7 @@ export default function AboutPage() {
       <section className="about-v2-proof">
         <div className="about-v2-shell about-v2-proof-grid">
           <div><strong><LiveReviewCount /></strong><span>FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span></div>
-          <div><strong>2</strong><span>FULLY EQUIPPED MOBILE RIGS</span></div>
+          <div><strong>2</strong><span>100% ELECTRIC MOBILE RIGS</span></div>
           <div><strong>{team.length}</strong><span>STUDENTS ON THE TEAM</span></div>
           <div><strong>2025</strong><span>BEST OF DECATURISH</span></div>
         </div>

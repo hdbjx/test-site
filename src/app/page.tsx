@@ -11,7 +11,7 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Book Mobile Car Detailing in Decatur, GA | Every Detail",
-  description: `Professional mobile detailing at your driveway in Decatur + Atlanta. We bring power and water. ${reviewCountLabel} five-star reviews. See pricing and book online.`,
+  description: `Professional mobile detailing at your driveway in Decatur + Atlanta. We bring power and water in 100% electric mobile rigs. ${reviewCountLabel} five-star reviews. See pricing and book online.`,
   path: "/",
   image: "og-default",
 });
@@ -39,7 +39,7 @@ export default function Home() {
       <section className="proof-row" aria-label="Why people choose Every Detail">
         <div className="container-ed grid gap-3 py-5 text-center sm:grid-cols-2 lg:grid-cols-4">
           <span className="proof-stars">★★★★★ <strong><LiveReviewCount /></strong> five-star reviews</span>
-          <span>{site.award.title}</span><span>Power + water included</span><span>100% mobile</span>
+          <span>{site.award.title}</span><span>Power + water included</span><span>100% electric rigs</span>
         </div>
       </section>
 
@@ -119,7 +119,7 @@ export default function Home() {
           <div className="how-grid">
             <article><b>01</b><h3>Get your quote</h3><p>Tell us what you drive and what it needs. We’ll recommend the right detail and show you the price.</p></article>
             <article><b>02</b><h3>Pick a time</h3><p>Choose an available appointment that works for you. No back-and-forth required.</p></article>
-            <article><b>03</b><h3>We come to you</h3><p>Our mobile rig arrives with its own water, power, tools, and products. You provide the driveway.</p></article>
+            <article><b>03</b><h3>We come to you</h3><p>Our 100% electric mobile rig arrives with its own water, battery power, tools, and products. No generator or outlet needed. You provide the driveway.</p></article>
             <article><b>04</b><h3>Get your car back</h3><p>We work through the detail and let you know when your car is ready to get back on the road.</p></article>
           </div>
           <Link href="/get-a-quote" className="btn btn-primary how-cta">Get my quote ↗</Link>

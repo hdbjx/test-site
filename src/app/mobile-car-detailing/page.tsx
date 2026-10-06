@@ -8,7 +8,7 @@ import { pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Mobile Car Detailing in Decatur & Atlanta, GA | Every Detail",
-  description: "Full inside-and-out mobile car detailing in Decatur and nearby Atlanta areas. First-time clients usually start with Premium or Factory Reset. See pricing online.",
+  description: "Full inside-and-out mobile car detailing in Decatur and nearby Atlanta areas with 100% electric mobile rigs. First-time clients usually start with Premium or Factory Reset.",
   path: "/mobile-car-detailing",
 });
 
@@ -21,7 +21,7 @@ export default function MobileCarDetailingPage() {
         <div className="edu-hero-grid">
           <h1>Full mobile car detailing,<br/><span>right in your driveway.</span></h1>
           <div className="edu-hero-copy">
-            <p className="edu-lede">Every Detail brings the crew, water, power, products and equipment to you. Our core detailing services clean the vehicle inside and out rather than treating the first visit like a quick interior-only or exterior-only clean.</p>
+            <p className="edu-lede">Every Detail brings the crew, water, power, products and equipment to you in a 100% electric mobile setup. Our core detailing services clean the vehicle inside and out rather than treating the first visit like a quick interior-only or exterior-only clean.</p>
             <p>For most first-time clients, Premium is the starting point. If the vehicle has heavy stains, pet hair, spills, odor or long-term buildup, Factory Reset adds the labor needed for a deeper recovery. Maintenance is designed mainly for vehicles that are already clean and being kept that way.</p>
             <div className="mt-7 flex flex-wrap gap-3"><Link href="/book" className="btn btn-primary">Book your detail ↗</Link><Link href="/get-a-quote" className="btn btn-secondary">Get a recommendation</Link></div>
           </div>
@@ -33,7 +33,7 @@ export default function MobileCarDetailingPage() {
         <div className="grid gap-6 md:grid-cols-3 mt-10">
           <article><b>01</b><h3 className="mt-3 text-xl font-semibold">Interior</h3><p className="mt-2">Vacuuming, seats, mats, dash, console, cupholders, doors, panels, glass and cargo areas, with deeper work when the selected service calls for it.</p></article>
           <article><b>02</b><h3 className="mt-3 text-xl font-semibold">Exterior</h3><p className="mt-2">Hand washing, wheels and tires, exterior glass, door jambs and finishing work, with paint protection or decontamination depending on the service.</p></article>
-          <article><b>03</b><h3 className="mt-3 text-xl font-semibold">Your driveway</h3><p className="mt-2">Our mobile rigs carry their own power and water. You provide the vehicle and an accessible place for the crew to work safely around it.</p></article>
+          <article><b>03</b><h3 className="mt-3 text-xl font-semibold">Your driveway</h3><p className="mt-2">Our 100% electric mobile rigs carry their own water and battery power, so there is no generator running in your driveway and no outlet needed. You provide the vehicle and an accessible place for the crew to work safely around it.</p></article>
         </div>
       </div></section>
 
@@ -49,7 +49,7 @@ export default function MobileCarDetailingPage() {
       </div></section>
 
       <CtaBand location="mobile_detailing_final" />
-      <JsonLd data={serviceSchema({ name: "Mobile Car Detailing", description: "Full inside-and-out mobile car detailing in Decatur and nearby Atlanta communities, with power and water supplied by Every Detail.", path: "/mobile-car-detailing" })} />
+      <JsonLd data={serviceSchema({ name: "Mobile Car Detailing", description: "Full inside-and-out mobile car detailing in Decatur and nearby Atlanta communities, using 100% electric mobile rigs with power and water supplied by Every Detail.", path: "/mobile-car-detailing" })} />
     </main>
   );
 }
