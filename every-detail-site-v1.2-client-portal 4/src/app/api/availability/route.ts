@@ -4,6 +4,20 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
+const publicAvailabilityHeaders = {
+  "Cache-Control": "no-store",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+const json = (body: unknown, init: ResponseInit = {}) =>
+  NextResponse.json(body, { ...init, headers: { ...publicAvailabilityHeaders, ...(init.headers ?? {}) } });
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: publicAvailabilityHeaders });
+}
+
 const isoDate = (s: string | null) => (s && /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : null);
 
 type AvailabilityItem = { vehicle: VehicleId; service: ServiceId };
@@ -43,22 +57,26 @@ function parseItems(q: URLSearchParams): AvailabilityItem[] | null {
  */
 export async function GET(req: Request) {
   const q = new URL(req.url).searchParams;
-  const items = parseItems(q);
+  const preset = q.get("preset");
+  const detailPlus = preset === "detailplus";
+  const items = detailPlus ? null : parseItems(q);
   const from = isoDate(q.get("from"));
   const to = isoDate(q.get("to"));
 
-  if (!items || !from || !to) {
-    return NextResponse.json({ error: "Bad request" }, { status: 400 });
+  if ((!detailPlus && !items) || !from || !to) {
+    return json({ error: "Bad request" }, { status: 400 });
   }
 
   const days = (Date.parse(to) - Date.parse(from)) / 86_400_000;
   if (days < 0 || days > 35) {
-    return NextResponse.json({ error: "Range too large" }, { status: 400 });
+    return json({ error: "Range too large" }, { status: 400 });
   }
 
-  const minutes = Math.max(...items.map(({ vehicle, service }) => PRICING[vehicle][service].minutes));
-  const baseCrew = Math.max(...items.map(({ service }) => services[service].crew));
-  const crew = baseCrew + Math.max(0, items.length - 1);
+  // Detail+ is a 75-minute upkeep visit. It uses the same live capacity engine
+  // as public bookings, with the normal two-person Every Detail crew and one rig.
+  const minutes = detailPlus ? 75 : Math.max(...items!.map(({ vehicle, service }) => PRICING[vehicle][service].minutes));
+  const baseCrew = detailPlus ? 2 : Math.max(...items!.map(({ service }) => services[service].crew));
+  const crew = detailPlus ? 2 : baseCrew + Math.max(0, items!.length - 1);
   const rigs = 1;
 
   try {
@@ -71,12 +89,9 @@ export async function GET(req: Request) {
     });
     if (error) throw error;
     const slots = ((data as { slot_start: string }[]) ?? []).map((r) => new Date(r.slot_start).toISOString());
-    return NextResponse.json(
-      { slots, minutes, crew, rigs },
-      { headers: { "Cache-Control": "no-store" } },
-    );
+    return json({ slots, minutes, crew, rigs });
   } catch (err) {
     console.error("[availability]", err);
-    return NextResponse.json({ error: "Availability is unavailable right now." }, { status: 503 });
+    return json({ error: "Availability is unavailable right now." }, { status: 503 });
   }
 }
