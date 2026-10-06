@@ -11,6 +11,7 @@ import type { AccountInfo, GarageVehicle } from "@/lib/supabase/account";
 import { FormError, Success, TextField } from "./parts";
 import { AutofillSafeNotes } from "./AutofillSafeNotes";
 import { AddressFields } from "./AddressFields";
+import { LeadSourceField } from "./LeadSourceField";
 
 const TZ = "America/New_York";
 const isValidDate = (d: Date) => Number.isFinite(d.getTime());
@@ -261,6 +262,13 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     }
     const fd = new FormData(e.currentTarget);
     const get = (k: string) => String(fd.get(k) ?? "").trim();
+    const leadSource = get("leadSource");
+    if (!leadSource) {
+      setBadField("leadSource");
+      setInfoStep(3);
+      setError("Tell us how you heard about Every Detail.");
+      return;
+    }
     setSending(true);
     setError(null);
     setBadField(null);
@@ -284,6 +292,8 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         email: get("email"),
         address: get("address"),
         notes: get("service_notes"),
+        leadSource,
+        leadSourceDetail: get("leadSourceDetail"),
       }),
     }).catch(() => null);
     const json = res ? await res.json().catch(() => ({})) : {};
@@ -328,7 +338,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     setBadField(field);
     if (field === "name") setInfoStep(1);
     if (field === "phone" || field === "email") setInfoStep(2);
-    if (field === "address") setInfoStep(3);
+    if (field === "address" || field === "leadSource") setInfoStep(3);
     setError(json.error ?? "No connection. Try again, or call us.");
   }
 
@@ -698,6 +708,9 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
             </div>
             <div className="mt-6">
               <AutofillSafeNotes label="Anything we should know?" name="service_notes" hint="Gate codes, parking, pet hair, stains, or a spot you care about." />
+            </div>
+            <div className="mt-6">
+              <LeadSourceField error={badField === "leadSource"} />
             </div>
             <button type="button" onClick={() => setInfoStep(2)} className="btn btn-secondary mt-6">Back</button>
           </div>

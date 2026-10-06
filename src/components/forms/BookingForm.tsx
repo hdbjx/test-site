@@ -10,6 +10,7 @@ import { duration, usd } from "@/lib/format";
 import { submitLead } from "@/lib/submit";
 import { FormError, formToObject, Honeypot, SelectField, Success, TextField } from "./parts";
 import { AutofillSafeNotes } from "./AutofillSafeNotes";
+import { LeadSourceField } from "./LeadSourceField";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -27,7 +28,7 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
     e.preventDefault();
     const form = e.currentTarget;
     const data = formToObject(form);
-    const missing = ["vehicle", "service", "name", "phone", "address", "preferredDays"].filter((k) => !data[k]?.trim());
+    const missing = ["vehicle", "service", "name", "phone", "address", "preferredDays", "leadSource"].filter((k) => !data[k]?.trim());
     if (missing.length) {
       setInvalid(missing);
       setError("Fill in the highlighted fields.");
@@ -177,6 +178,7 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
             <option>Midday</option>
             <option>Afternoon</option>
           </SelectField>
+          <LeadSourceField error={bad("leadSource")} />
         </fieldset>
 
       </div>

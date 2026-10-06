@@ -15,6 +15,8 @@ type BookingEmail = {
   start: string;
   price: number;
   notes?: string;
+  leadSource?: string;
+  leadSourceDetail?: string;
   lines?: Array<{ vehicle: string; service: string; price: number }>;
 };
 
@@ -236,6 +238,7 @@ export async function sendBookingEmails(booking: BookingEmail) {
         ${detailRow("When", appointment)}
         ${detailRow("Address", booking.address)}
         ${detailRow("Total", money)}
+        ${booking.leadSource ? detailRow("Heard about us", `${booking.leadSource}${booking.leadSourceDetail ? ` · ${booking.leadSourceDetail}` : ""}`) : ""}
         ${booking.notes ? detailRow("Notes", booking.notes) : ""}
       </table>
     `,

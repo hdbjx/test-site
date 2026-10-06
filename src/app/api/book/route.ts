@@ -20,6 +20,19 @@ export const dynamic = "force-dynamic";
 const str = (v: unknown, max = 500) =>
   typeof v === "string" ? v.trim().slice(0, max) : "";
 
+const LEAD_SOURCES = {
+  google: "Google",
+  instagram: "Instagram",
+  referral: "Friend / Referral",
+  van_trailer: "Saw our van / trailer",
+  local_event: "Local event",
+  previous_customer: "Previous customer",
+  other: "Other",
+} as const;
+
+type LeadSource = keyof typeof LEAD_SOURCES;
+const isLeadSource = (value: string): value is LeadSource => value in LEAD_SOURCES;
+
 type RawBookingItem = {
   vehicle?: unknown;
   service?: unknown;
@@ -69,10 +82,16 @@ export async function POST(req: Request) {
   const start = str(body.start);
   const address = str(body.address);
   const notes = str(body.notes, 2000);
+  const leadSource = str(body.leadSource, 40);
+  const leadSourceDetail = str(body.leadSourceDetail, 200);
   const requested = rawItems(body);
 
   if (!start || Number.isNaN(Date.parse(start)) || requested.length < 1 || requested.length > 2) {
     return NextResponse.json({ ok: false, error: "Pick your vehicle, service and time." }, { status: 422 });
+  }
+
+  if (!isLeadSource(leadSource)) {
+    return NextResponse.json({ ok: false, error: "Tell us how you heard about Every Detail.", field: "leadSource" }, { status: 422 });
   }
 
   if (!address) {
@@ -237,6 +256,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "We couldn't verify that your booking was created. Please try again or call/text us." }, { status: 500 });
   }
 
+  // Attribution is intentionally stored after the existing booking RPC so the
+  // Team iOS app and every other booking client can keep using that RPC without
+  // sending these website-only fields. The columns are nullable/backward-compatible.
+  const attribution = await supabaseAdmin()
+    .from("jobs")
+    .update({ lead_source: leadSource, lead_source_detail: leadSourceDetail || null })
+    .eq("id", data);
+  if (attribution.error) console.error("[book] attribution", attribution.error);
+
   // A confirmed website booking closes any open CRM opportunity for the same
   // person. Booking remains valid even if CRM cleanup fails.
   const crmMatch = await supabaseAdmin().rpc("crm_mark_booked_by_identity", {
@@ -259,6 +287,8 @@ export async function POST(req: Request) {
     start: new Date(start).toISOString(),
     price: totalPrice,
     notes: operationalNotes,
+    leadSource: LEAD_SOURCES[leadSource],
+    leadSourceDetail: leadSourceDetail || undefined,
     lines: lines.map((line) => ({ vehicle: line.vehicleLabel, service: line.serviceName, price: line.price })),
   }).catch((emailError) => {
     console.error("[book] email", emailError);
@@ -278,6 +308,9 @@ export async function POST(req: Request) {
         email,
         address,
         notes: operationalNotes,
+        leadSource,
+        leadSourceLabel: LEAD_SOURCES[leadSource],
+        leadSourceDetail: leadSourceDetail || null,
         service: appointmentService,
         vehicle: appointmentVehicle,
         vehicles: lines.map((line) => ({ vehicle: line.vehicleLabel, service: line.serviceName, price: line.price })),

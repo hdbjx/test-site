@@ -5,7 +5,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const REQUIRED: Record<string, string[]> = {
   quote: ["name", "phone", "email", "vehicleMake", "vehicleModel", "interest"],
-  booking: ["name", "phone", "vehicle", "service", "address", "preferredDays"],
+  booking: ["name", "phone", "vehicle", "service", "address", "preferredDays", "leadSource"],
   detailplus: ["name", "phone", "frequency", "coverage", "vehicle"],
 };
 
