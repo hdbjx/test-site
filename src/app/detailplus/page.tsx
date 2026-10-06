@@ -16,57 +16,26 @@ export const metadata = pageMetadata({
 
 export default function DetailPlusPage() {
   return (
-    <main className="plus-brand">
-      <section className="plus-brand-hero">
-        <div className="plus-brand-shell">
-          <div className="plus-brand-hero-grid">
-            <div className="plus-brand-hero-copy">
-              <p className="plus-brand-kicker">DETAIL+ / RECURRING CARE</p>
-              <h1>Your car stays clean.<br/><span>Automatically.</span></h1>
-              <p className="plus-brand-lede">Book once. We come back on your schedule, with the same mobile service and the same standard every time.</p>
-              <div className="plus-brand-actions"><a href="#build" className="plus-brand-btn plus-brand-btn-light">Build my plan ↗</a><a href="#how" className="plus-brand-text-link">How it works ↓</a></div>
-            </div>
-            <figure className="plus-brand-photo">
-              <Photo id="work-davis-0909" priority sizes="(min-width: 900px) 34vw, 94vw"/>
-              <div className="plus-brand-stamp plus-brand-hero-stamp">DETAIL+<br/>REPEAT CARE</div>
-              <figcaption>YOUR DRIVEWAY / OUR STANDARD / ON REPEAT</figcaption>
-            </figure>
-          </div>
-          <div className="plus-brand-rule" aria-label="How Detail Plus works"><span>01 / BOOK ONCE</span><span>02 / WE COME BACK</span><span>03 / STAY CLEAN</span></div>
-        </div>
-      </section>
+    <main className="plus-v2">
+      <section className="plus-v2-hero"><div className="plus-v2-shell plus-v2-hero-grid">
+        <div className="plus-v2-hero-copy"><p className="plus-v2-kicker">DETAIL+ / RECURRING CARE</p><h1>Get it clean.<br/><span>Keep it clean.</span></h1><p>Detail+ puts your car on a recurring detailing schedule. Pick how often we come and what gets cleaned. Your rate stays flat, your visits stay on the calendar, and the mess never gets a chance to become a reset.</p><div className="plus-v2-actions"><a href="#build" className="btn btn-primary">Build your plan ↗</a><a href="#how" className="plus-v2-inline">See how it works</a></div></div>
+        <figure className="plus-v2-photo"><Photo id="work-davis-0909" priority ratio="4/5" sizes="(min-width: 900px) 40vw, 94vw"/><figcaption>RECURRING CARE / DONE BY OUR CREW</figcaption></figure>
+      </div></section>
 
-      <section className="plus-brand-ticker"><div><span>NO CONTRACT</span><span>FLAT RATE PER VISIT</span><span>RECURRING SCHEDULING</span><span>EXTRA MESSES COVERED</span></div></section>
+      <section className="plus-v2-strip"><div className="plus-v2-shell"><span>NO CONTRACT</span><span>FLAT RATE PER VISIT</span><span>RECURRING SCHEDULING</span><span>EXTRA MESSES COVERED</span></div></section>
 
-      <section className="plus-brand-why">
-        <div className="plus-brand-shell">
-          <div className="plus-brand-section-head"><p className="plus-brand-kicker">02 / WHY RECURRING CARE</p><h2>Clean is easier to keep<br/><span>than recover.</span></h2><p>Detail+ starts after the reset. Instead of letting weeks of dirt, spills, crumbs and pet hair stack up again, we return before the car gets far behind.</p></div>
-          <div className="plus-brand-benefits">{detailPlusBenefits.map((b,i)=><article key={b.title}><span>{String(i+1).padStart(2,"0")}</span><div><h3>{b.title}</h3><p>{b.body}</p></div></article>)}</div>
-        </div>
-      </section>
+      <section className="plus-v2-why"><div className="plus-v2-shell"><div className="plus-v2-head"><div><p className="plus-v2-kicker">WHY DETAIL+</p><h2>A clean car is easier<br/><span>to keep than recover.</span></h2></div><p>One-time details solve the buildup. Detail+ is what happens next. We return before the vehicle needs another major catch-up clean.</p></div><div className="plus-v2-benefits">{detailPlusBenefits.map((b,i)=><article key={b.title}><b>{String(i+1).padStart(2,"0")}</b><h3>{b.title}</h3><p>{b.body}</p></article>)}</div></div></section>
 
-      <section id="how" className="plus-brand-how">
-        <div className="plus-brand-shell">
-          <div className="plus-brand-how-intro"><div className="plus-brand-stamp plus-brand-stamp-coral">SET IT<br/>ON REPEAT</div><div><p className="plus-brand-kicker">03 / HOW IT WORKS</p><h2>Three decisions.<br/><span>Then it runs itself.</span></h2></div></div>
-          <ol>{detailPlusSteps.map((s,i)=><li key={s.title}><b>{String(i+1).padStart(2,"0")}</b><div><small>STEP {String(i+1).padStart(2,"0")}</small><h3>{s.title}</h3><p>{s.body}</p></div></li>)}</ol>
-          <div className="plus-brand-cadence"><span>AVAILABLE CADENCES</span><p>{frequencies.map((f)=>f.label).join("  /  ")}</p></div>
-        </div>
-      </section>
+      <section id="how" className="plus-v2-how"><div className="plus-v2-shell"><p className="plus-v2-kicker">HOW IT WORKS</p><h2>Three decisions.<br/><span>Then it runs itself.</span></h2><ol>{detailPlusSteps.map((s,i)=><li key={s.title}><b>{String(i+1).padStart(2,"0")}</b><div><h3>{s.title}</h3><p>{s.body}</p></div></li>)}</ol><div className="plus-v2-frequency"><span>AVAILABLE CADENCES</span><p>{frequencies.map((f)=>f.label).join("  /  ")}</p></div></div></section>
 
-      <section className="plus-brand-rule-section"><div className="plus-brand-shell"><p className="plus-brand-kicker">04 / THE SIMPLE RULE</p><blockquote>“{detailPlusGuarantee}”</blockquote><p>Whatever coverage your plan includes gets handled on that visit. Spills, stains, crumbs and pet hair do not turn into surprise add-on charges.</p></div></section>
+      <section className="plus-v2-promise"><div className="plus-v2-shell"><p className="plus-v2-kicker">THE SIMPLE RULE</p><blockquote>“{detailPlusGuarantee}”</blockquote><p>Whatever coverage your plan includes gets handled on that visit. Spills, stains, crumbs and pet hair do not turn into surprise add-on charges.</p></div></section>
 
-      <section id="build" className="plus-brand-build">
-        <div className="plus-brand-shell plus-brand-build-grid">
-          <div className="plus-brand-build-copy"><p className="plus-brand-kicker">05 / BUILD YOUR PLAN</p><h2>Make clean<br/><span>the default.</span></h2><p>Choose your vehicle, frequency and coverage. We’ll put together the flat per-visit rate and reach out to get the first visit on the calendar.</p><div className="plus-brand-mini"><b>NOT READY FOR RECURRING?</b><p>Start with one detail. Move into Detail+ once you know the work.</p><Link href="/book">Book one detail first ↗</Link></div></div>
-          <div className="plus-brand-form-wrap"><div className="plus-brand-form-label"><span>YOUR DETAIL+ PLAN</span><b>BUILD IT ↓</b></div><DetailPlusForm /></div>
-        </div>
-      </section>
+      <section id="build" className="plus-v2-build"><div className="plus-v2-shell plus-v2-build-grid"><div className="plus-v2-build-copy"><p className="plus-v2-kicker">BUILD YOUR PLAN</p><h2>Tell us what<br/><span>staying clean means.</span></h2><p>Choose the vehicle, frequency and whether you want the interior, exterior or both maintained. We will send the flat per-visit rate and get the first visit on the calendar.</p><div className="plus-v2-build-note"><b>NOT READY FOR RECURRING?</b><p>Start with a one-time detail. You can move into Detail+ after you know the work.</p><Link href="/book">Book one detail first ↗</Link></div></div><div className="plus-v2-form"><DetailPlusForm /></div></div></section>
 
-      <section className="plus-brand-reviews"><div className="plus-brand-shell"><div className="plus-brand-section-head compact"><p className="plus-brand-kicker">06 / WHY PEOPLE COME BACK</p><h2>The standard stays.<br/><span>So do they.</span></h2></div><ReviewGrid /></div></section>
+      <section className="plus-v2-reviews"><div className="plus-v2-shell"><p className="plus-v2-kicker">WHY PEOPLE COME BACK</p><ReviewGrid /></div></section>
+      <section className="plus-v2-faq"><div className="plus-v2-shell plus-v2-faq-grid"><div><p className="plus-v2-kicker">DETAIL+ QUESTIONS</p><h2>Before you<br/><span>put it on repeat.</span></h2></div><FaqList faqs={detailPlusFaqs}/></div></section>
 
-      <section className="plus-brand-faq"><div className="plus-brand-shell plus-brand-faq-grid"><div><p className="plus-brand-kicker">07 / BEFORE YOU PUT IT ON REPEAT</p><h2>Good questions.<br/><span>Clear answers.</span></h2></div><FaqList faqs={detailPlusFaqs}/></div></section>
-
-      <section className="plus-brand-final"><div className="plus-brand-shell"><div className="plus-brand-stamp plus-brand-stamp-coral">REPEAT<br/>CARE</div><p className="plus-brand-kicker">DETAIL+ / READY WHEN YOU ARE</p><h2>Your car stays clean.<br/><span>That’s the point.</span></h2><a href="#build" className="plus-brand-btn plus-brand-btn-light">Build my Detail+ plan ↗</a></div></section>
+      <section className="plus-v2-final"><div className="plus-v2-shell"><p className="plus-v2-kicker">READY WHEN YOU ARE</p><h2>Make clean<br/><span>the default.</span></h2><a href="#build" className="btn btn-on-dark">Build your Detail+ plan ↗</a></div></section>
       <JsonLd data={serviceSchema({name:"Detail+ recurring detailing membership",description:"Recurring mobile car detailing on a set schedule for one flat rate per visit.",path:"/detailplus"})}/>
     </main>
   );

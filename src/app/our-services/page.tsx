@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
@@ -66,7 +65,6 @@ export default function ServicesPage() {
       <main className="services-v161">
         <section className="edu-hero">
           <div className="svc-shell">
-            <div className="mb-6"><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
             <p className="svc-eyebrow">MOBILE DETAILING / DECATUR, GA</p>
             <div className="edu-hero-grid">
               <h1>A detail is more than<br/><span>a car wash.</span></h1>
@@ -127,7 +125,7 @@ export default function ServicesPage() {
 
         <section className="svc-single"><div className="svc-shell svc-single-inner"><div><p className="svc-eyebrow">ONLY NEED ONE SIDE?</p><h2>Interior-only or exterior-only.</h2></div><p>Our core details cover the whole vehicle. Detail+ members can choose interior-only or exterior-only plans. For a one-time standalone job, send us what you need and we will quote it.</p><Link href="/get-a-quote" className="svc-outline-btn">Get a quote <span>↗</span></Link></div></section>
 
-        <section className="svc-paint" id="paint"><div className="svc-shell"><div className="svc-paint-grid"><div><p className="svc-eyebrow">BEYOND DETAILING</p><h2>Cleaning and paint correction are <span>different jobs.</span></h2><p>Detailing removes dirt and contamination from the vehicle. Paint correction goes a step further by machine-polishing the clear coat to reduce visible swirls, haze and defects. Ceramic coating is protection applied after the paint is properly prepared.</p><Link href="/paint-correction" className="svc-light-btn">Learn about paint care <span>↗</span></Link></div><div className="svc-paint-list">{paintServices.map((p,i)=><div key={p.id}><b>0{i+1}</b><div><h3>{p.name}</h3><p>{p.bestFor}</p></div><strong>from {usd(p.startingAt)}</strong></div>)}</div></div></div></section>
+        <section className="svc-paint" id="paint"><div className="svc-shell"><div className="svc-paint-grid"><div><p className="svc-eyebrow">BEYOND DETAILING</p><h2>Cleaning and paint correction are <span>different jobs.</span></h2><p>Detailing removes dirt and contamination from the vehicle. Paint correction goes a step further by machine-polishing the clear coat to reduce visible swirls, haze and defects. Ceramic coating is protection applied after the paint is properly prepared.</p><Link href="/ceramic" className="svc-light-btn">Learn about paint care <span>↗</span></Link></div><div className="svc-paint-list">{paintServices.map((p,i)=><div key={p.id}><b>0{i+1}</b><div><h3>{p.name}</h3><p>{p.bestFor}</p></div><strong>from {usd(p.startingAt)}</strong></div>)}</div></div></div></section>
 
         <section className="svc-plus" id="detail-plus"><div className="svc-shell"><div className="svc-plus-grid"><div><p className="svc-eyebrow">AFTER THE FIRST DETAIL</p><h2>Getting clean is one job.<br/><span>Staying clean is another.</span></h2><p>Detail+ is recurring care for vehicles that already have a clean baseline. Instead of waiting for the car to build up again, we return on a schedule and maintain it.</p><Link href="/detailplus" className="svc-light-btn">Learn how Detail+ works <span>↗</span></Link></div><div className="svc-plus-steps"><div><b>01</b><h3>Establish the baseline</h3><p>Start with the vehicle at the right level of clean.</p></div><div><b>02</b><h3>Choose a schedule</h3><p>Pick a frequency that fits how the vehicle is used.</p></div><div><b>03</b><h3>Maintain it</h3><p>We return before the car needs another major reset.</p></div></div></div></div></section>
 

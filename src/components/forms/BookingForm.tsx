@@ -1,15 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { AddressFields } from "./AddressFields";
 import { useState, type FormEvent } from "react";
 import { PRICING, serviceList, services, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { duration, usd } from "@/lib/format";
 import { submitLead } from "@/lib/submit";
-import { FormError, formToObject, Honeypot, SelectField, Success, TextField } from "./parts";
-import { AutofillSafeNotes } from "./AutofillSafeNotes";
+import { FormError, formToObject, Honeypot, SelectField, Success, TextArea, TextField } from "./parts";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -32,12 +30,6 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
       setInvalid(missing);
       setError("Fill in the highlighted fields.");
       form.querySelector<HTMLElement>(`[name="${missing[0]}"]`)?.focus();
-      return;
-    }
-    if (!/\d/.test(data.address ?? "") || !/\b(?:GA|Georgia)\b/i.test(data.address ?? "") || !/\b\d{5}(?:-\d{4})?\b/.test(data.address ?? "")) {
-      setInvalid(["address"]);
-      setError("Enter the full service address, including street, city, state and ZIP code.");
-      form.querySelector<HTMLElement>('[name="address"]')?.focus();
       return;
     }
     setStatus("sending");
@@ -145,18 +137,14 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
         </fieldset>
 
         <fieldset className="space-y-6">
-          <legend className="t-h3">3. Your details & timing</legend>
-          <div className="grid gap-6 sm:grid-cols-2">
-            <TextField label="Name" name="name" autoComplete="name" error={bad("name")} />
-            <TextField label="Phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" error={bad("phone")} errorText="Enter a 10-digit phone number." />
-          </div>
-          <TextField label="Email" name="email" type="email" autoComplete="email" optional error={bad("email")} errorText="Check your email address." />
-          <AutofillSafeNotes label="Anything we should know?" name="notes" hint="Gate codes, parking, pet hair, stains, or a specific spot you care about." />
-          <div>
-            <p className="field-label">Service address</p>
-            <p className="mb-4 mt-1 text-sm text-muted">Where should our team meet the vehicle?</p>
-            <AddressFields error={bad("address")} />
-          </div>
+          <legend className="t-h3">3. When and where</legend>
+          <TextField
+            label="Address where the car will be"
+            name="address"
+            autoComplete="street-address"
+            hint="Home, apartment or office. Include the city."
+            error={bad("address")}
+          />
           <div>
             <p id="days-label" className="field-label">
               Days that work for you
@@ -179,6 +167,15 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
           </SelectField>
         </fieldset>
 
+        <fieldset className="space-y-6">
+          <legend className="t-h3">4. Your details</legend>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <TextField label="Name" name="name" autoComplete="name" error={bad("name")} />
+            <TextField label="Phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" error={bad("phone")} errorText="Enter a 10-digit phone number." />
+          </div>
+          <TextField label="Email" name="email" type="email" autoComplete="email" optional error={bad("email")} errorText="Check your email address." />
+          <TextArea label="Anything we should know?" name="notes" optional hint="Gate codes, parking, pet hair, stains, a specific spot you care about." />
+        </fieldset>
       </div>
 
       {/* Summary: sticky on desktop, inline before submit on mobile */}

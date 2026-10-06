@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 
-const HIDDEN_ON = ["/book", "/get-a-quote", "/detailplus/join", "/info-form"];
+const HIDDEN_ON = ["/book", "/get-a-quote", "/detailplus/join"];
 
 /** Persistent mobile booking bar. Appears once the hero is scrolled past; never on form pages. */
 export function MobileBookBar() {
@@ -32,13 +32,13 @@ export function MobileBookBar() {
     >
       <div className="container-ed flex items-center gap-3 py-3">
         <a
-          href={site.phone.sms}
+          href={site.phone.href}
           tabIndex={show ? 0 : -1}
-          onClick={() => track("text_click", { location: "mobile_bar" })}
+          onClick={() => track("phone_click", { location: "mobile_bar" })}
           className="btn btn-secondary btn-sm shrink-0 px-4"
-          aria-label={`Text ${site.phone.display}`}
+          aria-label={`Call ${site.phone.display}`}
         >
-          Text
+          Call
         </a>
         <Link
           href="/book"

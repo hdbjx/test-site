@@ -22,7 +22,7 @@ export const homeFaqs: Faq[] = [
   },
   {
     q: "Do you bring your own power and water?",
-    a: "Yes. We're fully mobile and bring our own water and battery power in a 100% electric setup, so there is no generator or outlet needed. All we need is room to work around the car.",
+    a: "Yes. We're fully mobile and bring our own power and water, so all we need is room to work around the car.",
     confirmed: true,
   },
   {

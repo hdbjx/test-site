@@ -27,10 +27,6 @@ const legacyRedirects = (): R[] => [
   { source: "/services-3", destination: "/ceramic", statusCode: 301 },
   { source: "/join-detail", destination: "/detailplus/join", statusCode: 301 },
   { source: "/home", destination: "/", statusCode: 301 },
-  { source: "/services", destination: "/our-services", statusCode: 301 },
-  { source: "/services-2", destination: "/our-services", statusCode: 301 },
-  { source: "/mobile-detailing", destination: "/mobile-car-detailing", statusCode: 301 },
-  { source: "/car-detailing", destination: "/mobile-car-detailing", statusCode: 301 },
 
   // Wix blog archive URLs
   { source: "/blog/categories/:path*", destination: "/blog", statusCode: 301 },

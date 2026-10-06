@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
-import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
-import { JsonLd } from "@/components/JsonLd";
 import { ReviewGrid } from "@/components/ReviewGrid";
 import { ServicePicker } from "@/components/ServicePicker";
 import { areasWithPages } from "@/data/areas";
-import { pageMetadata, serviceSchema } from "@/lib/seo";
+import { reviewCountLabel } from "@/data/site";
+import { pageMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
@@ -29,13 +27,12 @@ export default async function AreaPage({ params }: Params) {
   return (
     <main className="area-v2">
       <section className="area-v2-hero"><div className="area-v2-shell">
-        <div className="mb-6"><Breadcrumbs items={[{ name: "Service Areas", path: "/service-areas" }, { name: area.name, path: `/service-areas/${slug}` }]} /></div>
         <p className="area-v2-kicker">MOBILE DETAILING / {area.name.toUpperCase()}</p>
         <h1>Car detailing in<br/><span>{area.name}.</span></h1>
         <div className="area-v2-hero-bottom"><p>{page.intro}</p><div><Link href="/book" className="btn btn-primary">Book your detail ↗</Link><Link href="/get-a-quote" className="area-v2-inline">Get a recommendation</Link></div></div>
       </div></section>
 
-      <section className="area-v2-proof"><div className="area-v2-shell"><span><LiveReviewCount /> FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span><span>POWER + WATER INCLUDED</span><span>TRAINED CREW</span><span>ONLINE PRICING</span></div></section>
+      <section className="area-v2-proof"><div className="area-v2-shell"><span>{reviewCountLabel} FIVE-STAR REVIEWS</span><span>POWER + WATER INCLUDED</span><span>TRAINED CREW</span><span>ONLINE PRICING</span></div></section>
 
       <section className="area-v2-local"><div className="area-v2-shell area-v2-local-grid"><div><p className="area-v2-kicker">HOW IT WORKS</p><h2>Your parking spot.<br/><span>Our setup.</span></h2></div><div className="area-v2-notes">{page.localNotes.map((n,i)=><article key={n}><b>{String(i+1).padStart(2,"0")}</b><p>{n}</p></article>)}</div></div></section>
 
@@ -44,7 +41,6 @@ export default async function AreaPage({ params }: Params) {
       <section className="area-v2-reviews"><div className="area-v2-shell"><p className="area-v2-kicker">THE WORK, ACCORDING TO CLIENTS</p><ReviewGrid /></div></section>
       <section className="area-v2-back"><div className="area-v2-shell"><Link href="/service-areas">← See every service area</Link></div></section>
       <CtaBand location={`area_${slug}_final`} />
-      <JsonLd data={serviceSchema({ name: `Mobile Car Detailing in ${area.name}, GA`, description: page.description, path: `/service-areas/${slug}`, areaServed: [`${area.name}, GA`] })} />
     </main>
   );
 }

@@ -12,9 +12,7 @@ export type EventName =
   | "booking_add_vehicle" // second vehicle added to a booking: { count }
   | "quote_start" // first interaction with the quote form
   | "quote_submit" // quote sent: { interest }
-  | "quote_price_reveal" // personalized quote price revealed after lead capture
   | "phone_click" // { location }
-  | "text_click" // { location }
   | "detailplus_start" // plan builder interaction
   | "detailplus_submit" // Detail+ request sent
   | "paint_inquiry"; // any paint/ceramic quote click or submit

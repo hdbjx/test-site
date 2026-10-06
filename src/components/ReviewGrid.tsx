@@ -1,6 +1,5 @@
 import { reviews } from "@/data/reviews";
-import { site } from "@/data/site";
-import { GoogleMapsAttribution, LiveReviewCount } from "./GoogleReviewStats";
+import { reviewCountLabel, site } from "@/data/site";
 import { Stars } from "./Stars";
 
 export function ReviewGrid({ heading = true }: { heading?: boolean }) {
@@ -9,7 +8,7 @@ export function ReviewGrid({ heading = true }: { heading?: boolean }) {
     <div>
       {heading && (
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <h2 className="t-h2 max-w-3xl"><LiveReviewCount /> five-star reviews from local drivers <GoogleMapsAttribution /></h2>
+          <h2 className="t-h2 max-w-3xl">{reviewCountLabel} five-star reviews from local drivers</h2>
           <a href={site.reviews.googleUrl} target="_blank" rel="noopener" className="link shrink-0 font-display font-semibold">
             Read them on Google
           </a>

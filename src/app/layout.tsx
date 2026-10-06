@@ -3,7 +3,6 @@ import "./globals.css";
 import { Analytics } from "@/components/Analytics";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { GoogleReviewStatsProvider } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
 import { MobileBookBar } from "@/components/MobileBookBar";
 import { RouteTransition } from "@/components/RouteTransition";
@@ -31,7 +30,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-dvh">
-        <GoogleReviewStatsProvider>
         <RouteTransition />
         <Header />
         <main id="main" tabIndex={-1} className="outline-none">
@@ -41,7 +39,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MobileBookBar />
         <JsonLd data={localBusinessSchema()} />
         <Analytics />
-        </GoogleReviewStatsProvider>
       </body>
     </html>
   );
