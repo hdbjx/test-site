@@ -65,7 +65,20 @@ async function saveQuoteToCrm(fields: Record<string, string>, clientId: string) 
 
   // The CRM RPC owns deduplication and sales workflow. The canonical website
   // contact is linked afterward so CRM conversion never has to create a copy.
-  const linked = await supabaseAdmin().from("crm_leads").update({ converted_client_id: clientId }).eq("id", leadId);
+  // Persist the exact customer-visible quote from the recommender. Do not
+  // recalculate it here, because CRM must show the same amount the customer saw.
+  const parsedQuote = fields.quote ? Number(fields.quote) : null;
+  const quoteAmount = parsedQuote !== null && Number.isFinite(parsedQuote) && parsedQuote >= 0
+    ? parsedQuote
+    : null;
+
+  const linked = await supabaseAdmin()
+    .from("crm_leads")
+    .update({
+      converted_client_id: clientId,
+      ...(quoteAmount !== null ? { quote_amount: quoteAmount } : {}),
+    })
+    .eq("id", leadId);
   if (linked.error) throw linked.error;
   return leadId;
 }
