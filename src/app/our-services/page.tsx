@@ -1,9 +1,12 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
 import { ServicesDecisionTool } from "@/components/ServicesDecisionTool";
+import { ServiceDepthScroll } from "@/components/ServiceDepthScroll";
+import { ServicesScrollEffects } from "@/components/ServicesScrollEffects";
 import { homeFaqs } from "@/data/faqs";
 import { paintServices } from "@/data/paint";
 import { PRICING, serviceList, vehicles } from "@/data/services";
@@ -64,6 +67,7 @@ export default function ServicesPage() {
   return (
     <>
       <main className="services-v161">
+        <ServicesScrollEffects />
         <section className="edu-hero">
           <div className="svc-shell">
             <div className="mb-6"><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
@@ -86,9 +90,9 @@ export default function ServicesPage() {
               <p>A professional detail costs more than a drive-through wash because it is a hands-on service measured in technician hours, not minutes on a conveyor.</p>
             </div>
             <div className="edu-area-grid">
-              {detailAreas.map(([no,title,copy]) => <article key={no}><b>{no}</b><h3>{title}</h3><p>{copy}</p></article>)}
+              {detailAreas.map(([no,title,copy], index) => <article key={no} data-svc-reveal style={{ "--svc-delay": index } as CSSProperties}><b>{no}</b><h3>{title}</h3><p>{copy}</p></article>)}
             </div>
-            <div className="edu-value-statement">
+            <div className="edu-value-statement" data-svc-reveal>
               <p>You’re not paying for a wash.</p>
               <h3>You’re paying for the <span>time, equipment and attention</span> required to clean the vehicle properly.</h3>
             </div>
@@ -102,6 +106,8 @@ export default function ServicesPage() {
             <div><p>A regularly detailed sedan and a family SUV that has gone years without a deep clean should not receive the same process or carry the same price.</p><p>Our three detailing levels are based on the vehicle’s starting condition and the amount of labor needed to get the right result.</p></div>
           </div>
         </section>
+
+        <ServiceDepthScroll />
 
         <section className="edu-services">
           <div className="svc-shell">
@@ -131,7 +137,7 @@ export default function ServicesPage() {
 
         <section className="svc-plus" id="detail-plus"><div className="svc-shell"><div className="svc-plus-grid"><div><p className="svc-eyebrow">AFTER THE FIRST DETAIL</p><h2>Getting clean is one job.<br/><span>Staying clean is another.</span></h2><p>Detail+ is recurring care for vehicles that already have a clean baseline. Instead of waiting for the car to build up again, we return on a schedule and maintain it.</p><Link href="/detailplus" className="svc-light-btn">Learn how Detail+ works <span>↗</span></Link></div><div className="svc-plus-steps"><div><b>01</b><h3>Establish the baseline</h3><p>Start with the vehicle at the right level of clean.</p></div><div><b>02</b><h3>Choose a schedule</h3><p>Pick a frequency that fits how the vehicle is used.</p></div><div><b>03</b><h3>Maintain it</h3><p>We return before the car needs another major reset.</p></div></div></div></div></section>
 
-        <section className="svc-process"><div className="svc-shell"><div className="svc-section-head compact"><p className="svc-eyebrow">WHAT HAPPENS ON DETAIL DAY</p><h2>Your driveway.<br/><span>Our setup.</span></h2><p>You do not need to drive to a shop or provide a hose and outlet. We arrive prepared to do the job where the car is parked.</p></div><ol><li><b>01</b><h3>We arrive prepared.</h3><p>Our team brings the power, water, products and equipment needed for the service.</p></li><li><b>02</b><h3>We work through the car.</h3><p>The technicians follow the process for the service level you selected rather than rushing the most visible areas.</p></li><li><b>03</b><h3>We finish and check it.</h3><p>The vehicle is inspected, packed up and returned ready to drive.</p></li></ol></div></section>
+        <section className="svc-process"><div className="svc-shell"><div className="svc-section-head compact" data-svc-reveal><p className="svc-eyebrow">WHAT HAPPENS ON DETAIL DAY</p><h2>Your driveway.<br/><span>Our setup.</span></h2><p>You do not need to drive to a shop or provide a hose and outlet. We arrive prepared to do the job where the car is parked.</p></div><ol><li data-svc-reveal style={{ "--svc-delay": 0 } as CSSProperties}><b>01</b><h3>We arrive prepared.</h3><p>Our team brings the power, water, products and equipment needed for the service.</p></li><li data-svc-reveal style={{ "--svc-delay": 1 } as CSSProperties}><b>02</b><h3>We work through the car.</h3><p>The technicians follow the process for the service level you selected rather than rushing the most visible areas.</p></li><li data-svc-reveal style={{ "--svc-delay": 2 } as CSSProperties}><b>03</b><h3>We finish and check it.</h3><p>The vehicle is inspected, packed up and returned ready to drive.</p></li></ol></div></section>
 
         <section className="svc-faq"><div className="svc-shell svc-faq-grid"><div><p className="svc-eyebrow">STILL LEARNING?</p><h2>Service questions.</h2><p>Common questions about what we do, what you need to provide and how the service works.</p></div><FaqList faqs={homeFaqs.slice(0,8)} /></div></section>
       </main>
