@@ -65,6 +65,22 @@ export const images: SiteImage[] = [
   // CURATED WORK
   // ------------------------------------------------------------
 
+  // Additional real-job photography added October 2026. Kept as individual
+  // registry entries so pages can use the crop that best fits each photo.
+  { id: "crew-shirt-van", file: "/images/crew-shirt-van.jpg", alt: "Every Detail technician beside the branded mobile detailing van", w: 2, h: 3, category: "team" },
+  { id: "mobile-rig-open-job", file: "/images/mobile-rig-open-job.jpg", alt: "Open Every Detail mobile detailing van set up beside a customer vehicle", w: 2, h: 3, category: "rig" },
+  { id: "black-car-pressure-wash", file: "/images/black-car-pressure-wash.jpg", alt: "Every Detail technician pressure washing a black vehicle beside the mobile rig", w: 2, h: 3, category: "work" },
+  { id: "clean-white-interior", file: "/images/clean-white-interior.jpg", alt: "Clean white vehicle interior after detailing", w: 2, h: 3, category: "interior" },
+  { id: "clean-white-cabin", file: "/images/clean-white-cabin.jpg", alt: "Clean light-colored vehicle cabin viewed from the rear seats", w: 2, h: 3, category: "interior" },
+  { id: "mobile-rig-open-driveway", file: "/images/mobile-rig-open-driveway.jpg", alt: "Every Detail mobile detailing van open and fully set up in a residential driveway", w: 2, h: 3, category: "rig" },
+  { id: "classic-red-wheel", file: "/images/classic-red-wheel.jpg", alt: "Glossy red classic car wheel and fender after detailing", w: 2, h: 3, category: "exterior" },
+  { id: "classic-car-cockpit", file: "/images/classic-car-cockpit.jpg", alt: "Clean classic car cockpit with the Every Detail van visible outside", w: 3, h: 2, category: "interior" },
+  { id: "technician-branded-van", file: "/images/technician-branded-van.jpg", alt: "Every Detail technician walking beside the branded mobile detailing van", w: 2, h: 3, category: "team" },
+  { id: "two-tech-interior-detail", file: "/images/two-tech-interior-detail.jpg", alt: "Two Every Detail technicians working together inside a customer vehicle", w: 3, h: 2, category: "team" },
+  { id: "rear-seat-detail", file: "/images/rear-seat-detail.jpg", alt: "Every Detail technician wiping down a vehicle rear seat", w: 3, h: 2, category: "interior" },
+  { id: "finished-lexus-front", file: "/images/finished-lexus-front.jpg", alt: "Clean gray Lexus front end after detailing", w: 2, h: 3, category: "exterior" },
+  { id: "tesla-foam-wash", file: "/images/tesla-foam-wash.jpg", alt: "Every Detail technician foam washing a Tesla in a residential driveway", w: 1365, h: 2048, category: "work" },
+
   // Detail+ recurring-care photography. These aliases intentionally
   // use descriptive IDs so the Detail+ story can reference the exact
   // local assets through the shared <Photo> registry.

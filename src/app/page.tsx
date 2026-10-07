@@ -69,16 +69,16 @@ export default function Home() {
 
           <div className="work-v157-grid">
             <figure>
-              <Photo id="work-rex-0467" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
-              <figcaption><span>02 / EXTERIOR</span><strong>Rex · Foam wash</strong></figcaption>
+              <Photo id="two-tech-interior-detail" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
+              <figcaption><span>02 / INTERIOR</span><strong>Two-person cabin detail</strong></figcaption>
             </figure>
             <figure>
-              <Photo id="work-davis-0909" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
-              <figcaption><span>03 / THE DETAILS</span><strong>Davis · Floor mat detail</strong></figcaption>
+              <Photo id="rear-seat-detail" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
+              <figcaption><span>03 / THE DETAILS</span><strong>Seat-by-seat finishing</strong></figcaption>
             </figure>
             <figure>
-              <Photo id="work-will-0920" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
-              <figcaption><span>04 / THE RIG</span><strong>Will · Running the job</strong></figcaption>
+              <Photo id="classic-car-cockpit" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
+              <figcaption><span>04 / INTERIOR</span><strong>Clean all the way through</strong></figcaption>
             </figure>
             <figure>
               <Photo id="work-finished-0771" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />

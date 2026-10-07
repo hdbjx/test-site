@@ -28,7 +28,7 @@ const loopSteps = [
     eyebrow: "PICK THE RHYTHM",
     title: "Your schedule, already handled.",
     body: "Every two weeks, monthly, every six weeks, every two months or quarterly. Pick the cadence that matches how you actually use the car.",
-    image: "team-tablet",
+    image: "classic-car-cockpit",
     note: "2 WEEKS → QUARTERLY",
   },
   {
@@ -44,7 +44,7 @@ const loopSteps = [
     eyebrow: "STAY AHEAD",
     title: "The mess never gets a head start.",
     body: "Crumbs, spills, muddy weeks and pet hair get handled as part of the coverage you chose. The point is not another rescue detail. It is avoiding one.",
-    image: "interior-detail-team",
+    image: "rear-seat-detail",
     note: "IF IT'S IN THE PLAN, IT'S COVERED",
   },
 ] as const;
@@ -71,7 +71,7 @@ export default function DetailPlusPage() {
               </div>
             </div>
             <figure className="plus-brand-photo plus-v177-hero-photo">
-              <Photo id="work-davis-0909" priority sizes="(min-width: 900px) 42vw, 94vw"/>
+              <Photo id="tesla-foam-wash" priority sizes="(min-width: 900px) 42vw, 94vw"/>
               <div className="plus-v177-photo-wash" aria-hidden="true" />
               <div className="plus-brand-stamp plus-brand-hero-stamp">DETAIL+<br/>ON REPEAT</div>
               <figcaption>YOUR DRIVEWAY / OUR STANDARD / ON REPEAT</figcaption>

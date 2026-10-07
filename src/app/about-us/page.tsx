@@ -93,10 +93,10 @@ export default function AboutPage() {
             <p>The company grew, but the work still happens the same place it started: outside somebody&rsquo;s house, with a team that has to earn the result one car at a time.</p>
           </div>
           <div className="about-v2-work-grid">
-            <figure className="about-v2-work-wide"><Photo id="about-ops-05" ratio="3/2" sizes="(min-width: 900px) 60vw, 92vw"/><figcaption>THE TEAM / ON THE JOB</figcaption></figure>
-            <figure><Photo id="about-ops-02" ratio="4/5" sizes="(min-width: 900px) 30vw, 92vw"/><figcaption>THE RIG / BUILT TO BE MOBILE</figcaption></figure>
-            <figure><Photo id="about-ops-01" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>SETUP / EVERY DRIVEWAY</figcaption></figure>
-            <figure><Photo id="about-ops-06" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>THE WORK / DETAIL BY DETAIL</figcaption></figure>
+            <figure className="about-v2-work-wide"><Photo id="two-tech-interior-detail" ratio="3/2" sizes="(min-width: 900px) 60vw, 92vw"/><figcaption>THE TEAM / INSIDE THE CAR</figcaption></figure>
+            <figure><Photo id="mobile-rig-open-driveway" ratio="4/5" sizes="(min-width: 900px) 30vw, 92vw"/><figcaption>THE RIG / BUILT TO BE MOBILE</figcaption></figure>
+            <figure><Photo id="rear-seat-detail" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>THE WORK / SEAT BY SEAT</figcaption></figure>
+            <figure><Photo id="classic-car-cockpit" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>THE RESULT / CLEAN THROUGHOUT</figcaption></figure>
           </div>
         </div>
       </section>

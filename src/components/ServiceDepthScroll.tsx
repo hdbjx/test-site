@@ -16,8 +16,8 @@ const levels = [
     time: "2–3 HR",
     labor: "LIGHT",
     meter: 34,
-    image: "/images/exterior-wash-team.jpg",
-    position: "center 61%",
+    image: "/images/tesla-foam-wash.jpg",
+    position: "center 55%",
     tags: ["HAND WASH", "VACUUM", "SURFACES", "GLASS", "WHEELS"],
   },
   {
