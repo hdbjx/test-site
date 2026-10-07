@@ -56,12 +56,23 @@ const levels = [
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 const range = (value: number, start: number, end: number) => clamp((value - start) / (end - start));
-const hold = (value: number, enterStart: number, enterEnd: number, holdEnd: number, exitEnd: number) => {
-  if (value <= enterStart || value >= exitEnd) return 0;
-  if (value < enterEnd) return range(value, enterStart, enterEnd);
-  if (value <= holdEnd) return 1;
-  return 1 - range(value, holdEnd, exitEnd);
+const smoothstep = (value: number) => {
+  const t = clamp(value);
+  return t * t * (3 - 2 * t);
 };
+
+// A long scene envelope with no frozen plateau. Opacity gets very close to full
+// through the reading zone, while scene position and photography keep moving
+// continuously with scroll so the interaction never feels stuck.
+const linger = (value: number, start: number, enterEnd: number, exitStart: number, end: number) => {
+  if (value <= start || value >= end) return 0;
+  const enter = smoothstep(range(value, start, enterEnd));
+  const exit = 1 - smoothstep(range(value, exitStart, end));
+  return Math.min(enter, exit);
+};
+
+const drift = (value: number, start: number, end: number, from: number, to: number) =>
+  from + (to - from) * smoothstep(range(value, start, end));
 
 export function ServiceDepthScroll() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -153,18 +164,20 @@ export function ServiceDepthScroll() {
     };
   }, []);
 
-  // Each chapter has a deliberate reading plateau. The previous version spent
-  // too much of each window transitioning, which made complete scenes easy to
-  // flick past on a trackpad. These envelopes follow enter -> HOLD -> exit.
-  const intro = 1 - range(progress, 0.105, 0.135);
-  const anatomy = hold(progress, 0.105, 0.135, 0.235, 0.265);
-  const value = hold(progress, 0.235, 0.265, 0.365, 0.395);
+  // V17.5 pacing: long readable windows, but no true hold. Every chapter keeps
+  // drifting a little while it is readable so trackpad/wheel input is visible.
+  const intro = 1 - smoothstep(range(progress, 0.085, 0.135));
+  const anatomyWindow = [0.085, 0.12, 0.225, 0.27] as const;
+  const valueWindow = [0.225, 0.26, 0.36, 0.405] as const;
+  const anatomy = linger(progress, ...anatomyWindow);
+  const value = linger(progress, ...valueWindow);
   const windows = [
-    [0.365, 0.395, 0.505, 0.535],
-    [0.505, 0.535, 0.645, 0.675],
-    [0.645, 0.675, 0.805, 0.835],
+    [0.36, 0.395, 0.505, 0.55],
+    [0.505, 0.54, 0.65, 0.695],
+    [0.65, 0.685, 0.815, 0.86],
   ] as const;
-  const finale = hold(progress, 0.805, 0.835, 1.0, 1.1);
+  const finaleWindow = [0.815, 0.85, 0.985, 1.03] as const;
+  const finale = linger(progress, ...finaleWindow);
   const railProgress = Math.round(range(progress, 0.01, 0.985) * 100);
 
   return (
@@ -189,14 +202,14 @@ export function ServiceDepthScroll() {
             <div className="depth-backdrop-shade" />
           </div>
 
-          <div className="service-depth-intro depth-scene" data-depth-mobile style={{ "--scene-opacity": intro, "--scene-y": `${(1 - intro) * 36}px` } as CSSProperties}>
+          <div className="service-depth-intro depth-scene" data-depth-mobile style={{ "--scene-opacity": intro, "--scene-y": `${drift(progress, 0, 0.135, 12, -18)}px` } as CSSProperties}>
             <p className="svc-eyebrow">SCROLL TO GO DEEPER</p>
             <h2>One car.<br /><span>Three depths.</span></h2>
             <p>The service level changes with the starting condition. Keep scrolling and the job gets deeper with you.</p>
             <div className="service-depth-cue"><span>↓</span> ENTER THE DETAIL</div>
           </div>
 
-          <div className="service-depth-anatomy depth-scene" data-depth-mobile style={{ "--scene-opacity": anatomy, "--scene-y": `${(1 - anatomy) * 34}px` } as CSSProperties}>
+          <div className="service-depth-anatomy depth-scene" data-depth-mobile style={{ "--scene-opacity": anatomy, "--scene-y": `${drift(progress, anatomyWindow[0], anatomyWindow[3], 24, -24)}px` } as CSSProperties}>
             <div className="depth-anatomy-head"><p className="svc-eyebrow">WHAT A DETAIL ACTUALLY COVERS</p><h2>We don&apos;t clean a surface.<br/><span>We work through a car.</span></h2></div>
             <div className="depth-anatomy-grid">
               <article><b>01</b><h3>Interior</h3><p>Seats, carpets, mats, dash, console, doors, glass, cargo space and the small areas quick cleans skip.</p></article>
@@ -205,7 +218,7 @@ export function ServiceDepthScroll() {
             </div>
           </div>
 
-          <div className="service-depth-value depth-scene" data-depth-mobile style={{ "--scene-opacity": value, "--scene-y": `${(1 - value) * 30}px` } as CSSProperties}>
+          <div className="service-depth-value depth-scene" data-depth-mobile style={{ "--scene-opacity": value, "--scene-y": `${drift(progress, valueWindow[0], valueWindow[3], 22, -22)}px` } as CSSProperties}>
             <p className="svc-eyebrow">WHY IT COSTS MORE THAN A WASH</p>
             <h2>You&apos;re buying<br/><span>technician hours.</span></h2>
             <div className="depth-value-equation"><span>TIME</span><i>+</i><span>EQUIPMENT</span><i>+</i><span>ATTENTION</span><i>=</i><strong>THE RESULT</strong></div>
@@ -214,16 +227,17 @@ export function ServiceDepthScroll() {
 
           <div className="service-depth-levels">
             {levels.map((level, index) => {
-              const [start, enterEnd, holdEnd, end] = windows[index];
-              const visibility = hold(progress, start, enterEnd, holdEnd, end);
-              const entering = range(progress, start, enterEnd);
-              const leaving = range(progress, holdEnd, end);
-              const meterIn = range(entering, 0.12, 0.76);
-              const tagIn = range(entering, 0.32, 0.88);
+              const [start, enterEnd, exitStart, end] = windows[index];
+              const visibility = linger(progress, start, enterEnd, exitStart, end);
+              const sceneTravel = smoothstep(range(progress, start, end));
+              const meterIn = smoothstep(range(progress, start + 0.006, enterEnd + 0.035));
+              const tagIn = smoothstep(range(progress, start + 0.012, enterEnd + 0.05));
               const style = {
                 "--depth-opacity": visibility,
-                "--depth-y": `${(1 - entering) * 58 - leaving * 32}px`,
-                "--depth-scale": 0.975 + visibility * 0.025,
+                // Keep a small amount of motion through the entire reading window.
+                "--depth-y": `${42 - sceneTravel * 68}px`,
+                "--depth-scale": 0.985 + sceneTravel * 0.018,
+                "--depth-photo-y": `${-10 + sceneTravel * 20}px`,
                 "--depth-image": `url('${level.image}')`,
                 "--depth-position": level.position,
                 "--depth-meter": `${level.meter * meterIn}%`,
@@ -253,7 +267,7 @@ export function ServiceDepthScroll() {
             })}
           </div>
 
-          <div className="service-depth-finale depth-scene" data-depth-mobile style={{ "--scene-opacity": finale, "--scene-y": `${(1 - finale) * 24}px` } as CSSProperties}>
+          <div className="service-depth-finale depth-scene" data-depth-mobile style={{ "--scene-opacity": finale, "--scene-y": `${drift(progress, finaleWindow[0], 1, 20, -16)}px` } as CSSProperties}>
             <div>
               <p className="svc-eyebrow">THE RIGHT SERVICE IS THE RIGHT AMOUNT OF WORK</p>
               <h2>Now choose what<br/><span>your car needs.</span></h2>

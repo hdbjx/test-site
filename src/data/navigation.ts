@@ -9,7 +9,6 @@ export const primaryNav: NavItem[] = [
 ];
 
 export const serviceNav: NavItem[] = [
-  { label: "Mobile Car Detailing", href: "/mobile-car-detailing" },
   { label: "Detailing Services", href: "/our-services" },
   { label: "Paint Correction", href: "/paint-correction" },
   { label: "Ceramic Coatings", href: "/ceramic" },
