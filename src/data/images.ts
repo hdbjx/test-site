@@ -78,8 +78,26 @@ export const images: SiteImage[] = [
   { id: "technician-branded-van", file: "/images/technician-branded-van.jpg", alt: "Every Detail technician walking beside the branded mobile detailing van", w: 2, h: 3, category: "team" },
   { id: "two-tech-interior-detail", file: "/images/two-tech-interior-detail.jpg", alt: "Two Every Detail technicians working together inside a customer vehicle", w: 3, h: 2, category: "team" },
   { id: "rear-seat-detail", file: "/images/rear-seat-detail.jpg", alt: "Every Detail technician wiping down a vehicle rear seat", w: 3, h: 2, category: "interior" },
-  { id: "finished-lexus-front", file: "/images/finished-lexus-front.jpg", alt: "Clean gray Lexus front end after detailing", w: 2, h: 3, category: "exterior" },
-  { id: "tesla-foam-wash", file: "/images/tesla-foam-wash.jpg", alt: "Every Detail technician foam washing a Tesla in a residential driveway", w: 1365, h: 2048, category: "work" },
+  { id: "tesla-foam-wash", file: "/images/tesla-foam-wash.jpg", alt: "Every Detail technician foam washing a Tesla in a residential driveway", w: 2, h: 3, category: "work" },
+
+
+  // Additional full-resolution originals from the October 2026 iCloud photo set.
+  // These stay in the shared registry so future pages can rotate photography
+  // without falling back to compressed exports.
+  { id: "hq-branded-van-side", file: "/images/hq-branded-van-side.jpg", alt: "Every Detail branded mobile detailing van parked at a local job", w: 3, h: 2, category: "rig" },
+  { id: "hq-van-through-flowers", file: "/images/hq-van-through-flowers.jpg", alt: "Every Detail van photographed through flowers at a neighborhood job", w: 3, h: 2, category: "brand" },
+  { id: "hq-interior-team-front-seats", file: "/images/hq-interior-team-front-seats.jpg", alt: "Every Detail technicians cleaning the front seats of a vehicle", w: 3, h: 2, category: "team" },
+  { id: "hq-technician-trunk-detail", file: "/images/hq-technician-trunk-detail.jpg", alt: "Every Detail technician cleaning the rear cargo area of a vehicle", w: 3, h: 2, category: "work" },
+  { id: "hq-decatur-summer-sky", file: "/images/hq-decatur-summer-sky.jpg", alt: "Blue sky and flowering trees during an Every Detail neighborhood job", w: 2, h: 3, category: "local" },
+  { id: "hq-white-ioniq-front", file: "/images/hq-white-ioniq-front.jpg", alt: "Clean white Hyundai Ioniq after detailing", w: 2, h: 3, category: "exterior" },
+  { id: "hq-black-suv-finished", file: "/images/hq-black-suv-finished.jpg", alt: "Finished black SUV after an Every Detail service", w: 2, h: 3, category: "exterior" },
+  { id: "hq-technician-window-detail", file: "/images/hq-technician-window-detail.jpg", alt: "Every Detail technician cleaning the side of a customer vehicle", w: 3, h: 2, category: "work" },
+  { id: "hq-mobile-rig-fleet", file: "/images/hq-mobile-rig-fleet.jpg", alt: "Every Detail mobile detailing vehicles lined up at a local job site", w: 3, h: 2, category: "rig" },
+  { id: "hq-black-suv-grille", file: "/images/hq-black-suv-grille.jpg", alt: "Detailed black SUV grille and front finish", w: 3, h: 2, category: "exterior" },
+  { id: "hq-white-suv-finished", file: "/images/hq-white-suv-finished.jpg", alt: "Finished white SUV after detailing", w: 2, h: 3, category: "exterior" },
+  { id: "hq-interior-front-seat-work", file: "/images/hq-interior-front-seat-work.jpg", alt: "Every Detail technician working inside a tan vehicle interior", w: 3, h: 2, category: "interior" },
+  { id: "hq-crew-shirt-detail", file: "/images/hq-crew-shirt-detail.jpg", alt: "Every Detail technician wearing a branded shirt during a detail", w: 2, h: 3, category: "team" },
+  { id: "hq-white-ioniq-wheel", file: "/images/hq-white-ioniq-wheel.jpg", alt: "Clean wheel and front quarter of a white Hyundai Ioniq", w: 2, h: 3, category: "exterior" },
 
   // Detail+ recurring-care photography. These aliases intentionally
   // use descriptive IDs so the Detail+ story can reference the exact

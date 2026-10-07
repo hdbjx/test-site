@@ -16,6 +16,7 @@ export function Header() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [availabilityOpen, setAvailabilityOpen] = useState(false);
   const [showAvailabilityBanner, setShowAvailabilityBanner] = useState(false);
+  const [detailPlusHeaderScrolled, setDetailPlusHeaderScrolled] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -113,6 +114,23 @@ export function Header() {
   }, [menuOpen]);
 
   useEffect(() => {
+    if (pathname !== "/detailplus") {
+      setDetailPlusHeaderScrolled(false);
+      return;
+    }
+    const updateDetailPlusHeader = () => {
+      setDetailPlusHeaderScrolled(window.scrollY > Math.max(420, window.innerHeight * 0.72));
+    };
+    updateDetailPlusHeader();
+    window.addEventListener("scroll", updateDetailPlusHeader, { passive: true });
+    window.addEventListener("resize", updateDetailPlusHeader);
+    return () => {
+      window.removeEventListener("scroll", updateDetailPlusHeader);
+      window.removeEventListener("resize", updateDetailPlusHeader);
+    };
+  }, [pathname]);
+
+  useEffect(() => {
     if (!availabilityOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -128,10 +146,14 @@ export function Header() {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
   const onHome = pathname === "/";
-  const onDarkHero = onHome || pathname === "/paint-correction" || pathname === "/ceramic" || pathname === "/detailplus";
+  const onDetailPlus = pathname === "/detailplus";
+  const onDarkHero = onHome || pathname === "/paint-correction" || pathname === "/ceramic" || onDetailPlus;
+  const headerClass = onDarkHero
+    ? `fixed inset-x-0 top-0 z-40 text-white home-header${onDetailPlus ? ` detailplus-header${detailPlusHeaderScrolled ? " detailplus-header--scrolled" : ""}` : ""}`
+    : "sticky inset-x-0 top-0 z-40 text-white inner-header";
 
   return (
-    <header className={onDarkHero ? "fixed inset-x-0 top-0 z-40 text-white home-header" : "sticky inset-x-0 top-0 z-40 text-white inner-header"}>
+    <header className={headerClass}>
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"

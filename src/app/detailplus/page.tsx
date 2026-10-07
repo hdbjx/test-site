@@ -20,15 +20,15 @@ const loopSteps = [
     eyebrow: "START CLEAN",
     title: "Reset the baseline.",
     body: "Detail+ works best once the car is where you want it. Start with a full detail if needed, then recurring care keeps it from sliding backward.",
-    image: "finished-white-car",
-    note: "ONE GOOD RESET",
+    image: "clean-white-interior",
+    note: "START FROM A CLEAN BASELINE",
   },
   {
     n: "02",
     eyebrow: "PICK THE RHYTHM",
     title: "Your schedule, already handled.",
     body: "Every two weeks, monthly, every six weeks, every two months or quarterly. Pick the cadence that matches how you actually use the car.",
-    image: "classic-car-cockpit",
+    image: "technician-branded-van",
     note: "2 WEEKS → QUARTERLY",
   },
   {
@@ -36,7 +36,7 @@ const loopSteps = [
     eyebrow: "WE COME BACK",
     title: "No rebooking ritual.",
     body: "Your visits recur automatically and we remind you before each one. The mobile setup comes back to you, so staying clean does not become another errand.",
-    image: "branded-rig-driveway",
+    image: "mobile-rig-open-driveway",
     note: "YOUR DRIVEWAY / OUR RIG",
   },
   {
@@ -84,14 +84,22 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section className="plus-v177-manifesto">
-        <div className="plus-brand-shell">
-          <p className="plus-brand-kicker">THE IDEA IS SIMPLE</p>
-          <h2>A clean car should be a <span>default state,</span><br/>not a once-in-a-while event.</h2>
-          <div className="plus-v177-manifesto-grid">
-            <p>Most cars do not get destroyed overnight. They slowly fall behind. Detail+ changes the timing. We return while the car is still manageable, which means less buildup, fewer rescue cleans, and a car that feels consistently taken care of.</p>
-            <div className="plus-v177-loopmark" aria-hidden="true"><span>DETAIL+</span><b>↻</b><small>CLEAN / RETURN / REPEAT</small></div>
+      <section className="plus-v177-manifesto plus-v180-manifesto">
+        <div className="plus-brand-shell plus-v180-manifesto-grid">
+          <div className="plus-v180-manifesto-copy">
+            <p className="plus-brand-kicker">THE IDEA IS SIMPLE</p>
+            <h2>Clean should be the <span>baseline.</span></h2>
+            <p>Most cars do not get wrecked overnight. They slowly fall behind. Detail+ changes the timing by bringing us back while the car is still manageable.</p>
+            <div className="plus-v180-manifesto-points">
+              <span><b>01</b> LESS BUILDUP</span>
+              <span><b>02</b> FEWER RESCUE CLEANS</span>
+              <span><b>03</b> CONSISTENTLY CLEAN</span>
+            </div>
           </div>
+          <figure className="plus-v180-manifesto-photo">
+            <Photo id="two-tech-interior-detail" sizes="(min-width: 900px) 44vw, 94vw" />
+            <figcaption>REAL CARE / BEFORE IT PILES UP</figcaption>
+          </figure>
         </div>
       </section>
 
@@ -104,7 +112,7 @@ export default function DetailPlusPage() {
               <div className="plus-v177-orbit-ring"><b>+</b></div>
               <span className="p1">RESET</span><span className="p2">SCHEDULE</span><span className="p3">RETURN</span><span className="p4">REPEAT</span>
             </div>
-            <p className="plus-v177-loop-sub">Scroll through one Detail+ cycle. Nothing is locked in place. The page keeps moving, just like the plan.</p>
+            <p className="plus-v177-loop-sub">Pick the cadence once. We return on that rhythm and handle the work before the car falls behind again.</p>
           </aside>
           <div className="plus-v177-loop-steps">
             {loopSteps.map((s) => (
@@ -130,8 +138,9 @@ export default function DetailPlusPage() {
             <div><p className="plus-brand-kicker">THE DETAIL+ RULE</p><h2>Life happens.<br/><span>Your price doesn’t.</span></h2></div>
             <blockquote>“{detailPlusGuarantee}”</blockquote>
           </div>
-          <div className="plus-v177-benefit-grid">
+          <div className="plus-v177-benefit-grid plus-v180-benefit-grid">
             {detailPlusBenefits.map((b, i) => <article key={b.title}><span>{String(i + 1).padStart(2, "0")}</span><h3>{b.title}</h3><p>{b.body}</p></article>)}
+            <figure className="plus-v180-benefit-photo"><Photo id="classic-red-wheel" sizes="(min-width: 900px) 28vw, 94vw"/><figcaption>THE STANDARD / EVERY VISIT</figcaption></figure>
           </div>
         </div>
       </section>
@@ -151,7 +160,16 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section className="plus-brand-reviews plus-v177-reviews"><div className="plus-brand-shell"><div className="plus-brand-section-head compact"><p className="plus-brand-kicker">WHY PEOPLE COME BACK</p><h2>The standard stays.<br/><span>So do they.</span></h2></div><ReviewGrid /></div></section>
+      <section className="plus-brand-reviews plus-v177-reviews plus-v180-reviews">
+        <div className="plus-brand-shell plus-v180-reviews-grid">
+          <div className="plus-v180-reviews-intro">
+            <p className="plus-brand-kicker">WHY PEOPLE COME BACK</p>
+            <h2>The standard stays.<br/><span>So do they.</span></h2>
+            <figure><Photo id="crew-shirt-van" sizes="(min-width: 900px) 28vw, 94vw"/><figcaption>LOCAL CREW / RECURRING CARE</figcaption></figure>
+          </div>
+          <div className="plus-v180-review-grid"><ReviewGrid /></div>
+        </div>
+      </section>
 
       <section className="plus-brand-faq"><div className="plus-brand-shell plus-brand-faq-grid"><div><p className="plus-brand-kicker">BEFORE YOU PUT IT ON REPEAT</p><h2>Good questions.<br/><span>Clear answers.</span></h2></div><FaqList faqs={detailPlusFaqs}/></div></section>
 
