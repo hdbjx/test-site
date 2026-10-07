@@ -107,6 +107,18 @@ export function ServiceDepthScroll() {
 
     measureHeader();
     update();
+
+    // Browsers can resolve a hash before this very tall sticky story has fully
+    // laid out. Re-resolve the initial destination after layout so direct
+    // links such as /our-services#pricing land where they actually belong.
+    const initialHash = window.location.hash.slice(1);
+    let hashTimer: number | null = null;
+    if (initialHash && !["maintenance-detail", "premium-detail", "factory-reset"].includes(initialHash)) {
+      hashTimer = window.setTimeout(() => {
+        document.getElementById(initialHash)?.scrollIntoView({ block: "start" });
+      }, 120);
+    }
+
     const header = document.querySelector<HTMLElement>("body > header, header");
     const observer = typeof ResizeObserver !== "undefined" && header ? new ResizeObserver(requestUpdate) : null;
     if (header && observer) observer.observe(header);
@@ -117,6 +129,7 @@ export function ServiceDepthScroll() {
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
       if (rafRef.current !== null) window.cancelAnimationFrame(rafRef.current);
+      if (hashTimer !== null) window.clearTimeout(hashTimer);
     };
   }, []);
 
@@ -143,6 +156,14 @@ export function ServiceDepthScroll() {
           </div>
           <div className="service-depth-rail" aria-hidden="true">
             <span>ROUTINE</span><i><b style={{ height: `${railProgress}%` }} /></i><span>RESET</span>
+          </div>
+
+          <div className="service-depth-backdrops" aria-hidden="true">
+            <div className="depth-backdrop depth-backdrop-intro" style={{ "--backdrop-opacity": intro } as CSSProperties} />
+            <div className="depth-backdrop depth-backdrop-anatomy" style={{ "--backdrop-opacity": anatomy } as CSSProperties} />
+            <div className="depth-backdrop depth-backdrop-value" style={{ "--backdrop-opacity": value } as CSSProperties} />
+            <div className="depth-backdrop depth-backdrop-finale" style={{ "--backdrop-opacity": finale } as CSSProperties} />
+            <div className="depth-backdrop-shade" />
           </div>
 
           <div className="service-depth-intro depth-scene" data-depth-mobile style={{ "--scene-opacity": intro, "--scene-y": `${(1 - intro) * 36}px` } as CSSProperties}>
