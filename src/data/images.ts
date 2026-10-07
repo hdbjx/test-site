@@ -65,6 +65,42 @@ export const images: SiteImage[] = [
   // CURATED WORK
   // ------------------------------------------------------------
 
+  // Detail+ recurring-care photography. These aliases intentionally
+  // use descriptive IDs so the Detail+ story can reference the exact
+  // local assets through the shared <Photo> registry.
+  {
+    id: "finished-white-car",
+    file: "/images/finished-white-car.jpg",
+    alt: "Finished white vehicle after an Every Detail service",
+    w: 2,
+    h: 3,
+    category: "exterior",
+  },
+  {
+    id: "team-tablet",
+    file: "/images/team-tablet.jpg",
+    alt: "Every Detail team using a tablet during a mobile detailing job",
+    w: 2,
+    h: 3,
+    category: "team",
+  },
+  {
+    id: "branded-rig-driveway",
+    file: "/images/branded-rig-driveway.jpg",
+    alt: "Every Detail branded mobile detailing rig at a residential driveway",
+    w: 2,
+    h: 3,
+    category: "rig",
+  },
+  {
+    id: "interior-detail-team",
+    file: "/images/interior-detail-team.jpg",
+    alt: "Every Detail technicians working together on a vehicle interior",
+    w: 3,
+    h: 2,
+    category: "interior",
+  },
+
   {
     id: "work-01",
     file: "/images/black-truck-finished.jpg",
