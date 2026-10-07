@@ -98,7 +98,11 @@ export function Footer() {
           <p>
             © {year} {site.legalName}. Decatur, Georgia.
           </p>
-          <p>Student-run. Professionally detailed.</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-2 md:justify-end">
+            <Link href="/terms" className="text-paper/75 hover:text-paper hover:underline">Terms</Link>
+            <Link href="/privacy-policy" className="text-paper/75 hover:text-paper hover:underline">Privacy</Link>
+            <span>Student-run. Professionally detailed.</span>
+          </div>
         </div>
       </div>
     </footer>
