@@ -56,9 +56,11 @@ const levels = [
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 const range = (value: number, start: number, end: number) => clamp((value - start) / (end - start));
-const bell = (value: number, start: number, peak: number, end: number) => {
-  if (value <= start || value >= end) return 0;
-  return value < peak ? range(value, start, peak) : 1 - range(value, peak, end);
+const hold = (value: number, enterStart: number, enterEnd: number, holdEnd: number, exitEnd: number) => {
+  if (value <= enterStart || value >= exitEnd) return 0;
+  if (value < enterEnd) return range(value, enterStart, enterEnd);
+  if (value <= holdEnd) return 1;
+  return 1 - range(value, holdEnd, exitEnd);
 };
 
 export function ServiceDepthScroll() {
@@ -151,22 +153,25 @@ export function ServiceDepthScroll() {
     };
   }, []);
 
-  const intro = 1 - range(progress, 0.045, 0.12);
-  const anatomy = bell(progress, 0.085, 0.16, 0.255);
-  const value = bell(progress, 0.215, 0.29, 0.37);
+  // Each chapter has a deliberate reading plateau. The previous version spent
+  // too much of each window transitioning, which made complete scenes easy to
+  // flick past on a trackpad. These envelopes follow enter -> HOLD -> exit.
+  const intro = 1 - range(progress, 0.105, 0.135);
+  const anatomy = hold(progress, 0.105, 0.135, 0.235, 0.265);
+  const value = hold(progress, 0.235, 0.265, 0.365, 0.395);
   const windows = [
-    [0.335, 0.42, 0.515],
-    [0.48, 0.57, 0.665],
-    [0.63, 0.72, 0.825],
+    [0.365, 0.395, 0.505, 0.535],
+    [0.505, 0.535, 0.645, 0.675],
+    [0.645, 0.675, 0.805, 0.835],
   ] as const;
-  const finale = range(progress, 0.79, 0.9);
-  const railProgress = Math.round(range(progress, 0.02, 0.9) * 100);
+  const finale = hold(progress, 0.805, 0.835, 1.0, 1.1);
+  const railProgress = Math.round(range(progress, 0.01, 0.985) * 100);
 
   return (
     <section ref={sectionRef} className="service-depth" aria-label="How Every Detail service levels increase in depth">
-      <span id="maintenance-detail" className="service-depth-anchor" style={{ top: "34%" }} aria-hidden="true" />
-      <span id="premium-detail" className="service-depth-anchor" style={{ top: "49%" }} aria-hidden="true" />
-      <span id="factory-reset" className="service-depth-anchor" style={{ top: "64%" }} aria-hidden="true" />
+      <span id="maintenance-detail" className="service-depth-anchor" style={{ top: "38%" }} aria-hidden="true" />
+      <span id="premium-detail" className="service-depth-anchor" style={{ top: "52%" }} aria-hidden="true" />
+      <span id="factory-reset" className="service-depth-anchor" style={{ top: "66%" }} aria-hidden="true" />
       <div ref={frameRef} className="service-depth-sticky">
         <div className="service-depth-stage">
           <div className="service-depth-topline" aria-hidden="true">
@@ -209,10 +214,10 @@ export function ServiceDepthScroll() {
 
           <div className="service-depth-levels">
             {levels.map((level, index) => {
-              const [start, peak, end] = windows[index];
-              const visibility = bell(progress, start, peak, end);
-              const entering = range(progress, start, peak);
-              const leaving = range(progress, peak, end);
+              const [start, enterEnd, holdEnd, end] = windows[index];
+              const visibility = hold(progress, start, enterEnd, holdEnd, end);
+              const entering = range(progress, start, enterEnd);
+              const leaving = range(progress, holdEnd, end);
               const meterIn = range(entering, 0.12, 0.76);
               const tagIn = range(entering, 0.32, 0.88);
               const style = {
