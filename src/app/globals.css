@@ -4164,3 +4164,46 @@ main,section,article,div,form,fieldset{min-width:0}
 .services-v161 .edu-value-statement[data-svc-reveal]{transform:translate3d(0,calc((1 - var(--svc-reveal)) * 48px),0) scale(calc(.96 + var(--svc-reveal) * .04));box-shadow:calc(4px + var(--svc-reveal) * 5px) calc(4px + var(--svc-reveal) * 5px) 0 var(--color-red)}
 .services-v161 .svc-process li[data-svc-reveal]{transform:translate3d(0,calc((1 - var(--svc-reveal)) * (45px + var(--svc-delay) * 16px)),0);box-shadow:calc(2px + var(--svc-reveal) * 4px) calc(2px + var(--svc-reveal) * 4px) 0 #dbc7b3}
 @media(prefers-reduced-motion:reduce){.services-v161 [data-svc-reveal]{opacity:1!important;transform:none!important;filter:none!important}}
+
+/* V17.3: The service story must remain a real vertical sticky container.
+   A clipped main ancestor can become the sticky containing block in Chromium,
+   causing the frame to scroll away while the 760vh track remains. Keep the
+   Services page overflow-visible; html/body still provide global x clipping. */
+@media (min-width:801px){
+  .services-v161{overflow:visible!important;overflow-x:visible!important}
+  .service-depth{overflow:visible!important}
+  .service-depth-sticky{position:sticky!important;top:var(--depth-top)!important}
+}
+
+/* V17.3 hard pin fallback. The desktop story gets explicit before/pinned/after
+   states, so it cannot leave a tall empty track behind if native sticky is
+   disrupted by a browser/ancestor overflow interaction. */
+@media (min-width:801px){
+  .service-depth-sticky[data-pin="before"]{
+    position:absolute!important;
+    top:0!important;
+    left:1rem;
+    right:1rem;
+    width:auto;
+  }
+  .service-depth-sticky[data-pin="pinned"]{
+    position:fixed!important;
+    top:var(--depth-top)!important;
+    left:1rem;
+    right:1rem;
+    width:auto;
+    z-index:35;
+  }
+  .service-depth-sticky[data-pin="after"]{
+    position:absolute!important;
+    top:auto!important;
+    bottom:0;
+    left:1rem;
+    right:1rem;
+    width:auto;
+  }
+}
+@media (min-width:801px) and (prefers-reduced-motion:reduce){
+  .services-v161{overflow:visible!important}
+  .service-depth-sticky{position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important}
+}

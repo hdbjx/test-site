@@ -75,9 +75,12 @@ export function ServiceDepthScroll() {
 
     const measureHeader = () => {
       const header = document.querySelector<HTMLElement>("body > header, header");
-      const height = window.innerWidth > 800 ? Math.ceil(header?.getBoundingClientRect().height ?? 0) : 0;
-      topRef.current = height;
-      section.style.setProperty("--depth-top", `${height}px`);
+      const headerRect = header?.getBoundingClientRect();
+      // Use the header's actual viewport bottom rather than only its height.
+      // This remains correct when the school-hours banner changes the sticky header.
+      const top = window.innerWidth > 800 ? Math.max(0, Math.ceil(headerRect?.bottom ?? 0)) : 0;
+      topRef.current = top;
+      section.style.setProperty("--depth-top", `${top}px`);
     };
 
     const update = () => {
@@ -87,11 +90,26 @@ export function ServiceDepthScroll() {
 
       if (window.innerWidth > 800) {
         const rect = section.getBoundingClientRect();
-        const frameHeight = frameRef.current?.offsetHeight ?? window.innerHeight;
+        const frame = frameRef.current;
+        const frameHeight = frame?.offsetHeight ?? Math.max(1, window.innerHeight - topRef.current - 16);
         const travel = Math.max(1, section.offsetHeight - frameHeight);
-        setProgress(clamp((topRef.current - rect.top) / travel));
+        const distanceIntoStory = topRef.current - rect.top;
+        setProgress(clamp(distanceIntoStory / travel));
+
+        // Do not rely on CSS sticky alone. A clipped/overflow ancestor can make
+        // Chromium treat the story as a normal block while its 760vh track keeps
+        // scrolling. Explicit pin states guarantee that the frame stays visible
+        // for the whole story and releases exactly at the bottom.
+        if (frame) {
+          let pin: "before" | "pinned" | "after" = "pinned";
+          if (distanceIntoStory <= 0) pin = "before";
+          else if (distanceIntoStory >= travel) pin = "after";
+          if (frame.dataset.pin !== pin) frame.dataset.pin = pin;
+        }
         return;
       }
+
+      if (frameRef.current) delete frameRef.current.dataset.pin;
 
       const viewport = window.innerHeight;
       section.querySelectorAll<HTMLElement>("[data-depth-mobile]").forEach((el) => {
