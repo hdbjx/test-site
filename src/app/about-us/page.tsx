@@ -93,10 +93,10 @@ export default function AboutPage() {
             <p>The company grew, but the work still happens the same place it started: outside somebody&rsquo;s house, with a team that has to earn the result one car at a time.</p>
           </div>
           <div className="about-v2-work-grid">
-            <figure className="about-v2-work-wide"><Photo id="two-tech-interior-detail" ratio="3/2" sizes="(min-width: 900px) 60vw, 92vw"/><figcaption>THE TEAM / INSIDE THE CAR</figcaption></figure>
-            <figure><Photo id="mobile-rig-open-driveway" ratio="4/5" sizes="(min-width: 900px) 30vw, 92vw"/><figcaption>THE RIG / BUILT TO BE MOBILE</figcaption></figure>
-            <figure><Photo id="rear-seat-detail" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>THE WORK / SEAT BY SEAT</figcaption></figure>
-            <figure><Photo id="classic-car-cockpit" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>THE RESULT / CLEAN THROUGHOUT</figcaption></figure>
+            <figure className="about-v2-work-wide"><Photo id="hq-branded-van-side" ratio="3/2" sizes="(min-width: 900px) 60vw, 92vw"/><figcaption>THE RIG / OUT IN DECATUR</figcaption></figure>
+            <figure><Photo id="hq-technician-trunk-detail" ratio="4/5" sizes="(min-width: 900px) 30vw, 92vw"/><figcaption>THE WORK / CARGO AREA</figcaption></figure>
+            <figure><Photo id="hq-white-ioniq-front" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>THE RESULT / FINISHED EXTERIOR</figcaption></figure>
+            <figure><Photo id="hq-van-through-flowers" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>THE NEIGHBORHOOD / DECATUR</figcaption></figure>
           </div>
         </div>
       </section>

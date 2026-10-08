@@ -4103,8 +4103,8 @@ main,section,article,div,form,fieldset{min-width:0}
 /* Every chapter has photography. The first third of the story should never read as a black holding screen. */
 .service-depth-backdrops{position:absolute;z-index:1;inset:0;overflow:hidden;pointer-events:none}
 .depth-backdrop{--backdrop-opacity:0;position:absolute;inset:-2%;opacity:var(--backdrop-opacity);background-size:cover;background-repeat:no-repeat;will-change:opacity,transform;transform:scale(calc(1.035 + (1 - var(--backdrop-opacity)) * .018));filter:saturate(.94) contrast(1.04);transition:opacity .04s linear}
-.depth-backdrop-intro{background-image:url('/images/hero.jpg');background-position:center 48%}
-.depth-backdrop-anatomy{background-image:url('/images/interior-detail-team.jpg');background-position:center 48%}
+.depth-backdrop-intro{background-image:url('/images/hq-mobile-rig-fleet.jpg');background-position:center 48%}
+.depth-backdrop-anatomy{background-image:url('/images/hq-black-suv-grille.jpg');background-position:center 48%}
 .depth-backdrop-value{background-image:url('/images/team-rig-setup.jpg');background-position:center 48%}
 .depth-backdrop-finale{background-image:url('/images/finished-sedan-rig.jpg');background-position:center 52%}
 .depth-backdrop-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgb(9 9 9/.94) 0%,rgb(9 9 9/.82) 37%,rgb(9 9 9/.36) 64%,rgb(9 9 9/.12) 100%),linear-gradient(0deg,rgb(8 8 8/.62) 0%,transparent 45%,rgb(8 8 8/.22) 100%)}
@@ -4282,7 +4282,7 @@ main,section,article,div,form,fieldset{min-width:0}
 .plus-v177-hero .plus-brand-lede{max-width:42rem;color:rgb(255 255 255/.84);font-size:clamp(1.02rem,1.2vw,1.22rem)}
 .plus-v177-hero-photo{height:min(70svh,690px);min-height:34rem;margin-right:calc((100vw - min(88vw,1340px))/ -2);border-left:2px solid rgb(243 241 236/.35)}
 .plus-v177-hero-photo>div:first-child{height:100%!important;aspect-ratio:auto!important}
-.plus-v177-hero-photo img{height:100%!important;object-fit:cover;object-position:52% 50%;transform:scale(1.02)}
+.plus-v177-hero-photo img{height:100%!important;object-fit:cover;object-position:50% 58%;transform:scale(1.02)}
 .plus-v177-photo-wash{position:absolute;inset:0;background:linear-gradient(90deg,rgb(89 13 7/.62) 0%,rgb(89 13 7/.08) 44%,transparent 70%),linear-gradient(0deg,rgb(17 17 17/.2),transparent 45%);pointer-events:none}
 .plus-v177-hero .plus-brand-hero-stamp{left:1.5rem;top:1.5rem;background:rgb(89 13 7/.9);backdrop-filter:blur(4px)}
 .plus-v177-hero-proof{display:flex;flex-wrap:wrap;gap:.65rem 1.35rem;margin-top:2.25rem;padding-top:1.25rem;border-top:1px solid rgb(243 241 236/.35)}
@@ -4416,4 +4416,39 @@ main,section,article,div,form,fieldset{min-width:0}
 }
 @media(max-width:620px){
   .plus-v180-benefit-grid{grid-template-columns:1fr}.plus-v180-benefit-photo{grid-column:auto}.plus-v180-manifesto-points span{font-size:.62rem}
+}
+
+
+/* Detail+ v18.2: compact, separated hero navigation. The Detail+ nav should
+   read as navigation, not as another layer floating across the hero photo. */
+.detailplus-header{
+  background:rgb(54 7 4 / .98);
+  box-shadow:0 1px 0 rgb(255 255 255 / .12);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+.detailplus-header::before{display:none!important}
+@media (min-width:1024px){
+  .detailplus-header .home-nav-shell{
+    width:min(88vw,1340px)!important;
+    height:5.45rem!important;
+    min-height:5.45rem!important;
+    margin:0 auto!important;
+    padding:0!important;
+  }
+  .detailplus-header .home-logo-control img{width:4.45rem!important;height:4.45rem!important}
+  .detailplus-header .home-nav-links{gap:.55rem!important}
+  .detailplus-header .home-nav-links a,
+  .detailplus-header .home-nav-links button,
+  .detailplus-header .home-nav-actions>a:not(.btn){font-size:1.02rem!important}
+  .detailplus-header .home-nav-actions{gap:.85rem}
+  .detailplus-header .home-nav-actions .btn-sm{min-height:3.25rem!important;padding:.72rem 1.2rem!important;font-size:1rem!important}
+  .plus-v177-hero{padding-top:7.9rem}
+  .detailplus-header.detailplus-header--scrolled{background:rgb(17 17 17 / .98)}
+  .detailplus-header.detailplus-header--scrolled .home-nav-shell{height:4.9rem!important;min-height:4.9rem!important}
+  .detailplus-header.detailplus-header--scrolled .home-logo-control img{width:4rem!important;height:4rem!important}
+}
+@media (max-width:1023px){
+  .detailplus-header{background:rgb(54 7 4 / .98)}
+  .detailplus-header .home-nav-shell{margin-top:0!important}
 }
