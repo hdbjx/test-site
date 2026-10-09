@@ -256,6 +256,46 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "We couldn't verify that your booking was created. Please try again or call/text us." }, { status: 500 });
   }
 
+  // Persist each purchased add-on against the vehicle line so the Team app
+  // and Van HQ receive structured required work, not just human-readable notes.
+  const { data: createdVehicleLines, error: vehicleLinesError } = await supabaseAdmin()
+    .from("job_vehicles")
+    .select("id, sort_order, created_at")
+    .eq("job_id", data)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (vehicleLinesError || !createdVehicleLines || createdVehicleLines.length !== lines.length) {
+    console.error("[book] structured add-ons: could not resolve vehicle lines", vehicleLinesError, createdVehicleLines);
+    await supabaseAdmin().from("jobs").delete().eq("id", data);
+    return NextResponse.json({ ok: false, error: "We couldn't finish creating that booking. Please try again." }, { status: 500 });
+  }
+
+  const addonRows = lines.flatMap((line, index) =>
+    line.addons.map((addon) => ({
+      job_id: data,
+      job_vehicle_id: createdVehicleLines[index].id,
+      addon_key: addon.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, ""),
+      addon_name: ADDON_LABELS[addon],
+      price: ADDON_PRICES[addon] ?? 0,
+      status: "required",
+    })),
+  );
+
+  if (addonRows.length > 0) {
+    const { error: addonError } = await supabaseAdmin()
+      .from("job_vehicle_addons")
+      .insert(addonRows);
+
+    if (addonError) {
+      console.error("[book] structured add-ons", addonError);
+      // Do not leave behind a confirmed appointment whose required work is
+      // missing from the operations apps. jobs cascades to its vehicle lines.
+      await supabaseAdmin().from("jobs").delete().eq("id", data);
+      return NextResponse.json({ ok: false, error: "We couldn't finish adding the selected services. Please try again." }, { status: 500 });
+    }
+  }
+
   // Attribution is intentionally stored after the existing booking RPC so the
   // Team iOS app and every other booking client can keep using that RPC without
   // sending these website-only fields. The columns are nullable/backward-compatible.
