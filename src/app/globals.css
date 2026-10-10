@@ -4452,3 +4452,6 @@ main,section,article,div,form,fieldset{min-width:0}
   .detailplus-header{background:rgb(54 7 4 / .98)}
   .detailplus-header .home-nav-shell{margin-top:0!important}
 }
+
+/* Behavioral quote intent selector */
+.quote-rec-timing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin-top:1rem}.quote-rec-timing{border:1.5px solid var(--line,#c9c3bb);background:#fff;padding:.9rem 1rem;border-radius:10px;text-align:left;font-weight:700;cursor:pointer}.quote-rec-timing:hover,.quote-rec-timing.is-selected{border-color:#590d07;background:#f4ebe7;color:#590d07}.quote-rec-contact{transition:opacity .2s ease}.quote-rec-save-card .quote-rec-contact-grid{margin-top:.5rem}@media(max-width:640px){.quote-rec-timing-grid{grid-template-columns:1fr}}

@@ -66,6 +66,9 @@ async function saveQuoteToCrm(fields: Record<string, string>, clientId: string) 
     // The recommender already supplies the selected add-ons / paint upgrades here,
     // which gives CRM managers the context behind the final quoted total.
     p_internal_notes: nullable(fields.internalNotes),
+    p_source: nullable(fields.source) ?? "Website Recommender",
+    p_quote_session_id: nullable(fields.sessionId),
+    p_desired_timing: nullable(fields.desiredTiming),
   });
   if (error) throw error;
   const leadId = typeof data === "string" ? data : String(data ?? "");

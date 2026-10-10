@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { recommenderVehicles, type RecommenderVehicle } from "@/data/recommenderVehicles";
 import { PRICING, services, vehicleLabel, type ServiceId } from "@/data/services";
 import { ADDON_PRICES, PAINT_UPGRADES, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
@@ -128,10 +128,24 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
   const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [desiredTiming, setDesiredTiming] = useState<"asap" | "weekend" | "next_week" | "exploring" | null>(null);
+  const [sessionId, setSessionId] = useState("");
   const started = useRef(false);
   const conditionRef = useRef<HTMLDivElement>(null);
   const concernsRef = useRef<HTMLDivElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let id = sessionStorage.getItem("ed_quote_session_id");
+    if (!id) { id = crypto.randomUUID(); sessionStorage.setItem("ed_quote_session_id", id); }
+    setSessionId(id);
+  }, []);
+
+  async function recordBehavior(stage: string, extra: Record<string, unknown> = {}) {
+    const id = sessionId || sessionStorage.getItem("ed_quote_session_id");
+    if (!id) return;
+    await fetch("/api/quote-session", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ sessionId:id, stage, ...extra }) }).catch(() => null);
+  }
 
   const start = () => {
     if (started.current) return;
@@ -213,6 +227,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     setCustomizeExpanded(false);
     setQuoteDirty(false);
     setError(null);
+    void recordBehavior("recommendation_viewed", { vehicleMake: vehicle.make, vehicleModel: vehicle.model, vehicleSize: vehicleLabel(vehicle.vehicle), conditionLabel: CONDITIONS.find((item) => item.value === condition)?.label ?? "", concerns: [...concerns].map(concernLabel), recommendedService: services[next.service].name, quoteAmount: PRICING[vehicle.vehicle][next.service].price });
     window.setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
   }
 
@@ -260,6 +275,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     setError(null);
     setSending(false);
     setSent(false);
+    setDesiredTiming(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -272,11 +288,13 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     if (addonIds.length) q.set("addons", addonIds.join(","));
     if (paint.size) q.set("paint", [...paint].join(","));
     q.set("from", "quote");
+    if (desiredTiming) q.set("timing", desiredTiming);
     return `/book?${q.toString()}`;
   }
 
   async function sendBuild() {
     if (!vehicle || !condition || !service || !result) return;
+    if (!desiredTiming) { setError("Tell us when you would want it done."); return; }
     if (!name.trim()) { setError("Enter your name so we know who the build belongs to."); return; }
     if ((phone.match(/\d/g) ?? []).length < 10) { setError("Enter a 10-digit phone number so we can follow up."); return; }
     if (!email.trim()) { setError("Enter your email so we can save your quote."); return; }
@@ -315,10 +333,14 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       message,
       internalNotes,
       source: "Website Recommender",
+      sessionId,
+      desiredTiming,
     });
 
     if (response.ok) {
       setSent(true);
+      sessionStorage.setItem("ed_quote_contact", JSON.stringify({ name:name.trim(), phone:phone.trim(), email:email.trim() }));
+      void recordBehavior("contact_captured", { desiredTiming, quoteAmount: total });
       setQuoteDirty(false);
       track("quote_submit", { interest: service, source: "recommender" });
       track("quote_price_reveal", { vehicle: vehicle.vehicle, service, total });
@@ -340,50 +362,31 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       <div ref={resultRef} className="quote-rec-result">
         <button type="button" onClick={reset} className="quote-rec-back">← Start over</button>
 
-        <div className={`quote-rec-result-grid quote-rec-result-grid-conversion ${sent ? "is-revealed" : "is-gated"}`}>
+        <div className="quote-rec-result-grid quote-rec-result-grid-conversion is-revealed">
           <section className="quote-rec-result-main">
             <p className="eyebrow">Recommended for your {vehicle.model}</p>
             <h2>{activeService.name}</h2>
             <p className="quote-rec-result-summary">{activeService.summary}</p>
-
-            <div className="quote-rec-includes" aria-label="What is included">
-              {included.map((item) => <span key={item}>✓ {item}</span>)}
-            </div>
-
-            <details className="quote-rec-why-details">
-              <summary>Why this fits your {vehicle.model}</summary>
-              <p>{result.why}</p>
-            </details>
+            <div className="quote-rec-includes" aria-label="What is included">{included.map((item) => <span key={item}>✓ {item}</span>)}</div>
+            <details className="quote-rec-why-details"><summary>Why this fits your {vehicle.model}</summary><p>{result.why}</p></details>
           </section>
-
-          {sent ? (
-            <aside className="quote-rec-price-card quote-rec-price-reveal" aria-live="polite">
-              <span>Your exact quote</span>
-              <strong>{totalDisplay}</strong>
-              <small>{vehicleName} · {vehicleLabel(vehicle.vehicle)}</small>
-              {extrasSummary.length > 0 && <p>Includes recommended: {extrasSummary.join(", ")}</p>}
-              <b>Upfront pricing. We&rsquo;ll confirm everything before your appointment.</b>
-            </aside>
-          ) : (
-            <aside className="quote-rec-ready-card">
-              <span>Your personalized quote</span>
-              <strong>Ready</strong>
-              <p>We&rsquo;ve matched your {vehicle.model} to the service we&rsquo;d recommend. Your exact price is ready to reveal.</p>
-              <div className="quote-rec-ready-lock">Exact price · Ready now</div>
-            </aside>
-          )}
+          <aside className="quote-rec-price-card quote-rec-price-reveal" aria-live="polite">
+            <span>Your detail</span><strong>{totalDisplay}</strong><small>{vehicleName} · {vehicleLabel(vehicle.vehicle)}</small>
+            {extrasSummary.length > 0 && <p>Includes recommended: {extrasSummary.join(", ")}</p>}
+            <b>{totalNote}</b>
+          </aside>
         </div>
 
         {!sent ? (
           <section className="quote-rec-save-card quote-rec-unlock-card">
             <div className="quote-rec-save-copy">
-              <p className="eyebrow">Your quote is ready</p>
-              <h3>Where should we send your {vehicle.model} quote?</h3>
-              <p>Enter your info once. We&rsquo;ll show your exact price immediately on this page and save the recommendation in case you want help later.</p>
-              <div className="quote-rec-value-list">
-                <span>✓ Exact price for your vehicle</span>
-                <span>✓ Personalized service recommendation</span>
-                <span>✓ Instant booking after you see the price</span>
+              <p className="eyebrow">One quick question</p>
+              <h3>When would you want your {vehicle.model} done?</h3>
+              <p>This helps us give you the right next step instead of chasing you with generic follow-ups.</p>
+              <div className="quote-rec-timing-grid">
+                {[['asap','As soon as possible'],['weekend','This weekend'],['next_week','Next week'],['exploring','Just exploring']].map(([value,label]) => (
+                  <button key={value} type="button" className={`quote-rec-timing ${desiredTiming===value?'is-selected':''}`} onClick={() => { setDesiredTiming(value as typeof desiredTiming); void recordBehavior('timing_selected',{desiredTiming:value,quoteAmount:total}); }}>{label}</button>
+                ))}
               </div>
             </div>
             <div className="quote-rec-contact">
@@ -394,9 +397,9 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
               </div>
               {error && <p className="quote-rec-error" role="alert">{error}</p>}
               <button type="button" className="btn btn-primary quote-rec-save-button" onClick={sendBuild} disabled={sending}>
-                {sending ? "Building your quote..." : "Show my exact price ↗"}
+                {sending ? "Saving..." : desiredTiming === "exploring" ? "Save my quote ↗" : "Continue with my quote ↗"}
               </button>
-              <p className="quote-rec-save-note">No spam and no commitment. We&rsquo;ll only use this to help with your detail.</p>
+              <p className="quote-rec-save-note">No address needed for a quote. If you book, we’ll ask for the service address before confirming.</p>
             </div>
           </section>
         ) : (
@@ -405,15 +408,15 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
               <div>
                 <span>Quote ready</span>
                 <h3>Your {vehicle.model} is matched with {activeService.name}.</h3>
-                <p>Your exact price is above. If it looks good, the next step is simply choosing a time.</p>
+                <p>{desiredTiming === "exploring" ? "We saved your recommendation so you can come back when the timing is right." : "Your quote is saved. Next, see real openings that match what you want."}</p>
               </div>
               <div className="quote-rec-book-actions">
                 <Link
                   className="btn btn-primary"
                   href={selectedBookingHref()}
-                  onClick={() => track("book_click", { location: "saved_quote", vehicle: vehicle.vehicle, service })}
+                  onClick={() => { track("book_click", { location: "saved_quote", vehicle: vehicle.vehicle, service }); void recordBehavior("availability_viewed", { desiredTiming }); }}
                 >
-                  See available times ↗
+                  {desiredTiming === "exploring" ? "See times anyway ↗" : "See matching times ↗"}
                 </Link>
                 <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>
                   {customizeExpanded ? "Hide customization ↑" : "Customize my detail +"}

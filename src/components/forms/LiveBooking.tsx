@@ -95,6 +95,24 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const [booked, setBooked] = useState<Booked | null>(null);
   const [infoStep, setInfoStep] = useState<1 | 2 | 3>(1);
   const formRef = useRef<HTMLFormElement>(null);
+  const quoteSessionRef = useRef<string | null>(null);
+
+  async function recordQuoteBehavior(stage: string, extra: Record<string, unknown> = {}) {
+    const sessionId = quoteSessionRef.current;
+    if (!sessionId) return;
+    await fetch("/api/quote-session", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({sessionId,stage,...extra}) }).catch(() => null);
+  }
+
+  useEffect(() => {
+    if (!fromQuote) return;
+    quoteSessionRef.current = sessionStorage.getItem("ed_quote_session_id");
+    const raw = sessionStorage.getItem("ed_quote_contact");
+    window.setTimeout(() => {
+      if (!raw || !formRef.current) return;
+      try { const c=JSON.parse(raw); for (const [k,v] of Object.entries(c)) { const el=formRef.current?.elements.namedItem(k) as HTMLInputElement | null; if (el && !el.value && typeof v === "string") el.value=v; } } catch {}
+    }, 0);
+    void recordQuoteBehavior("availability_viewed");
+  }, [fromQuote]);
 
   const resolved = lines.map((line) => {
     const saved = line.savedId === "size" ? undefined : garage.find((g) => g.id === line.savedId);
@@ -281,6 +299,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       paint: line.paint,
     }));
 
+    void recordQuoteBehavior("booking_started", {selectedSlot:start.toISOString()});
     const res = await fetch("/api/book", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -312,6 +331,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       json.vehicles.length > 0;
 
     if (confirmed) {
+      void recordQuoteBehavior("booking_completed", {selectedSlot:start.toISOString()});
       track("booking_submit", { vehicleCount: lines.length, services: lines.map((line) => line.service).join(",") });
       setBooked({
         service: String(json.service ?? ""),
@@ -632,7 +652,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                       <>
                         <div role="radiogroup" aria-label="Start time" className="booking-time-grid">
                           {daySlots.map((s) => (
-                            <button key={s.toISOString()} type="button" role="radio" aria-checked={start?.getTime() === s.getTime()} onClick={() => setStart(s)} className="choice booking-time-choice">
+                            <button key={s.toISOString()} type="button" role="radio" aria-checked={start?.getTime() === s.getTime()} onClick={() => { setStart(s); void recordQuoteBehavior("slot_selected", {selectedSlot:s.toISOString()}); }} className="choice booking-time-choice">
                               {fmtTime(s)}
                             </button>
                           ))}
