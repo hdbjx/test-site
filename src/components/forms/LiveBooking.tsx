@@ -48,6 +48,7 @@ type Props = {
   initialAddons?: AddonId[];
   initialPaint?: PaintUpgradeId[];
   fromQuote?: boolean;
+  fromHome?: boolean;
 };
 
 type BookingLine = {
@@ -69,7 +70,7 @@ type Booked = {
   confirmationEmailSent: boolean;
 };
 
-export function LiveBooking({ account, email, garage = [], initialVehicle, initialService, initialAddons = [], initialPaint = [], fromQuote = false }: Props) {
+export function LiveBooking({ account, email, garage = [], initialVehicle, initialService, initialAddons = [], initialPaint = [], fromQuote = false, fromHome = false }: Props) {
   const signedIn = !!account;
   const primary = garage.find((g) => g.is_primary) ?? garage[0];
   const nextKey = useRef(2);
@@ -115,12 +116,15 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   }, [fromQuote]);
 
   useEffect(() => {
-    if (!fromQuote || slots === null) return;
+    if ((!fromQuote && !fromHome) || slots === null) return;
     const timer = window.setTimeout(() => {
-      document.getElementById("booking-time-picker")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 120);
+      document.getElementById("booking-time-picker")?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
+    }, 140);
     return () => window.clearTimeout(timer);
-  }, [fromQuote, slots]);
+  }, [fromQuote, fromHome, slots]);
 
   const resolved = lines.map((line) => {
     const saved = line.savedId === "size" ? undefined : garage.find((g) => g.id === line.savedId);

@@ -75,6 +75,12 @@ export function HomeBookingFlow() {
   const chooseVehicle = (id: VehicleId) => {
     setVehicle(id);
     track("vehicle_select", { vehicle: id, service: service ?? undefined, location: "home_flow" });
+
+    if (!service) return;
+    track("book_click", { location: "home_flow_auto", vehicle: id, service });
+    const href = bookingHref(id, service);
+    const separator = href.includes("?") ? "&" : "?";
+    window.location.assign(`${href}${separator}from=home`);
   };
 
   return (

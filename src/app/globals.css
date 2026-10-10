@@ -4632,3 +4632,28 @@ main,section,article,div,form,fieldset{min-width:0}
     opacity: 1 !important;
   }
 }
+
+
+/* Retro desktop cursor ----------------------------------------------------- */
+@media (pointer: fine) {
+  html, body, body * {
+    cursor: url('/cursors/retro-arrow.png') 1 1, auto;
+  }
+
+  a, button, summary, label, select,
+  input[type="button"], input[type="submit"], input[type="reset"],
+  input[type="checkbox"], input[type="radio"],
+  [role="button"], [role="radio"], [role="option"], [tabindex]:not([tabindex="-1"]) {
+    cursor: url('/cursors/retro-pointer.png') 7 1, pointer !important;
+  }
+
+  input[type="text"], input[type="email"], input[type="tel"],
+  input[type="search"], input[type="number"], input[type="url"],
+  input:not([type]), textarea, [contenteditable="true"] {
+    cursor: text;
+  }
+
+  button:disabled, input:disabled, select:disabled, [aria-disabled="true"] {
+    cursor: not-allowed !important;
+  }
+}

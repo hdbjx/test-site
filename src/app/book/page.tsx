@@ -25,6 +25,7 @@ export default async function BookPage({
   const initialAddons = (addons ?? "").split(",").filter(isAddonId) as AddonId[];
   const initialPaint = (paint ?? "").split(",").filter(isPaintUpgradeId) as PaintUpgradeId[];
   const fromQuote = from === "quote";
+  const fromHome = from === "home";
 
   // Live booking needs Supabase; without it the site falls back to booking requests.
   if (!supabaseConfigured || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -62,6 +63,7 @@ export default async function BookPage({
           initialAddons={initialAddons}
           initialPaint={initialPaint}
           fromQuote={fromQuote}
+          fromHome={fromHome}
         />
       </section>
     </>
