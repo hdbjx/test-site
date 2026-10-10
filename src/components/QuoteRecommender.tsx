@@ -419,66 +419,96 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       );
     }
 
+    const timingLabel = timingOptions.find((item) => item.value === desiredTiming)?.label ?? "";
+    const firstName = name.trim().split(/\s+/)[0] || "";
+    const phoneReady = name.trim().length >= 2;
+    const emailReady = phone.replace(/\D/g, "").length >= 10;
+    const submitReady = emailReady && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+
+    const contactPrompt = desiredTiming === "exploring"
+      ? {
+          kicker: "Save it for later",
+          title: firstName ? `Nice to meet you, ${firstName}.` : `Want us to save this for you?`,
+          body: `We'll keep your ${vehicle.model}, ${activeService.name}, and ${totalDisplay} quote together so you can pick it back up whenever you're ready.`,
+          cta: `Save my recommendation ↗`,
+        }
+      : {
+          kicker: desiredTiming === "asap" ? "Let's find a spot" : desiredTiming === "weekend" ? "Let's check the weekend" : "Let's plan next week",
+          title: firstName ? `Perfect, ${firstName}. Let's find a time.` : `Want to see the openings that fit?`,
+          body: `Your ${vehicle.model} and ${totalDisplay} recommendation are ready. Tell us where to send the booking options and we'll carry everything forward.`,
+          cta: desiredTiming === "asap" ? "Show my earliest openings ↗" : desiredTiming === "weekend" ? "Show weekend openings ↗" : "Show next week's openings ↗",
+        };
+
     return (
-      <div ref={resultRef} className="quote-rec-result quote-rec-conversation" id="quote-personal-result">
-        <button type="button" onClick={() => { setDesiredTiming(null); setSent(false); setError(null); }} className="quote-rec-back">← Change timing</button>
-
-        <div className="quote-rec-reactive-confirm"><span>✓</span><p><strong>{timingOptions.find((item) => item.value === desiredTiming)?.label}.</strong> {desiredTiming === "exploring" ? "We'll keep this low pressure." : "We built the next step around that."}</p></div>
-
-        <div className="quote-rec-result-grid quote-rec-result-grid-conversion is-revealed">
-          <section className="quote-rec-result-main">
-            <p className="eyebrow">Built for your {vehicle.model}</p>
-            <h2>{activeService.name}</h2>
-            <p className="quote-rec-personal-reason">{personalReason}</p>
-            <p className="quote-rec-result-summary">{activeService.summary}</p>
-            <div className="quote-rec-includes" aria-label="What is included">{included.map((item) => <span key={item}>✓ {item}</span>)}</div>
-            <details className="quote-rec-why-details"><summary>See why we chose this</summary><p>{result.why}</p></details>
-          </section>
-          <aside className="quote-rec-price-card quote-rec-price-reveal" aria-live="polite">
-            <span>Your personalized detail</span><strong>{totalDisplay}</strong><small>{vehicleName} · {vehicleLabel(vehicle.vehicle)}</small>
-            {extrasSummary.length > 0 && <p>Includes recommended: {extrasSummary.join(", ")}</p>}
-            <b>{totalNote}</b>
-          </aside>
+      <div ref={resultRef} className="quote-rec-result quote-rec-conversation quote-rec-flow" id="quote-personal-result">
+        <div className="quote-rec-answerbar">
+          <button type="button" onClick={() => { setDesiredTiming(null); setSent(false); setError(null); }} className="quote-rec-answer-edit">← Change</button>
+          <div><span>You said</span><strong>{timingLabel}</strong></div>
+          <div className="quote-rec-answer-vehicle"><span>{vehicleName}</span><span>{conditionLabel}{concernNames.length ? ` · ${concernNames.slice(0,2).join(" · ")}` : ""}</span></div>
         </div>
 
+        <section className="quote-rec-reveal-card" aria-live="polite">
+          <div className="quote-rec-reveal-copy">
+            <p className="eyebrow">Here's what we'd do</p>
+            <h2>{activeService.name}</h2>
+            <p className="quote-rec-reveal-reason">{personalReason}</p>
+            <div className="quote-rec-reveal-includes">{included.slice(0,3).map((item) => <span key={item}>✓ {item}</span>)}</div>
+            <details className="quote-rec-why-details"><summary>Why this fits your {vehicle.model}</summary><p>{result.why}</p></details>
+          </div>
+          <div className="quote-rec-reveal-price">
+            <span>Your recommendation</span>
+            <strong>{totalDisplay}</strong>
+            <small>{activeService.name}{extrasSummary.length ? ` + ${extrasSummary.join(", ")}` : ""}</small>
+            <p>{totalNote}</p>
+          </div>
+        </section>
+
         {!sent ? (
-          <section className="quote-rec-reactive-contact">
-            <div className="quote-rec-reactive-copy">
-              <p className="eyebrow">{timingCopy.eyebrow}</p>
-              <h3>{timingCopy.title}</h3>
-              <p>{timingCopy.body}</p>
-              <div className="quote-rec-build-recap"><strong>{activeService.name} · {totalDisplay}</strong><span>{vehicle.model} · {timingOptions.find((item) => item.value === desiredTiming)?.label}</span></div>
+          <section className="quote-rec-next-card">
+            <div className="quote-rec-next-copy">
+              <p className="eyebrow">{contactPrompt.kicker}</p>
+              <h3>{contactPrompt.title}</h3>
+              <p>{contactPrompt.body}</p>
+              <div className="quote-rec-trust-row"><span>✓ No payment now</span><span>✓ Quote stays saved</span><span>✓ We come to you</span></div>
             </div>
-            <div className="quote-rec-contact quote-rec-contact-personal">
-              <div className="quote-rec-contact-heading">
-                <span>{name.trim() ? `Got it, ${name.trim().split(/\s+/)[0]}.` : "Keep your recommendation together"}</span>
-                <h4>{name.trim() ? "Where should we send the details?" : "Where should we send it?"}</h4>
+
+            <div className="quote-rec-progressive-form">
+              <label className="quote-rec-progressive-field is-visible">
+                <span>First, what's your name?</span>
+                <input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" placeholder="First name" required autoFocus />
+              </label>
+
+              <div className={`quote-rec-progressive-step ${phoneReady ? "is-visible" : ""}`} aria-hidden={!phoneReady}>
+                <p>{firstName ? `Thanks, ${firstName}. What's the best number for scheduling?` : "What's the best mobile number?"}</p>
+                <input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="(404) 555-0123" required tabIndex={phoneReady ? 0 : -1} />
+                <small>We'll use this for your quote and scheduling updates.</small>
               </div>
-              <div className="quote-rec-contact-grid">
-                <label><span>First name</span><input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" placeholder="First name" required /></label>
-                <label><span>Mobile number</span><input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="(404) 555-0123" required /></label>
-                <label><span>Email</span><input className="field" value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="email" placeholder="you@email.com" required /></label>
+
+              <div className={`quote-rec-progressive-step ${emailReady ? "is-visible" : ""}`} aria-hidden={!emailReady}>
+                <p>And where should we send the details?</p>
+                <input className="field" value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="email" placeholder="Email address" required tabIndex={emailReady ? 0 : -1} />
               </div>
+
               {error && <p className="quote-rec-error" role="alert">{error}</p>}
-              <button type="button" className="btn btn-primary quote-rec-save-button" onClick={sendBuild} disabled={sending}>
-                {sending ? "Saving..." : timingCopy.cta}
+              <button type="button" className={`btn btn-primary quote-rec-conversion-button ${submitReady ? "is-ready" : ""}`} onClick={sendBuild} disabled={sending || !submitReady}>
+                {sending ? "Saving..." : contactPrompt.cta}
               </button>
-              <p className="quote-rec-save-note">Your recommendation stays saved. No payment required.</p>
+              <p className="quote-rec-privacy">No spam. Your info is only used to help with this detail and scheduling.</p>
             </div>
           </section>
         ) : (
           <>
-            <section className="quote-rec-book-card" role="status">
+            <section className="quote-rec-book-card quote-rec-book-card-clean" role="status">
               <div>
-                <span>{name.trim() ? `Saved for ${name.trim().split(/\s+/)[0]}` : "Saved"}</span>
-                <h3>{desiredTiming === "exploring" ? `Your ${vehicle.model} recommendation is saved.` : `Let's find the right time for your ${vehicle.model}.`}</h3>
-                <p>{desiredTiming === "exploring" ? "You can come back when the timing is right. If you want, you can still look at current openings now." : "Your vehicle, service, price, and timing are already carried into booking."}</p>
+                <span>{firstName ? `You're set, ${firstName}` : "Saved"}</span>
+                <h3>{desiredTiming === "exploring" ? `Your ${vehicle.model} recommendation is saved.` : `Your recommendation is saved. Now pick the time.`}</h3>
+                <p>{desiredTiming === "exploring" ? "Nothing else you need to do. You can check openings whenever you're ready." : `We'll carry your ${vehicle.model}, ${activeService.name}, ${totalDisplay} price, and contact info into booking.`}</p>
               </div>
               <div className="quote-rec-book-actions">
                 <Link className="btn btn-primary" href={selectedBookingHref()} onClick={() => { track("book_click", { location: "saved_quote", vehicle: vehicle.vehicle, service }); void recordBehavior("availability_viewed", { desiredTiming }); }}>
-                  {desiredTiming === "exploring" ? "See current openings ↗" : timingCopy.cta}
+                  {desiredTiming === "exploring" ? "See openings ↗" : contactPrompt.cta}
                 </Link>
-                <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>{customizeExpanded ? "Hide customization ↑" : "Customize my detail +"}</button>
+                <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>{customizeExpanded ? "Hide options ↑" : "Customize detail +"}</button>
               </div>
             </section>
 
