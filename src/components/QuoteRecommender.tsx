@@ -227,7 +227,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     setCustomizeExpanded(false);
     setQuoteDirty(false);
     setError(null);
-    void recordBehavior("recommendation_viewed", { vehicleMake: vehicle.make, vehicleModel: vehicle.model, vehicleSize: vehicleLabel(vehicle.vehicle), conditionLabel: CONDITIONS.find((item) => item.value === condition)?.label ?? "", concerns: [...concerns].map(concernLabel), recommendedService: services[next.service].name, quoteAmount: PRICING[vehicle.vehicle][next.service].price });
+    void recordBehavior("assessment_completed", { vehicleMake: vehicle.make, vehicleModel: vehicle.model, vehicleSize: vehicleLabel(vehicle.vehicle), conditionLabel: CONDITIONS.find((item) => item.value === condition)?.label ?? "", concerns: [...concerns].map(concernLabel) });
     window.setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
   }
 
@@ -357,131 +357,138 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     const selectedPaintNames = [...paint].map((id) => PAINT_UPGRADES[id].name);
     const extrasSummary = [...selectedAddonNames, ...selectedPaintNames];
     const vehicleName = `${vehicle.make} ${vehicle.model}`;
+    const conditionLabel = CONDITIONS.find((item) => item.value === condition)?.label ?? "";
+    const concernNames = [...concerns].map(concernLabel);
+    const firstConcern = concernNames[0];
+
+    const timingOptions = [
+      { value: "asap", label: "As soon as possible", sub: "I'd like to get it handled" },
+      { value: "weekend", label: "This weekend", sub: "Weekend works best" },
+      { value: "next_week", label: "Next week", sub: "I'm planning ahead" },
+      { value: "exploring", label: "Just looking around", sub: "I'm not ready yet" },
+    ] as const;
+
+    const timingCopy = desiredTiming === "asap"
+      ? { eyebrow: "Let's get it handled", title: `Let's find the earliest fit for your ${vehicle.model}.`, body: "We'll save this recommendation and take you straight to the best available openings.", cta: "Find my earliest opening ↗" }
+      : desiredTiming === "weekend"
+        ? { eyebrow: "Weekend works", title: `Let's see what works for your ${vehicle.model} this weekend.`, body: "We'll keep your recommendation together and show you the weekend options that fit it.", cta: "Check weekend openings ↗" }
+        : desiredTiming === "next_week"
+          ? { eyebrow: "Planning ahead", title: `We'll find a good time for your ${vehicle.model} next week.`, body: "A little flexibility usually gives you more choice. Save the build and we'll show you matching openings.", cta: "See next week's openings ↗" }
+          : { eyebrow: "No pressure", title: `Want to keep this ${vehicle.model} recommendation?`, body: "Save the service and price so you can come back without rebuilding everything when you're ready.", cta: `Save my ${totalDisplay} recommendation ↗` };
+
+    const personalReason = concerns.has("selling")
+      ? `Since you're getting the ${vehicle.model} ready to sell, we built this around presentation and value instead of adding work that will not meaningfully help.`
+      : concernNames.length > 0
+        ? `You told us the ${vehicle.model} is in ${conditionLabel.toLowerCase()} shape${firstConcern ? ` and mentioned ${firstConcern.toLowerCase()}` : ""}. This gives it the level of work it needs without automatically pushing you into more service than makes sense.`
+        : `Based on the ${vehicle.model}'s ${conditionLabel.toLowerCase()} condition, this is the level of detail that makes the most sense without adding unnecessary work.`;
+
+    function chooseTiming(value: typeof timingOptions[number]["value"]) {
+      setDesiredTiming(value);
+      setError(null);
+      void recordBehavior("timing_selected", { desiredTiming: value });
+      void recordBehavior("recommendation_viewed", { desiredTiming: value, recommendedService: activeService.name, quoteAmount: total });
+      window.setTimeout(() => document.getElementById("quote-personal-result")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+    }
+
+    if (!desiredTiming) {
+      return (
+        <div ref={resultRef} className="quote-rec-result quote-rec-conversation">
+          <button type="button" onClick={reset} className="quote-rec-back">← Start over</button>
+          <section className="quote-rec-intent-stage">
+            <div className="quote-rec-intent-context">
+              <p className="eyebrow">Got it</p>
+              <h2>One last thing about your {vehicle.model}.</h2>
+              <p>When are you hoping to get it cleaned?</p>
+              <div className="quote-rec-mini-summary">
+                <span>{vehicleName}</span>
+                <span>{conditionLabel} condition</span>
+                {concernNames.slice(0, 2).map((item) => <span key={item}>{item}</span>)}
+                {concernNames.length > 2 && <span>+{concernNames.length - 2} more</span>}
+              </div>
+            </div>
+            <div className="quote-rec-intent-options">
+              {timingOptions.map((item) => (
+                <button key={item.value} type="button" className="quote-rec-intent-choice" onClick={() => chooseTiming(item.value)}>
+                  <span><strong>{item.label}</strong><small>{item.sub}</small></span><b>→</b>
+                </button>
+              ))}
+              <p className="quote-rec-intent-note">We'll shape the next step around your timing.</p>
+            </div>
+          </section>
+        </div>
+      );
+    }
 
     return (
-      <div ref={resultRef} className="quote-rec-result">
-        <button type="button" onClick={reset} className="quote-rec-back">← Start over</button>
+      <div ref={resultRef} className="quote-rec-result quote-rec-conversation" id="quote-personal-result">
+        <button type="button" onClick={() => { setDesiredTiming(null); setSent(false); setError(null); }} className="quote-rec-back">← Change timing</button>
+
+        <div className="quote-rec-reactive-confirm"><span>✓</span><p><strong>{timingOptions.find((item) => item.value === desiredTiming)?.label}.</strong> {desiredTiming === "exploring" ? "We'll keep this low pressure." : "We built the next step around that."}</p></div>
 
         <div className="quote-rec-result-grid quote-rec-result-grid-conversion is-revealed">
           <section className="quote-rec-result-main">
-            <p className="eyebrow">Recommended for your {vehicle.model}</p>
+            <p className="eyebrow">Built for your {vehicle.model}</p>
             <h2>{activeService.name}</h2>
+            <p className="quote-rec-personal-reason">{personalReason}</p>
             <p className="quote-rec-result-summary">{activeService.summary}</p>
             <div className="quote-rec-includes" aria-label="What is included">{included.map((item) => <span key={item}>✓ {item}</span>)}</div>
-            <details className="quote-rec-why-details"><summary>Why this fits your {vehicle.model}</summary><p>{result.why}</p></details>
+            <details className="quote-rec-why-details"><summary>See why we chose this</summary><p>{result.why}</p></details>
           </section>
           <aside className="quote-rec-price-card quote-rec-price-reveal" aria-live="polite">
-            <span>Your detail</span><strong>{totalDisplay}</strong><small>{vehicleName} · {vehicleLabel(vehicle.vehicle)}</small>
+            <span>Your personalized detail</span><strong>{totalDisplay}</strong><small>{vehicleName} · {vehicleLabel(vehicle.vehicle)}</small>
             {extrasSummary.length > 0 && <p>Includes recommended: {extrasSummary.join(", ")}</p>}
             <b>{totalNote}</b>
           </aside>
         </div>
 
         {!sent ? (
-          <section className="quote-rec-save-card quote-rec-unlock-card">
-            <div className="quote-rec-save-copy">
-              <p className="eyebrow">One quick question</p>
-              <h3>When would you want your {vehicle.model} done?</h3>
-              <p>This helps us give you the right next step instead of chasing you with generic follow-ups.</p>
-              <div className="quote-rec-timing-grid">
-                {[['asap','As soon as possible'],['weekend','This weekend'],['next_week','Next week'],['exploring','Just exploring']].map(([value,label]) => (
-                  <button key={value} type="button" className={`quote-rec-timing ${desiredTiming===value?'is-selected':''}`} onClick={() => { setDesiredTiming(value as typeof desiredTiming); void recordBehavior('timing_selected',{desiredTiming:value,quoteAmount:total}); }}>{label}</button>
-                ))}
-              </div>
+          <section className="quote-rec-reactive-contact">
+            <div className="quote-rec-reactive-copy">
+              <p className="eyebrow">{timingCopy.eyebrow}</p>
+              <h3>{timingCopy.title}</h3>
+              <p>{timingCopy.body}</p>
+              <div className="quote-rec-build-recap"><strong>{activeService.name} · {totalDisplay}</strong><span>{vehicle.model} · {timingOptions.find((item) => item.value === desiredTiming)?.label}</span></div>
             </div>
-            <div className="quote-rec-contact">
+            <div className="quote-rec-contact quote-rec-contact-personal">
+              <div className="quote-rec-contact-heading">
+                <span>{name.trim() ? `Got it, ${name.trim().split(/\s+/)[0]}.` : "Keep your recommendation together"}</span>
+                <h4>{name.trim() ? "Where should we send the details?" : "Where should we send it?"}</h4>
+              </div>
               <div className="quote-rec-contact-grid">
-                <label><span>First name</span><input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" required /></label>
-                <label><span>Mobile number</span><input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" required /></label>
-                <label><span>Email</span><input className="field" value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="email" required /></label>
+                <label><span>First name</span><input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" placeholder="First name" required /></label>
+                <label><span>Mobile number</span><input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="(404) 555-0123" required /></label>
+                <label><span>Email</span><input className="field" value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="email" placeholder="you@email.com" required /></label>
               </div>
               {error && <p className="quote-rec-error" role="alert">{error}</p>}
               <button type="button" className="btn btn-primary quote-rec-save-button" onClick={sendBuild} disabled={sending}>
-                {sending ? "Saving..." : desiredTiming === "exploring" ? "Save my quote ↗" : "Continue with my quote ↗"}
+                {sending ? "Saving..." : timingCopy.cta}
               </button>
-              <p className="quote-rec-save-note">No address needed for a quote. If you book, we’ll ask for the service address before confirming.</p>
+              <p className="quote-rec-save-note">Your recommendation stays saved. No payment required.</p>
             </div>
           </section>
         ) : (
           <>
             <section className="quote-rec-book-card" role="status">
               <div>
-                <span>Quote ready</span>
-                <h3>Your {vehicle.model} is matched with {activeService.name}.</h3>
-                <p>{desiredTiming === "exploring" ? "We saved your recommendation so you can come back when the timing is right." : "Your quote is saved. Next, see real openings that match what you want."}</p>
+                <span>{name.trim() ? `Saved for ${name.trim().split(/\s+/)[0]}` : "Saved"}</span>
+                <h3>{desiredTiming === "exploring" ? `Your ${vehicle.model} recommendation is saved.` : `Let's find the right time for your ${vehicle.model}.`}</h3>
+                <p>{desiredTiming === "exploring" ? "You can come back when the timing is right. If you want, you can still look at current openings now." : "Your vehicle, service, price, and timing are already carried into booking."}</p>
               </div>
               <div className="quote-rec-book-actions">
-                <Link
-                  className="btn btn-primary"
-                  href={selectedBookingHref()}
-                  onClick={() => { track("book_click", { location: "saved_quote", vehicle: vehicle.vehicle, service }); void recordBehavior("availability_viewed", { desiredTiming }); }}
-                >
-                  {desiredTiming === "exploring" ? "See times anyway ↗" : "See matching times ↗"}
+                <Link className="btn btn-primary" href={selectedBookingHref()} onClick={() => { track("book_click", { location: "saved_quote", vehicle: vehicle.vehicle, service }); void recordBehavior("availability_viewed", { desiredTiming }); }}>
+                  {desiredTiming === "exploring" ? "See current openings ↗" : timingCopy.cta}
                 </Link>
-                <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>
-                  {customizeExpanded ? "Hide customization ↑" : "Customize my detail +"}
-                </button>
+                <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>{customizeExpanded ? "Hide customization ↑" : "Customize my detail +"}</button>
               </div>
             </section>
 
             {customizeExpanded && (
               <section className="quote-rec-customize-panel">
-                <div className="quote-rec-options-head">
-                  <div><p className="eyebrow">Optional</p><h3>Customize your saved quote</h3></div>
-                  <span>Changes are saved to the same lead</span>
-                </div>
-
-                {result.upgradeMessage && result.upgradeService && (
-                  <button type="button" className="quote-rec-upgrade" onClick={applyUpgrade}>
-                    <span>Consider upgrading</span>
-                    <strong>{result.upgradeMessage}</strong>
-                    <b>Upgrade to {services[result.upgradeService].name} ↗</b>
-                  </button>
-                )}
-
-                {result.addons.length > 0 && (
-                  <div className="quote-rec-customize-group">
-                    <h4>Add-ons</h4>
-                    <div className="quote-rec-addon-list">
-                      {result.addons.map((addon) => {
-                        const checked = checkedAddons.has(addon.id);
-                        return (
-                          <button key={addon.id} type="button" className={`quote-rec-addon ${checked ? "is-selected" : ""}`} onClick={() => toggleAddon(addon.id)} aria-pressed={checked}>
-                            <span className="quote-rec-check">{checked ? "✓" : ""}</span>
-                            <strong>{addon.name}</strong>
-                            {addon.recommended && <small>Recommended</small>}
-                            <b>{addon.price}</b>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                <div className="quote-rec-customize-group">
-                  <h4>Paint correction + protection</h4>
-                  <div className="quote-rec-paint-grid">
-                    {(Object.keys(PAINT_UPGRADES) as PaintUpgradeId[]).map((id) => {
-                      const item = PAINT_UPGRADES[id];
-                      const selected = paint.has(id);
-                      return (
-                        <button key={id} type="button" className={`quote-rec-paint-card ${selected ? "is-selected" : ""}`} onClick={() => togglePaint(id)} aria-pressed={selected}>
-                          <span>{item.tag}</span>
-                          <strong>{item.name}</strong>
-                          <b>${item.prices[vehicle.vehicle]}</b>
-                          <p>{item.why}</p>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="quote-rec-customize-footer">
-                  <div><span>Updated estimate</span><strong>{totalDisplay}</strong><p>{totalNote}</p></div>
-                  <button type="button" className="btn btn-primary" onClick={sendBuild} disabled={sending || !quoteDirty}>
-                    {sending ? "Saving..." : quoteDirty ? "Save changes ↗" : "Saved ✓"}
-                  </button>
-                </div>
+                <div className="quote-rec-options-head"><div><p className="eyebrow">Optional</p><h3>Customize your saved quote</h3></div><span>Changes stay with this recommendation</span></div>
+                {result.upgradeMessage && result.upgradeService && <button type="button" className="quote-rec-upgrade" onClick={applyUpgrade}><span>Consider upgrading</span><strong>{result.upgradeMessage}</strong><b>Upgrade to {services[result.upgradeService].name} ↗</b></button>}
+                {result.addons.length > 0 && <div className="quote-rec-customize-group"><h4>Add-ons</h4><div className="quote-rec-addon-list">{result.addons.map((addon) => { const checked = checkedAddons.has(addon.id); return <button key={addon.id} type="button" className={`quote-rec-addon ${checked ? "is-selected" : ""}`} onClick={() => toggleAddon(addon.id)} aria-pressed={checked}><span className="quote-rec-check">{checked ? "✓" : ""}</span><strong>{addon.name}</strong>{addon.recommended && <small>Recommended</small>}<b>{addon.price}</b></button>; })}</div></div>}
+                <div className="quote-rec-customize-group"><h4>Paint correction + protection</h4><div className="quote-rec-paint-grid">{(Object.keys(PAINT_UPGRADES) as PaintUpgradeId[]).map((id) => { const item = PAINT_UPGRADES[id]; const selected = paint.has(id); return <button key={id} type="button" className={`quote-rec-paint-card ${selected ? "is-selected" : ""}`} onClick={() => togglePaint(id)} aria-pressed={selected}><span>{item.tag}</span><strong>{item.name}</strong><b>${item.prices[vehicle.vehicle]}</b><p>{item.why}</p></button>; })}</div></div>
+                <div className="quote-rec-customize-footer"><div><span>Updated estimate</span><strong>{totalDisplay}</strong><p>{totalNote}</p></div><button type="button" className="btn btn-primary" onClick={sendBuild} disabled={sending || !quoteDirty}>{sending ? "Saving..." : quoteDirty ? "Save changes ↗" : "Saved ✓"}</button></div>
                 {error && <p className="quote-rec-error" role="alert">{error}</p>}
               </section>
             )}
