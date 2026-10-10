@@ -386,7 +386,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       setDesiredTiming(value);
       setError(null);
       void recordBehavior("timing_selected", { desiredTiming: value });
-      void recordBehavior("recommendation_viewed", { desiredTiming: value, recommendedService: activeService.name, quoteAmount: total });
+      void recordBehavior("recommendation_viewed", { desiredTiming: value, recommendedService: activeService?.name ?? service, quoteAmount: total });
       window.setTimeout(() => document.getElementById("quote-personal-result")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
     }
 
