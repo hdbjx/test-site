@@ -107,15 +107,20 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     if (!fromQuote) return;
     quoteSessionRef.current = sessionStorage.getItem("ed_quote_session_id");
     const raw = sessionStorage.getItem("ed_quote_contact");
-    window.setTimeout(() => {
-      if (raw && formRef.current) {
-        try { const c=JSON.parse(raw); for (const [k,v] of Object.entries(c)) { const el=formRef.current?.elements.namedItem(k) as HTMLInputElement | null; if (el && !el.value && typeof v === "string") el.value=v; } } catch {}
-      }
-      setInfoStep(3);
-      document.getElementById("booking-time-picker")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 180);
+    if (raw && formRef.current) {
+      try { const c=JSON.parse(raw); for (const [k,v] of Object.entries(c)) { const el=formRef.current?.elements.namedItem(k) as HTMLInputElement | null; if (el && !el.value && typeof v === "string") el.value=v; } } catch {}
+    }
+    setInfoStep(3);
     void recordQuoteBehavior("availability_viewed");
   }, [fromQuote]);
+
+  useEffect(() => {
+    if (!fromQuote || slots === null) return;
+    const timer = window.setTimeout(() => {
+      document.getElementById("booking-time-picker")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 120);
+    return () => window.clearTimeout(timer);
+  }, [fromQuote, slots]);
 
   const resolved = lines.map((line) => {
     const saved = line.savedId === "size" ? undefined : garage.find((g) => g.id === line.savedId);
