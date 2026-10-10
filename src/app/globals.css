@@ -4637,14 +4637,14 @@ main,section,article,div,form,fieldset{min-width:0}
 /* Retro desktop cursor ----------------------------------------------------- */
 @media (pointer: fine) {
   html, body, body * {
-    cursor: url('/cursors/retro-arrow.png') 1 1, auto;
+    cursor: url('/cursors/retro-arrow.png') 3 2, auto;
   }
 
   a, button, summary, label, select,
   input[type="button"], input[type="submit"], input[type="reset"],
   input[type="checkbox"], input[type="radio"],
   [role="button"], [role="radio"], [role="option"], [tabindex]:not([tabindex="-1"]) {
-    cursor: url('/cursors/retro-pointer.png') 7 1, pointer !important;
+    cursor: url('/cursors/retro-pointer.png') 11 2, pointer !important;
   }
 
   input[type="text"], input[type="email"], input[type="tel"],

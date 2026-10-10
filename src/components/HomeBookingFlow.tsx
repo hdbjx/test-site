@@ -35,6 +35,7 @@ export function HomeBookingFlow() {
   const [service, setService] = useState<ServiceId | null>(null);
   const [vehicle, setVehicle] = useState<VehicleId | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
   const chosenService = service ? services[service] : null;
   const chosenVehicle = vehicle ? vehicles.find((v) => v.id === vehicle)! : null;
   const quote = service && vehicle ? PRICING[vehicle][service] : null;
@@ -76,11 +77,20 @@ export function HomeBookingFlow() {
     setVehicle(id);
     track("vehicle_select", { vehicle: id, service: service ?? undefined, location: "home_flow" });
 
-    if (!service) return;
-    track("book_click", { location: "home_flow_auto", vehicle: id, service });
-    const href = bookingHref(id, service);
-    const separator = href.includes("?") ? "&" : "?";
-    window.location.assign(`${href}${separator}from=home`);
+    // Keep the customer on the homepage. Once the result row renders,
+    // nudge the page only as far as needed to keep the summary + CTA in view.
+    window.setTimeout(() => {
+      const result = resultRef.current;
+      if (!result) return;
+      const rect = result.getBoundingClientRect();
+      const bottomGutter = window.innerWidth <= 640 ? 20 : 34;
+      const overflow = rect.bottom - (window.innerHeight - bottomGutter);
+      if (overflow <= 0) return;
+      window.scrollBy({
+        top: overflow,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      });
+    }, 90);
   };
 
   return (
@@ -117,7 +127,7 @@ export function HomeBookingFlow() {
               </div>
             </div>
 
-            <div className={`v15-result ${quote && chosenVehicle ? "is-visible" : ""}`}>
+            <div ref={resultRef} className={`v15-result ${quote && chosenVehicle ? "is-visible" : ""}`}>
               {quote && chosenVehicle && (
                 <>
                   <div className="v15-result-summary">
