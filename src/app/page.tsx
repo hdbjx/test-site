@@ -5,6 +5,7 @@ import { ReviewStoryScroll } from "@/components/ReviewStoryScroll";
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { TrackedLink } from "@/components/TrackedLink";
+import { HomeScrollMotion } from "@/components/HomeScrollMotion";
 import { homeFaqs } from "@/data/faqs";
 import { reviewCountLabel, site } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
@@ -21,6 +22,7 @@ export default function Home() {
 
   return (
     <>
+      <HomeScrollMotion />
       <section className="hero-full" aria-label="Every Detail mobile car detailing">
         <div className="hero-shade" />
         <div className="container-ed hero-inner">
@@ -116,11 +118,11 @@ export default function Home() {
       <section className="home-how" aria-labelledby="how-heading">
         <div className="container-ed">
           <div className="how-head"><p className="eyebrow">How it works</p><h2 id="how-heading" className="home-display">We make detailing<br /><span>the easy part.</span></h2></div>
-          <div className="how-grid">
-            <article><b>01</b><h3>Get your quote</h3><p>Tell us what you drive and what it needs. We’ll recommend the right detail and show you the price.</p></article>
-            <article><b>02</b><h3>Pick a time</h3><p>Choose an available appointment that works for you. No back-and-forth required.</p></article>
-            <article><b>03</b><h3>We come to you</h3><p>Our 100% electric mobile rig arrives with its own water, battery power, tools, and products. No generator or outlet needed. You provide the driveway.</p></article>
-            <article><b>04</b><h3>Get your car back</h3><p>We work through the detail and let you know when your car is ready to get back on the road.</p></article>
+          <div className="how-grid how-stack">
+            <article className="how-stack-card"><b>01</b><div><span>START HERE</span><h3>Get your quote</h3><p>Tell us what you drive and what it needs. We’ll recommend the right detail and show you the price.</p></div></article>
+            <article className="how-stack-card"><b>02</b><div><span>LOCK IT IN</span><h3>Pick a time</h3><p>Choose an available appointment that works for you. No back-and-forth required.</p></div></article>
+            <article className="how-stack-card"><b>03</b><div><span>YOUR DRIVEWAY</span><h3>We come to you</h3><p>Our 100% electric mobile rig arrives with its own water, battery power, tools, and products. No generator or outlet needed. You provide the driveway.</p></div></article>
+            <article className="how-stack-card"><b>04</b><div><span>DONE RIGHT</span><h3>Get your car back</h3><p>We work through the detail and let you know when your car is ready to get back on the road.</p></div></article>
           </div>
           <Link href="/get-a-quote" className="btn btn-primary how-cta">Get my quote ↗</Link>
         </div>
@@ -134,6 +136,7 @@ export default function Home() {
             <p>Two ways to go beyond a one-time detail: improve and protect the paint, or put keeping the whole car clean on repeat.</p>
           </div>
 
+          <div className="upgrade-stack">
           <div className="upgrade-board upgrade-board-paint">
             <div className="upgrade-index">01 / PAINT</div>
             <div className="upgrade-main">
@@ -166,6 +169,7 @@ export default function Home() {
               <div className="upgrade-actions"><Link href="/detailplus" className="tactile-link tactile-link-light">See Detail+ <b>↗</b></Link></div>
             </div>
             <div className="upgrade-stamp upgrade-stamp-light">REPEAT<br />CARE</div>
+          </div>
           </div>
         </div>
       </section>
