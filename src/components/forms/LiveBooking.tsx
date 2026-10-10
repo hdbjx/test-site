@@ -108,9 +108,12 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     quoteSessionRef.current = sessionStorage.getItem("ed_quote_session_id");
     const raw = sessionStorage.getItem("ed_quote_contact");
     window.setTimeout(() => {
-      if (!raw || !formRef.current) return;
-      try { const c=JSON.parse(raw); for (const [k,v] of Object.entries(c)) { const el=formRef.current?.elements.namedItem(k) as HTMLInputElement | null; if (el && !el.value && typeof v === "string") el.value=v; } } catch {}
-    }, 0);
+      if (raw && formRef.current) {
+        try { const c=JSON.parse(raw); for (const [k,v] of Object.entries(c)) { const el=formRef.current?.elements.namedItem(k) as HTMLInputElement | null; if (el && !el.value && typeof v === "string") el.value=v; } } catch {}
+      }
+      setInfoStep(3);
+      document.getElementById("booking-time-picker")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 180);
     void recordQuoteBehavior("availability_viewed");
   }, [fromQuote]);
 
@@ -399,7 +402,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           </p>
         )}
 
-        <section>
+        <section className={fromQuote ? "hidden" : ""} aria-hidden={fromQuote}>
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className="t-h3">1. Your vehicles</h2>
@@ -565,8 +568,8 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           </section>
         )}
 
-        <fieldset>
-          <legend className="t-h3">2. Pick a time</legend>
+        <fieldset id="booking-time-picker" className="scroll-mt-28">
+          <legend className="t-h3">{fromQuote ? "Pick your time" : "2. Pick a time"}</legend>
           {!allVehiclesReady ? (
             <p className="mt-3 text-muted">Choose every vehicle to see open times.</p>
           ) : slotsError ? (
@@ -674,7 +677,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         </fieldset>
 
         <fieldset className="space-y-6">
-          <legend className="t-h3">3. Your details</legend>
+          <legend className="t-h3">{fromQuote ? "Finish booking" : "3. Your details"}</legend>
 
           <div className="client-info-progress" aria-label="Your information progress">
             <button type="button" onClick={() => setInfoStep(1)} className={infoStep === 1 ? "is-active" : infoStep > 1 ? "is-done" : ""}>

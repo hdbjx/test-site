@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { recommenderVehicles, type RecommenderVehicle } from "@/data/recommenderVehicles";
 import { PRICING, services, vehicleLabel, type ServiceId } from "@/data/services";
 import { ADDON_PRICES, PAINT_UPGRADES, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { track } from "@/lib/analytics";
 import { submitLead } from "@/lib/submit";
+import { QuoteBookingContinuation } from "@/components/QuoteBookingContinuation";
 
 const CONDITIONS = [
   { value: 1, label: "Like New", desc: "Looks great in there. Regular upkeep is all it needs." },
@@ -505,12 +505,22 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
                 <p>{desiredTiming === "exploring" ? "Nothing else you need to do. You can check openings whenever you're ready." : `We'll carry your ${vehicle.model}, ${activeService.name}, ${totalDisplay} price, and contact info into booking.`}</p>
               </div>
               <div className="quote-rec-book-actions">
-                <Link className="btn btn-primary" href={selectedBookingHref()} onClick={() => { track("book_click", { location: "saved_quote", vehicle: vehicle.vehicle, service }); void recordBehavior("availability_viewed", { desiredTiming }); }}>
-                  {desiredTiming === "exploring" ? "See openings ↗" : contactPrompt.cta}
-                </Link>
                 <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>{customizeExpanded ? "Hide options ↑" : "Customize detail +"}</button>
               </div>
             </section>
+
+            <QuoteBookingContinuation
+              vehicle={vehicle.vehicle}
+              service={service}
+              addons={result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.id)}
+              paint={[...paint]}
+              name={name.trim()}
+              phone={phone.trim()}
+              email={email.trim()}
+              timing={desiredTiming}
+              sessionId={sessionId}
+              bookingHref={selectedBookingHref()}
+            />
 
             {customizeExpanded && (
               <section className="quote-rec-customize-panel">
