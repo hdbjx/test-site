@@ -229,7 +229,7 @@ function afterJobShell(content: string, preheader = "") {
 <html>
   <head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Every Detail</title></head>
   <body style="margin:0;padding:0;background:#f3f1ec;font-family:Arial,Helvetica,sans-serif;color:#111111;">
-    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(preheader)}</div>
+    <div style="display:none!important;visibility:hidden;mso-hide:all;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;color:transparent;">${escapeHtml(preheader)}&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;</div>
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#f3f1ec;">
       <tr><td align="center" style="padding:22px 12px;">
         <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:680px;">
@@ -319,11 +319,11 @@ export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: st
     ${reviewModule}
     ${detailPlusModule}
     ${receiptModule}
-  `, `Your ${input.vehicle} is back to its best.`);
+  `, `Your ${input.service} is complete. See the transformation inside.`);
 
   return sendEmail({
     to: input.email,
-    subject: `${firstName}, your ${input.vehicle} is all set`,
+    subject: `Your ${input.vehicle} is all set`,
     html,
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
     attachments: input.includeReceipt && receiptBase64 ? [{ filename: `${input.receiptNumber}.pdf`, content: receiptBase64 }] : undefined,
