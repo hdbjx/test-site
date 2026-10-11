@@ -66,6 +66,34 @@ export async function GET(request: NextRequest) {
     try {
       if (!job.email || !job.scheduled_start) throw new Error("Reminder job is missing email or scheduled start");
 
+      // Re-read the job immediately before sending. A reschedule trigger clears
+      // customer_reminder_email_claimed_at, so a stale claim is rejected here.
+      const { data: currentJob, error: validationError } = await admin
+        .from("jobs")
+        .select("id,status,email,scheduled_start,customer_reminder_email_claimed_at")
+        .eq("id", job.id)
+        .maybeSingle();
+
+      if (validationError) throw validationError;
+
+      const stillCurrent =
+        currentJob &&
+        ["booked", "assigned"].includes(String(currentJob.status)) &&
+        currentJob.customer_reminder_email_claimed_at &&
+        currentJob.scheduled_start === job.scheduled_start &&
+        String(currentJob.email || "").trim().toLowerCase() === job.email.trim().toLowerCase();
+
+      if (!stillCurrent) {
+        console.info(`[job-reminders] skipped stale claim ${job.id}`);
+        const release = await admin.rpc("finish_customer_email_reminder", {
+          p_job_id: job.id,
+          p_scheduled_start: job.scheduled_start,
+          p_sent: false,
+        });
+        if (release.error) console.error("[job-reminders] stale release", release.error);
+        continue;
+      }
+
       const result = await sendJobReminderEmail({
         name: job.customer_name || "there",
         email: job.email,
