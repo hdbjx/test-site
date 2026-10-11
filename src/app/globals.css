@@ -4695,3 +4695,210 @@ main,section,article,div,form,fieldset{min-width:0}
 .halloween-site header{background:rgba(13,10,8,.94)!important;border-color:#4d2c1b!important}.halloween-site header a,.halloween-site header button{color:#f5ead8}.halloween-site footer{background:#0d0a08;color:#e9dbc5}
 .halloween-site .seasonal-host{overflow:visible}
 @media(max-width:700px){.halloween-site .hero-full:after{right:18px;bottom:16px;font-size:11px}.halloween-site .how-stack-card,.halloween-site .upgrade-board{box-shadow:5px 5px 0 #6d2d16}}
+
+
+/* V16.9.1 Halloween refinement: restore readability and keep the gradient header. */
+.halloween-site .home-header,
+.halloween-site .inner-header {
+  background: transparent !important;
+  border-bottom: 0 !important;
+}
+.halloween-site .home-header::before,
+.halloween-site .inner-header::before {
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / .80) 0%,
+    rgb(0 0 0 / .60) 26%,
+    rgb(0 0 0 / .34) 56%,
+    rgb(0 0 0 / .12) 80%,
+    transparent 100%
+  ) !important;
+}
+.halloween-site .home-nav-shell,
+.halloween-site .inner-nav-shell,
+.halloween-site .home-nav-links,
+.halloween-site .inner-nav-links,
+.halloween-site .home-nav-actions,
+.halloween-site .inner-nav-actions {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+/* Keep the Halloween homepage warm, but make the stacked quote cards readable. */
+.halloween-site .home-how {
+  color: var(--color-ink);
+}
+.halloween-site .home-how .home-display,
+.halloween-site .home-how .home-display span,
+.halloween-site .home-how > .container-ed > p:last-child {
+  color: var(--color-ink);
+}
+.halloween-site .how-stack-card {
+  background: #e6d6bb !important;
+  color: #17110e !important;
+  border-color: #2b1a12 !important;
+  box-shadow: 8px 8px 0 #7c3218 !important;
+}
+.halloween-site .how-stack-card:nth-child(even) {
+  background: #dcc7a7 !important;
+}
+.halloween-site .how-stack-card:nth-child(3) {
+  background: #ead8c0 !important;
+}
+.halloween-site .how-stack-card:nth-child(4) {
+  background: #f0e3cf !important;
+}
+.halloween-site .how-stack-card > b,
+.halloween-site .how-stack-card > div > span {
+  color: #b84919 !important;
+}
+.halloween-site .how-stack-card h3,
+.halloween-site .how-stack-card p {
+  color: #17110e !important;
+}
+.halloween-site .how-stack-card p,
+.halloween-site .how-stack-card:nth-child(4) p {
+  color: rgb(23 17 14 / .78) !important;
+}
+
+/* Inner-page headers: readable on the dark top treatment, while forms stay light below. */
+.halloween-site main > section.container-ed:first-of-type {
+  position: relative;
+  z-index: 1;
+  padding-top: clamp(8rem, 11vw, 10rem);
+  color: #f7ead4;
+}
+.halloween-site main > section.container-ed:first-of-type nav[aria-label="Breadcrumb"],
+.halloween-site main > section.container-ed:first-of-type nav[aria-label="Breadcrumb"] a,
+.halloween-site main > section.container-ed:first-of-type nav[aria-label="Breadcrumb"] span[aria-current="page"] {
+  color: rgb(247 234 212 / .72) !important;
+}
+.halloween-site main > section.container-ed:first-of-type .t-page,
+.halloween-site main > section.container-ed:first-of-type .t-lede,
+.halloween-site main > section.container-ed:first-of-type .t-lede p {
+  color: #f7ead4 !important;
+}
+.halloween-site main > section.container-ed:first-of-type .t-lede,
+.halloween-site main > section.container-ed:first-of-type .t-lede p {
+  opacity: .9;
+}
+
+/* Booking and quote surfaces should stay crisp and highly legible. */
+.halloween-site .panel,
+.halloween-site .client-info-panel,
+.halloween-site .booking-calendar-wrap,
+.halloween-site .quote-rec-next-card,
+.halloween-site .quote-rec-reactive-contact {
+  color: var(--color-ink);
+}
+.halloween-site .text-muted {
+  color: rgb(23 17 14 / .66) !important;
+}
+.halloween-site .field,
+.halloween-site .choice,
+.halloween-site .panel {
+  background: rgb(255 250 242 / .92);
+}
+.halloween-site .booking-calendar-day[data-available="false"] {
+  color: rgb(23 17 14 / .58);
+}
+.halloween-site .booking-no-availability,
+.halloween-site .booking-time-zone {
+  color: rgb(23 17 14 / .74);
+}
+
+@media (max-width: 767px) {
+  .halloween-site main > section.container-ed:first-of-type {
+    padding-top: 7rem;
+  }
+}
+
+
+/* V16.9.2 Halloween stronger: more seasonal elements without losing clarity. */
+.halloween-site .seasonal-host{position:relative;overflow:visible}
+.halloween-site .seasonal-host .decor{opacity:.95}
+.halloween-site .hero-full .ghostScene{right:2.4vw;bottom:2.6rem;transform:scale(1.04)}
+.halloween-site .hero-full .web.tl{left:1.2rem;top:1rem;opacity:.42}
+.halloween-site .hero-full .bats.tr{right:4vw;top:5.8rem;opacity:.9}
+.halloween-site .proof-row{position:relative;overflow:visible}
+.halloween-site .proof-row .leafPile.bl{left:1rem;bottom:-1.35rem;transform:scale(1.04)}
+.halloween-site .proof-row .crows.tr{right:1.3rem;top:-.55rem;opacity:.68}
+.halloween-site .home-services .leafPile.bl{left:1.2rem;bottom:-1rem;transform:scale(1.08)}
+.halloween-site .work-v157-lead .web.tl{left:.6rem;top:.4rem;opacity:.55}
+.halloween-site .work-v157-grid figure .decor{opacity:.88}
+.halloween-site .how-stack-card .decor{opacity:.92}
+.halloween-site .home-next .upgrade-board{position:relative;overflow:visible}
+.halloween-site .home-next .upgrade-board .decor{opacity:.92}
+.halloween-site .home-faq .leafPile.bl{left:1rem;bottom:-1rem;transform:scale(1.02)}
+.halloween-site .final-book .web.tl{left:1rem;top:1rem;opacity:.52}
+.halloween-site .final-book .ghostScene.tr{right:1rem;top:.5rem}
+
+.halloween-site .panel,
+.halloween-site .booking-calendar-wrap,
+.halloween-site .quote-rec-next-card,
+.halloween-site .quote-rec-reactive-contact,
+.halloween-site .quote-rec-intent-context,
+.halloween-site .client-info-panel {
+  position: relative;
+  overflow: hidden;
+}
+.halloween-site .panel::after,
+.halloween-site .booking-calendar-wrap::after,
+.halloween-site .quote-rec-next-card::after,
+.halloween-site .quote-rec-reactive-contact::after,
+.halloween-site .client-info-panel::after {
+  content: "";
+  position: absolute;
+  right: .7rem;
+  top: .6rem;
+  width: 74px;
+  height: 74px;
+  pointer-events: none;
+  opacity: .16;
+  background:
+    repeating-radial-gradient(circle at 100% 0, transparent 0 10px, rgba(116,54,29,.6) 10.8px 11.8px, transparent 12.6px 18px),
+    linear-gradient(135deg, transparent 48%, rgba(116,54,29,.7) 49%, transparent 50%),
+    linear-gradient(90deg, rgba(116,54,29,.7), rgba(116,54,29,.7));
+  background-size: 100% 100%, 100% 100%, 52px 1px;
+  background-repeat: no-repeat;
+  transform: scaleX(-1);
+  transform-origin: right top;
+}
+.halloween-site .booking-calendar-wrap::before,
+.halloween-site .client-info-panel::before {
+  content: "";
+  position: absolute;
+  left: .85rem;
+  bottom: .65rem;
+  width: 74px;
+  height: 32px;
+  pointer-events: none;
+  opacity: .55;
+  background:
+    radial-gradient(ellipse at 15% 65%, #9b451d 0 28%, transparent 29%),
+    radial-gradient(ellipse at 32% 78%, #d97824 0 24%, transparent 25%),
+    radial-gradient(ellipse at 52% 48%, #6d321a 0 28%, transparent 29%),
+    radial-gradient(ellipse at 71% 76%, #c95a1f 0 25%, transparent 26%),
+    radial-gradient(ellipse at 90% 58%, #e0a02d 0 23%, transparent 24%);
+}
+.halloween-site .booking-calendar-wrap::before { bottom: .9rem; left: 1rem; }
+.halloween-site .choice[aria-checked="true"],
+.halloween-site .choice[aria-pressed="true"],
+.halloween-site .choice:has(input:checked) {
+  box-shadow: 3px 3px 0 #8b3e1e;
+}
+.halloween-site .btn-secondary{
+  background:#f3e6cf;
+}
+@media (max-width: 900px) {
+  .halloween-site .hero-full .ghostScene{transform:scale(.84);right:1rem;bottom:1.3rem}
+  .halloween-site .hero-full .bats.tr{top:5rem;right:1rem}
+  .halloween-site .proof-row .leafPile.bl{left:.35rem;bottom:-1.15rem;transform:scale(.84)}
+  .halloween-site .home-services .leafPile.bl,.halloween-site .home-faq .leafPile.bl{transform:scale(.82);left:.2rem}
+  .halloween-site .panel::after,
+  .halloween-site .booking-calendar-wrap::after,
+  .halloween-site .quote-rec-next-card::after,
+  .halloween-site .quote-rec-reactive-contact::after,
+  .halloween-site .client-info-panel::after{width:58px;height:58px;opacity:.13}
+}

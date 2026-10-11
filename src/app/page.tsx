@@ -24,7 +24,10 @@ export default function Home() {
   return (
     <>
       <HomeScrollMotion />
-      <section className="hero-full" aria-label="Every Detail mobile car detailing">
+      <section className="hero-full seasonal-host" aria-label="Every Detail mobile car detailing">
+        <SeasonalDecor variant="web" corner="tl" />
+        <SeasonalDecor variant="sprig" corner="tr" />
+        <SeasonalDecor variant="ghost" corner="br" />
         <div className="hero-shade" />
         <div className="container-ed hero-inner">
           <div className="hero-copy rise">
@@ -39,7 +42,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="proof-row" aria-label="Why people choose Every Detail">
+      <section className="proof-row seasonal-host" aria-label="Why people choose Every Detail">
+        <SeasonalDecor variant="leafPile" corner="bl" />
+        <SeasonalDecor variant="scattered" corner="tr" />
+        <SeasonalDecor variant="leafPile" corner="bl" />
         <div className="container-ed grid gap-3 py-5 text-center sm:grid-cols-2 lg:grid-cols-4">
           <span className="proof-stars">★★★★★ <strong><LiveReviewCount /></strong> five-star reviews</span>
           <span>{site.award.title}</span><span>Power + water included</span><span>100% electric rigs</span>
@@ -67,25 +73,30 @@ export default function Home() {
           </div>
 
           <figure className="work-v157-lead seasonal-host">
+            <SeasonalDecor variant="web" corner="tl" />
             <SeasonalDecor variant="leafPile" corner="br" />
             <Photo id="work-mateo-0670" sizes="(min-width: 1500px) 1480px, 94vw" ratio="21/9" />
             <figcaption><span>01 / ON THE JOB</span><strong>Mateo · Foam wash</strong></figcaption>
           </figure>
 
           <div className="work-v157-grid">
-            <figure>
+            <figure className="seasonal-host">
+              <SeasonalDecor variant="sprig" corner="tr" />
               <Photo id="two-tech-interior-detail" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
               <figcaption><span>02 / INTERIOR</span><strong>Two-person cabin detail</strong></figcaption>
             </figure>
-            <figure>
+            <figure className="seasonal-host">
+              <SeasonalDecor variant="leafPile" corner="br" />
               <Photo id="rear-seat-detail" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
               <figcaption><span>03 / THE DETAILS</span><strong>Seat-by-seat finishing</strong></figcaption>
             </figure>
-            <figure>
+            <figure className="seasonal-host">
+              <SeasonalDecor variant="ghost" corner="bl" />
               <Photo id="classic-car-cockpit" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
               <figcaption><span>04 / INTERIOR</span><strong>Clean all the way through</strong></figcaption>
             </figure>
-            <figure>
+            <figure className="seasonal-host">
+              <SeasonalDecor variant="web" corner="tr" />
               <Photo id="work-finished-0771" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
               <figcaption><span>05 / FINISHED</span><strong>The result</strong></figcaption>
             </figure>
@@ -123,9 +134,9 @@ export default function Home() {
           <div className="how-head"><p className="eyebrow">How it works</p><h2 id="how-heading" className="home-display">We make detailing<br /><span>the easy part.</span></h2></div>
           <div className="how-grid how-stack">
             <article className="how-stack-card seasonal-host"><SeasonalDecor variant="web" corner="tr" /><b>01</b><div><span>START HERE</span><h3>Get your quote</h3><p>Tell us what you drive and what it needs. We’ll recommend the right detail and show you the price.</p></div></article>
-            <article className="how-stack-card"><b>02</b><div><span>LOCK IT IN</span><h3>Pick a time</h3><p>Choose an available appointment that works for you. No back-and-forth required.</p></div></article>
+            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="leafPile" corner="br" /><b>02</b><div><span>LOCK IT IN</span><h3>Pick a time</h3><p>Choose an available appointment that works for you. No back-and-forth required.</p></div></article>
             <article className="how-stack-card seasonal-host"><SeasonalDecor variant="sprig" corner="bl" /><b>03</b><div><span>YOUR DRIVEWAY</span><h3>We come to you</h3><p>Our 100% electric mobile rig arrives with its own water, battery power, tools, and products. No generator or outlet needed. You provide the driveway.</p></div></article>
-            <article className="how-stack-card"><b>04</b><div><span>DONE RIGHT</span><h3>Get your car back</h3><p>We work through the detail and let you know when your car is ready to get back on the road.</p></div></article>
+            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="ghost" corner="tr" /><b>04</b><div><span>DONE RIGHT</span><h3>Get your car back</h3><p>We work through the detail and let you know when your car is ready to get back on the road.</p></div></article>
           </div>
           <Link href="/get-a-quote" className="btn btn-primary how-cta">Get my quote ↗</Link>
         </div>
@@ -140,7 +151,7 @@ export default function Home() {
           </div>
 
           <div className="upgrade-stack">
-          <div className="upgrade-board upgrade-board-paint"><SeasonalDecor variant="leafPile" corner="br" />
+          <div className="upgrade-board upgrade-board-paint seasonal-host"><SeasonalDecor variant="leafPile" corner="br" /><SeasonalDecor variant="web" corner="tl" />
             <div className="upgrade-index">01 / PAINT</div>
             <div className="upgrade-main">
               <p className="upgrade-label">Paint correction + ceramic coating</p>
@@ -156,7 +167,7 @@ export default function Home() {
             <div className="upgrade-stamp">PAINT<br />CARE</div>
           </div>
 
-          <div className="upgrade-board upgrade-board-plus"><SeasonalDecor variant="web" corner="tr" />
+          <div className="upgrade-board upgrade-board-plus seasonal-host"><SeasonalDecor variant="web" corner="tr" /><SeasonalDecor variant="ghost" corner="bl" />
             <div className="upgrade-index">02 / RECURRING CARE</div>
             <div className="upgrade-main">
               <p className="upgrade-label">Detail+</p>
@@ -179,11 +190,14 @@ export default function Home() {
 
       <section className="home-faq seasonal-host">
         <SeasonalDecor variant="sprig" corner="tr" />
+        <SeasonalDecor variant="leafPile" corner="bl" />
         <div className="container-ed faq-layout"><div className="faq-title"><p className="eyebrow">Before you book</p><h2 className="home-display">The stuff you’re<br />probably wondering.</h2><p>We’d rather answer the question before it becomes a reason not to book. Still unsure about something? Call or text us and a real person will answer.</p></div><div className="faq-list-home"><FaqList faqs={featuredFaqs} /><Link href="/our-services" className="link">See all service details ↗</Link></div></div>
       </section>
 
       <section className="final-book final-book-v12 seasonal-host">
         <SeasonalDecor variant="pumpkin" corner="br" />
+        <SeasonalDecor variant="web" corner="tl" />
+        <SeasonalDecor variant="ghost" corner="tr" />
         <div className="container-ed final-inner">
           <p className="eyebrow">We come to you</p>
           <h2 className="final-title">Your driveway.<br /><span>Our detail shop.</span></h2>
