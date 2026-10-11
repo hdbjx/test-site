@@ -6,6 +6,7 @@ import { HomeBookingFlow } from "@/components/HomeBookingFlow";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { TrackedLink } from "@/components/TrackedLink";
 import { HomeScrollMotion } from "@/components/HomeScrollMotion";
+import { SeasonalDecor } from "@/components/SeasonalDecor";
 import { homeFaqs } from "@/data/faqs";
 import { reviewCountLabel, site } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
@@ -45,7 +46,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="pricing" className="home-services home-services-v14">
+      <section id="pricing" className="home-services home-services-v14 seasonal-host">
+        <SeasonalDecor variant="scattered" corner="tr" />
         <div className="container-ed">
           <div className="home-section-head v14-service-head">
             <div><p className="eyebrow">Start here</p><h2 id="pricing-heading" className="home-display">Choose what<br />your car needs.</h2></div>
@@ -64,7 +66,8 @@ export default function Home() {
             <p className="work-proof-copy">No stock photos and no mystery shop. Just our crew, our rigs, and real jobs around Decatur and Atlanta.</p>
           </div>
 
-          <figure className="work-v157-lead">
+          <figure className="work-v157-lead seasonal-host">
+            <SeasonalDecor variant="leafPile" corner="br" />
             <Photo id="work-mateo-0670" sizes="(min-width: 1500px) 1480px, 94vw" ratio="21/9" />
             <figcaption><span>01 / ON THE JOB</span><strong>Mateo · Foam wash</strong></figcaption>
           </figure>
@@ -119,9 +122,9 @@ export default function Home() {
         <div className="container-ed">
           <div className="how-head"><p className="eyebrow">How it works</p><h2 id="how-heading" className="home-display">We make detailing<br /><span>the easy part.</span></h2></div>
           <div className="how-grid how-stack">
-            <article className="how-stack-card"><b>01</b><div><span>START HERE</span><h3>Get your quote</h3><p>Tell us what you drive and what it needs. We’ll recommend the right detail and show you the price.</p></div></article>
+            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="web" corner="tr" /><b>01</b><div><span>START HERE</span><h3>Get your quote</h3><p>Tell us what you drive and what it needs. We’ll recommend the right detail and show you the price.</p></div></article>
             <article className="how-stack-card"><b>02</b><div><span>LOCK IT IN</span><h3>Pick a time</h3><p>Choose an available appointment that works for you. No back-and-forth required.</p></div></article>
-            <article className="how-stack-card"><b>03</b><div><span>YOUR DRIVEWAY</span><h3>We come to you</h3><p>Our 100% electric mobile rig arrives with its own water, battery power, tools, and products. No generator or outlet needed. You provide the driveway.</p></div></article>
+            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="sprig" corner="bl" /><b>03</b><div><span>YOUR DRIVEWAY</span><h3>We come to you</h3><p>Our 100% electric mobile rig arrives with its own water, battery power, tools, and products. No generator or outlet needed. You provide the driveway.</p></div></article>
             <article className="how-stack-card"><b>04</b><div><span>DONE RIGHT</span><h3>Get your car back</h3><p>We work through the detail and let you know when your car is ready to get back on the road.</p></div></article>
           </div>
           <Link href="/get-a-quote" className="btn btn-primary how-cta">Get my quote ↗</Link>
@@ -137,7 +140,7 @@ export default function Home() {
           </div>
 
           <div className="upgrade-stack">
-          <div className="upgrade-board upgrade-board-paint">
+          <div className="upgrade-board upgrade-board-paint"><SeasonalDecor variant="leafPile" corner="br" />
             <div className="upgrade-index">01 / PAINT</div>
             <div className="upgrade-main">
               <p className="upgrade-label">Paint correction + ceramic coating</p>
@@ -153,7 +156,7 @@ export default function Home() {
             <div className="upgrade-stamp">PAINT<br />CARE</div>
           </div>
 
-          <div className="upgrade-board upgrade-board-plus">
+          <div className="upgrade-board upgrade-board-plus"><SeasonalDecor variant="web" corner="tr" />
             <div className="upgrade-index">02 / RECURRING CARE</div>
             <div className="upgrade-main">
               <p className="upgrade-label">Detail+</p>
@@ -174,11 +177,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-faq">
+      <section className="home-faq seasonal-host">
+        <SeasonalDecor variant="sprig" corner="tr" />
         <div className="container-ed faq-layout"><div className="faq-title"><p className="eyebrow">Before you book</p><h2 className="home-display">The stuff you’re<br />probably wondering.</h2><p>We’d rather answer the question before it becomes a reason not to book. Still unsure about something? Call or text us and a real person will answer.</p></div><div className="faq-list-home"><FaqList faqs={featuredFaqs} /><Link href="/our-services" className="link">See all service details ↗</Link></div></div>
       </section>
 
-      <section className="final-book final-book-v12">
+      <section className="final-book final-book-v12 seasonal-host">
+        <SeasonalDecor variant="pumpkin" corner="br" />
         <div className="container-ed final-inner">
           <p className="eyebrow">We come to you</p>
           <h2 className="final-title">Your driveway.<br /><span>Our detail shop.</span></h2>

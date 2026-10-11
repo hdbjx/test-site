@@ -4657,3 +4657,6 @@ main,section,article,div,form,fieldset{min-width:0}
     cursor: not-allowed !important;
   }
 }
+
+/* Seasonal decorations are anchored to real page elements, never the viewport. */
+.seasonal-host { position: relative; }

@@ -7,7 +7,6 @@ import { GoogleReviewStatsProvider } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
 import { MobileBookBar } from "@/components/MobileBookBar";
 import { RouteTransition } from "@/components/RouteTransition";
-import { SeasonalOverlay } from "@/components/SeasonalOverlay";
 import { site } from "@/data/site";
 import { localBusinessSchema } from "@/lib/seo";
 
@@ -42,7 +41,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MobileBookBar />
         <JsonLd data={localBusinessSchema()} />
         <Analytics />
-        <SeasonalOverlay />
         </GoogleReviewStatsProvider>
       </body>
     </html>
