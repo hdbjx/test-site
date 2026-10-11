@@ -1,8 +1,14 @@
+type EmailAttachment = {
+  filename: string;
+  content: string; // base64
+};
+
 type EmailMessage = {
   to: string | string[];
   subject: string;
   html: string;
   replyTo?: string;
+  attachments?: EmailAttachment[];
 };
 
 type BookingEmail = {
@@ -163,6 +169,7 @@ export async function sendEmail(message: EmailMessage) {
       subject: message.subject,
       html: message.html,
       ...(message.replyTo ? { reply_to: message.replyTo } : {}),
+      ...(message.attachments?.length ? { attachments: message.attachments } : {}),
     }),
     cache: "no-store",
   });
@@ -172,9 +179,87 @@ export async function sendEmail(message: EmailMessage) {
     throw new Error(`Resend responded ${response.status}: ${body}`);
   }
 
+  const responseBody = await response.json().catch(() => ({})) as { id?: string };
+
   return {
     ok: true,
+    id: responseBody.id || null,
   };
+}
+
+export type AfterJobEmail = {
+  name: string;
+  email: string;
+  vehicle: string;
+  service: string;
+  completedAt: string;
+  total: number;
+  receiptNumber: string;
+  lines: Array<{ label: string; amount: number }>;
+  beforeUrl?: string | null;
+  afterUrl?: string | null;
+  includeReceipt: boolean;
+  includeReview: boolean;
+  includeDetailPlus: boolean;
+};
+
+function afterJobPhotoSplit(beforeUrl?: string | null, afterUrl?: string | null) {
+  if (!beforeUrl || !afterUrl) return "";
+  return `
+    <div style="margin:28px 0 0;border:2px solid ${BRAND.black};background:${BRAND.black};">
+      <div style="padding:10px 12px;color:#fff;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;font-weight:700;">The transformation</div>
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="table-layout:fixed;background:#fff;">
+        <tr>
+          <td width="50%" style="padding:0;border-right:2px solid ${BRAND.black};vertical-align:top;">
+            <div style="padding:7px 10px;background:${BRAND.beige};font-size:10px;letter-spacing:1.3px;font-weight:700;">BEFORE</div>
+            <img src="${escapeHtml(beforeUrl)}" alt="Before detail" width="100%" style="display:block;width:100%;height:auto;border:0;">
+          </td>
+          <td width="50%" style="padding:0;vertical-align:top;">
+            <div style="padding:7px 10px;background:${BRAND.beige};font-size:10px;letter-spacing:1.3px;font-weight:700;">AFTER</div>
+            <img src="${escapeHtml(afterUrl)}" alt="After detail" width="100%" style="display:block;width:100%;height:auto;border:0;">
+          </td>
+        </tr>
+      </table>
+    </div>`;
+}
+
+export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: string) {
+  const firstName = input.name.trim().split(/\s+/)[0] || input.name || "there";
+  const completed = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York", month: "long", day: "numeric", year: "numeric"
+  }).format(new Date(input.completedAt));
+  const reviewUrl = process.env.GOOGLE_REVIEW_URL || "https://www.google.com/search?q=Every+Detail+Mobile+Detailing#lrd=0x8e30f21fe0cce555:0x394893f8064359ae,1,,,,";
+  const detailPlusUrl = process.env.DETAIL_PLUS_URL || "https://www.everydetail.co/detailplus";
+  const bookUrl = process.env.BOOKING_URL || "https://www.everydetail.co/book";
+
+  const modules = [
+    input.includeReceipt ? `<div style="margin-top:24px;padding:18px;background:${BRAND.cream};border-left:5px solid ${BRAND.coral};"><b>Receipt</b><br><span style="font-size:13px;color:${BRAND.gray};">Your ${escapeHtml(input.receiptNumber)} receipt for ${formatMoney(input.total)} is attached as a PDF.</span></div>` : "",
+    input.includeReview ? `<div style="margin-top:24px;padding:20px;border:2px solid ${BRAND.black};"><div style="font-size:11px;letter-spacing:1.5px;color:${BRAND.coral};font-weight:700;">HOW DID WE DO?</div><h2 style="margin:7px 0 9px;font-size:23px;">Love how it turned out?</h2><p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:${BRAND.gray};">A Google review helps our small team more than you might think.</p><a href="${escapeHtml(reviewUrl)}" style="display:inline-block;padding:11px 15px;background:${BRAND.red};color:#fff;text-decoration:none;font-weight:700;font-size:13px;">Leave a review</a></div>` : "",
+    input.includeDetailPlus ? `<div style="margin-top:24px;padding:20px;background:${BRAND.red};color:#fff;"><div style="font-size:11px;letter-spacing:1.5px;color:${BRAND.beige};font-weight:700;">DETAIL+</div><h2 style="margin:7px 0 9px;font-size:23px;color:#fff;">Keep it from getting back to square one.</h2><p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#fff;">Detail+ puts your vehicle on a recurring maintenance schedule so we come back before the mess builds up again.</p><a href="${escapeHtml(detailPlusUrl)}" style="display:inline-block;padding:11px 15px;background:#fff;color:${BRAND.red};text-decoration:none;font-weight:700;font-size:13px;">Explore Detail+</a></div>` : "",
+  ].join("");
+
+  const html = shell(`
+    <div style="font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:700;">Detail complete</div>
+    <h1 style="margin:10px 0 14px;font-size:34px;line-height:1.05;color:${BRAND.black};">Your vehicle is all set${firstName ? `, ${escapeHtml(firstName)}` : ""}.</h1>
+    <p style="margin:0 0 24px;font-size:16px;line-height:1.65;color:${BRAND.gray};">Thanks for choosing Every Detail. Here is a recap of today’s visit.</p>
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      ${detailRow("Vehicle", input.vehicle)}
+      ${detailRow("Service", input.service)}
+      ${detailRow("Completed", completed)}
+    </table>
+    ${afterJobPhotoSplit(input.beforeUrl, input.afterUrl)}
+    <div style="margin-top:26px;padding:18px;background:${BRAND.cream};border-left:5px solid ${BRAND.coral};font-size:14px;line-height:1.65;"><b>Keep it looking this good.</b><br>Regular upkeep is easier than another reset. <a href="${escapeHtml(bookUrl)}" style="color:${BRAND.red};font-weight:700;">Book your next visit</a> whenever you are ready.</div>
+    ${modules}
+    <p style="margin:26px 0 0;font-size:14px;line-height:1.65;color:${BRAND.gray};">Something not right? Reply directly to this email and we’ll help.</p>
+  `, `Your ${input.vehicle} is all set.`);
+
+  return sendEmail({
+    to: input.email,
+    subject: `Your ${input.vehicle} is all set`,
+    html,
+    replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
+    attachments: input.includeReceipt && receiptBase64 ? [{ filename: `${input.receiptNumber}.pdf`, content: receiptBase64 }] : undefined,
+  });
 }
 
 export async function sendBookingEmails(booking: BookingEmail) {
