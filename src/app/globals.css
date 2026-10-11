@@ -4660,3 +4660,38 @@ main,section,article,div,form,fieldset{min-width:0}
 
 /* Seasonal decorations are anchored to real page elements, never the viewport. */
 .seasonal-host { position: relative; }
+
+/* ============================================================
+   EVERY DETAIL: HALLOWEEN EDITION
+   Visual-only seasonal art direction. Layout and flows unchanged.
+   ============================================================ */
+.halloween-site {
+  --color-paper:#e9dfca;
+  --color-paper2:#d9c9ae;
+  --color-sand:#c38b4e;
+  --color-ink:#171310;
+  --color-muted:#5d5146;
+  --color-red:#d65a1f;
+  --color-red-hover:#b94716;
+  --color-oxblood:#2a0d0b;
+  --color-line:rgb(38 22 13 / .25);
+  background:#120f0d;
+}
+.halloween-site ::selection{background:#d65a1f;color:#fff8e8}
+.halloween-site .hero-full{position:relative;isolation:isolate;filter:saturate(.78) contrast(1.08)}
+.halloween-site .hero-full:before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(7,5,4,.25),rgba(18,6,2,.05) 45%,rgba(12,7,4,.46)),radial-gradient(circle at 78% 25%,rgba(229,105,29,.14),transparent 28%)}
+.halloween-site .hero-full:after{content:"HALLOWEEN EDITION  /  OCTOBER";position:absolute;z-index:3;right:5.5vw;bottom:25px;padding:8px 12px;border:1px solid rgba(255,236,204,.55);color:#fff0d3;background:rgba(15,10,7,.64);backdrop-filter:blur(5px);font-family:var(--font-numeral);font-size:14px;letter-spacing:.13em;transform:rotate(-2deg)}
+.halloween-site .hero-shade{z-index:2;background:linear-gradient(90deg,rgba(5,4,3,.8),rgba(10,6,4,.23) 62%,rgba(5,3,2,.18))}
+.halloween-site .hero-inner{position:relative;z-index:3}.halloween-site .hero-kicker{color:#f0a04a}.halloween-site .hero-title,.halloween-site .hero-lede{color:#fff8ea;text-shadow:0 3px 22px rgba(0,0,0,.45)}
+.halloween-site .proof-row{background:#17120f;color:#f3e6cf;border-color:#4a2b1c}.halloween-site .proof-row span+span{border-color:#4a2b1c}.halloween-site .proof-stars{color:#f0a04a}
+.halloween-site .home-services,.halloween-site .home-how,.halloween-site .home-faq{background:#e9dfca;background-image:radial-gradient(circle at 15% 10%,rgba(120,67,30,.06),transparent 24%),radial-gradient(circle at 82% 70%,rgba(79,39,17,.05),transparent 28%)}
+.halloween-site .eyebrow{color:#a53e17}.halloween-site .home-display span,.halloween-site .next-v158-heading .home-display span{color:#c34b18}
+.halloween-site .home-work{background:#161210;color:#f5ead7}.halloween-site .work-v157-shell{background:#161210}.halloween-site .work-v157-head .eyebrow,.halloween-site .work-v157-head .home-display span{color:#ed8731}.halloween-site .work-v157-grid figure,.halloween-site .work-v157-lead{box-shadow:9px 9px 0 #6d2d16}.halloween-site .work-instagram-cta{border-color:#7c3b1e;background:#211813}
+.halloween-site .how-stack-card{background:#dfd0b7;border-color:#26170f;box-shadow:7px 7px 0 #7c3218}.halloween-site .how-stack-card:nth-child(even){background:#c9b495}.halloween-site .how-stack-card b{color:#b84919}
+.halloween-site .home-next{background:#0f0d0c;color:#f4e9d5}.halloween-site .next-v158-heading>p:last-child{color:#c9baa5}.halloween-site .upgrade-board{border-color:#e7d7bd;box-shadow:9px 9px 0 #873619}.halloween-site .upgrade-board-paint{background:#d8c6a8;color:#17110e}.halloween-site .upgrade-board-plus{background:#25120d;color:#f6e7ce}.halloween-site .upgrade-board-plus .upgrade-chips span,.halloween-site .upgrade-board-plus .plus-steps div{border-color:#9a4a25}.halloween-site .upgrade-stamp{color:#b34619;border-color:#b34619}
+.halloween-site .home-faq{border-top:10px solid #17120f}.halloween-site .faq-list-home details{border-color:#6c503a}.halloween-site .faq-list-home summary:hover{color:#a23b16}
+.halloween-site .final-book{background:#260d0a;color:#fff0d9;position:relative;overflow:hidden}.halloween-site .final-book:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 70%,rgba(232,105,29,.2),transparent 25%),radial-gradient(circle at 85% 25%,rgba(0,0,0,.32),transparent 30%)}.halloween-site .final-book .eyebrow{color:#f09a42}.halloween-site .final-title span{color:#ef7629}
+.halloween-site .btn-primary{background:#d65a1f;border-color:#1b0d08;color:#fff7e9;box-shadow:5px 5px 0 #1b0d08}.halloween-site .btn-primary:hover{background:#f07828}.halloween-site .btn-quote{background:#efe2cb;border-color:#1a120e;color:#18110d;box-shadow:5px 5px 0 #1a120e}
+.halloween-site header{background:rgba(13,10,8,.94)!important;border-color:#4d2c1b!important}.halloween-site header a,.halloween-site header button{color:#f5ead8}.halloween-site footer{background:#0d0a08;color:#e9dbc5}
+.halloween-site .seasonal-host{overflow:visible}
+@media(max-width:700px){.halloween-site .hero-full:after{right:18px;bottom:16px;font-size:11px}.halloween-site .how-stack-card,.halloween-site .upgrade-board{box-shadow:5px 5px 0 #6d2d16}}
