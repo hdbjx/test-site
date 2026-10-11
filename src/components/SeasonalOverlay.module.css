@@ -1,0 +1,91 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  overflow: hidden;
+  user-select: none;
+}
+
+.web {
+  position: absolute;
+  top: 0;
+  width: 112px;
+  height: 112px;
+  opacity: 0.22;
+  background:
+    radial-gradient(circle at 0 0, transparent 0 21px, rgba(40, 34, 28, .65) 22px 23px, transparent 24px 38px, rgba(40, 34, 28, .55) 39px 40px, transparent 41px 56px, rgba(40, 34, 28, .45) 57px 58px, transparent 59px),
+    linear-gradient(45deg, transparent 49.2%, rgba(40, 34, 28, .55) 49.5% 50.5%, transparent 50.8%),
+    linear-gradient(22.5deg, transparent 49.2%, rgba(40, 34, 28, .45) 49.5% 50.5%, transparent 50.8%),
+    linear-gradient(67.5deg, transparent 49.2%, rgba(40, 34, 28, .45) 49.5% 50.5%, transparent 50.8%);
+  transform-origin: top left;
+}
+
+.webLeft { left: 0; }
+.webRight { right: 0; transform: scaleX(-1); }
+
+.cornerCluster {
+  position: absolute;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: flex-end;
+  filter: drop-shadow(0 5px 5px rgba(0,0,0,.16));
+}
+
+.bottomLeft { left: 14px; }
+.bottomRight { right: 14px; flex-direction: row-reverse; }
+
+.pumpkin { font-size: 46px; transform: rotate(-5deg); }
+.pumpkinSmall { font-size: 34px; transform: rotate(7deg); }
+.leafPile { font-size: 28px; margin: 0 -7px -2px; transform: rotate(10deg); }
+.leafPileSmall { font-size: 21px; margin-bottom: 1px; transform: rotate(-15deg); }
+
+.batOne,
+.batTwo {
+  position: absolute;
+  top: 105px;
+  font-size: 22px;
+  opacity: .7;
+  filter: grayscale(1) brightness(.35);
+}
+
+.batOne { right: 8%; transform: rotate(-12deg); }
+.batTwo { right: 11.5%; top: 137px; font-size: 14px; transform: rotate(11deg); opacity: .5; }
+
+.fallingLeaves { position: absolute; inset: 0; }
+
+.fallingLeaf {
+  --leaf-drift: 30px;
+  position: absolute;
+  top: -40px;
+  opacity: .58;
+  filter: saturate(.82) drop-shadow(0 2px 2px rgba(0,0,0,.08));
+  animation-name: leafFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+@keyframes leafFall {
+  0% { transform: translate3d(0, -8vh, 0) rotate(0deg); }
+  35% { transform: translate3d(var(--leaf-drift), 35vh, 0) rotate(145deg); }
+  70% { transform: translate3d(calc(var(--leaf-drift) * -.45), 72vh, 0) rotate(285deg); }
+  100% { transform: translate3d(var(--leaf-drift), 112vh, 0) rotate(430deg); }
+}
+
+@media (max-width: 700px) {
+  .web { width: 78px; height: 78px; background-size: 78px 78px; opacity: .16; }
+  .pumpkin { font-size: 34px; }
+  .pumpkinSmall { font-size: 27px; }
+  .leafPile { font-size: 22px; }
+  .leafPileSmall { font-size: 17px; }
+  .bottomLeft { left: 7px; bottom: calc(72px + env(safe-area-inset-bottom)); }
+  .bottomRight { right: 7px; bottom: calc(72px + env(safe-area-inset-bottom)); }
+  .batOne { top: 88px; right: 9%; font-size: 17px; }
+  .batTwo { display: none; }
+  .fallingLeaf:nth-child(even) { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fallingLeaf { animation: none; display: none; }
+}
