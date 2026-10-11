@@ -5684,3 +5684,260 @@ main,section,article,div,form,fieldset{min-width:0}
     box-shadow:3px 3px 0 #080605 !important;
   }
 }
+
+
+/* =========================================================
+   V16.9.8 — full-site Halloween visual QA
+   Visual-only hardening. Booking/account business logic untouched.
+   ========================================================= */
+
+/* Generic inner-page safety. Page content always reads as paper + ink, while
+   the navigation remains over the dark Halloween gradient. */
+.halloween-site .page-header-shell{
+  isolation:isolate;
+  overflow:hidden;
+  border-bottom:1px solid rgb(24 17 13 / .10);
+}
+.halloween-site .page-header-shell > [data-seasonal="web"]{
+  z-index:-1 !important;
+  right:-1.25rem !important;
+  top:-1.4rem !important;
+  opacity:.16 !important;
+}
+.halloween-site .page-header-shell + section.container-ed,
+.halloween-site .page-header-shell + section.container-ed *{
+  text-shadow:none;
+}
+
+/* Account gets a deliberate dashboard treatment instead of inheriting random
+   global Halloween surface rules. */
+.halloween-site .account-page{
+  min-height:70vh;
+  background:
+    radial-gradient(circle at 90% 3%, rgb(154 68 31 / .075), transparent 20rem),
+    radial-gradient(circle at 6% 65%, rgb(89 13 7 / .045), transparent 24rem),
+    var(--color-paper);
+  color:#18110d;
+}
+.halloween-site .account-page .page-header-shell{
+  background:linear-gradient(180deg,#eadcc2 0%,#e9dfca 100%);
+  border-bottom:2px solid #18110d;
+  box-shadow:0 5px 0 rgb(133 56 29 / .28);
+}
+.halloween-site .account-page .page-header-shell > [data-seasonal]{display:none !important}
+.halloween-site .account-page .page-header-shell .t-page{
+  color:#18110d !important;
+  letter-spacing:-.055em;
+}
+.halloween-site .account-page .page-header-shell .t-lede,
+.halloween-site .account-page .page-header-shell .t-lede p{
+  color:rgb(24 17 13 / .72) !important;
+}
+.halloween-site .account-page .page-header-shell nav,
+.halloween-site .account-page .page-header-shell nav a,
+.halloween-site .account-page .page-header-shell nav span{
+  color:rgb(24 17 13 / .62) !important;
+}
+.halloween-site .account-page > section.container-ed{
+  position:relative;
+  padding-top:3.5rem;
+}
+.halloween-site .account-page .t-h2,
+.halloween-site .account-page .t-h3{
+  color:#18110d;
+}
+.halloween-site .account-page .t-h2{
+  letter-spacing:-.045em;
+}
+.halloween-site .account-page .text-ink\/80{
+  color:rgb(24 17 13 / .76) !important;
+}
+.halloween-site .account-page .text-muted{
+  color:rgb(24 17 13 / .60) !important;
+}
+.halloween-site .account-page .panel{
+  background:#fffaf1 !important;
+  color:#18110d !important;
+  border:2px solid #18110d !important;
+  border-radius:7px !important;
+  box-shadow:7px 7px 0 #7b321e !important;
+}
+.halloween-site .account-page article.panel{
+  position:relative;
+  overflow:hidden;
+}
+.halloween-site .account-page article.panel::before{
+  content:"";
+  position:absolute;
+  right:-34px;
+  top:-38px;
+  width:110px;
+  height:110px;
+  pointer-events:none;
+  opacity:.10;
+  background:repeating-radial-gradient(circle at 100% 0,transparent 0 17px,#7b321e 18px 19px,transparent 20px 28px);
+}
+.halloween-site .account-page .field,
+.halloween-site .account-page .choice,
+.halloween-site .account-page select,
+.halloween-site .account-page textarea{
+  background:#fffdf8 !important;
+  color:#18110d !important;
+  border-color:rgb(24 17 13 / .28) !important;
+}
+.halloween-site .account-page .choice[aria-checked="true"],
+.halloween-site .account-page .choice[aria-pressed="true"],
+.halloween-site .account-page .choice:has(input:checked){
+  background:#f2dfc7 !important;
+  border-color:#18110d !important;
+  box-shadow:3px 3px 0 #7b321e !important;
+}
+.halloween-site .account-page .field-label,
+.halloween-site .account-page label,
+.halloween-site .account-page p,
+.halloween-site .account-page li,
+.halloween-site .account-page span{
+  color:inherit;
+}
+.halloween-site .account-page .field-hint,
+.halloween-site .account-page .text-sm.text-muted,
+.halloween-site .account-page .text-xs.text-muted{
+  color:rgb(24 17 13 / .58) !important;
+}
+.halloween-site .account-page .link{
+  color:#6e2b1b;
+  text-decoration-color:#b9572a;
+}
+.halloween-site .account-page .btn-secondary{
+  background:#f4e6d0 !important;
+  color:#18110d !important;
+  border-color:#18110d !important;
+}
+.halloween-site .account-page .btn-primary{
+  background:#ad4b27 !important;
+  color:#fff8ea !important;
+}
+.halloween-site .account-page .border-ink\/15{
+  border-color:rgb(24 17 13 / .16) !important;
+}
+.halloween-site .account-page .border-ink{
+  border-color:#18110d !important;
+}
+.halloween-site .account-page .bg-paper2{
+  background:#eadbc2 !important;
+}
+.halloween-site .account-page .bg-sand{
+  background:#d4a46b !important;
+}
+
+/* Sign-in/update-password are intentionally compact cards. */
+.halloween-site .account-page > .page-header-shell + section.max-w-xl,
+.halloween-site .account-page > .page-header-shell + section.max-w-2xl{
+  margin-top:2.25rem;
+  padding:clamp(1.4rem,3vw,2.25rem);
+  background:#fffaf1;
+  border:2px solid #18110d;
+  box-shadow:7px 7px 0 #7b321e;
+}
+
+/* Generic form-heavy pages. Keep Halloween around the page, not inside the
+   controls, so contrast and usability stay identical to the clean build. */
+.halloween-site main .field,
+.halloween-site main .choice,
+.halloween-site main textarea,
+.halloween-site main select{
+  color:#18110d;
+}
+.halloween-site main .field::placeholder,
+.halloween-site main textarea::placeholder{
+  color:rgb(24 17 13 / .48);
+}
+.halloween-site main .panel{
+  color:#18110d;
+}
+
+/* Legal/blog/about/service-area editorial pages retain their existing layout
+   and retro geometry. These route roots get explicit readable base colors so
+   Halloween token changes can never invert copy accidentally. */
+.halloween-site .about-v2,
+.halloween-site .blog-v2,
+.halloween-site .areas-v2,
+.halloween-site .legal-v1,
+.halloween-site .post-v2,
+.halloween-site .services-v161,
+.halloween-site .mobile-detailing-page{
+  color:#18110d;
+}
+.halloween-site .about-v2 .text-muted,
+.halloween-site .blog-v2 .text-muted,
+.halloween-site .areas-v2 .text-muted,
+.halloween-site .legal-v1 .text-muted,
+.halloween-site .post-v2 .text-muted,
+.halloween-site .services-v161 .text-muted{
+  color:rgb(24 17 13 / .62) !important;
+}
+
+/* Paint pages intentionally own dark heroes, but all light sections below keep
+   their original ink contrast. */
+.halloween-site .paint-v38 .pv38-paper,
+.halloween-site .paint-v38 .paint-choice-section,
+.halloween-site .paint-v38 .paint-proof-strip,
+.halloween-site .paint-v38 .paint-sequence{
+  color:#18110d;
+}
+
+/* Retro geometry consistency across all pages. */
+.halloween-site .panel,
+.halloween-site .svc-level,
+.halloween-site .svc-live-prices,
+.halloween-site .about-v2 article,
+.halloween-site .areas-v2 article{
+  box-sizing:border-box;
+}
+
+@media (max-width:767px){
+  /* Account mobile: turn the desktop two-column dashboard into a clean single
+     column without allowing shadows/borders to create horizontal overflow. */
+  .halloween-site .account-page > section.container-ed{
+    padding-top:2rem;
+    padding-inline:1rem;
+  }
+  .halloween-site .account-page .page-header-shell{
+    padding-inline:1rem !important;
+    padding-top:6.6rem !important;
+  }
+  .halloween-site .account-page .panel{
+    padding:1.15rem !important;
+    box-shadow:4px 4px 0 #7b321e !important;
+  }
+  .halloween-site .account-page .space-y-16 > * + *{
+    margin-top:2.75rem !important;
+  }
+  .halloween-site .account-page .t-h2{
+    font-size:clamp(2.5rem,13vw,4rem);
+  }
+  .halloween-site .account-page .t-h3{
+    font-size:1.35rem;
+  }
+  .halloween-site .account-page .btn{
+    min-height:3rem;
+  }
+  .halloween-site .account-page > .page-header-shell + section.max-w-xl,
+  .halloween-site .account-page > .page-header-shell + section.max-w-2xl{
+    width:calc(100% - 2rem);
+    margin:1.5rem auto 4rem;
+    padding:1.15rem;
+    box-shadow:4px 4px 0 #7b321e;
+  }
+  .halloween-site .account-page .grid.grid-cols-\[5\.5rem_1fr\]{
+    grid-template-columns:minmax(4.75rem,.7fr) minmax(0,1.3fr);
+  }
+
+  /* Keep every retro shadow inside the viewport on editorial pages. */
+  .halloween-site .svc-level,
+  .halloween-site .svc-live-prices,
+  .halloween-site .about-v2 article,
+  .halloween-site .areas-v2 article{
+    max-width:calc(100vw - 2rem);
+  }
+}

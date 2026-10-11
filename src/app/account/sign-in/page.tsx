@@ -15,7 +15,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
   if (session.state === "customer") redirect(safeNext);
 
   return (
-    <>
+    <div className="account-page">
       <PageHeader
         crumbs={[{ name: "Account", path: "/account" }, { name: "Sign in", path: "/account/sign-in" }]}
         title={mode === "signup" ? "Create your account" : "Sign in"}
@@ -24,6 +24,6 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
       <section className="container-ed max-w-xl pb-24">
         <SignInForm initialMode={mode === "signup" ? "signup" : "signin"} next={safeNext} linkError={error === "link"} />
       </section>
-    </>
+    </div>
   );
 }

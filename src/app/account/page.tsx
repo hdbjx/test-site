@@ -24,7 +24,7 @@ export default async function AccountPage() {
 
   if (session.state === "unconfirmed" || session.state === "staff") {
     return (
-      <>
+      <div className="account-page">
         <PageHeader crumbs={[{ name: "Account", path: "/account" }]} title="Your account" />
         <section className="container-ed max-w-2xl pb-24">
           <div className="panel p-8">
@@ -38,7 +38,7 @@ export default async function AccountPage() {
             </form>
           </div>
         </section>
-      </>
+      </div>
     );
   }
 
@@ -65,7 +65,7 @@ export default async function AccountPage() {
   const first = account.full_name.split(" ")[0];
 
   return (
-    <>
+    <div className="account-page">
       <PageHeader crumbs={[{ name: "Account", path: "/account" }]} title={`Hi, ${first}`}>
         <Link href="/book" className="btn btn-primary">Book a detail</Link>
         <form action="/auth/sign-out" method="post">
@@ -104,6 +104,6 @@ export default async function AccountPage() {
           )}
         </div>
       </section>
-    </>
+    </div>
   );
 }

@@ -6,11 +6,11 @@ export const metadata = pageMetadata({ title: "Set a new password | Every Detail
 
 export default function UpdatePasswordPage() {
   return (
-    <>
+    <div className="account-page">
       <PageHeader crumbs={[{ name: "Account", path: "/account" }, { name: "New password", path: "/account/update-password" }]} title="Set a new password" />
       <section className="container-ed max-w-xl pb-24">
         <UpdatePasswordForm />
       </section>
-    </>
+    </div>
   );
 }

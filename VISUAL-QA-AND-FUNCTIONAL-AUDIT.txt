@@ -1,0 +1,43 @@
+EVERY DETAIL v16.9.8 FULL-SITE QA
+
+FUNCTIONAL INTEGRITY CHECK
+All critical booking/account behavior files below are byte-identical to the pre-Halloween v16.7.4 baseline.
+
+OK  src/components/forms/LiveBooking.tsx  c96e467d06cc6e55
+OK  src/components/forms/BookingForm.tsx  3a1d5a2549f30ba9
+OK  src/components/forms/AddressFields.tsx  22c61f4f1db1b153
+OK  src/components/forms/DetailPlusForm.tsx  97bde415469bfacd
+OK  src/components/QuoteRecommender.tsx  f5efd45ed4b13b73
+OK  src/components/QuoteBookingContinuation.tsx  1244c522a1ff048e
+OK  src/lib/supabase/account.ts  2944af2a331f1f70
+OK  src/lib/supabase/browser.ts  aab789d90db8c889
+OK  src/lib/supabase/server.ts  eab33e6aae32850b
+OK  src/lib/submit.ts  9d1e40451a4b30e4
+OK  src/data/booking.ts  e1ed08cdba736375
+OK  src/data/services.ts  dcf3d13e32cb194a
+OK  src/data/quoteExtras.ts  37408d95d338bf28
+OK  src/components/account/LiveJobPortal.tsx  1668d860b5a2086b
+OK  src/components/account/ProfileForm.tsx  abbd00b5f9a7d5fd
+OK  src/components/account/VehicleManager.tsx  66d6ec013657a3ac
+OK  src/components/account/SignInForm.tsx  4d6d4a17b873d073
+OK  src/components/account/UpdatePasswordForm.tsx  7bb51b80ad751767
+
+INTENTIONAL VISUAL-SCOPE SOURCE CHANGES
+- src/app/globals.css
+- src/app/layout.tsx (adds halloween-site body class only)
+- src/app/page.tsx (seasonal decoration placement)
+- src/app/detailplus/page.tsx (seasonal decoration placement)
+- src/components/PageHeader.tsx (safe seasonal decoration hook)
+- src/components/SeasonalDecor.tsx
+- src/components/SeasonalDecor.module.css
+- src/app/book/page.tsx (booking-page visual wrapper only)
+- src/app/account/page.tsx (account-page visual wrapper only)
+- src/app/account/sign-in/page.tsx (account-page visual wrapper only)
+- src/app/account/update-password/page.tsx (account-page visual wrapper only)
+
+QA NOTES
+- Booking form logic, availability/calendar behavior, add-ons, multi-vehicle booking, quote carryover, address handling, Supabase calls, and account actions are unchanged.
+- Account pages now have an explicit high-contrast dashboard treatment.
+- Generic inner-page headers/forms have contrast hardening.
+- Mobile retro borders/shadows are constrained to avoid horizontal overflow.
+- Existing homepage/Detail+ scroll and sticky motion selectors were not altered.
