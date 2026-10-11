@@ -206,54 +206,47 @@ export type AfterJobEmail = {
 function afterJobPhotoSplit(beforeUrl?: string | null, afterUrl?: string | null) {
   if (!beforeUrl || !afterUrl) return "";
   return `
-    <div style="margin:30px 0 0;">
-      <div style="margin:0 0 10px;font-size:10px;line-height:1.2;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.gray};font-weight:700;">The transformation</div>
-      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="table-layout:fixed;background:#fff;">
-        <tr>
-          <td width="50%" style="padding:0 4px 0 0;vertical-align:top;">
-            <div style="padding:0 0 7px;font-size:10px;letter-spacing:1.2px;color:${BRAND.gray};font-weight:700;">BEFORE</div>
-            <img src="${escapeHtml(beforeUrl)}" alt="Before detail" width="100%" style="display:block;width:100%;height:auto;border:0;border-radius:2px;">
-          </td>
-          <td width="50%" style="padding:0 0 0 4px;vertical-align:top;">
-            <div style="padding:0 0 7px;font-size:10px;letter-spacing:1.2px;color:${BRAND.gray};font-weight:700;">AFTER</div>
-            <img src="${escapeHtml(afterUrl)}" alt="After detail" width="100%" style="display:block;width:100%;height:auto;border:0;border-radius:2px;">
-          </td>
-        </tr>
-      </table>
-    </div>`;
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-top:28px;table-layout:fixed;">
+      <tr>
+        <td colspan="2" style="padding:0 0 12px;font-size:11px;line-height:1.2;letter-spacing:1.8px;text-transform:uppercase;color:#111111;font-weight:700;">01 / THE TRANSFORMATION</td>
+      </tr>
+      <tr>
+        <td width="50%" style="padding:0 5px 0 0;vertical-align:top;">
+          <div style="padding:0 0 7px;font-size:10px;letter-spacing:1.4px;color:#666666;font-weight:700;">BEFORE</div>
+          <img src="${escapeHtml(beforeUrl)}" alt="Before detail" width="100%" style="display:block;width:100%;height:auto;border:0;border-radius:3px;">
+        </td>
+        <td width="50%" style="padding:0 0 0 5px;vertical-align:top;">
+          <div style="padding:0 0 7px;font-size:10px;letter-spacing:1.4px;color:#666666;font-weight:700;">AFTER</div>
+          <img src="${escapeHtml(afterUrl)}" alt="After detail" width="100%" style="display:block;width:100%;height:auto;border:0;border-radius:3px;">
+        </td>
+      </tr>
+    </table>`;
 }
 
 function afterJobShell(content: string, preheader = "") {
   return `
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Every Detail</title>
-  </head>
-  <body style="margin:0;padding:0;background:#f4f2ee;font-family:Arial,Helvetica,sans-serif;color:${BRAND.black};">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Every Detail</title></head>
+  <body style="margin:0;padding:0;background:#f3f1ec;font-family:Arial,Helvetica,sans-serif;color:#111111;">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(preheader)}</div>
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#f4f2ee;">
-      <tr>
-        <td align="center" style="padding:30px 14px;">
-          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:660px;background:#ffffff;">
-            <tr>
-              <td style="padding:25px 34px 21px;border-bottom:1px solid #e7e2dc;">
-                <div style="font-size:12px;line-height:1.2;letter-spacing:2px;text-transform:uppercase;color:${BRAND.red};font-weight:800;">Every Detail</div>
-                <div style="margin-top:5px;font-size:12px;line-height:1.4;color:#77736f;">Premium mobile detailing · Decatur, GA</div>
-              </td>
-            </tr>
-            <tr><td style="padding:38px 34px 34px;">${content}</td></tr>
-            <tr>
-              <td style="padding:23px 34px 27px;border-top:1px solid #e7e2dc;font-size:11px;line-height:1.7;color:#77736f;">
-                <strong style="color:${BRAND.black};letter-spacing:.8px;">EVERY DETAIL</strong><br>
-                Premium mobile detailing · Decatur, GA
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#f3f1ec;">
+      <tr><td align="center" style="padding:22px 12px;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:680px;">
+          <tr><td style="padding:18px 4px 22px;">
+            <table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr>
+              <td style="font-size:12px;letter-spacing:2px;font-weight:800;color:#590d07;">EVERY DETAIL</td>
+              <td align="right" style="font-size:11px;color:#666666;">DECATUR + ATLANTA</td>
+            </tr></table>
+          </td></tr>
+          ${content}
+          <tr><td style="padding:28px 4px 8px;font-size:11px;line-height:1.7;color:#666666;">
+            <strong style="color:#111111;letter-spacing:1px;">EVERY DETAIL</strong><br>
+            Premium mobile detailing · Decatur + Atlanta<br>
+            Questions? Reply directly to this email.
+          </td></tr>
+        </table>
+      </td></tr>
     </table>
   </body>
 </html>`;
@@ -261,57 +254,72 @@ function afterJobShell(content: string, preheader = "") {
 
 export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: string) {
   const firstName = input.name.trim().split(/\s+/)[0] || input.name || "there";
-  const completed = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York", month: "long", day: "numeric", year: "numeric"
-  }).format(new Date(input.completedAt));
+  const completed = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", month: "long", day: "numeric", year: "numeric" }).format(new Date(input.completedAt));
   const reviewUrl = process.env.GOOGLE_REVIEW_URL || "https://www.google.com/search?q=Every+Detail+Mobile+Detailing#lrd=0x8e30f21fe0cce555:0x394893f8064359ae,1,,,,";
   const detailPlusUrl = process.env.DETAIL_PLUS_URL || "https://www.everydetail.co/detailplus";
   const bookUrl = process.env.BOOKING_URL || "https://www.everydetail.co/book";
 
   const reviewModule = input.includeReview ? `
-    <div style="margin-top:34px;padding-top:30px;border-top:1px solid #e7e2dc;">
-      <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.coral};font-weight:800;">How did we do?</div>
-      <h2 style="margin:8px 0 9px;font-size:22px;line-height:1.2;color:${BRAND.black};">Love how it turned out?</h2>
-      <p style="margin:0 0 15px;font-size:14px;line-height:1.65;color:${BRAND.gray};">A Google review is one of the best ways to support our team.</p>
-      <a href="${escapeHtml(reviewUrl)}" style="display:inline-block;padding:11px 16px;background:${BRAND.red};color:#fff;text-decoration:none;font-weight:700;font-size:12px;">Leave a review</a>
-    </div>` : "";
+    <tr><td style="padding:0 4px 14px;">
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;border:1px solid rgba(17,17,17,.14);border-radius:12px;">
+        <tr><td style="padding:25px 26px;">
+          <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:#b8363d;font-weight:800;">03 / HOW DID WE DO?</div>
+          <div style="margin:8px 0 7px;font-size:23px;line-height:1.15;font-weight:700;letter-spacing:-.5px;">Love how it turned out?</div>
+          <div style="font-size:14px;line-height:1.6;color:#666666;">A Google review is one of the best ways to support our small team.</div>
+          <div style="margin-top:18px;"><a href="${escapeHtml(reviewUrl)}" style="display:inline-block;background:#b8363d;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:7px;font-size:13px;font-weight:700;">Leave a review ↗</a></div>
+        </td></tr>
+      </table>
+    </td></tr>` : "";
 
   const detailPlusModule = input.includeDetailPlus ? `
-    <div style="margin-top:32px;padding:24px 25px;background:#f5f1ed;">
-      <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.red};font-weight:800;">Detail+</div>
-      <h2 style="margin:8px 0 8px;font-size:21px;line-height:1.25;color:${BRAND.black};">Want us to keep it this way?</h2>
-      <p style="margin:0 0 13px;font-size:14px;line-height:1.65;color:${BRAND.gray};">Detail+ is a simple recurring maintenance plan built to keep your vehicle from getting back to square one.</p>
-      <a href="${escapeHtml(detailPlusUrl)}" style="color:${BRAND.red};font-size:13px;font-weight:700;text-decoration:none;">Explore Detail+ →</a>
-    </div>` : "";
+    <tr><td style="padding:0 4px 14px;">
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#590d07;border-radius:12px;">
+        <tr><td style="padding:26px;">
+          <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:#dbc7b3;font-weight:800;">DETAIL+</div>
+          <div style="margin:8px 0 8px;font-size:25px;line-height:1.1;font-weight:700;letter-spacing:-.6px;color:#ffffff;">Keep it at its best.</div>
+          <div style="font-size:14px;line-height:1.6;color:#f3f1ec;">Recurring maintenance that keeps your vehicle from getting back to square one.</div>
+          <div style="margin-top:16px;"><a href="${escapeHtml(detailPlusUrl)}" style="color:#ffffff;font-size:13px;font-weight:700;text-decoration:underline;text-decoration-color:#b8363d;text-underline-offset:4px;">Explore Detail+ ↗</a></div>
+        </td></tr>
+      </table>
+    </td></tr>` : "";
 
-  const receiptLine = input.includeReceipt ? `
-    <div style="margin-top:28px;font-size:12px;line-height:1.6;color:${BRAND.gray};">Receipt attached · <strong style="color:${BRAND.black};">${escapeHtml(input.receiptNumber)}</strong> · ${formatMoney(input.total)}</div>` : "";
+  const receiptModule = input.includeReceipt ? `
+    <tr><td style="padding:5px 4px 0;">
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-top:1px solid rgba(17,17,17,.14);">
+        <tr>
+          <td style="padding:18px 0;font-size:12px;line-height:1.5;color:#666666;">RECEIPT <strong style="color:#111111;">${escapeHtml(input.receiptNumber)}</strong><br>Attached as a PDF for your records.</td>
+          <td align="right" style="padding:18px 0;font-size:24px;line-height:1;font-weight:700;color:#111111;">${formatMoney(input.total)}</td>
+        </tr>
+      </table>
+    </td></tr>` : "";
 
   const html = afterJobShell(`
-    <div style="font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:800;">Detail complete</div>
-    <h1 style="margin:10px 0 10px;font-size:34px;line-height:1.08;color:${BRAND.black};font-weight:700;">${escapeHtml(firstName)}, your ${escapeHtml(input.vehicle)} is all set.</h1>
-    <div style="font-size:14px;line-height:1.6;color:${BRAND.gray};">${escapeHtml(input.service)} · ${escapeHtml(completed)}</div>
+    <tr><td style="background:#590d07;border-radius:16px;padding:36px 30px 34px;">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#dbc7b3;font-weight:800;">DETAIL COMPLETE / ${escapeHtml(completed)}</div>
+      <div style="margin-top:16px;font-size:38px;line-height:1.02;font-weight:700;letter-spacing:-1.6px;color:#ffffff;">${escapeHtml(firstName)}, your car.<br>Back to its best.</div>
+      <div style="margin-top:17px;font-size:14px;line-height:1.5;color:#f3f1ec;">${escapeHtml(input.vehicle)} · ${escapeHtml(input.service)}</div>
+    </td></tr>
 
-    ${afterJobPhotoSplit(input.beforeUrl, input.afterUrl)}
+    <tr><td style="padding:30px 4px 14px;">${afterJobPhotoSplit(input.beforeUrl, input.afterUrl)}
+      <div style="margin-top:22px;font-size:20px;font-weight:700;letter-spacing:-.3px;">${escapeHtml(input.vehicle)}</div>
+      <div style="margin-top:4px;font-size:13px;color:#666666;">${escapeHtml(input.service)} · completed ${escapeHtml(completed)}</div>
+      <p style="margin:14px 0 0;font-size:15px;line-height:1.65;color:#4f4c49;">Thanks for trusting us with it. Everything is finished and ready to go.</p>
+    </td></tr>
 
-    <div style="margin-top:28px;">
-      <div style="font-size:17px;line-height:1.35;font-weight:700;color:${BRAND.black};">${escapeHtml(input.service)}</div>
-      <div style="margin-top:4px;font-size:13px;line-height:1.5;color:${BRAND.gray};">${escapeHtml(input.vehicle)}</div>
-      <p style="margin:15px 0 0;font-size:15px;line-height:1.7;color:#4f4c49;">Thanks for trusting us with your vehicle. Everything is finished and ready to go.</p>
-    </div>
-
-    <div style="margin-top:34px;padding-top:29px;border-top:1px solid #e7e2dc;">
-      <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.red};font-weight:800;">Keep it looking this good</div>
-      <p style="margin:9px 0 14px;font-size:14px;line-height:1.65;color:${BRAND.gray};">Regular upkeep is easier than starting over. When you’re ready, we’ll take care of it.</p>
-      <a href="${escapeHtml(bookUrl)}" style="color:${BRAND.red};font-size:13px;font-weight:700;text-decoration:none;">Book your next detail →</a>
-    </div>
-
+    <tr><td style="padding:0 4px 14px;">
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#ebe6dd;border-radius:12px;">
+        <tr><td style="padding:25px 26px;">
+          <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:#590d07;font-weight:800;">02 / KEEP IT LOOKING THIS GOOD</div>
+          <div style="margin:8px 0 7px;font-size:23px;line-height:1.15;font-weight:700;letter-spacing:-.5px;">Maintenance beats starting over.</div>
+          <div style="font-size:14px;line-height:1.6;color:#55514d;">When it’s time for the next detail, we’ll bring everything back to your driveway.</div>
+          <div style="margin-top:17px;"><a href="${escapeHtml(bookUrl)}" style="display:inline-block;color:#590d07;font-size:13px;font-weight:700;text-decoration:underline;text-decoration-color:#b8363d;text-underline-offset:4px;">Book your next detail ↗</a></div>
+        </td></tr>
+      </table>
+    </td></tr>
     ${reviewModule}
     ${detailPlusModule}
-    ${receiptLine}
-
-    <p style="margin:14px 0 0;font-size:12px;line-height:1.65;color:${BRAND.gray};">Questions or something not right? Reply directly to this email and we’ll help.</p>
-  `, `Your ${input.vehicle} is all set.`);
+    ${receiptModule}
+  `, `Your ${input.vehicle} is back to its best.`);
 
   return sendEmail({
     to: input.email,
