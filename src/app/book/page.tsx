@@ -30,7 +30,7 @@ export default async function BookPage({
   // Live booking needs Supabase; without it the site falls back to booking requests.
   if (!supabaseConfigured || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return (
-      <>
+      <div className="booking-page">
         <PageHeader
           crumbs={[{ name: "Book", path: "/book" }]}
           title="Book your detail"
@@ -39,7 +39,7 @@ export default async function BookPage({
         <section className="container-ed pb-24">
           <BookingForm initialVehicle={initialVehicle} initialService={initialService} />
         </section>
-      </>
+      </div>
     );
   }
 
@@ -47,7 +47,7 @@ export default async function BookPage({
   const customer = session.state === "customer" ? session : null;
 
   return (
-    <>
+    <div className="booking-page">
       <PageHeader
         crumbs={[{ name: "Book", path: "/book" }]}
         title="Book your detail"
@@ -66,6 +66,6 @@ export default async function BookPage({
           fromHome={fromHome}
         />
       </section>
-    </>
+    </div>
   );
 }

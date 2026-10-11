@@ -12,9 +12,8 @@ type Props = {
 
 export function PageHeader({ crumbs, title, lede, children, aside }: Props) {
   return (
-    <section className="container-ed seasonal-host relative pb-12 pt-8 md:pb-16 md:pt-10">
+    <section className="page-header-shell container-ed seasonal-host relative pb-12 pt-8 md:pb-16 md:pt-10">
       <SeasonalDecor variant="web" corner="tr" />
-      <SeasonalDecor variant="ghost" corner="bl" className="hidden md:block" />
       <Breadcrumbs items={crumbs} />
       <div className={`mt-8 grid gap-10 ${aside ? "lg:grid-cols-12 lg:items-center" : ""}`}>
         <div className={aside ? "lg:col-span-6" : "max-w-3xl"}>

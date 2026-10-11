@@ -3,6 +3,7 @@ import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
 import { ReviewGrid } from "@/components/ReviewGrid";
+import { SeasonalDecor } from "@/components/SeasonalDecor";
 import { DetailPlusForm } from "@/components/forms/DetailPlusForm";
 import { detailPlusBenefits, detailPlusGuarantee, frequencies } from "@/data/detailplus";
 import { detailPlusFaqs } from "@/data/faqs";
@@ -52,7 +53,9 @@ const loopSteps = [
 export default function DetailPlusPage() {
   return (
     <main className="plus-brand plus-v177">
-      <section className="plus-brand-hero plus-v177-hero">
+      <section className="plus-brand-hero plus-v177-hero seasonal-host">
+        <SeasonalDecor variant="web" corner="tl" />
+        <SeasonalDecor variant="sprig" corner="tr" />
         <div className="plus-v177-ghost" aria-hidden="true">DETAIL+</div>
         <div className="plus-brand-shell">
           <div className="plus-brand-hero-grid">
@@ -70,7 +73,8 @@ export default function DetailPlusPage() {
                 <span><b>03</b> WE COME TO YOU</span>
               </div>
             </div>
-            <figure className="plus-brand-photo plus-v177-hero-photo">
+            <figure className="plus-brand-photo plus-v177-hero-photo seasonal-host">
+              <SeasonalDecor variant="leafPile" corner="br" />
               <Photo id="hq-black-suv-finished" priority sizes="(min-width: 900px) 42vw, 94vw"/>
               <div className="plus-v177-photo-wash" aria-hidden="true" />
               <div className="plus-brand-stamp plus-brand-hero-stamp">DETAIL+<br/>ON REPEAT</div>
@@ -84,7 +88,8 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section className="plus-v177-manifesto plus-v180-manifesto">
+      <section className="plus-v177-manifesto plus-v180-manifesto seasonal-host">
+        <SeasonalDecor variant="leafPile" corner="bl" />
         <div className="plus-brand-shell plus-v180-manifesto-grid">
           <div className="plus-v180-manifesto-copy">
             <p className="plus-brand-kicker">THE IDEA IS SIMPLE</p>
@@ -96,14 +101,16 @@ export default function DetailPlusPage() {
               <span><b>03</b> CONSISTENTLY CLEAN</span>
             </div>
           </div>
-          <figure className="plus-v180-manifesto-photo">
+          <figure className="plus-v180-manifesto-photo seasonal-host">
+            <SeasonalDecor variant="web" corner="tr" />
             <Photo id="hq-interior-team-front-seats" sizes="(min-width: 900px) 44vw, 94vw" />
             <figcaption>REAL CARE / BEFORE IT PILES UP</figcaption>
           </figure>
         </div>
       </section>
 
-      <section id="loop" className="plus-v177-loop">
+      <section id="loop" className="plus-v177-loop seasonal-host">
+        <SeasonalDecor variant="web" corner="tr" />
         <div className="plus-brand-shell plus-v177-loop-grid">
           <aside className="plus-v177-loop-sticky">
             <p className="plus-brand-kicker">HOW DETAIL+ WORKS</p>
@@ -116,8 +123,10 @@ export default function DetailPlusPage() {
           </aside>
           <div className="plus-v177-loop-steps">
             {loopSteps.map((s) => (
-              <article className="plus-v177-loop-step" key={s.n}>
-                <figure>
+              <article className="plus-v177-loop-step seasonal-host" key={s.n}>
+                <figure className="seasonal-host">
+                  {s.n === "02" ? <SeasonalDecor variant="sprig" corner="tr" /> : null}
+                  {s.n === "04" ? <SeasonalDecor variant="leafPile" corner="br" /> : null}
                   <Photo id={s.image} sizes="(min-width: 900px) 46vw, 94vw" />
                   <figcaption>{s.note}</figcaption>
                 </figure>
@@ -132,7 +141,8 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section className="plus-v177-covered">
+      <section className="plus-v177-covered seasonal-host">
+        <SeasonalDecor variant="sprig" corner="tr" />
         <div className="plus-brand-shell">
           <div className="plus-v177-covered-head">
             <div><p className="plus-brand-kicker">THE DETAIL+ RULE</p><h2>Life happens.<br/><span>Your price doesn’t.</span></h2></div>
@@ -140,12 +150,14 @@ export default function DetailPlusPage() {
           </div>
           <div className="plus-v177-benefit-grid plus-v180-benefit-grid">
             {detailPlusBenefits.map((b, i) => <article key={b.title}><span>{String(i + 1).padStart(2, "0")}</span><h3>{b.title}</h3><p>{b.body}</p></article>)}
-            <figure className="plus-v180-benefit-photo"><Photo id="classic-red-wheel" sizes="(min-width: 900px) 28vw, 94vw"/><figcaption>THE STANDARD / EVERY VISIT</figcaption></figure>
+            <figure className="plus-v180-benefit-photo seasonal-host">
+              <SeasonalDecor variant="leafPile" corner="br" /><Photo id="classic-red-wheel" sizes="(min-width: 900px) 28vw, 94vw"/><figcaption>THE STANDARD / EVERY VISIT</figcaption></figure>
           </div>
         </div>
       </section>
 
-      <section id="build" className="plus-brand-build plus-v177-build">
+      <section id="build" className="plus-brand-build plus-v177-build seasonal-host">
+        <SeasonalDecor variant="web" corner="tl" />
         <div className="plus-brand-shell plus-brand-build-grid">
           <div className="plus-brand-build-copy">
             <p className="plus-brand-kicker">BUILD YOUR PLAN</p>
@@ -156,24 +168,25 @@ export default function DetailPlusPage() {
             </div>
             <div className="plus-brand-mini"><b>NOT READY FOR RECURRING?</b><p>Start with one detail. Move into Detail+ once you know the work.</p><Link href="/book">Book one detail first ↗</Link></div>
           </div>
-          <div className="plus-brand-form-wrap"><div className="plus-brand-form-label"><span>YOUR DETAIL+ PLAN</span><b>BUILD IT ↓</b></div><DetailPlusForm /></div>
+          <div className="plus-brand-form-wrap seasonal-host"><SeasonalDecor variant="leafPile" corner="br" /><div className="plus-brand-form-label"><span>YOUR DETAIL+ PLAN</span><b>BUILD IT ↓</b></div><DetailPlusForm /></div>
         </div>
       </section>
 
-      <section className="plus-brand-reviews plus-v177-reviews plus-v180-reviews">
+      <section className="plus-brand-reviews plus-v177-reviews plus-v180-reviews seasonal-host">
+        <SeasonalDecor variant="web" corner="tr" />
         <div className="plus-brand-shell plus-v180-reviews-grid">
           <div className="plus-v180-reviews-intro">
             <p className="plus-brand-kicker">WHY PEOPLE COME BACK</p>
             <h2>The standard stays.<br/><span>So do they.</span></h2>
-            <figure><Photo id="crew-shirt-van" sizes="(min-width: 900px) 28vw, 94vw"/><figcaption>LOCAL CREW / RECURRING CARE</figcaption></figure>
+            <figure className="seasonal-host"><SeasonalDecor variant="sprig" corner="tr" /><Photo id="crew-shirt-van" sizes="(min-width: 900px) 28vw, 94vw"/><figcaption>LOCAL CREW / RECURRING CARE</figcaption></figure>
           </div>
           <div className="plus-v180-review-grid"><ReviewGrid /></div>
         </div>
       </section>
 
-      <section className="plus-brand-faq"><div className="plus-brand-shell plus-brand-faq-grid"><div><p className="plus-brand-kicker">BEFORE YOU PUT IT ON REPEAT</p><h2>Good questions.<br/><span>Clear answers.</span></h2></div><FaqList faqs={detailPlusFaqs}/></div></section>
+      <section className="plus-brand-faq seasonal-host"><SeasonalDecor variant="leafPile" corner="bl" /><div className="plus-brand-shell plus-brand-faq-grid"><div><p className="plus-brand-kicker">BEFORE YOU PUT IT ON REPEAT</p><h2>Good questions.<br/><span>Clear answers.</span></h2></div><FaqList faqs={detailPlusFaqs}/></div></section>
 
-      <section className="plus-brand-final plus-v177-final"><div className="plus-brand-shell"><div className="plus-v177-final-loop" aria-hidden="true">↻</div><p className="plus-brand-kicker">DETAIL+ / READY WHEN YOU ARE</p><h2>Stop re-deciding<br/><span>to clean the car.</span></h2><p>Set the plan once. We’ll keep showing up.</p><a href="#build" className="plus-brand-btn plus-brand-btn-light">Build my Detail+ plan ↗</a></div></section>
+      <section className="plus-brand-final plus-v177-final seasonal-host"><SeasonalDecor variant="pumpkin" corner="br" /><SeasonalDecor variant="web" corner="tl" /><div className="plus-brand-shell"><div className="plus-v177-final-loop" aria-hidden="true">↻</div><p className="plus-brand-kicker">DETAIL+ / READY WHEN YOU ARE</p><h2>Stop re-deciding<br/><span>to clean the car.</span></h2><p>Set the plan once. We’ll keep showing up.</p><a href="#build" className="plus-brand-btn plus-brand-btn-light">Build my Detail+ plan ↗</a></div></section>
       <JsonLd data={serviceSchema({name:"Detail+ recurring detailing membership",description:"Recurring mobile car detailing on a set schedule for one flat rate per visit.",path:"/detailplus"})}/>
     </main>
   );
