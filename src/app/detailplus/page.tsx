@@ -74,7 +74,6 @@ export default function DetailPlusPage() {
               </div>
             </div>
             <figure className="plus-brand-photo plus-v177-hero-photo seasonal-host">
-              <SeasonalDecor variant="leafPile" corner="br" />
               <Photo id="hq-black-suv-finished" priority sizes="(min-width: 900px) 42vw, 94vw"/>
               <div className="plus-v177-photo-wash" aria-hidden="true" />
               <div className="plus-brand-stamp plus-brand-hero-stamp">DETAIL+<br/>ON REPEAT</div>
