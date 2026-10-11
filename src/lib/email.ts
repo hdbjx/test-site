@@ -206,21 +206,57 @@ export type AfterJobEmail = {
 function afterJobPhotoSplit(beforeUrl?: string | null, afterUrl?: string | null) {
   if (!beforeUrl || !afterUrl) return "";
   return `
-    <div style="margin:28px 0 0;border:2px solid ${BRAND.black};background:${BRAND.black};">
-      <div style="padding:10px 12px;color:#fff;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;font-weight:700;">The transformation</div>
+    <div style="margin:30px 0 0;">
+      <div style="margin:0 0 10px;font-size:10px;line-height:1.2;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.gray};font-weight:700;">The transformation</div>
       <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="table-layout:fixed;background:#fff;">
         <tr>
-          <td width="50%" style="padding:0;border-right:2px solid ${BRAND.black};vertical-align:top;">
-            <div style="padding:7px 10px;background:${BRAND.beige};font-size:10px;letter-spacing:1.3px;font-weight:700;">BEFORE</div>
-            <img src="${escapeHtml(beforeUrl)}" alt="Before detail" width="100%" style="display:block;width:100%;height:auto;border:0;">
+          <td width="50%" style="padding:0 4px 0 0;vertical-align:top;">
+            <div style="padding:0 0 7px;font-size:10px;letter-spacing:1.2px;color:${BRAND.gray};font-weight:700;">BEFORE</div>
+            <img src="${escapeHtml(beforeUrl)}" alt="Before detail" width="100%" style="display:block;width:100%;height:auto;border:0;border-radius:2px;">
           </td>
-          <td width="50%" style="padding:0;vertical-align:top;">
-            <div style="padding:7px 10px;background:${BRAND.beige};font-size:10px;letter-spacing:1.3px;font-weight:700;">AFTER</div>
-            <img src="${escapeHtml(afterUrl)}" alt="After detail" width="100%" style="display:block;width:100%;height:auto;border:0;">
+          <td width="50%" style="padding:0 0 0 4px;vertical-align:top;">
+            <div style="padding:0 0 7px;font-size:10px;letter-spacing:1.2px;color:${BRAND.gray};font-weight:700;">AFTER</div>
+            <img src="${escapeHtml(afterUrl)}" alt="After detail" width="100%" style="display:block;width:100%;height:auto;border:0;border-radius:2px;">
           </td>
         </tr>
       </table>
     </div>`;
+}
+
+function afterJobShell(content: string, preheader = "") {
+  return `
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Every Detail</title>
+  </head>
+  <body style="margin:0;padding:0;background:#f4f2ee;font-family:Arial,Helvetica,sans-serif;color:${BRAND.black};">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(preheader)}</div>
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#f4f2ee;">
+      <tr>
+        <td align="center" style="padding:30px 14px;">
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:660px;background:#ffffff;">
+            <tr>
+              <td style="padding:25px 34px 21px;border-bottom:1px solid #e7e2dc;">
+                <div style="font-size:12px;line-height:1.2;letter-spacing:2px;text-transform:uppercase;color:${BRAND.red};font-weight:800;">Every Detail</div>
+                <div style="margin-top:5px;font-size:12px;line-height:1.4;color:#77736f;">Premium mobile detailing · Decatur, GA</div>
+              </td>
+            </tr>
+            <tr><td style="padding:38px 34px 34px;">${content}</td></tr>
+            <tr>
+              <td style="padding:23px 34px 27px;border-top:1px solid #e7e2dc;font-size:11px;line-height:1.7;color:#77736f;">
+                <strong style="color:${BRAND.black};letter-spacing:.8px;">EVERY DETAIL</strong><br>
+                Premium mobile detailing · Decatur, GA
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
 }
 
 export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: string) {
@@ -232,30 +268,54 @@ export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: st
   const detailPlusUrl = process.env.DETAIL_PLUS_URL || "https://www.everydetail.co/detailplus";
   const bookUrl = process.env.BOOKING_URL || "https://www.everydetail.co/book";
 
-  const modules = [
-    input.includeReceipt ? `<div style="margin-top:24px;padding:18px;background:${BRAND.cream};border-left:5px solid ${BRAND.coral};"><b>Receipt</b><br><span style="font-size:13px;color:${BRAND.gray};">Your ${escapeHtml(input.receiptNumber)} receipt for ${formatMoney(input.total)} is attached as a PDF.</span></div>` : "",
-    input.includeReview ? `<div style="margin-top:24px;padding:20px;border:2px solid ${BRAND.black};"><div style="font-size:11px;letter-spacing:1.5px;color:${BRAND.coral};font-weight:700;">HOW DID WE DO?</div><h2 style="margin:7px 0 9px;font-size:23px;">Love how it turned out?</h2><p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:${BRAND.gray};">A Google review helps our small team more than you might think.</p><a href="${escapeHtml(reviewUrl)}" style="display:inline-block;padding:11px 15px;background:${BRAND.red};color:#fff;text-decoration:none;font-weight:700;font-size:13px;">Leave a review</a></div>` : "",
-    input.includeDetailPlus ? `<div style="margin-top:24px;padding:20px;background:${BRAND.red};color:#fff;"><div style="font-size:11px;letter-spacing:1.5px;color:${BRAND.beige};font-weight:700;">DETAIL+</div><h2 style="margin:7px 0 9px;font-size:23px;color:#fff;">Keep it from getting back to square one.</h2><p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#fff;">Detail+ puts your vehicle on a recurring maintenance schedule so we come back before the mess builds up again.</p><a href="${escapeHtml(detailPlusUrl)}" style="display:inline-block;padding:11px 15px;background:#fff;color:${BRAND.red};text-decoration:none;font-weight:700;font-size:13px;">Explore Detail+</a></div>` : "",
-  ].join("");
+  const reviewModule = input.includeReview ? `
+    <div style="margin-top:34px;padding-top:30px;border-top:1px solid #e7e2dc;">
+      <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.coral};font-weight:800;">How did we do?</div>
+      <h2 style="margin:8px 0 9px;font-size:22px;line-height:1.2;color:${BRAND.black};">Love how it turned out?</h2>
+      <p style="margin:0 0 15px;font-size:14px;line-height:1.65;color:${BRAND.gray};">A Google review is one of the best ways to support our team.</p>
+      <a href="${escapeHtml(reviewUrl)}" style="display:inline-block;padding:11px 16px;background:${BRAND.red};color:#fff;text-decoration:none;font-weight:700;font-size:12px;">Leave a review</a>
+    </div>` : "";
 
-  const html = shell(`
-    <div style="font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:700;">Detail complete</div>
-    <h1 style="margin:10px 0 14px;font-size:34px;line-height:1.05;color:${BRAND.black};">Your vehicle is all set${firstName ? `, ${escapeHtml(firstName)}` : ""}.</h1>
-    <p style="margin:0 0 24px;font-size:16px;line-height:1.65;color:${BRAND.gray};">Thanks for choosing Every Detail. Here is a recap of today’s visit.</p>
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-      ${detailRow("Vehicle", input.vehicle)}
-      ${detailRow("Service", input.service)}
-      ${detailRow("Completed", completed)}
-    </table>
+  const detailPlusModule = input.includeDetailPlus ? `
+    <div style="margin-top:32px;padding:24px 25px;background:#f5f1ed;">
+      <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.red};font-weight:800;">Detail+</div>
+      <h2 style="margin:8px 0 8px;font-size:21px;line-height:1.25;color:${BRAND.black};">Want us to keep it this way?</h2>
+      <p style="margin:0 0 13px;font-size:14px;line-height:1.65;color:${BRAND.gray};">Detail+ is a simple recurring maintenance plan built to keep your vehicle from getting back to square one.</p>
+      <a href="${escapeHtml(detailPlusUrl)}" style="color:${BRAND.red};font-size:13px;font-weight:700;text-decoration:none;">Explore Detail+ →</a>
+    </div>` : "";
+
+  const receiptLine = input.includeReceipt ? `
+    <div style="margin-top:28px;font-size:12px;line-height:1.6;color:${BRAND.gray};">Receipt attached · <strong style="color:${BRAND.black};">${escapeHtml(input.receiptNumber)}</strong> · ${formatMoney(input.total)}</div>` : "";
+
+  const html = afterJobShell(`
+    <div style="font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:800;">Detail complete</div>
+    <h1 style="margin:10px 0 10px;font-size:34px;line-height:1.08;color:${BRAND.black};font-weight:700;">${escapeHtml(firstName)}, your ${escapeHtml(input.vehicle)} is all set.</h1>
+    <div style="font-size:14px;line-height:1.6;color:${BRAND.gray};">${escapeHtml(input.service)} · ${escapeHtml(completed)}</div>
+
     ${afterJobPhotoSplit(input.beforeUrl, input.afterUrl)}
-    <div style="margin-top:26px;padding:18px;background:${BRAND.cream};border-left:5px solid ${BRAND.coral};font-size:14px;line-height:1.65;"><b>Keep it looking this good.</b><br>Regular upkeep is easier than another reset. <a href="${escapeHtml(bookUrl)}" style="color:${BRAND.red};font-weight:700;">Book your next visit</a> whenever you are ready.</div>
-    ${modules}
-    <p style="margin:26px 0 0;font-size:14px;line-height:1.65;color:${BRAND.gray};">Something not right? Reply directly to this email and we’ll help.</p>
+
+    <div style="margin-top:28px;">
+      <div style="font-size:17px;line-height:1.35;font-weight:700;color:${BRAND.black};">${escapeHtml(input.service)}</div>
+      <div style="margin-top:4px;font-size:13px;line-height:1.5;color:${BRAND.gray};">${escapeHtml(input.vehicle)}</div>
+      <p style="margin:15px 0 0;font-size:15px;line-height:1.7;color:#4f4c49;">Thanks for trusting us with your vehicle. Everything is finished and ready to go.</p>
+    </div>
+
+    <div style="margin-top:34px;padding-top:29px;border-top:1px solid #e7e2dc;">
+      <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.red};font-weight:800;">Keep it looking this good</div>
+      <p style="margin:9px 0 14px;font-size:14px;line-height:1.65;color:${BRAND.gray};">Regular upkeep is easier than starting over. When you’re ready, we’ll take care of it.</p>
+      <a href="${escapeHtml(bookUrl)}" style="color:${BRAND.red};font-size:13px;font-weight:700;text-decoration:none;">Book your next detail →</a>
+    </div>
+
+    ${reviewModule}
+    ${detailPlusModule}
+    ${receiptLine}
+
+    <p style="margin:14px 0 0;font-size:12px;line-height:1.65;color:${BRAND.gray};">Questions or something not right? Reply directly to this email and we’ll help.</p>
   `, `Your ${input.vehicle} is all set.`);
 
   return sendEmail({
     to: input.email,
-    subject: `Your ${input.vehicle} is all set`,
+    subject: `${firstName}, your ${input.vehicle} is all set`,
     html,
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
     attachments: input.includeReceipt && receiptBase64 ? [{ filename: `${input.receiptNumber}.pdf`, content: receiptBase64 }] : undefined,
