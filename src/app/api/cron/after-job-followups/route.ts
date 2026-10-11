@@ -15,6 +15,7 @@ type ClaimedFollowup = {
   include_review: boolean;
   include_detail_plus: boolean;
   attempt_count: number;
+  recipient_override?: string | null;
 };
 
 function authorized(request: NextRequest) {
@@ -31,22 +32,35 @@ export async function GET(request: NextRequest) {
   if (!authorized(request)) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const admin = supabaseAdmin();
-  const { data, error } = await admin.rpc("claim_after_job_followups", { p_limit: MAX_PER_RUN });
-  if (error) {
-    console.error("[after-job-followups] claim", error);
-    return NextResponse.json({ ok: false, error: "Could not claim follow-ups" }, { status: 500 });
+  await admin.rpc("recover_stuck_after_job_followups");
+
+  const { data: dueData, error: dueError } = await admin.rpc("get_due_after_job_followups", { p_limit: MAX_PER_RUN });
+  if (dueError) {
+    console.error("[after-job-followups] due", dueError);
+    return NextResponse.json({ ok: false, error: "Could not load due follow-ups" }, { status: 500 });
   }
 
-  const rows = (data ?? []) as ClaimedFollowup[];
+  const dueRows = (dueData ?? []) as ClaimedFollowup[];
+  let claimed = 0;
   let sent = 0;
   let failed = 0;
 
-  for (const followup of rows) {
+  for (const due of dueRows) {
+    const { data: claimedData, error: claimError } = await admin.rpc("claim_after_job_followup", { p_followup_id: due.id });
+    if (claimError) {
+      console.error(`[after-job-followups] claim ${due.id}`, claimError);
+      continue;
+    }
+    const followup = claimedData as ClaimedFollowup | null;
+    if (!followup?.id) continue;
+    claimed += 1;
+
     try {
       const { data: job, error: jobError } = await admin.from("jobs").select("*").eq("id", followup.job_id).maybeSingle();
       if (jobError) throw jobError;
-      if (!job || String(job.status) !== "complete") throw new Error("Job is no longer complete");
-      if (!String(job.email || "").trim()) throw new Error("Completed job has no customer email");
+      if (!job || String(job.status).toLowerCase() !== "complete") throw new Error("Job is no longer complete");
+      const recipientEmail = String(followup.recipient_override || job.email || "").trim();
+      if (!recipientEmail) throw new Error("Completed job has no customer email");
 
       const [{ data: vehicles, error: vehicleError }, { data: addons, error: addonError }, { data: media, error: mediaError }, { data: checkout }] = await Promise.all([
         admin.from("job_vehicles").select("id,vehicle_label,vehicle_size,service_name,price,sort_order,created_at").eq("job_id", followup.job_id).order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
@@ -103,7 +117,7 @@ export async function GET(request: NextRequest) {
 
       const result = await sendAfterJobEmail({
         name: String(job.customer_name || "there"),
-        email: String(job.email).trim(),
+        email: recipientEmail,
         vehicle: vehicleLabel,
         service: serviceLabel,
         completedAt,
@@ -118,10 +132,8 @@ export async function GET(request: NextRequest) {
       }, receiptBase64);
       if (!result.ok) throw new Error("Email provider did not confirm delivery request");
 
-      const finish = await admin.rpc("finish_after_job_followup", {
+      const finish = await admin.rpc("complete_after_job_followup", {
         p_followup_id: followup.id,
-        p_sent: true,
-        p_error: null,
         p_provider_message_id: result.id || null,
       });
       if (finish.error) throw finish.error;
@@ -130,15 +142,13 @@ export async function GET(request: NextRequest) {
       failed += 1;
       const message = sendError instanceof Error ? sendError.message : String(sendError);
       console.error(`[after-job-followups] ${followup.id}`, sendError);
-      const finish = await admin.rpc("finish_after_job_followup", {
+      const finish = await admin.rpc("fail_after_job_followup", {
         p_followup_id: followup.id,
-        p_sent: false,
         p_error: message.slice(0, 1500),
-        p_provider_message_id: null,
       });
       if (finish.error) console.error("[after-job-followups] release", finish.error);
     }
   }
 
-  return NextResponse.json({ ok: true, claimed: rows.length, sent, failed });
+  return NextResponse.json({ ok: true, due: dueRows.length, claimed, sent, failed });
 }
