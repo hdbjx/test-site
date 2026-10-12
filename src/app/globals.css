@@ -5941,3 +5941,9 @@ main,section,article,div,form,fieldset{min-width:0}
     max-width:calc(100vw - 2rem);
   }
 }
+
+
+/* V16.9.9: Halloween is active only when the runtime date gate adds .halloween-site. */
+body:not(.halloween-site) [data-seasonal] {
+  display: none !important;
+}

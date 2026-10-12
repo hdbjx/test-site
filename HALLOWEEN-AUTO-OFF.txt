@@ -1,0 +1,6 @@
+Halloween auto-off
+
+The Halloween visual layer is enabled only during October using America/New_York time.
+At 12:00 AM ET on November 1, the halloween-site class is no longer applied and all seasonal decorations are hidden automatically.
+The gate repeats annually, so the Halloween theme will automatically return each October unless this gate is removed.
+No booking, account, availability, or backend logic was changed.
