@@ -198,7 +198,10 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           .map((s: string) => new Date(s))
           .filter(isValidDate);
         setSlots(list);
-        setDay((d) => (d && list.some((s) => dayKey(s) === d) ? d : null));
+        setDay((currentDay) => {
+          if (currentDay && list.some((slot) => dayKey(slot) === currentDay)) return currentDay;
+          return list[0] ? dayKey(list[0]) : null;
+        });
       })
       .catch(() => !cancelled && setSlotsError("We couldn't load open times. Refresh, or call us to book."));
     return () => {
@@ -403,15 +406,15 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   }
 
   return (
-    <form ref={formRef} noValidate onSubmit={onSubmit} className="relative grid gap-10 lg:grid-cols-12">
+    <form ref={formRef} noValidate onSubmit={onSubmit} className="booking-flow relative grid gap-10 lg:grid-cols-12">
       <div className="min-w-0 space-y-12 lg:col-span-8">
         {!signedIn && (
-          <p className="text-ink/80">
+          <p className="booking-returning text-ink/80">
             Booked with us before? <Link href="/account/sign-in?next=/book" className="link">Sign in</Link> to use your saved vehicles.
           </p>
         )}
 
-        <section className={fromQuote ? "hidden" : ""} aria-hidden={fromQuote}>
+        <section className={`booking-flow-section ${fromQuote ? "hidden" : ""}`} aria-hidden={fromQuote}>
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className="t-h3">1. Your vehicles</h2>
@@ -426,7 +429,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
             {resolved.map((line, index) => {
               const usedSavedIds = new Set(lines.filter((other) => other.key !== line.key).map((other) => other.savedId));
               return (
-                <fieldset key={line.key} className="panel p-5 sm:p-6">
+                <fieldset key={line.key} className="panel booking-vehicle-card p-5 sm:p-6">
                   <div className="flex items-center justify-between gap-4">
                     <legend className="font-display text-lg font-semibold">Vehicle {index + 1}</legend>
                     {lines.length > 1 && (
@@ -577,14 +580,18 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           </section>
         )}
 
-        <fieldset id="booking-time-picker" className="scroll-mt-28">
+        <fieldset id="booking-time-picker" className="booking-flow-section scroll-mt-28">
           <legend className="t-h3">{fromQuote ? "Pick your time" : "2. Pick a time"}</legend>
           {!allVehiclesReady ? (
             <p className="mt-3 text-muted">Choose every vehicle to see open times.</p>
           ) : slotsError ? (
             <p className="mt-3 text-red">{slotsError}</p>
           ) : slots === null ? (
-            <p className="mt-3 text-muted" aria-live="polite">Checking the schedule…</p>
+            <div className="booking-loading" aria-live="polite" aria-label="Checking the schedule">
+              <span />
+              <span />
+              <span />
+            </div>
           ) : days.length === 0 ? (
             <p className="mt-3 text-ink/80">
               No open times in the next month for this appointment. Call or text <a className="link" href={site.phone.href}>{site.phone.display}</a> and we&rsquo;ll find one.
@@ -685,7 +692,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           )}
         </fieldset>
 
-        <fieldset className="space-y-6">
+        <fieldset className="booking-flow-section space-y-6">
           <legend className="t-h3">{fromQuote ? "Finish booking" : "3. Your details"}</legend>
 
           <div className="client-info-progress" aria-label="Your information progress">
@@ -749,8 +756,8 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         </fieldset>
       </div>
 
-      <aside className="lg:col-span-4">
-        <div className="panel p-6 lg:sticky lg:top-24">
+      <aside className="booking-summary lg:col-span-4">
+        <div className="panel booking-summary-card p-6 lg:sticky lg:top-24">
           <h2 className="font-display text-lg font-semibold">Your appointment</h2>
           {allVehiclesReady && displayTotal !== null ? (
             <div className="mt-4 space-y-4">

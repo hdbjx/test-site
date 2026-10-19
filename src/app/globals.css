@@ -5948,4 +5948,454 @@ body:not(.halloween-site) [data-seasonal] {
   display: none !important;
 }
 
-/* Homepage visual system moved to home-v19.css. Legacy rules above remain for shared components. */
+/* V17.0 homepage hero handoff
+   Keep the proof points inside the photographic first screen, make their
+   contrast explicit, then dissolve the dark hero into the warm services page. */
+.hero-full > .proof-row {
+  position:absolute;
+  z-index:6;
+  left:0;
+  right:0;
+  bottom:0;
+  overflow:visible;
+  border:0;
+  color:#fff7e8;
+  background:linear-gradient(
+    180deg,
+    rgb(16 12 10 / .10) 0%,
+    rgb(16 12 10 / .78) 18%,
+    rgb(16 12 10 / .96) 62%,
+    #e7dcc7 100%
+  );
+  padding:1rem 0 2.6rem;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+.hero-full > .proof-row > .container-ed {
+  min-height:4.7rem;
+  padding-top:0;
+  padding-bottom:0;
+  align-items:center;
+}
+.hero-full > .proof-row span,
+.hero-full > .proof-row strong {
+  color:#fff7e8 !important;
+  opacity:1 !important;
+  text-shadow:0 1px 14px rgb(0 0 0 / .52);
+}
+.hero-full > .proof-row .proof-stars {
+  color:#f4a24c !important;
+}
+.hero-full > .proof-row span + span {
+  border-color:rgb(255 247 232 / .22) !important;
+}
+
+/* The proof rail now occupies the bottom of the hero, so protect the CTA copy. */
+.hero-full .hero-inner.container-ed {
+  padding-bottom:max(clamp(8.8rem, 15vh, 11.5rem), 9rem);
+}
+
+/* Match the final color stop of the hero handoff exactly. */
+.halloween-site .home-services.home-services-v14 {
+  background-color:#e7dcc7;
+}
+
+@media (max-width:1023px) {
+  .hero-full > .proof-row {
+    padding-top:.75rem;
+    padding-bottom:2.15rem;
+  }
+  .hero-full > .proof-row > .container-ed {
+    min-height:4.25rem;
+  }
+  .hero-full .hero-inner.container-ed {
+    padding-bottom:9.2rem;
+  }
+}
+
+@media (max-width:767px) {
+  .hero-full {
+    min-height:100svh;
+    height:auto;
+  }
+  .hero-full .hero-inner.container-ed {
+    min-height:100svh;
+    padding-bottom:13.4rem;
+  }
+  .hero-full > .proof-row {
+    padding:.35rem 0 1.9rem;
+  }
+  .hero-full > .proof-row > .container-ed {
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    min-height:0 !important;
+  }
+  .hero-full > .proof-row span {
+    min-height:3.45rem !important;
+    padding:.55rem .45rem !important;
+    font-size:.68rem;
+    line-height:1.18;
+  }
+  .hero-full > .proof-row span:nth-child(odd) {
+    border-right:1px solid rgb(255 247 232 / .20) !important;
+  }
+  .hero-full > .proof-row span:nth-child(-n+2) {
+    border-bottom:1px solid rgb(255 247 232 / .20) !important;
+  }
+}
+
+/* V17.1 mobile hero handoff
+   Keep the conversion copy, proof grid, and cream transition inside a normal
+   phone viewport without allowing the absolute proof rail to cover the CTAs. */
+@media (max-width:767px) {
+  .hero-full {
+    min-height:100svh;
+    overflow:hidden;
+    background-position:60% center;
+  }
+
+  .hero-full .hero-inner.container-ed {
+    box-sizing:border-box;
+    min-height:100svh;
+    align-items:flex-start;
+    padding-top:clamp(13rem,34svh,19rem);
+    padding-left:max(1rem,env(safe-area-inset-left));
+    padding-right:max(1rem,env(safe-area-inset-right));
+    padding-bottom:11.4rem;
+  }
+
+  .hero-full .hero-copy {
+    width:100%;
+    max-width:31rem;
+  }
+
+  .hero-full .hero-title {
+    font-size:clamp(3rem,14.2vw,4.35rem) !important;
+    line-height:.89 !important;
+  }
+
+  .hero-full .hero-lede {
+    max-width:21.5rem;
+    margin-top:.95rem;
+    font-size:.95rem;
+    line-height:1.42;
+  }
+
+  .hero-full .hero-copy .mt-7 {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:.65rem;
+    width:min(100%,23rem);
+    margin-top:1.15rem !important;
+  }
+
+  .hero-full .hero-copy .btn {
+    width:100%;
+    min-width:0;
+    min-height:3rem;
+    padding:.72rem .7rem;
+    justify-content:center;
+    text-align:center;
+    font-size:.84rem;
+    white-space:nowrap;
+  }
+
+  .hero-full > .proof-row {
+    padding:.25rem 0 max(1.35rem,env(safe-area-inset-bottom));
+    background:linear-gradient(
+      180deg,
+      rgb(16 12 10 / .18) 0%,
+      rgb(16 12 10 / .90) 12%,
+      rgb(16 12 10 / .98) 68%,
+      #e7dcc7 100%
+    );
+  }
+
+  .hero-full > .proof-row > .container-ed {
+    width:100%;
+    padding-inline:1rem !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .hero-full > .proof-row span {
+    min-width:0;
+    min-height:3.25rem !important;
+    padding:.48rem .4rem !important;
+    font-size:clamp(.58rem,2.7vw,.68rem) !important;
+    line-height:1.16;
+    overflow-wrap:anywhere;
+  }
+
+  .hero-full > .proof-row .proof-stars {
+    flex-direction:column !important;
+    flex-wrap:nowrap;
+    gap:.08rem;
+  }
+
+  .home-services.home-services-v14 {
+    margin-top:-1px;
+    padding-top:clamp(4rem,12vw,5rem) !important;
+  }
+}
+
+@media (max-width:374px) {
+  .hero-full .hero-inner.container-ed {
+    padding-top:clamp(11.5rem,30svh,14.5rem);
+    padding-bottom:10.9rem;
+  }
+  .hero-full .hero-title {
+    font-size:clamp(2.75rem,13.8vw,3.45rem) !important;
+  }
+  .hero-full .hero-lede {
+    font-size:.9rem;
+  }
+  .hero-full .hero-copy .btn {
+    font-size:.78rem;
+    padding-inline:.45rem;
+  }
+  .hero-full > .proof-row span {
+    font-size:.56rem !important;
+  }
+}
+
+/* V17.2: booking page conversion + mobile UX pass */
+.booking-page {
+  background:
+    radial-gradient(circle at 86% 7%, rgb(184 54 61 / .055), transparent 23rem),
+    var(--color-paper);
+}
+.booking-page .page-header-shell {
+  padding-bottom: 2.6rem;
+}
+.booking-page .page-header-shell .t-page {
+  max-width: 12ch;
+}
+.booking-page .page-header-shell .t-lede {
+  max-width: 43rem;
+}
+.booking-header-proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: 1.1rem;
+}
+.booking-header-proof span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: .35rem .7rem .3rem;
+  border: 1px solid rgb(17 17 17 / .14);
+  border-radius: 999px;
+  background: rgb(255 255 255 / .55);
+  color: rgb(17 17 17 / .72);
+  font-family: var(--font-display);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .015em;
+}
+.booking-header-proof span::before {
+  content: "✓";
+  margin-right: .35rem;
+  color: var(--color-red);
+  font-weight: 900;
+}
+.booking-flow {
+  align-items: start;
+}
+.booking-flow > .space-y-12 {
+  display: grid;
+  gap: 2rem;
+}
+.booking-flow > .space-y-12 > * {
+  margin-top: 0 !important;
+}
+.booking-returning {
+  margin: 0 0 -.35rem;
+  padding: .85rem 1rem;
+  border: 1px solid rgb(17 17 17 / .10);
+  border-radius: .75rem;
+  background: rgb(255 255 255 / .42);
+  font-size: .9rem;
+}
+.booking-flow-section {
+  position: relative;
+  min-width: 0;
+  padding: clamp(1.1rem, 2.5vw, 1.55rem);
+  border: 1px solid rgb(17 17 17 / .13);
+  border-radius: 1rem;
+  background: rgb(255 255 255 / .34);
+}
+.booking-flow-section > legend {
+  width: auto;
+  padding: 0 .25rem;
+}
+.booking-vehicle-card {
+  border-color: rgb(17 17 17 / .13) !important;
+  box-shadow: none !important;
+}
+.booking-vehicle-card .choice,
+.booking-flow-section .choice {
+  border-width: 1.5px;
+}
+.booking-flow-section .choice:has(input:checked),
+.booking-time-choice[aria-checked="true"] {
+  border-color: var(--color-red);
+  box-shadow: 0 0 0 1px var(--color-red), 3px 3px 0 rgb(17 17 17 / .92);
+}
+.booking-loading {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .5rem;
+  width: min(100%, 29rem);
+  margin-top: 1rem;
+}
+.booking-loading span {
+  height: 3rem;
+  border-radius: .7rem;
+  background: linear-gradient(90deg, rgb(17 17 17 / .055), rgb(255 255 255 / .7), rgb(17 17 17 / .055));
+  background-size: 220% 100%;
+  animation: booking-loading 1.2s linear infinite;
+}
+@keyframes booking-loading { to { background-position: -220% 0; } }
+.booking-summary-card {
+  border: 1px solid rgb(17 17 17 / .18) !important;
+  border-top: 4px solid var(--color-red) !important;
+  box-shadow: 0 12px 34px rgb(17 17 17 / .08) !important;
+}
+.booking-summary-card > h2 {
+  font-size: 1.05rem;
+  letter-spacing: -.015em;
+}
+.booking-summary-card .btn-primary {
+  min-height: 3.35rem;
+}
+
+/* Halloween palette should not reduce booking readability. */
+.halloween-site .booking-page .booking-header-proof span {
+  background: #fffaf1 !important;
+  color: #18110d !important;
+  border-color: rgb(24 17 13 / .16) !important;
+}
+.halloween-site .booking-page .booking-flow-section {
+  background: rgb(255 250 241 / .58) !important;
+  border-color: rgb(24 17 13 / .14) !important;
+}
+.halloween-site .booking-page .booking-calendar-day {
+  color: #18110d !important;
+}
+.halloween-site .booking-page .booking-calendar-day[data-past="true"],
+.halloween-site .booking-page .booking-calendar-day[data-outside="true"] {
+  color: rgb(24 17 13 / .26) !important;
+}
+.halloween-site .booking-page .booking-calendar-day[data-available="true"] {
+  color: #8f3f25 !important;
+}
+.halloween-site .booking-page .booking-calendar-day[aria-checked="true"] {
+  color: #fff8ea !important;
+}
+
+@media (max-width: 1023px) {
+  .booking-page .page-header-shell {
+    padding-bottom: 1.75rem !important;
+  }
+  .booking-flow {
+    gap: 1.5rem;
+  }
+  .booking-summary-card {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .booking-page .page-header-shell,
+  .halloween-site .booking-page .page-header-shell {
+    padding-top: 5.35rem !important;
+    padding-bottom: 1.35rem !important;
+  }
+  .booking-page .page-header-shell .mt-8 {
+    margin-top: 1.15rem !important;
+  }
+  .booking-page .page-header-shell .t-page,
+  .halloween-site .booking-page .page-header-shell .t-page {
+    font-size: clamp(2.65rem, 13vw, 3.8rem);
+    line-height: .92;
+  }
+  .booking-page .page-header-shell .t-lede,
+  .halloween-site .booking-page .page-header-shell .t-lede {
+    margin-top: .8rem !important;
+    font-size: .94rem;
+    line-height: 1.45;
+  }
+  .booking-header-proof {
+    gap: .35rem;
+    margin-top: .8rem;
+  }
+  .booking-header-proof span {
+    min-height: 1.75rem;
+    padding: .25rem .52rem .22rem;
+    font-size: .64rem;
+  }
+  .booking-flow > .space-y-12 {
+    gap: 1rem;
+  }
+  .booking-flow-section {
+    margin-inline: -.15rem;
+    padding: 1rem .85rem;
+    border-radius: .8rem;
+  }
+  .booking-flow-section > legend {
+    font-size: 1.45rem;
+  }
+  .booking-vehicle-card {
+    padding: .9rem !important;
+  }
+  .booking-vehicle-card .choice.flex-row,
+  .booking-flow-section .choice.flex-row {
+    align-items: flex-start;
+  }
+  .booking-vehicle-card .choice.flex-row > span:first-of-type {
+    min-width: 0;
+  }
+  .booking-vehicle-card .choice.flex-row .t-numeral {
+    font-size: 1.55rem;
+  }
+  .booking-calendar-wrap {
+    border-color: rgb(17 17 17 / .13);
+  }
+  .booking-calendar-day {
+    min-height: 2.55rem;
+    aspect-ratio: auto;
+  }
+  .booking-time-choice {
+    min-height: 3rem;
+  }
+  .booking-summary {
+    margin-top: -.25rem;
+  }
+  .booking-summary-card {
+    padding: 1.1rem !important;
+    border-radius: .8rem !important;
+  }
+  .booking-summary-card .t-numeral.text-4xl {
+    font-size: 2rem;
+  }
+  .client-info-progress {
+    position: sticky;
+    top: .5rem;
+    z-index: 4;
+    box-shadow: 0 6px 18px rgb(17 17 17 / .07);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+@media (max-width: 374px) {
+  .booking-header-proof span { font-size: .6rem; }
+  .booking-flow-section { padding-inline: .7rem; }
+  .booking-calendar-month { padding-inline: .4rem !important; }
+  .booking-calendar-day { min-height: 2.35rem; font-size: .8rem !important; }
+  .booking-time-grid { gap: .3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .booking-loading span { animation: none; }
+}
