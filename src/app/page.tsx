@@ -22,11 +22,12 @@ export default function Home() {
   const featuredFaqs = [homeFaqs[2], homeFaqs[4], homeFaqs[7], homeFaqs[5], homeFaqs[8]];
 
   return (
-    <>
+    <div className="home-v19">
       <HomeScrollMotion />
       <section className="hero-full seasonal-host" aria-label="Every Detail mobile car detailing">
         <SeasonalDecor variant="web" corner="tl" />
         <SeasonalDecor variant="sprig" corner="tr" />
+        <SeasonalDecor variant="ghost" corner="br" className="hero-ghost" />
         <div className="hero-shade" />
         <div className="container-ed hero-inner">
           <div className="hero-copy rise">
@@ -42,9 +43,7 @@ export default function Home() {
       </section>
 
       <section className="proof-row seasonal-host" aria-label="Why people choose Every Detail">
-        <SeasonalDecor variant="leafPile" corner="bl" />
         <SeasonalDecor variant="scattered" corner="tr" />
-        <SeasonalDecor variant="leafPile" corner="bl" />
         <div className="container-ed grid gap-3 py-5 text-center sm:grid-cols-2 lg:grid-cols-4">
           <span className="proof-stars">★★★★★ <strong><LiveReviewCount /></strong> five-star reviews</span>
           <span>{site.award.title}</span><span>Power + water included</span><span>100% electric rigs</span>
@@ -195,6 +194,7 @@ export default function Home() {
       <section className="final-book final-book-v12 seasonal-host">
         <SeasonalDecor variant="pumpkin" corner="br" />
         <SeasonalDecor variant="web" corner="tl" />
+        <SeasonalDecor variant="ghost" corner="tr" className="final-ghost" />
         <div className="container-ed final-inner">
           <p className="eyebrow">We come to you</p>
           <h2 className="final-title">Your driveway.<br /><span>Our detail shop.</span></h2>
@@ -202,6 +202,6 @@ export default function Home() {
           <div className="final-actions"><Link href="/get-a-quote" className="btn btn-primary">Get my quote ↗</Link><TrackedLink href="/book" event="book_click" params={{ location: "home_final" }} className="final-quote">Already know what you want? Book now</TrackedLink></div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

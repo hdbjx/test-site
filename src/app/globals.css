@@ -5947,3 +5947,5 @@ main,section,article,div,form,fieldset{min-width:0}
 body:not(.halloween-site) [data-seasonal] {
   display: none !important;
 }
+
+/* Homepage visual system moved to home-v19.css. Legacy rules above remain for shared components. */
