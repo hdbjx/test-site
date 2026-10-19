@@ -77,20 +77,29 @@ export function HomeBookingFlow() {
     setVehicle(id);
     track("vehicle_select", { vehicle: id, service: service ?? undefined, location: "home_flow" });
 
-    // Keep the customer on the homepage. Once the result row renders,
-    // nudge the page only as far as needed to keep the summary + CTA in view.
+    // The result expands over ~380ms. Measuring it immediately catches the
+    // collapsed height and can stop short before the price/CTA are visible.
+    // Reconcile after the reveal has finished, then move only the amount needed.
+    const revealStartedAt = window.scrollY;
     window.setTimeout(() => {
       const result = resultRef.current;
       if (!result) return;
+
+      // If the customer deliberately moved the page while the result opened,
+      // respect that instead of fighting their scroll position.
+      if (Math.abs(window.scrollY - revealStartedAt) > 120) return;
+
       const rect = result.getBoundingClientRect();
-      const bottomGutter = window.innerWidth <= 640 ? 20 : 34;
-      const overflow = rect.bottom - (window.innerHeight - bottomGutter);
+      const bottomGutter = window.innerWidth <= 640 ? 22 : 38;
+      const visibleBottom = window.innerHeight - bottomGutter;
+      const overflow = rect.bottom - visibleBottom;
       if (overflow <= 0) return;
+
       window.scrollBy({
-        top: overflow,
+        top: overflow + 8,
         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
       });
-    }, 90);
+    }, 460);
   };
 
   return (

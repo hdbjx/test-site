@@ -6399,3 +6399,85 @@ body:not(.halloween-site) [data-seasonal] {
 @media (prefers-reduced-motion: reduce) {
   .booking-loading span { animation: none; }
 }
+
+/* V17.3: booking completion visibility + homepage result reveal */
+@media (min-width:1024px) {
+  /* The global booking header is sticky and taller than Tailwind's top-24.
+     Keep the appointment card below it instead of letting it stick behind it. */
+  .booking-summary {
+    align-self:stretch;
+    position:relative;
+  }
+  .booking-summary-card {
+    position:sticky !important;
+    top:10.75rem !important;
+    max-height:calc(100svh - 12rem);
+    overflow:auto;
+    overscroll-behavior:contain;
+  }
+}
+
+.booking-final-action {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:1.25rem;
+  align-items:center;
+  padding:1.15rem 1.25rem;
+  border:1px solid rgb(17 17 17 / .18);
+  border-top:4px solid var(--color-red);
+  border-radius:1rem;
+  background:rgb(255 255 255 / .62);
+  box-shadow:0 10px 28px rgb(17 17 17 / .06);
+}
+.booking-final-action > div {
+  min-width:0;
+  display:grid;
+  gap:.16rem;
+}
+.booking-final-action span {
+  color:var(--color-red);
+  font-family:var(--font-display);
+  font-size:.66rem;
+  font-weight:800;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.booking-final-action strong {
+  font-family:var(--font-display);
+  font-size:1.05rem;
+  line-height:1.2;
+}
+.booking-final-action small {
+  color:var(--color-muted);
+  font-size:.78rem;
+}
+.booking-final-action .btn {
+  min-width:10rem;
+}
+.halloween-site .booking-page .booking-final-action {
+  background:#fffaf1;
+  border-color:rgb(24 17 13 / .18);
+  border-top-color:var(--color-red);
+}
+
+/* Give the expanded homepage quote enough scroll target area that the price
+   and Choose a time CTA can both be brought into view after vehicle selection. */
+.v15-result { scroll-margin-bottom:2rem; }
+
+@media (max-width:1023px) {
+  .booking-final-action {
+    grid-template-columns:1fr;
+    gap:.8rem;
+  }
+  .booking-final-action .btn {
+    width:100%;
+  }
+}
+
+@media (max-width:640px) {
+  .booking-final-action {
+    padding:1rem;
+    border-radius:.8rem;
+  }
+  .booking-final-action strong { font-size:1rem; }
+}

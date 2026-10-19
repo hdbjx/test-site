@@ -754,6 +754,17 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
             <button type="button" onClick={() => setInfoStep(2)} className="btn btn-secondary mt-6">Back</button>
           </div>
         </fieldset>
+
+        <div className="booking-final-action" aria-label="Complete booking">
+          <div>
+            <span>Ready to book</span>
+            <strong>{start ? `${fmtDay(start, { weekday: "short", month: "short", day: "numeric" })} at ${fmtTime(start)}` : "Pick a time to continue"}</strong>
+            {displayTotal !== null && allVehiclesReady && <small>{usd(displayTotal)}{hasVariableAddons ? "+" : ""} total</small>}
+          </div>
+          <button type="submit" disabled={sending || !start || !allVehiclesReady || infoStep !== 3} className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50">
+            {sending ? "Booking…" : lines.length > 1 ? `Book ${lines.length} vehicles` : "Book it"}
+          </button>
+        </div>
       </div>
 
       <aside className="booking-summary lg:col-span-4">
