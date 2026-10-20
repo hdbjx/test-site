@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GiftCardPurchaseForm } from "@/components/gift-cards/GiftCardPurchaseForm";
+import { GiftCardIntro } from "@/components/gift-cards/GiftCardIntro";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -11,21 +12,17 @@ export const metadata = pageMetadata({
 export default function GiftCardsPage() {
   return (
     <div className="gift-page">
-      <section className="gift-showcase">
+      <GiftCardIntro />
+
+      <section className="gift-showcase" id="gift-builder">
         <div className="container-ed gift-builder-grid">
           <aside className="gift-preview-wrap gift-preview-wrap-v2">
-            <p className="eyebrow">Every Detail gift cards</p>
-            <h1>Give them something they’ll actually use.</h1>
+            <p className="eyebrow">Build the gift</p>
+            <h1>Choose the amount.<br />We’ll handle the rest.</h1>
             <p className="gift-showcase-copy">
-              Clean car energy, without guessing the package. Choose the amount, add the recipient,
-              and we’ll turn it into an Every Detail gift card once payment is confirmed.
+              Pick the value, add the recipient, and pay by Venmo or Zelle. We turn it into a real
+              Every Detail gift card as soon as payment is confirmed.
             </p>
-
-            <div className="gift-card-preview gift-card-preview-lg">
-              <div className="gift-card-top"><span>EVERY DETAIL</span><b>GIFT CARD</b></div>
-              <div className="gift-card-center"><strong>A better kind<br />of clean.</strong></div>
-              <div className="gift-card-bottom"><span>MOBILE DETAILING · DECATUR + ATLANTA</span><i>ED</i></div>
-            </div>
 
             <div className="gift-points-grid">
               <div>
