@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { sendEmail } from "@/lib/email";
+import { buildGiftCardRequestEmail, sendEmail } from "@/lib/email";
 
 function clean(value: unknown, max = 300) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
@@ -10,9 +10,6 @@ function validEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-function escapeHtml(value: string) {
-  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
-}
 
 export async function POST(req: Request) {
   let body: Record<string, unknown>;
@@ -67,13 +64,21 @@ export async function POST(req: Request) {
   }
 
   const dollars = data.amount_cents / 100;
-  const methodLabel = data.payment_method === "venmo" ? "Venmo" : "Zelle";
   const paymentTarget = data.payment_method === "venmo"
     ? (process.env.GIFT_CARD_VENMO_LABEL || "@Every-Detail")
     : (process.env.GIFT_CARD_ZELLE_LABEL || "404-268-7748 · Joseph Perreault");
   const paymentUrl = data.payment_method === "venmo" ? (process.env.GIFT_CARD_VENMO_URL || "https://venmo.com/u/Every-Detail") : "";
-  const paymentDestination = paymentTarget ? ` to <strong>${escapeHtml(paymentTarget)}</strong>` : " using the Every Detail payment details you already have";
-  const html = `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#111"><h2 style="margin:0 0 12px">Your Every Detail gift card request</h2><p>We reserved a <strong>$${dollars}</strong> gift card for ${escapeHtml(recipientName)}.</p><p>Send <strong>$${dollars}</strong> by ${methodLabel}${paymentDestination} and include <strong>${data.reference}</strong> in the payment note. The gift card stays pending until our team confirms the payment.</p><p style="padding:14px;background:#f3f1ec"><strong>Reference:</strong> ${data.reference}<br><strong>Value:</strong> $${dollars}<br><strong>Payment:</strong> ${methodLabel}</p><p>Purchased gift-card value has no expiration and no inactivity fee.</p></div>`;
+  const html = buildGiftCardRequestEmail({
+    purchaserName,
+    recipientName,
+    amount: dollars,
+    reference: data.reference,
+    paymentMethod: data.payment_method,
+    paymentTarget: paymentTarget || undefined,
+    paymentUrl: paymentUrl || undefined,
+    deliveryMode: deliveryMode as "purchaser" | "recipient",
+  });
+
   sendEmail({ to: purchaserEmail, subject: `Gift card request ${data.reference} · Every Detail`, html }).catch((emailError) => console.error("[gift-cards] confirmation email failed", emailError));
 
   return NextResponse.json({

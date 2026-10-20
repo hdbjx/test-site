@@ -6700,3 +6700,78 @@ body:not(.halloween-site) [data-seasonal] {
 .gift-pay-link { display:inline-flex; margin-top:1.15rem; }
 .gift-payment-help { margin-top:1rem; font-size:.84rem; color:var(--color-muted); }
 .gift-payment-help a { color:var(--color-ink); font-weight:800; text-decoration:underline; }
+
+/* ===== GIFT CARDS V2 REFINEMENT ===== */
+.gift-page { background:linear-gradient(180deg,#f7f3ec 0%,#f1ebdf 100%); }
+.gift-showcase { padding:clamp(8rem,11vw,10.25rem) 0 clamp(4rem,7vw,6rem); }
+.gift-builder-grid { display:grid; grid-template-columns:minmax(18rem,.92fr) minmax(0,1.08fr); gap:clamp(2rem,5vw,5rem); align-items:start; }
+.gift-preview-wrap-v2 { position:sticky; top:7rem; display:grid; gap:1.2rem; }
+.gift-preview-wrap-v2 h1 { margin:.2rem 0 0; font-family:var(--font-display); font-size:clamp(3.2rem,6vw,5.8rem); line-height:.92; letter-spacing:-.06em; max-width:10ch; }
+.gift-showcase-copy { max-width:34rem; color:var(--color-muted); font-size:1.02rem; line-height:1.72; }
+.gift-card-preview-lg { min-height:22rem; transform:none; border-radius:1.4rem; }
+.gift-points-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.8rem; }
+.gift-points-grid > div { padding:1rem 1.05rem; border:1px solid rgb(17 17 17 / .1); border-radius:1rem; background:rgb(255 255 255 / .7); backdrop-filter:blur(10px); }
+.gift-points-grid span { display:block; margin-bottom:.35rem; font-size:.82rem; font-weight:900; letter-spacing:.04em; text-transform:uppercase; color:var(--color-ink); }
+.gift-points-grid p { margin:0; color:var(--color-muted); font-size:.9rem; line-height:1.55; }
+.gift-form-shell { border:1px solid rgb(17 17 17 / .08); border-radius:1.5rem; background:rgb(255 255 255 / .75); box-shadow:0 28px 70px rgb(17 17 17 / .08); overflow:hidden; backdrop-filter:blur(12px); }
+.gift-form-shell-head { display:flex; align-items:flex-end; justify-content:space-between; gap:1.2rem; padding:1.6rem 1.7rem 0; }
+.gift-form-shell-head h2 { margin:.45rem 0 0; font-family:var(--font-display); font-size:clamp(2rem,3vw,3rem); line-height:.96; letter-spacing:-.05em; max-width:14ch; }
+.gift-shell-badges { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:.45rem; }
+.gift-shell-badges span { border:1px solid rgb(17 17 17 / .12); border-radius:999px; padding:.55rem .8rem; background:#fff; font-size:.68rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+.gift-form { border:0; background:transparent; }
+.gift-form-section { padding:1.55rem 1.7rem; border-bottom:1px solid rgb(17 17 17 / .08); }
+.gift-form-step { margin-bottom:1rem; }
+.gift-form-step b { background:#111; width:2.15rem; height:2.15rem; }
+.gift-form-step span { font-size:1rem; letter-spacing:.05em; }
+.gift-amount-grid { gap:.65rem; }
+.gift-amount-grid button { min-height:4rem; border-radius:.95rem; background:#fff; font-size:1.14rem; }
+.gift-form input,.gift-form textarea,.gift-form select { border-radius:.85rem; padding:.95rem 1rem; background:#fff; }
+.gift-choice-row label,.gift-custom-amount div { border-radius:.9rem; }
+.gift-message { margin-top:1rem; }
+.gift-form-submit { padding:1.45rem 1.7rem 1.7rem; background:linear-gradient(180deg,rgba(238,231,220,.55) 0%,rgba(238,231,220,.95) 100%); }
+.gift-form-submit strong { font-size:2.15rem; }
+.gift-form-submit .btn { min-width:15rem; }
+.gift-form-error { margin:1rem 1.7rem 1.7rem; }
+.gift-success { border:0; border-top:0; background:transparent; padding:1.6rem 1.7rem 1.8rem; }
+.gift-success-kicker { display:inline-block; padding:.45rem .72rem; border-radius:999px; background:rgb(185 32 44 / .1); color:var(--color-red); }
+.gift-success h2 { margin:.9rem 0 .9rem; font-size:clamp(2rem,4vw,3.6rem); }
+.gift-success > p { margin-bottom:1.15rem; }
+.gift-success-meta { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.7rem; margin:1.3rem 0; }
+.gift-success-meta > div { padding:1rem; border:1px solid rgb(17 17 17 / .08); border-radius:1rem; background:#fff; }
+.gift-success-meta span { display:block; margin-bottom:.25rem; color:var(--color-muted); font-size:.7rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+.gift-success-meta strong { font-family:var(--font-display); font-size:1.25rem; letter-spacing:-.03em; }
+.gift-success-note { border-radius:1rem; border:1px solid rgb(17 17 17 / .08); background:#faf8f4; }
+.gift-success-actions { display:flex; flex-wrap:wrap; gap:.8rem; margin-top:1.25rem; }
+.gift-pay-link { margin-top:0; }
+.gift-how-v2 { padding:clamp(4rem,6vw,6rem) 0; background:#fffdf8; color:var(--color-ink); border-top:1px solid rgb(17 17 17 / .08); }
+.gift-how-head { display:flex; justify-content:space-between; gap:2rem; align-items:end; margin-bottom:1.8rem; }
+.gift-how-head h2 { margin:.45rem 0 0; font-family:var(--font-display); font-size:clamp(2.3rem,4vw,4rem); line-height:.95; letter-spacing:-.05em; max-width:12ch; }
+.gift-how-head > p { max-width:34rem; color:var(--color-muted); line-height:1.7; }
+.gift-how-v2 .gift-how-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin-top:0; border:0; }
+.gift-how-v2 .gift-how-grid article { min-height:0; padding:1.25rem; border:1px solid rgb(17 17 17 / .08); border-radius:1.1rem; background:#f8f5ef; }
+.gift-how-v2 .gift-how-grid b { display:inline-block; margin-bottom:1.2rem; color:var(--color-red); font-size:.78rem; }
+.gift-how-v2 .gift-how-grid h3 { margin:0 0 .6rem; font-family:var(--font-display); font-size:1.7rem; line-height:1; }
+.gift-how-v2 .gift-how-grid p { margin:0; color:var(--color-muted); }
+.gift-rewards-bridge-v2 { padding:clamp(3.8rem,6vw,6rem) 0 clamp(4.4rem,7vw,7rem); background:#efe6d8; border-top:1px solid rgb(17 17 17 / .08); }
+.gift-rewards-grid { align-items:end; }
+.gift-rewards-grid h2 { margin-top:.5rem; max-width:11ch; }
+.gift-rewards-actions { display:flex; gap:.8rem; flex-wrap:wrap; margin-top:1.4rem; }
+
+@media (max-width: 900px) {
+  .gift-builder-grid,.gift-rewards-grid,.gift-how-v2 .gift-how-grid,.gift-how-head { grid-template-columns:1fr; display:grid; }
+  .gift-preview-wrap-v2 { position:static; }
+  .gift-points-grid,.gift-success-meta { grid-template-columns:1fr 1fr; }
+  .gift-form-shell-head { align-items:flex-start; flex-direction:column; }
+  .gift-shell-badges { justify-content:flex-start; }
+}
+
+@media (max-width: 640px) {
+  .gift-showcase { padding-top:7.4rem; }
+  .gift-preview-wrap-v2 h1 { font-size:clamp(2.7rem,14vw,4.4rem); }
+  .gift-card-preview-lg { min-height:18rem; }
+  .gift-points-grid,.gift-success-meta,.gift-how-v2 .gift-how-grid { grid-template-columns:1fr; }
+  .gift-form-shell-head,.gift-form-section,.gift-success,.gift-form-submit { padding-left:1.1rem; padding-right:1.1rem; }
+  .gift-form-submit .btn,.gift-success-actions .btn,.gift-success-actions a { width:100%; }
+  .gift-rewards-actions { flex-direction:column; }
+  .gift-rewards-actions .btn { width:100%; }
+}

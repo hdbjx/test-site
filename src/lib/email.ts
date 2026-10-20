@@ -136,6 +136,166 @@ function detailRow(label: string, value: string) {
   `;
 }
 
+export function buildGiftCardRequestEmail(input: {
+  purchaserName: string;
+  recipientName: string;
+  amount: number;
+  reference: string;
+  paymentMethod: "venmo" | "zelle";
+  paymentTarget?: string;
+  paymentUrl?: string;
+  deliveryMode: "purchaser" | "recipient";
+}) {
+  const recipient = escapeHtml(input.recipientName);
+  const purchaserFirst = escapeHtml(input.purchaserName.trim().split(/\s+/)[0] || input.purchaserName || "there");
+  const amount = formatMoney(input.amount);
+  const methodLabel = input.paymentMethod === "venmo" ? "Venmo" : "Zelle";
+  const target = input.paymentTarget ? escapeHtml(input.paymentTarget) : "Every Detail payment details";
+  const paymentCta = input.paymentMethod === "venmo" && input.paymentUrl
+    ? `<tr><td style="padding:0 0 22px;"><a href="${escapeHtml(input.paymentUrl)}" style="display:inline-block;padding:13px 18px;border-radius:999px;background:${BRAND.coral};color:#ffffff;text-decoration:none;font-weight:700;">Open Venmo ↗</a></td></tr>`
+    : "";
+  const deliveryCopy = input.deliveryMode === "recipient"
+    ? "As soon as payment is confirmed, we’ll email the active gift card to the recipient."
+    : "As soon as payment is confirmed, we’ll email the active gift card to you so you can send it yourself.";
+
+  return shell(`
+    <div style="font-size:11px;line-height:1.2;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:800;">Gift card request received</div>
+    <h1 style="margin:10px 0 12px;font-size:34px;line-height:0.98;letter-spacing:-1.2px;color:${BRAND.black};">Your gift card is almost ready.</h1>
+    <p style="margin:0 0 20px;font-size:16px;line-height:1.7;color:${BRAND.gray};">Hey ${purchaserFirst}, we reserved ${amount} for ${recipient}. Send payment using the details below and include your reference number so we can activate it quickly.</p>
+
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 26px;">
+      <tr>
+        <td style="padding:0;">
+          <div style="padding:24px;border-radius:22px;background:linear-gradient(135deg,#5c0b08,#8f191c 56%,#aa272c);color:#ffffff;">
+            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+              <tr>
+                <td style="font-size:11px;letter-spacing:2px;font-weight:800;">EVERY DETAIL</td>
+                <td align="right" style="font-size:12px;font-weight:800;">GIFT CARD</td>
+              </tr>
+              <tr><td colspan="2" style="padding:24px 0 32px;font-size:42px;line-height:0.9;font-weight:900;letter-spacing:-2px;">A better kind<br>of clean.</td></tr>
+              <tr>
+                <td style="font-size:11px;letter-spacing:1.6px;">MOBILE DETAILING · DECATUR + ATLANTA</td>
+                <td align="right"><span style="display:inline-block;width:34px;height:34px;line-height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.7);text-align:center;font-size:14px;font-weight:800;">ED</span></td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 22px;border:1px solid #dedbd5;border-radius:18px;overflow:hidden;background:#faf8f4;">
+      <tr><td style="padding:18px 20px 10px;font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:${BRAND.black};font-weight:800;">Payment details</td></tr>
+      <tr><td style="padding:0 20px 18px;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+          ${detailRow('Amount', amount)}
+          ${detailRow('Reference', input.reference)}
+          ${detailRow('Method', methodLabel)}
+          ${detailRow('Send to', target)}
+        </table>
+      </td></tr>
+    </table>
+
+    ${paymentCta}
+
+    <div style="padding:18px 20px;border-radius:18px;background:${BRAND.cream};border:1px solid #dedbd5;margin-bottom:20px;">
+      <div style="font-weight:800;font-size:13px;color:${BRAND.black};margin-bottom:8px;">What happens next</div>
+      <div style="font-size:14px;line-height:1.7;color:${BRAND.gray};">${deliveryCopy} Purchased gift-card value does not expire and has no inactivity fee.</div>
+    </div>
+
+    <p style="margin:0;font-size:13px;line-height:1.7;color:${BRAND.gray};">Questions? Reply to this email and our team will help.</p>
+  `, `${amount} gift card request for ${input.recipientName}. Send payment by ${methodLabel} and include ${input.reference}.`);
+}
+
+
+export function buildGiftCardActivatedEmail(input: {
+  recipientName: string;
+  purchaserName: string;
+  amount: number;
+  code: string;
+  message?: string | null;
+  deliveredToPurchaser?: boolean;
+}) {
+  const recipientFirst = escapeHtml(input.recipientName.trim().split(/\s+/)[0] || input.recipientName || "there");
+  const purchaser = escapeHtml(input.purchaserName);
+  const amount = formatMoney(input.amount);
+  const code = escapeHtml(input.code);
+  const note = input.message?.trim()
+    ? `<div style="margin:0 0 22px;padding:18px 20px;border-left:4px solid ${BRAND.coral};background:#faf8f4;font-size:15px;line-height:1.65;color:${BRAND.black};"><div style="margin-bottom:6px;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:${BRAND.gray};font-weight:800;">A note from ${purchaser}</div>${escapeHtml(input.message.trim())}</div>`
+    : "";
+
+  const intro = input.deliveredToPurchaser
+    ? `Your ${amount} Every Detail gift card is active and ready to give. Keep the code below, or forward this email when you are ready.`
+    : `${purchaser} sent you ${amount} toward an Every Detail service. No account is required. Just keep the code below and use it when you book or at checkout.`;
+  const headline = input.deliveredToPurchaser ? `${recipientFirst}, your gift card is ready.` : `${recipientFirst}, this one’s for you.`;
+
+  return shell(`
+    <div style="font-size:11px;line-height:1.2;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:800;">Your Every Detail gift card</div>
+    <h1 style="margin:10px 0 12px;font-size:36px;line-height:0.98;letter-spacing:-1.4px;color:${BRAND.black};">${headline}</h1>
+    <p style="margin:0 0 22px;font-size:16px;line-height:1.7;color:${BRAND.gray};">${intro}</p>
+
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 24px;">
+      <tr><td>
+        <div style="padding:26px;border-radius:22px;background:#8f191c;color:#ffffff;">
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+            <tr>
+              <td style="font-size:11px;letter-spacing:2px;font-weight:800;">EVERY DETAIL</td>
+              <td align="right" style="font-size:12px;font-weight:800;">GIFT CARD</td>
+            </tr>
+            <tr><td colspan="2" style="padding:24px 0 30px;font-size:42px;line-height:.9;font-weight:900;letter-spacing:-2px;">A better kind<br>of clean.</td></tr>
+            <tr>
+              <td style="font-size:11px;letter-spacing:1.6px;">MOBILE DETAILING · DECATUR + ATLANTA</td>
+              <td align="right"><span style="display:inline-block;width:34px;height:34px;line-height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.7);text-align:center;font-size:14px;font-weight:800;">ED</span></td>
+            </tr>
+          </table>
+        </div>
+      </td></tr>
+    </table>
+
+    ${note}
+
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 22px;border:1px solid #dedbd5;border-radius:18px;overflow:hidden;background:#faf8f4;">
+      <tr><td style="padding:18px 20px 10px;font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:${BRAND.black};font-weight:800;">Your card</td></tr>
+      <tr><td style="padding:0 20px 18px;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+          ${detailRow('Value', amount)}
+          ${detailRow('Gift card code', code)}
+          ${detailRow('Expiration', 'None')}
+        </table>
+      </td></tr>
+    </table>
+
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 18px;"><tr>
+      <td style="padding-right:6px;"><a href="https://www.everydetail.co/book" style="display:block;padding:14px 16px;border-radius:999px;background:${BRAND.coral};color:#ffffff;text-decoration:none;text-align:center;font-weight:800;">Book your detail ↗</a></td>
+      <td style="padding-left:6px;"><a href="https://www.everydetail.co/account" style="display:block;padding:13px 16px;border-radius:999px;border:1px solid ${BRAND.black};color:${BRAND.black};text-decoration:none;text-align:center;font-weight:800;">View account ↗</a></td>
+    </tr></table>
+
+    <p style="margin:0;font-size:13px;line-height:1.7;color:${BRAND.gray};">If you use only part of the card, the remaining balance stays available for a future visit.</p>
+  `, `${purchaser} sent you a ${amount} Every Detail gift card. Your code is ${input.code}.`);
+}
+
+export function buildGiftCardSentConfirmationEmail(input: {
+  purchaserName: string;
+  recipientName: string;
+  recipientEmail: string;
+  amount: number;
+  code: string;
+}) {
+  const first = escapeHtml(input.purchaserName.trim().split(/\s+/)[0] || input.purchaserName || "there");
+  const recipient = escapeHtml(input.recipientName);
+  const recipientEmail = escapeHtml(input.recipientEmail);
+  const amount = formatMoney(input.amount);
+  const code = escapeHtml(input.code);
+  return shell(`
+    <div style="font-size:11px;line-height:1.2;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:800;">Gift sent</div>
+    <h1 style="margin:10px 0 12px;font-size:34px;line-height:.98;letter-spacing:-1.2px;">It’s on the way.</h1>
+    <p style="margin:0 0 22px;font-size:16px;line-height:1.7;color:${BRAND.gray};">${first}, your ${amount} Every Detail gift card was activated and sent to ${recipient} at <strong style="color:${BRAND.black};">${recipientEmail}</strong>.</p>
+    <div style="padding:18px 20px;border-radius:18px;background:#faf8f4;border:1px solid #dedbd5;">
+      <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:${BRAND.gray};font-weight:800;">Gift card code</div>
+      <div style="margin-top:5px;font-size:22px;font-weight:900;letter-spacing:1px;color:${BRAND.black};">${code}</div>
+    </div>
+  `, `Your ${amount} gift card for ${input.recipientName} has been sent.`);
+}
+
 export async function sendEmail(message: EmailMessage) {
   const apiKey = process.env.RESEND_API_KEY;
 
