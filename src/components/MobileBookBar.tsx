@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 
 const HIDDEN_ON = ["/book", "/get-a-quote", "/detailplus/join", "/info-form"];
@@ -31,22 +30,21 @@ export function MobileBookBar() {
       aria-hidden={!show}
     >
       <div className="container-ed flex items-center gap-3 py-3">
-        <a
-          href={site.phone.sms}
+        <Link
+          href="/get-a-quote"
           tabIndex={show ? 0 : -1}
-          onClick={() => track("text_click", { location: "mobile_bar" })}
-          className="btn btn-secondary btn-sm shrink-0 px-4"
-          aria-label={`Text ${site.phone.display}`}
+          onClick={() => track("quote_start", { location: "mobile_bar" })}
+          className="btn btn-secondary btn-sm flex-1"
         >
-          Text
-        </a>
+          Find my detail
+        </Link>
         <Link
           href="/book"
           tabIndex={show ? 0 : -1}
           onClick={() => track("book_click", { location: "mobile_bar" })}
           className="btn btn-primary btn-sm flex-1"
         >
-          Book your detail
+          Book now
         </Link>
       </div>
     </div>

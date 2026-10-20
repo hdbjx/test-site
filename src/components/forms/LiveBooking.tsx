@@ -407,6 +407,12 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
 
   return (
     <form ref={formRef} noValidate onSubmit={onSubmit} className="booking-flow relative grid gap-10 lg:grid-cols-12">
+      <div className="booking-stage-rail lg:col-span-12" aria-label="Booking steps">
+        <span className="is-active"><b>1</b> Vehicle</span>
+        <span className={allVehiclesReady ? "is-active" : ""}><b>2</b> Detail</span>
+        <span className={start ? "is-active" : ""}><b>3</b> Time</span>
+        <span className={infoStep > 1 || fromQuote ? "is-active" : ""}><b>4</b> Your info</span>
+      </div>
       <div className="min-w-0 space-y-12 lg:col-span-8">
         {!signedIn && (
           <p className="booking-returning text-ink/80">

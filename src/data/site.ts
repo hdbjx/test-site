@@ -5,7 +5,7 @@
 
 export const site = {
   name: "Every Detail",
-  legalName: "Every Detail", // CONFIRM: registered business name (LLC?) for footer + schema
+  legalName: "Every Detail Mobile Detailing LLC",
   url: process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://www.everydetail.co",
   tagline: "Student-run. Professionally detailed.",
   description:

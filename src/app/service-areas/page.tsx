@@ -14,7 +14,7 @@ export const metadata = pageMetadata({
 
 export default function ServiceAreas() {
   return (
-    <main className="areas-v2">
+    <div className="areas-v2">
       <section className="areas-v2-hero">
         <div className="areas-v2-shell areas-v2-hero-grid">
           <div>
@@ -57,6 +57,6 @@ export default function ServiceAreas() {
 
       <section className="areas-v2-edge"><div className="areas-v2-shell"><div><p className="areas-v2-kicker">OUTSIDE THE LIST?</p><h2>Ask us anyway.</h2></div><p>We occasionally work outside our regular service area when the schedule allows. Send the address and vehicle through the quote form, or call <a className="link" href={site.phone.href}>{site.phone.display}</a>.</p><Link href="/get-a-quote" className="btn btn-secondary">Check your address ↗</Link></div></section>
       <CtaBand location="areas_final" />
-    </main>
+    </div>
   );
 }

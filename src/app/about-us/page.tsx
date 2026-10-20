@@ -29,7 +29,7 @@ const milestones = [
 
 export default function AboutPage() {
   return (
-    <main className="about-v2">
+    <div className="about-v2">
       <section className="about-v2-hero">
         <div className="about-v2-shell about-v2-hero-grid">
           <div className="about-v2-hero-copy">
@@ -126,6 +126,6 @@ export default function AboutPage() {
       </section>
 
       <CtaBand location="about_final" />
-    </main>
+    </div>
   );
 }

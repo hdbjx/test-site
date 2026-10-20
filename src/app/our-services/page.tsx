@@ -25,7 +25,7 @@ export default function ServicesPage() {
 
   return (
     <>
-      <main className="services-v161">
+      <div className="services-v161">
         <section className="edu-hero">
           <div className="svc-shell">
             <div className="mb-6"><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
@@ -40,6 +40,22 @@ export default function ServicesPage() {
           </div>
         </section>
 
+
+        <section className="svc-quick-pick" aria-labelledby="svc-quick-title">
+          <div className="svc-shell">
+            <div className="svc-quick-head">
+              <p className="svc-eyebrow">THE FAST VERSION</p>
+              <h2 id="svc-quick-title">How dirty is the car <span>right now?</span></h2>
+            </div>
+            <div className="svc-quick-grid">
+              <a href="#pricing"><b>01</b><span>Already pretty clean</span><strong>Maintenance Detail</strong><p>Routine upkeep for a car that is already in good shape.</p></a>
+              <a href="#pricing" className="is-featured"><b>02</b><span>Needs a real detail</span><strong>Premium Detail</strong><p>The best fit for most daily drivers that have fallen behind.</p></a>
+              <a href="#pricing"><b>03</b><span>Heavy buildup or neglect</span><strong>Factory Reset</strong><p>Our deepest clean for vehicles that need to start over.</p></a>
+            </div>
+            <div className="svc-quick-actions"><Link href="/get-a-quote" className="btn btn-primary">Find my detail ↗</Link><a href="#pricing" className="btn btn-secondary">See exact pricing</a></div>
+          </div>
+        </section>
+
         <ServiceDepthScroll />
 
         <section className="edu-booking" id="pricing">
@@ -49,7 +65,7 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="svc-single"><div className="svc-shell svc-single-inner"><div><p className="svc-eyebrow">ONLY NEED ONE SIDE?</p><h2>Interior-only or exterior-only.</h2></div><p>Our core details cover the whole vehicle. Detail+ members can choose interior-only or exterior-only plans. For a one-time standalone job, send us what you need and we will quote it.</p><Link href="/get-a-quote" className="svc-outline-btn">Get a quote <span>↗</span></Link></div></section>
+        <section className="svc-single"><div className="svc-shell svc-single-inner"><div><p className="svc-eyebrow">ONLY NEED ONE SIDE?</p><h2>Interior-only or exterior-only.</h2></div><p>Our core details cover the whole vehicle. Detail+ members can choose interior-only or exterior-only plans. For a one-time standalone job, send us what you need and we will quote it.</p><Link href="/get-a-quote" className="svc-outline-btn">Find my detail <span>↗</span></Link></div></section>
 
         <section className="svc-paint" id="paint"><div className="svc-shell"><div className="svc-paint-grid"><div><p className="svc-eyebrow">BEYOND DETAILING</p><h2>Cleaning and paint correction are <span>different jobs.</span></h2><p>Detailing removes dirt and contamination from the vehicle. Paint correction goes a step further by machine-polishing the clear coat to reduce visible swirls, haze and defects. Ceramic coating is protection applied after the paint is properly prepared.</p><Link href="/paint-correction" className="svc-light-btn">Learn about paint care <span>↗</span></Link></div><div className="svc-paint-list">{paintServices.map((p,i)=><div key={p.id}><b>0{i+1}</b><div><h3>{p.name}</h3><p>{p.bestFor}</p></div><strong>from {usd(p.startingAt)}</strong></div>)}</div></div></div></section>
 
@@ -58,7 +74,7 @@ export default function ServicesPage() {
         <section className="svc-process"><div className="svc-shell"><div className="svc-section-head compact"><p className="svc-eyebrow">WHAT HAPPENS ON DETAIL DAY</p><h2>Your driveway.<br/><span>Our setup.</span></h2><p>You do not need to drive to a shop or provide a hose and outlet. We arrive prepared to do the job where the car is parked.</p></div><ol><li><b>01</b><h3>We arrive prepared.</h3><p>Our team brings the power, water, products and equipment needed for the service.</p></li><li><b>02</b><h3>We work through the car.</h3><p>The technicians follow the process for the service level you selected rather than rushing the most visible areas.</p></li><li><b>03</b><h3>We finish and check it.</h3><p>The vehicle is inspected, packed up and returned ready to drive.</p></li></ol></div></section>
 
         <section className="svc-faq"><div className="svc-shell svc-faq-grid"><div><p className="svc-eyebrow">STILL LEARNING?</p><h2>Service questions.</h2><p>Common questions about what we do, what you need to provide and how the service works.</p></div><FaqList faqs={homeFaqs.slice(0,8)} /></div></section>
-      </main>
+      </div>
       <CtaBand location="services_final" />
       <JsonLd data={schemas} />
     </>

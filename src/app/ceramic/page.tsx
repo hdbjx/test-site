@@ -16,7 +16,7 @@ const quote="#paint-quote";
 
 export default function CeramicPage(){
   const ceramic=paintServices[2];
-  return <main className="paint-v38">
+  return <div className="paint-v38">
     <section className="pv38-hero pv38-hero-ceramic"><div className="container-ed pv38-hero-inner"><Breadcrumbs items={[{name:"Ceramic Coating",path:"/ceramic"}]}/><div className="pv38-hero-copy"><p className="pv38-kicker">2-year ceramic coating · Decatur + Atlanta</p><h1>Correct it first.<br/><em>Protect it next.</em></h1><p className="pv38-lede">A coating is only as good as the finish underneath it. We prepare and correct the paint first, then apply durable protection over the finished surface.</p><div className="pv38-actions"><TrackedLink href={quote} event="paint_inquiry" params={{location:"ceramic_hero"}} className="btn btn-primary">Get my coating quote ↗</TrackedLink><a href="#coating-process" className="pv38-text-link">See the process ↓</a></div><div className="pv38-proof"><span><b><LiveReviewCount/></b> five-star reviews</span><span>2-year protection</span><span>Correction included</span></div></div></div></section>
 
     <section id="coating-process" className="pv38-section pv38-paper"><div className="container-ed pv38-split-head"><div><p className="pv38-kicker dark">The important part</p><h2>The coating is step three.</h2></div><p>The gloss does not come from pouring ceramic onto imperfect paint. Most of the finished look is created during preparation and correction.</p></div><div className="container-ed pv38-horizontal-process"><article><span>01</span><h3>Prepare</h3><p>Wash and decontaminate the surface so we are working with clean paint.</p></article><article><span>02</span><h3>Correct</h3><p>Refine the paint before protection so swirls and haze are not locked underneath.</p></article><article><span>03</span><h3>Coat</h3><p>Apply the professional coating to the prepared clear coat and allow it to cure properly.</p></article></div></section>
@@ -32,5 +32,5 @@ export default function CeramicPage(){
     <section id="paint-quote" className="pv38-form"><div className="container-ed"><PaintLeadForm kind="ceramic"/></div></section>
     <section className="pv38-faq"><div className="container-ed pv38-faq-grid"><div><p className="pv38-kicker dark">Before you book</p><h2>Ceramic coating questions.</h2></div><FaqList faqs={paintFaqs}/></div></section>
     <JsonLd data={serviceSchema({name:"2-Year Ceramic Coating",description:ceramic.summary,path:"/ceramic",lowPrice:ceramic.startingAt})}/>
-  </main>;
+  </div>;
 }

@@ -6481,3 +6481,118 @@ body:not(.halloween-site) [data-seasonal] {
   }
   .booking-final-action strong { font-size:1rem; }
 }
+
+/* ===== V18 SYSTEM REFINEMENT ===== */
+:root {
+  --v18-section: clamp(4.5rem, 8vw, 8rem);
+  --v18-gap: clamp(1.25rem, 2.4vw, 2rem);
+  --v18-rule: rgb(24 17 13 / .16);
+}
+
+/* CTA language and navigation now use one clear decision model: Find My Detail / Book Now. */
+.booking-stage-rail {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:.5rem;
+  padding:.55rem;
+  border:1px solid var(--v18-rule);
+  border-radius:1rem;
+  background:rgb(255 255 255 / .5);
+}
+.booking-stage-rail span {
+  display:flex; align-items:center; gap:.55rem;
+  min-height:2.75rem; padding:.55rem .7rem;
+  border-radius:.7rem;
+  color:var(--color-muted);
+  font-family:var(--font-display); font-size:.78rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.06em;
+}
+.booking-stage-rail span b {
+  display:grid; place-items:center; width:1.55rem; height:1.55rem;
+  border:1px solid currentColor; border-radius:999px; font-size:.68rem;
+}
+.booking-stage-rail span.is-active { background:var(--color-ink); color:var(--color-paper); }
+
+/* Services: give customers a simple decision before the educational depth. */
+.svc-quick-pick { padding:clamp(3rem,6vw,5.5rem) 0; border-bottom:1px solid var(--v18-rule); background:var(--color-paper); }
+.svc-quick-head { display:flex; align-items:end; justify-content:space-between; gap:2rem; margin-bottom:2rem; }
+.svc-quick-head h2 { max-width:760px; font-family:var(--font-display); font-size:clamp(2.2rem,5vw,4.7rem); line-height:.94; letter-spacing:-.055em; }
+.svc-quick-head h2 span { color:var(--color-red); }
+.svc-quick-grid { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--v18-rule); }
+.svc-quick-grid a { display:flex; min-height:20rem; flex-direction:column; padding:1.6rem; border-right:1px solid var(--v18-rule); color:inherit; transition:background .2s ease,color .2s ease,transform .2s ease; }
+.svc-quick-grid a:last-child { border-right:0; }
+.svc-quick-grid a:hover { background:#fff; transform:translateY(-2px); }
+.svc-quick-grid a.is-featured { background:var(--color-ink); color:var(--color-paper); }
+.svc-quick-grid b { font-size:.72rem; letter-spacing:.1em; opacity:.62; }
+.svc-quick-grid span { margin-top:auto; font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; opacity:.7; }
+.svc-quick-grid strong { margin-top:.4rem; font-family:var(--font-display); font-size:clamp(1.6rem,2.6vw,2.4rem); line-height:1; letter-spacing:-.04em; }
+.svc-quick-grid p { margin-top:.9rem; max-width:29rem; line-height:1.55; opacity:.8; }
+.svc-quick-actions { display:flex; gap:.8rem; margin-top:1.3rem; }
+
+/* Detail+ resolves the offer before the long-form story. */
+.plus-offer-clarity { border-bottom:1px solid rgb(255 255 255 / .14); background:#171310; color:#f3f1ec; }
+.plus-offer-grid { display:grid; grid-template-columns:repeat(3,1fr) auto; align-items:stretch; }
+.plus-offer-grid > div { padding:1.4rem 1.4rem 1.5rem; border-right:1px solid rgb(255 255 255 / .14); }
+.plus-offer-grid span { display:block; color:#c8bba9; font-size:.68rem; font-weight:800; letter-spacing:.11em; }
+.plus-offer-grid strong { display:block; margin-top:.35rem; font-family:var(--font-display); font-size:1.05rem; }
+.plus-offer-grid > a { display:grid; place-items:center; padding:1.5rem 2rem; background:var(--color-red); color:#fff; font-family:var(--font-display); font-weight:800; }
+
+/* Homepage crew trust bridge */
+.home-team-proof { padding:var(--v18-section) 0; background:#ede8df; }
+.home-team-proof-grid { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr); gap:clamp(2rem,6vw,6rem); align-items:center; }
+.home-team-proof figure { transform:rotate(-1deg); box-shadow:0 22px 70px rgb(24 17 13 / .12); }
+.home-team-proof-copy p:not(.eyebrow) { max-width:34rem; margin-top:1.4rem; font-size:1.06rem; line-height:1.65; color:var(--color-muted); }
+.home-team-proof-points { display:flex; flex-wrap:wrap; gap:.55rem; margin:1.5rem 0 1.7rem; }
+.home-team-proof-points span { border:1px solid var(--v18-rule); border-radius:999px; padding:.48rem .72rem; font-size:.68rem; font-weight:800; letter-spacing:.06em; }
+
+/* Our Work: editorial proof instead of a generic gallery. */
+.work-page-v18 { background:var(--color-paper); }
+.work-page-hero { padding:clamp(7rem,11vw,10rem) 0 clamp(4rem,7vw,7rem); background:#161310; color:#f3f1ec; }
+.work-page-hero-grid { display:grid; grid-template-columns:1.15fr .65fr; gap:clamp(2rem,7vw,7rem); align-items:end; }
+.work-page-hero h1 { margin-top:1rem; font-family:var(--font-display); font-size:clamp(4rem,9vw,8.8rem); line-height:.82; letter-spacing:-.075em; }
+.work-page-hero h1 span { color:#b9202c; }
+.work-page-hero-copy > p { font-size:clamp(1.05rem,1.8vw,1.35rem); line-height:1.6; color:rgb(243 241 236 / .75); }
+.work-page-proof { display:flex; flex-direction:column; gap:.25rem; margin-top:2rem; padding-top:1.2rem; border-top:1px solid rgb(255 255 255 / .18); }
+.work-page-proof strong { font-family:var(--font-display); }
+.work-page-proof span { color:rgb(243 241 236 / .6); font-size:.88rem; }
+.work-page-jobs { padding:var(--v18-section) 0; }
+.work-case { display:grid; grid-template-columns:minmax(0,1.18fr) minmax(18rem,.82fr); gap:clamp(2rem,6vw,6rem); align-items:center; padding:clamp(3rem,6vw,6rem) 0; border-bottom:1px solid var(--v18-rule); }
+.work-case:first-child { padding-top:0; }
+.work-case.is-reverse .work-case-media { order:2; }
+.work-case-media { position:relative; padding:0 0 clamp(2rem,4vw,4rem); }
+.work-case-media > div:first-child { box-shadow:0 22px 70px rgb(24 17 13 / .1); }
+.work-case-inset { position:absolute; right:-2%; bottom:0; width:36%; padding:.45rem; background:var(--color-paper); box-shadow:0 16px 42px rgb(24 17 13 / .18); transform:rotate(2deg); }
+.work-case.is-reverse .work-case-inset { right:auto; left:-2%; transform:rotate(-2deg); }
+.work-case-copy h2 { margin-top:.9rem; max-width:11ch; font-family:var(--font-display); font-size:clamp(2.6rem,5vw,5rem); line-height:.92; letter-spacing:-.055em; }
+.work-case-copy > p:not(.eyebrow) { margin-top:1.3rem; max-width:38rem; color:var(--color-muted); font-size:1.03rem; line-height:1.65; }
+.work-case-meta { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.5rem; }
+.work-case-meta span { border:1px solid var(--v18-rule); border-radius:999px; padding:.48rem .7rem; font-size:.68rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+.work-page-crew { padding:var(--v18-section) 0; background:#ebe4d8; }
+.work-page-crew-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:clamp(2rem,6vw,6rem); align-items:center; }
+.work-page-crew h2 { margin:.85rem 0 1rem; font-family:var(--font-display); font-size:clamp(2.5rem,5vw,5rem); line-height:.93; letter-spacing:-.055em; }
+.work-page-crew p:not(.eyebrow) { max-width:34rem; color:var(--color-muted); line-height:1.65; margin-bottom:1.6rem; }
+.work-page-final { padding:clamp(4rem,7vw,6rem) 0; background:var(--color-oxblood); color:var(--color-paper); }
+.work-page-final-grid { display:flex; justify-content:space-between; gap:2rem; align-items:end; }
+.work-page-final h2 { margin:.5rem 0; font-family:var(--font-display); font-size:clamp(2.4rem,4.5vw,4.8rem); letter-spacing:-.05em; }
+.work-page-final p { color:rgb(243 241 236 / .75); }
+.work-page-final-actions { display:flex; gap:.8rem; flex-wrap:wrap; }
+
+@media (max-width: 900px) {
+  .svc-quick-grid, .plus-offer-grid, .home-team-proof-grid, .work-page-hero-grid, .work-case, .work-page-crew-grid { grid-template-columns:1fr; }
+  .svc-quick-grid a { min-height:15rem; border-right:0; border-bottom:1px solid var(--v18-rule); }
+  .svc-quick-grid a:last-child { border-bottom:0; }
+  .plus-offer-grid > div { border-right:0; border-bottom:1px solid rgb(255 255 255 / .14); }
+  .work-case.is-reverse .work-case-media { order:0; }
+  .work-case-copy h2 { max-width:14ch; }
+  .work-page-final-grid { align-items:flex-start; flex-direction:column; }
+}
+@media (max-width: 640px) {
+  .booking-stage-rail { grid-template-columns:repeat(4,minmax(0,1fr)); gap:.25rem; }
+  .booking-stage-rail span { justify-content:center; padding:.45rem .2rem; font-size:.58rem; letter-spacing:.025em; }
+  .booking-stage-rail span b { display:none; }
+  .svc-quick-head { display:block; }
+  .svc-quick-actions, .work-page-final-actions { flex-direction:column; }
+  .svc-quick-actions .btn, .work-page-final-actions .btn { width:100%; }
+  .work-page-hero h1 { font-size:clamp(3.5rem,18vw,5.5rem); }
+  .work-case-inset { width:42%; }
+}

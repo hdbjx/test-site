@@ -121,7 +121,7 @@ export function QuoteForm({ defaultInterest }: { defaultInterest?: string }) {
       <FormError message={error} />
 
       <button type="submit" disabled={status === "sending"} className="btn btn-primary w-full sm:w-auto disabled:opacity-60">
-        {status === "sending" ? "Sending…" : "Get my quote"}
+        {status === "sending" ? "Sending…" : "Find my detail"}
       </button>
     </form>
   );

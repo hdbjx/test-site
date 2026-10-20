@@ -16,7 +16,7 @@ const quote = "#paint-quote";
 
 export default function PaintCorrectionPage() {
   const [enhancement, correction] = paintServices;
-  return <main className="paint-v38">
+  return <div className="paint-v38">
     <section className="pv38-hero pv38-hero-correction">
       <div className="container-ed pv38-hero-inner">
         <Breadcrumbs items={[{name:"Paint Correction",path:"/paint-correction"}]}/>
@@ -61,5 +61,5 @@ export default function PaintCorrectionPage() {
     <section id="paint-quote" className="pv38-form"><div className="container-ed"><PaintLeadForm kind="paint-correction"/></div></section>
     <section className="pv38-faq"><div className="container-ed pv38-faq-grid"><div><p className="pv38-kicker dark">Before you book</p><h2>Paint correction questions.</h2></div><FaqList faqs={paintFaqs}/></div></section>
     <JsonLd data={[enhancement,correction].map(p=>serviceSchema({name:p.name,description:p.summary,path:"/paint-correction",lowPrice:p.startingAt}))}/>
-  </main>;
+  </div>;
 }

@@ -5,6 +5,7 @@ export type NavItem = { label: string; href: string; external?: boolean };
 export const primaryNav: NavItem[] = [
   { label: "Services", href: "/our-services" },
   { label: "Detail+", href: "/detailplus" },
+  { label: "Our Work", href: "/our-work" },
   { label: "About", href: "/about-us" },
 ];
 
@@ -15,7 +16,7 @@ export const serviceNav: NavItem[] = [
 ];
 
 export const moreNav: NavItem[] = [
-  { label: "Get a Quote", href: "/get-a-quote" },
+  { label: "Find My Detail", href: "/get-a-quote" },
   { label: "Service Areas", href: "/service-areas" },
   { label: "Shine On blog", href: "/blog" },
   ...(site.external.giftCards ? [{ label: "Gift Cards", href: site.external.giftCards, external: true }] : []),

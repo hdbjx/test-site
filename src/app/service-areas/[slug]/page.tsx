@@ -27,7 +27,7 @@ export default async function AreaPage({ params }: Params) {
   const { page } = area;
 
   return (
-    <main className="area-v2">
+    <div className="area-v2">
       <section className="area-v2-hero"><div className="area-v2-shell">
         <div className="mb-6"><Breadcrumbs items={[{ name: "Service Areas", path: "/service-areas" }, { name: area.name, path: `/service-areas/${slug}` }]} /></div>
         <p className="area-v2-kicker">MOBILE DETAILING / {area.name.toUpperCase()}</p>
@@ -45,6 +45,6 @@ export default async function AreaPage({ params }: Params) {
       <section className="area-v2-back"><div className="area-v2-shell"><Link href="/service-areas">← See every service area</Link></div></section>
       <CtaBand location={`area_${slug}_final`} />
       <JsonLd data={serviceSchema({ name: `Mobile Car Detailing in ${area.name}, GA`, description: page.description, path: `/service-areas/${slug}`, areaServed: [`${area.name}, GA`] })} />
-    </main>
+    </div>
   );
 }

@@ -169,8 +169,8 @@ export function Header() {
           aria-haspopup="dialog"
         >
           <span className="availability-banner-track" aria-hidden="true">
-            <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;PHONE AVAILABILITY IS LIMITED DURING SCHOOL HOURS&nbsp;&nbsp;•&nbsp;&nbsp;TEXTING IS BEST DURING THE SCHOOL DAY&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-            <span>STUDENT-RUN SCHEDULING&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS BEGIN AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;PHONE AVAILABILITY IS LIMITED DURING SCHOOL HOURS&nbsp;&nbsp;•&nbsp;&nbsp;TEXTING IS BEST DURING THE SCHOOL DAY&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY AVAILABLE&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+            <span>STUDENT-RUN TEAM&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY&nbsp;&nbsp;•&nbsp;&nbsp;FULLY MOBILE&nbsp;&nbsp;•&nbsp;&nbsp;POWER + WATER INCLUDED&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+            <span>STUDENT-RUN TEAM&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY&nbsp;&nbsp;•&nbsp;&nbsp;FULLY MOBILE&nbsp;&nbsp;•&nbsp;&nbsp;POWER + WATER INCLUDED&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
           </span>
           <span className="sr-only">View scheduling information for our student-run team</span>
         </button>

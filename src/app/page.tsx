@@ -32,10 +32,10 @@ export default function Home() {
           <div className="hero-copy rise">
             <p className="hero-kicker">Mobile detailing / Decatur + Atlanta</p>
             <h1 className="hero-title"><span>Your car.</span><span>Back to its best.</span></h1>
-            <p className="hero-lede">Professional mobile car detailing in Decatur and Atlanta, right at your driveway.<br />We bring the power and water.</p>
+            <p className="hero-lede">Mobile detailing that comes fully equipped to your driveway.<br />We bring the power, water, tools, and trained crew.</p>
             <div className="mt-7 flex flex-wrap gap-4">
-              <Link href="/get-a-quote" className="btn btn-primary">Get my quote ↗</Link>
-              <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-quote">Book a detail</TrackedLink>
+              <Link href="/get-a-quote" className="btn btn-primary">Find my detail ↗</Link>
+              <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-quote">Book now</TrackedLink>
             </div>
           </div>
         </div>
@@ -58,7 +58,7 @@ export default function Home() {
             <p className="home-section-copy">Three details. No package maze. Pick the level of clean you want, then tell us what you drive.</p>
           </div>
           <HomeBookingFlow />
-          <div className="home-text-links v14-service-links"><Link href="/our-services" className="link">Compare every service ↗</Link><Link href="/get-a-quote" className="link">Not sure what you need? Ask us</Link></div>
+          <div className="home-text-links v14-service-links"><Link href="/our-services" className="link">Compare every service ↗</Link><Link href="/get-a-quote" className="link">Not sure? Find my detail</Link></div>
         </div>
       </section>
 
@@ -83,15 +83,7 @@ export default function Home() {
               <Photo id="two-tech-interior-detail" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
               <figcaption><span>02 / INTERIOR</span><strong>Two-person cabin detail</strong></figcaption>
             </figure>
-            <figure className="seasonal-host">
-              <SeasonalDecor variant="leafPile" corner="br" />
-              <Photo id="rear-seat-detail" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
-              <figcaption><span>03 / THE DETAILS</span><strong>Seat-by-seat finishing</strong></figcaption>
-            </figure>
-            <figure className="seasonal-host">
-              <Photo id="classic-car-cockpit" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
-              <figcaption><span>04 / INTERIOR</span><strong>Clean all the way through</strong></figcaption>
-            </figure>
+
             <figure className="seasonal-host">
               <SeasonalDecor variant="web" corner="tr" />
               <Photo id="work-finished-0771" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
@@ -102,8 +94,9 @@ export default function Home() {
           <div className="work-instagram-cta">
             <div>
               <span className="work-instagram-label">MORE OF THE WORK</span>
-              <strong>Follow the crew on Instagram.</strong>
-              <p>Fresh details, before-and-afters, and what the team is working on around Atlanta.</p>
+              <strong>See the jobs behind the photos.</strong>
+              <p>Real vehicles, real problems, what we did, and how they turned out.</p>
+              <Link href="/our-work" className="link">Explore our work ↗</Link>
             </div>
             <a
               href="https://www.instagram.com/everydetail.atl/"
@@ -126,16 +119,22 @@ export default function Home() {
 
       <ReviewStoryScroll reviewCount={<LiveReviewCount />} />
 
+      <section className="home-team-proof" aria-labelledby="team-proof-heading">
+        <div className="container-ed home-team-proof-grid">
+          <figure><Photo id="about-team" sizes="(min-width: 900px) 48vw, 94vw" ratio="3/2" /></figure>
+          <div className="home-team-proof-copy"><p className="eyebrow">THE PEOPLE SHOWING UP</p><h2 id="team-proof-heading" className="home-display">Local crew.<br/><span>Serious standard.</span></h2><p>Every Detail started with one student and a driveway. Today, a trained team works from purpose-built electric rigs across Decatur and Atlanta.</p><div className="home-team-proof-points"><span>TRAINED TECHNICIANS</span><span>REAL LOCAL TEAM</span><span>100% ELECTRIC RIGS</span></div><Link href="/about-us" className="btn btn-secondary">Meet the team ↗</Link></div>
+        </div>
+      </section>
+
       <section className="home-how" aria-labelledby="how-heading">
         <div className="container-ed">
           <div className="how-head"><p className="eyebrow">How it works</p><h2 id="how-heading" className="home-display">We make detailing<br /><span>the easy part.</span></h2></div>
           <div className="how-grid how-stack">
-            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="web" corner="tr" /><b>01</b><div><span>START HERE</span><h3>Get your quote</h3><p>Tell us what you drive and what it needs. We’ll recommend the right detail and show you the price.</p></div></article>
+            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="web" corner="tr" /><b>01</b><div><span>START HERE</span><h3>Find your detail</h3><p>Tell us what you drive and what it needs. We’ll recommend the right detail and show you the price.</p></div></article>
             <article className="how-stack-card seasonal-host"><SeasonalDecor variant="leafPile" corner="br" /><b>02</b><div><span>LOCK IT IN</span><h3>Pick a time</h3><p>Choose an available appointment that works for you. No back-and-forth required.</p></div></article>
-            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="sprig" corner="bl" /><b>03</b><div><span>YOUR DRIVEWAY</span><h3>We come to you</h3><p>Our 100% electric mobile rig arrives with its own water, battery power, tools, and products. No generator or outlet needed. You provide the driveway.</p></div></article>
-            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="web" corner="tr" /><b>04</b><div><span>DONE RIGHT</span><h3>Get your car back</h3><p>We work through the detail and let you know when your car is ready to get back on the road.</p></div></article>
+            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="sprig" corner="bl" /><b>03</b><div><span>YOUR DRIVEWAY</span><h3>We come to you</h3><p>Our 100% electric mobile rig arrives with its own water, battery power, tools, and products. We work through the detail, check the result, and let you know when the car is ready.</p></div></article>
           </div>
-          <Link href="/get-a-quote" className="btn btn-primary how-cta">Get my quote ↗</Link>
+          <Link href="/get-a-quote" className="btn btn-primary how-cta">Find my detail ↗</Link>
         </div>
       </section>
 
@@ -198,7 +197,7 @@ export default function Home() {
           <p className="eyebrow">We come to you</p>
           <h2 className="final-title">Your driveway.<br /><span>Our detail shop.</span></h2>
           <p>Tell us what you drive. We’ll recommend the right detail, show you the exact price, and bring everything else.</p>
-          <div className="final-actions"><Link href="/get-a-quote" className="btn btn-primary">Get my quote ↗</Link><TrackedLink href="/book" event="book_click" params={{ location: "home_final" }} className="final-quote">Already know what you want? Book now</TrackedLink></div>
+          <div className="final-actions"><Link href="/get-a-quote" className="btn btn-primary">Find my detail ↗</Link><TrackedLink href="/book" event="book_click" params={{ location: "home_final" }} className="final-quote">Already know what you want? Book now</TrackedLink></div>
         </div>
       </section>
     </>

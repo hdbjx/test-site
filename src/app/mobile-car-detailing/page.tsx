@@ -14,7 +14,7 @@ export const metadata = pageMetadata({
 
 export default function MobileCarDetailingPage() {
   return (
-    <main className="services-v161 mobile-detailing-page">
+    <div className="services-v161 mobile-detailing-page">
       <section className="edu-hero"><div className="svc-shell">
         <div className="mb-6"><Breadcrumbs items={[{ name: "Mobile Car Detailing", path: "/mobile-car-detailing" }]} /></div>
         <p className="svc-eyebrow">MOBILE CAR DETAILING / DECATUR + ATLANTA</p>
@@ -50,6 +50,6 @@ export default function MobileCarDetailingPage() {
 
       <CtaBand location="mobile_detailing_final" />
       <JsonLd data={serviceSchema({ name: "Mobile Car Detailing", description: "Full inside-and-out mobile car detailing in Decatur and nearby Atlanta communities, using 100% electric mobile rigs with power and water supplied by Every Detail.", path: "/mobile-car-detailing" })} />
-    </main>
+    </div>
   );
 }

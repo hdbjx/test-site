@@ -52,7 +52,7 @@ const loopSteps = [
 
 export default function DetailPlusPage() {
   return (
-    <main className="plus-brand plus-v177">
+    <div className="plus-brand plus-v177">
       <section className="plus-brand-hero plus-v177-hero seasonal-host">
         <SeasonalDecor variant="web" corner="tl" />
         <SeasonalDecor variant="sprig" corner="tr" />
@@ -84,6 +84,16 @@ export default function DetailPlusPage() {
         <div className="plus-v177-cadence-rail" aria-label="Available Detail Plus frequencies">
           <span>YOUR CADENCE</span>
           {frequencies.map((f, i) => <b key={f.id}>{f.label}{i < frequencies.length - 1 ? <i>•</i> : null}</b>)}
+        </div>
+      </section>
+
+
+      <section className="plus-offer-clarity" aria-label="Detail Plus plan summary">
+        <div className="plus-brand-shell plus-offer-grid">
+          <div><span>CHOOSE YOUR FREQUENCY</span><strong>Every 2 weeks → Quarterly</strong></div>
+          <div><span>CHOOSE YOUR COVERAGE</span><strong>Interior · Exterior · Both</strong></div>
+          <div><span>ONE FLAT RATE</span><strong>Per visit · No contract</strong></div>
+          <a href="#build">Build my plan ↗</a>
         </div>
       </section>
 
@@ -187,6 +197,6 @@ export default function DetailPlusPage() {
 
       <section className="plus-brand-final plus-v177-final seasonal-host"><SeasonalDecor variant="pumpkin" corner="br" /><SeasonalDecor variant="web" corner="tl" /><div className="plus-brand-shell"><div className="plus-v177-final-loop" aria-hidden="true">↻</div><p className="plus-brand-kicker">DETAIL+ / READY WHEN YOU ARE</p><h2>Stop re-deciding<br/><span>to clean the car.</span></h2><p>Set the plan once. We’ll keep showing up.</p><a href="#build" className="plus-brand-btn plus-brand-btn-light">Build my Detail+ plan ↗</a></div></section>
       <JsonLd data={serviceSchema({name:"Detail+ recurring detailing membership",description:"Recurring mobile car detailing on a set schedule for one flat rate per visit.",path:"/detailplus"})}/>
-    </main>
+    </div>
   );
 }
