@@ -7,6 +7,7 @@ export const primaryNav: NavItem[] = [
   { label: "Detail+", href: "/detailplus" },
   { label: "Our Work", href: "/our-work" },
   { label: "About", href: "/about-us" },
+  { label: "Gift Cards", href: "/gift-cards" },
 ];
 
 export const serviceNav: NavItem[] = [
@@ -18,7 +19,6 @@ export const serviceNav: NavItem[] = [
 export const moreNav: NavItem[] = [
   { label: "Find My Detail", href: "/get-a-quote" },
   { label: "Service Areas", href: "/service-areas" },
-  { label: "Gift Cards", href: "/gift-cards" },
   { label: "Shine On blog", href: "/blog" },
   ...(site.external.clientPortal ? [{ label: "Client Portal", href: site.external.clientPortal, external: true }] : []),
 ];

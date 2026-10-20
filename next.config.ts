@@ -43,7 +43,6 @@ const legacyRedirects = (): R[] => [
   { source: "/my-addresses", destination: "/", statusCode: 302 },
   { source: "/members-area/:path*", destination: "/", statusCode: 302 },
   { source: "/client-portal", destination: site.external.clientPortal ?? "/", statusCode: 302 },
-  { source: "/gift-cards", destination: site.external.giftCards ?? "/", statusCode: 302 },
 ];
 
 const nextConfig: NextConfig = {
