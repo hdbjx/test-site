@@ -5,7 +5,7 @@ import { LiveJobPortal } from "@/components/account/LiveJobPortal";
 import type { PortalJob } from "@/lib/client-portal";
 import { ProfileForm } from "@/components/account/ProfileForm";
 import { VehicleManager } from "@/components/account/VehicleManager";
-import { getMyJobs, getMyPortalJobs, getSession, type ClientJob } from "@/lib/supabase/account";
+import { getMyGiftCards, getMyJobs, getMyPortalJobs, getMyRewardBalance, getSession, type ClientGiftCard, type ClientJob } from "@/lib/supabase/account";
 import { supabaseConfigured } from "@/lib/supabase/config";
 import { pageMetadata } from "@/lib/seo";
 
@@ -45,14 +45,16 @@ export default async function AccountPage() {
   const { account, garage, email } = session;
   let jobs: ClientJob[] = [];
   let portalJobs: PortalJob[] = [];
+  let giftCards: ClientGiftCard[] = [];
+  let rewards = { balance_cents: 0, lifetime_earned_cents: 0, lifetime_redeemed_cents: 0 };
   let portalLoadFailed = false;
   try {
-    [jobs, portalJobs] = await Promise.all([getMyJobs(), getMyPortalJobs()]);
+    [jobs, portalJobs, giftCards, rewards] = await Promise.all([getMyJobs(), getMyPortalJobs(), getMyGiftCards(), getMyRewardBalance()]);
   } catch (error) {
     portalLoadFailed = true;
     console.error("Account data failed to load", error);
     try {
-      jobs = await getMyJobs();
+      [jobs, giftCards, rewards] = await Promise.all([getMyJobs(), getMyGiftCards(), getMyRewardBalance()]);
     } catch (jobsError) {
       console.error("Account history failed to load", jobsError);
     }
@@ -88,6 +90,33 @@ export default async function AccountPage() {
           <div>
             <h2 className="t-h3">Your details</h2>
             <div className="mt-5"><ProfileForm account={account} email={email} /></div>
+          </div>
+          <div>
+            <div className="account-credit-head">
+              <div>
+                <p className="eyebrow">Available credit</p>
+                <h2 className="t-h3">${((rewards.balance_cents + giftCards.reduce((sum, card) => sum + card.balance_cents, 0)) / 100).toFixed(2)}</h2>
+              </div>
+              <Link href="/gift-cards" className="link">Buy one ↗</Link>
+            </div>
+            <div className="account-gift-list">
+              <div className="account-gift-card">
+                <div><span>Rewards</span><small>Earned Every Detail credit</small></div>
+                <strong>${(rewards.balance_cents / 100).toFixed(2)}</strong>
+              </div>
+            </div>
+            {giftCards.length > 0 ? (
+              <div className="account-gift-list">
+                {giftCards.map((card) => (
+                  <div key={card.id} className="account-gift-card">
+                    <div><span>{card.code}</span><small>Every Detail gift card</small></div>
+                    <strong>${(card.balance_cents / 100).toFixed(card.balance_cents % 100 ? 2 : 0)}</strong>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">Gift cards sent to this email will appear here automatically after they are activated. Rewards can be applied by the team at checkout.</p>
+            )}
           </div>
           {past.length > 0 && (
             <div>

@@ -17,6 +17,23 @@ export type GarageVehicle = {
   ceramic_installed: boolean;
   recommended_next: string | null;
 };
+
+export type ClientGiftCard = {
+  id: string;
+  code: string;
+  balance_cents: number;
+  initial_value_cents: number;
+  recipient_name: string | null;
+  issued_at: string;
+};
+
+
+export type ClientRewardBalance = {
+  balance_cents: number;
+  lifetime_earned_cents: number;
+  lifetime_redeemed_cents: number;
+};
+
 export type ClientJob = {
   id: string;
   service_name: string;
@@ -70,6 +87,29 @@ export async function getMyPortalJobs(): Promise<PortalJob[]> {
   const { data, error } = await supabase.rpc("get_my_client_portal_jobs");
   if (error) throw error;
   return (data as PortalJob[]) ?? [];
+}
+
+export async function getMyGiftCards(): Promise<ClientGiftCard[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("claim_my_gift_cards");
+  if (error) {
+    // Keep accounts usable before the gift-card migration has been applied.
+    if (error.message.includes("claim_my_gift_cards") || error.code === "PGRST202") return [];
+    throw error;
+  }
+  return (data as ClientGiftCard[]) ?? [];
+}
+
+export async function getMyRewardBalance(): Promise<ClientRewardBalance> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("get_my_reward_balance");
+  if (error) {
+    if (error.message.includes("get_my_reward_balance") || error.code === "PGRST202") {
+      return { balance_cents: 0, lifetime_earned_cents: 0, lifetime_redeemed_cents: 0 };
+    }
+    throw error;
+  }
+  return ((data as ClientRewardBalance[]) ?? [])[0] ?? { balance_cents: 0, lifetime_earned_cents: 0, lifetime_redeemed_cents: 0 };
 }
 
 export const vehicleName = (v: Pick<GarageVehicle, "year" | "make" | "model">) =>

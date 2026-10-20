@@ -18,8 +18,8 @@ export const serviceNav: NavItem[] = [
 export const moreNav: NavItem[] = [
   { label: "Find My Detail", href: "/get-a-quote" },
   { label: "Service Areas", href: "/service-areas" },
+  { label: "Gift Cards", href: "/gift-cards" },
   { label: "Shine On blog", href: "/blog" },
-  ...(site.external.giftCards ? [{ label: "Gift Cards", href: site.external.giftCards, external: true }] : []),
   ...(site.external.clientPortal ? [{ label: "Client Portal", href: site.external.clientPortal, external: true }] : []),
 ];
 

@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ["/paint-correction", 0.9],
     ["/ceramic", 0.9],
     ["/detailplus", 0.8],
+    ["/gift-cards", 0.8],
     ["/our-work", 0.8],
     ["/book", 0.8],
     ["/get-a-quote", 0.7],

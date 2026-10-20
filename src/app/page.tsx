@@ -138,6 +138,13 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="home-gift-card" aria-labelledby="home-gift-heading">
+        <div className="container-ed home-gift-card-grid">
+          <div><p className="eyebrow">Give Every Detail</p><h2 id="home-gift-heading" className="home-display">A clean car makes a<br /><span>surprisingly good gift.</span></h2></div>
+          <div><p>Birthdays, new cars, parents, teachers, thank-yous, or the person whose interior has seen better days. Choose any value and let them use it toward the detail they want.</p><Link href="/gift-cards" className="btn btn-secondary">Buy a gift card ↗</Link></div>
+        </div>
+      </section>
+
       <section className="home-next home-next-v158">
         <div className="container-ed next-v158-wrap">
           <div className="next-v158-heading">

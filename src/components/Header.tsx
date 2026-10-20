@@ -147,7 +147,7 @@ export function Header() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
   const onHome = pathname === "/";
   const onDetailPlus = pathname === "/detailplus";
-  const onDarkHero = onHome || pathname === "/paint-correction" || pathname === "/ceramic" || onDetailPlus;
+  const onDarkHero = onHome || pathname === "/paint-correction" || pathname === "/ceramic" || pathname === "/gift-cards" || onDetailPlus;
   const headerClass = onDarkHero
     ? `fixed inset-x-0 top-0 z-40 text-white home-header${onDetailPlus ? ` detailplus-header${detailPlusHeaderScrolled ? " detailplus-header--scrolled" : ""}` : ""}`
     : "sticky inset-x-0 top-0 z-40 text-white inner-header";

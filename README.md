@@ -143,3 +143,31 @@ Kept at the same URL: `/`, `/our-services`, `/ceramic`, `/detailplus`, `/about-u
 - No horizontal overflow at 390px or 1440px.
 - One H1 per page, plus unique titles, meta descriptions and canonicals. LocalBusiness, Service, BreadcrumbList and BlogPosting schema are in place. FAQ schema was left out on purpose, since Google no longer shows FAQ results for business sites.
 - The mobile menu, focus trap, Escape to close, vehicle selector keyboard arrows, and booking form validation were exercised in Chromium.
+
+## Gift cards
+
+`/gift-cards` uses the existing Supabase project and the migration in `gift-cards-v1.sql`.
+
+Current payment flow intentionally matches the existing Every Detail process:
+
+1. Customer builds a gift card on the website.
+2. Website creates a `gift_card_orders` row with `pending_payment` status and a unique reference.
+3. Customer pays through Venmo or Zelle and includes that reference.
+4. A manager approves the order from the team app by calling `approve_gift_card_order`.
+5. The active gift card and its transaction ledger are created atomically.
+6. Cards issued to a customer's account email automatically appear in `/account`.
+
+Optional environment variables:
+
+| Variable | Purpose |
+|---|---|
+| `GIFT_CARD_VENMO_LABEL` | Venmo handle/name shown after a request, for example `@EveryDetailATL` |
+| `GIFT_CARD_VENMO_URL` | Direct Venmo profile/payment URL shown as a button |
+| `GIFT_CARD_ZELLE_LABEL` | Zelle email/phone/name shown after a request |
+
+If a payment label is not configured, the site tells first-time buyers to text Every Detail for the correct payment details instead of guessing.
+
+See `GIFT-CARDS-APP-INTEGRATION.md` for the manager approval, checkout redemption, customer account, and rewards integration contract.
+
+## Gift cards and rewards v18.1
+Run `gift-cards-and-rewards-v1.1.sql` in Supabase SQL Editor before deploying this build.
