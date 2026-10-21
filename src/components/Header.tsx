@@ -209,7 +209,7 @@ export function Header() {
               </div>
             )}
           </div>
-          {primaryNav.filter((item) => item.label !== "Services").map((item) => (
+          {primaryNav.filter((item) => item.label !== "Services" && item.label !== "Our Work").map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -281,7 +281,7 @@ export function Header() {
 
             <p className="mobile-menu-label mobile-menu-label-more">Explore</p>
             <div className="mobile-menu-secondary">
-              {primaryNav.filter((item) => item.label !== "Services").map((item) => (
+              {primaryNav.filter((item) => item.label !== "Services" && item.label !== "Our Work").map((item) => (
                 <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>{item.label}</Link>
               ))}
               {supabaseConfigured && <a href="/account" data-no-transition="true" aria-current={isActive("/account") ? "page" : undefined}>Account</a>}

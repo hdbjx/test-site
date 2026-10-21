@@ -6402,29 +6402,30 @@ body:not(.halloween-site) [data-seasonal] {
 
 /* V17.3: booking completion visibility + homepage result reveal */
 @media (min-width:1024px) {
-  /* The summary used to become its own scroll container on shorter laptop
-     viewports. With the gift-card section added, that made the bottom of the
-     card look clipped. Let the page own scrolling by default. */
+  /* Keep the appointment summary sticky on desktop at every viewport height.
+     The card gets its own bounded vertical scroll only when its content is
+     taller than the visible browser area, so the bottom is never clipped. */
   .booking-summary {
     align-self:stretch;
     position:relative;
+    min-width:0;
   }
   .booking-summary-card {
-    position:relative !important;
-    top:auto !important;
-    max-height:none;
-    overflow:visible;
+    position:sticky !important;
+    top:8.75rem !important;
+    max-height:calc(100dvh - 9.75rem);
+    overflow-y:auto;
+    overflow-x:hidden;
+    overscroll-behavior:contain;
+    scrollbar-width:thin;
+    scrollbar-gutter:stable;
   }
 }
 
 @media (min-width:1024px) and (min-height:980px) {
-  /* On genuinely tall desktop viewports there is enough room for the entire
-     appointment card to stay visible, so keep the useful sticky behavior. */
   .booking-summary-card {
-    position:sticky !important;
     top:10.75rem !important;
-    max-height:none;
-    overflow:visible;
+    max-height:calc(100dvh - 11.75rem);
   }
 }
 
