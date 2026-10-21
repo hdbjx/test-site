@@ -857,7 +857,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                 <div className="booking-gift-card-head">
                   <div>
                     <p className="field-label">Have a gift card?</p>
-                    <p className="booking-gift-card-help">Add it now and we’ll have it ready at checkout. Nothing is redeemed when you book.</p>
+                    <p className="booking-gift-card-help">Enter it now so it’s ready at checkout. You’ll choose how much of the balance to use after your detail.</p>
                   </div>
                   {giftCardPreview && <button type="button" className="booking-gift-card-remove" onClick={clearGiftCard}>Remove</button>}
                 </div>

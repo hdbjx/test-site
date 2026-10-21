@@ -6402,18 +6402,29 @@ body:not(.halloween-site) [data-seasonal] {
 
 /* V17.3: booking completion visibility + homepage result reveal */
 @media (min-width:1024px) {
-  /* The global booking header is sticky and taller than Tailwind's top-24.
-     Keep the appointment card below it instead of letting it stick behind it. */
+  /* The summary used to become its own scroll container on shorter laptop
+     viewports. With the gift-card section added, that made the bottom of the
+     card look clipped. Let the page own scrolling by default. */
   .booking-summary {
     align-self:stretch;
     position:relative;
   }
   .booking-summary-card {
+    position:relative !important;
+    top:auto !important;
+    max-height:none;
+    overflow:visible;
+  }
+}
+
+@media (min-width:1024px) and (min-height:980px) {
+  /* On genuinely tall desktop viewports there is enough room for the entire
+     appointment card to stay visible, so keep the useful sticky behavior. */
+  .booking-summary-card {
     position:sticky !important;
     top:10.75rem !important;
-    max-height:calc(100svh - 12rem);
-    overflow:auto;
-    overscroll-behavior:contain;
+    max-height:none;
+    overflow:visible;
   }
 }
 
