@@ -84,6 +84,7 @@ export async function POST(req: Request) {
   const notes = str(body.notes, 2000);
   const leadSource = str(body.leadSource, 40);
   const leadSourceDetail = str(body.leadSourceDetail, 200);
+  const giftCardCode = str(body.giftCardCode, 64).toUpperCase();
   const requested = rawItems(body);
 
   if (!start || Number.isNaN(Date.parse(start)) || requested.length < 1 || requested.length > 2) {
@@ -128,6 +129,31 @@ export async function POST(req: Request) {
   phone = phoneDigits;
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
     return NextResponse.json({ ok: false, error: "Enter a valid email for your booking confirmation.", field: "email" }, { status: 422 });
+  }
+
+  let selectedGiftCard: { id: string; code: string; balance_cents: number; recipient_name: string | null } | null = null;
+  if (giftCardCode) {
+    const { data: giftCard, error: giftCardError } = await supabaseAdmin()
+      .from("gift_cards")
+      .select("id, code, balance_cents, recipient_name, status, expires_at")
+      .ilike("code", giftCardCode)
+      .maybeSingle();
+
+    if (giftCardError) {
+      console.error("[book] gift card validation", giftCardError);
+      return NextResponse.json({ ok: false, error: "We couldn't verify that gift card. Remove it or try again." }, { status: 502 });
+    }
+
+    if (!giftCard || giftCard.status !== "active" || Number(giftCard.balance_cents || 0) <= 0 || (giftCard.expires_at && new Date(giftCard.expires_at).getTime() <= Date.now())) {
+      return NextResponse.json({ ok: false, error: "That gift card is no longer available. Remove it or enter another code." }, { status: 422 });
+    }
+
+    selectedGiftCard = {
+      id: giftCard.id,
+      code: giftCard.code,
+      balance_cents: Number(giftCard.balance_cents),
+      recipient_name: giftCard.recipient_name || null,
+    };
   }
 
   const lines: BookingLine[] = [];
@@ -221,6 +247,7 @@ export async function POST(req: Request) {
     ...selectedExtras,
     variablePricing.length ? `Price to confirm before service: ${[...new Set(variablePricing)].join(", ")}` : "",
     hasPaintWork ? "Paint correction/coating selected from website quote. Confirm separate paint-production scheduling with client." : "",
+    selectedGiftCard ? `Gift card selected at booking: •••• ${selectedGiftCard.code.slice(-4)}. Apply at checkout, not at booking.` : "",
   ].filter(Boolean).join(" | ");
 
   const { data, error } = await supabaseAdmin().rpc("book_multi_vehicle_job", {
@@ -254,6 +281,23 @@ export async function POST(req: Request) {
   if (typeof data !== "string" || !data) {
     console.error("[book] booking RPC returned no job id", data);
     return NextResponse.json({ ok: false, error: "We couldn't verify that your booking was created. Please try again or call/text us." }, { status: 500 });
+  }
+
+  if (selectedGiftCard) {
+    const { error: giftIntentError } = await supabaseAdmin()
+      .from("job_gift_card_intents")
+      .upsert({
+        job_id: data,
+        gift_card_id: selectedGiftCard.id,
+        balance_cents_at_booking: selectedGiftCard.balance_cents,
+        source: "website_booking",
+      }, { onConflict: "job_id" });
+
+    if (giftIntentError) {
+      console.error("[book] gift card intent", giftIntentError);
+      await supabaseAdmin().from("jobs").delete().eq("id", data);
+      return NextResponse.json({ ok: false, error: "We couldn't attach that gift card to the booking. Please try again." }, { status: 500 });
+    }
   }
 
   // Persist each purchased add-on against the vehicle line so the Team app
@@ -372,5 +416,6 @@ export async function POST(req: Request) {
     vehicles: lines.map((line) => ({ vehicle: line.vehicleLabel, service: line.serviceName, price: line.price })),
     start,
     confirmationEmailSent: emailResult.customerSent,
+    giftCardSelected: selectedGiftCard ? { codeLast4: selectedGiftCard.code.slice(-4), balanceCents: selectedGiftCard.balance_cents } : null,
   });
 }

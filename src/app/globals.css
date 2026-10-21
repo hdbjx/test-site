@@ -7085,3 +7085,122 @@ body:not(.halloween-site) [data-seasonal] {
     padding-top: 3rem;
   }
 }
+
+/* ===== BOOKING GIFT CARD v18.6 ===== */
+.booking-gift-card {
+  margin-top: .15rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--v18-rule);
+}
+.booking-gift-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.booking-gift-card-help {
+  margin-top: .3rem;
+  color: var(--color-muted);
+  font-size: .78rem;
+  line-height: 1.45;
+}
+.booking-gift-card-remove {
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  color: var(--color-red);
+  font: inherit;
+  font-size: .75rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: .2rem;
+  cursor: pointer;
+}
+.booking-gift-card-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .55rem;
+  margin-top: .8rem;
+}
+.booking-gift-card-entry input {
+  min-width: 0;
+  border: 1px solid rgb(17 17 17 / .18);
+  border-radius: .75rem;
+  background: #fff;
+  padding: .78rem .85rem;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: .86rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  outline: none;
+}
+.booking-gift-card-entry input:focus {
+  border-color: var(--color-red);
+  box-shadow: 0 0 0 3px rgb(185 32 44 / .08);
+}
+.booking-gift-card-entry button {
+  border: 1px solid var(--color-ink);
+  border-radius: .75rem;
+  background: var(--color-ink);
+  color: #fff;
+  padding: .75rem .9rem;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+.booking-gift-card-entry button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+.booking-gift-card-applied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: .8rem;
+  padding: .9rem 1rem;
+  border: 1px solid rgb(89 13 7 / .16);
+  border-radius: .85rem;
+  background: rgb(89 13 7 / .055);
+}
+.booking-gift-card-applied > div {
+  display: grid;
+  gap: .12rem;
+}
+.booking-gift-card-applied span {
+  color: var(--color-red);
+  font-size: .67rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+.booking-gift-card-applied strong {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+.booking-gift-card-applied small {
+  color: var(--color-muted);
+  font-size: .72rem;
+}
+.booking-gift-card-applied > b {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 999px;
+  background: var(--color-oxblood);
+  color: #fff;
+  font-size: .85rem;
+}
+.booking-gift-card-error {
+  margin-top: .55rem;
+  color: #9e1d24;
+  font-size: .76rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+@media (max-width: 420px) {
+  .booking-gift-card-entry { grid-template-columns: 1fr; }
+  .booking-gift-card-entry button { width: 100%; }
+}

@@ -94,6 +94,10 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const [error, setError] = useState<string | null>(null);
   const [badField, setBadField] = useState<string | null>(null);
   const [booked, setBooked] = useState<Booked | null>(null);
+  const [giftCardCode, setGiftCardCode] = useState("");
+  const [giftCardBusy, setGiftCardBusy] = useState(false);
+  const [giftCardError, setGiftCardError] = useState<string | null>(null);
+  const [giftCardPreview, setGiftCardPreview] = useState<{ code: string; codeLast4: string; balanceCents: number; recipientName: string | null } | null>(null);
   const [infoStep, setInfoStep] = useState<1 | 2 | 3>(1);
   const formRef = useRef<HTMLFormElement>(null);
   const quoteSessionRef = useRef<string | null>(null);
@@ -287,6 +291,44 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     setInfoStep(3);
   }
 
+  async function validateGiftCard() {
+    const code = giftCardCode.trim();
+    if (!code) {
+      setGiftCardPreview(null);
+      setGiftCardError("Enter a gift card code.");
+      return;
+    }
+    setGiftCardBusy(true);
+    setGiftCardError(null);
+    try {
+      const response = await fetch("/api/gift-cards/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const json = await response.json().catch(() => ({}));
+      if (!response.ok || !json.ok) throw new Error(json.error || "We couldn't check that gift card.");
+      setGiftCardPreview({
+        code: String(json.code),
+        codeLast4: String(json.codeLast4),
+        balanceCents: Number(json.balanceCents),
+        recipientName: json.recipientName ? String(json.recipientName) : null,
+      });
+      setGiftCardCode(String(json.code));
+    } catch (giftError) {
+      setGiftCardPreview(null);
+      setGiftCardError(giftError instanceof Error ? giftError.message : "We couldn't check that gift card.");
+    } finally {
+      setGiftCardBusy(false);
+    }
+  }
+
+  function clearGiftCard() {
+    setGiftCardCode("");
+    setGiftCardPreview(null);
+    setGiftCardError(null);
+  }
+
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!allVehiclesReady || !start) {
@@ -328,6 +370,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         notes: get("service_notes"),
         leadSource,
         leadSourceDetail: get("leadSourceDetail"),
+        giftCardCode: giftCardPreview?.code ?? null,
       }),
     }).catch(() => null);
     const json = res ? await res.json().catch(() => ({})) : {};
@@ -809,6 +852,45 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                 <span className="leader" aria-hidden="true" />
                 <span className="t-numeral text-4xl">{usd(displayTotal)}{hasVariableAddons ? "+" : ""}</span>
               </p>
+
+              <div className="booking-gift-card">
+                <div className="booking-gift-card-head">
+                  <div>
+                    <p className="field-label">Have a gift card?</p>
+                    <p className="booking-gift-card-help">Add it now and we’ll have it ready at checkout. Nothing is redeemed when you book.</p>
+                  </div>
+                  {giftCardPreview && <button type="button" className="booking-gift-card-remove" onClick={clearGiftCard}>Remove</button>}
+                </div>
+
+                {giftCardPreview ? (
+                  <div className="booking-gift-card-applied">
+                    <div>
+                      <span>GIFT CARD •••• {giftCardPreview.codeLast4}</span>
+                      <strong>{usd(giftCardPreview.balanceCents / 100)} available</strong>
+                      {giftCardPreview.recipientName && <small>{giftCardPreview.recipientName}</small>}
+                    </div>
+                    <b>✓</b>
+                  </div>
+                ) : (
+                  <div className="booking-gift-card-entry">
+                    <input
+                      type="text"
+                      value={giftCardCode}
+                      onChange={(event) => { setGiftCardCode(event.target.value.toUpperCase()); setGiftCardError(null); }}
+                      onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void validateGiftCard(); } }}
+                      placeholder="ED-XXXX-XXXX-XXXX"
+                      autoCapitalize="characters"
+                      autoCorrect="off"
+                      aria-label="Gift card code"
+                    />
+                    <button type="button" onClick={() => void validateGiftCard()} disabled={giftCardBusy || !giftCardCode.trim()}>
+                      {giftCardBusy ? "Checking…" : "Apply"}
+                    </button>
+                  </div>
+                )}
+                {giftCardError && <p className="booking-gift-card-error" role="alert">{giftCardError}</p>}
+              </div>
+
               {appointmentMinutes && <p className="text-sm text-muted">About {duration(appointmentMinutes)} on site. Multi-vehicle appointments are staffed to work on the vehicles together.</p>}
             </div>
           ) : (
