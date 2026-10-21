@@ -7216,3 +7216,118 @@ body:not(.halloween-site) [data-seasonal] {
   .booking-gift-card-entry { grid-template-columns: 1fr; }
   .booking-gift-card-entry button { width: 100%; }
 }
+
+/* ===== BOOKING SUMMARY VIEWPORT FIT v18.9 ===== */
+@media (min-width:1024px) {
+  .booking-summary-card {
+    /* The summary remains sticky, but becomes its own scroll surface only when
+       the available viewport is shorter than the card's content. */
+    max-height: calc(100dvh - 9.6rem) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: auto;
+    scrollbar-color: rgb(17 17 17 / .32) transparent;
+  }
+
+  .booking-summary-card::-webkit-scrollbar {
+    width: 9px;
+  }
+  .booking-summary-card::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .booking-summary-card::-webkit-scrollbar-thumb {
+    background: rgb(17 17 17 / .26);
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+  }
+  .booking-summary-card:hover::-webkit-scrollbar-thumb {
+    background: rgb(17 17 17 / .42);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+}
+
+/* Short laptop windows need a denser summary, not a non-sticky summary. */
+@media (min-width:1024px) and (max-height:900px) {
+  .booking-summary-card {
+    top: 8.45rem !important;
+    max-height: calc(100dvh - 9.15rem) !important;
+    padding: 1.15rem 1.3rem !important;
+  }
+
+  .booking-summary-card > h2 {
+    font-size: 1rem;
+  }
+
+  .booking-summary-card > .mt-4.space-y-4 {
+    margin-top: .8rem !important;
+    row-gap: .8rem !important;
+  }
+
+  .booking-summary-card .t-numeral.text-3xl {
+    font-size: 1.85rem !important;
+  }
+
+  .booking-summary-card .t-numeral.text-4xl {
+    font-size: 2.35rem !important;
+  }
+
+  .booking-summary-card .border-t.pt-4,
+  .booking-summary-card .border-t-2.pt-4 {
+    padding-top: .75rem !important;
+  }
+
+  .booking-gift-card {
+    padding-top: .75rem;
+  }
+
+  .booking-gift-card-help {
+    margin-top: .2rem;
+    font-size: .73rem;
+    line-height: 1.35;
+  }
+
+  .booking-gift-card-entry {
+    margin-top: .6rem;
+  }
+
+  .booking-gift-card-entry input,
+  .booking-gift-card-entry button {
+    min-height: 2.85rem;
+    padding-top: .62rem;
+    padding-bottom: .62rem;
+  }
+
+  .booking-summary-card > p.mt-4 {
+    margin-top: .8rem !important;
+    padding-top: .8rem !important;
+  }
+
+  .booking-summary-card > ul.mt-4 {
+    margin-top: .75rem !important;
+  }
+
+  .booking-summary-card > .mt-5 {
+    margin-top: .8rem !important;
+  }
+
+  .booking-summary-card > .btn-primary.mt-4 {
+    margin-top: .75rem !important;
+  }
+}
+
+@media (min-width:1024px) and (max-height:760px) {
+  .booking-summary-card {
+    top: 7.9rem !important;
+    max-height: calc(100dvh - 8.55rem) !important;
+    padding: .95rem 1.15rem !important;
+  }
+
+  .booking-summary-card > ul.mt-4 {
+    font-size: .76rem !important;
+    line-height: 1.3;
+  }
+}
