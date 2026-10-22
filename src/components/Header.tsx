@@ -12,6 +12,7 @@ import { supabaseConfigured } from "@/lib/supabase/config";
 export function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [homeMenuPreview, setHomeMenuPreview] = useState("/images/hero.jpg");
   const [moreOpen, setMoreOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [availabilityOpen, setAvailabilityOpen] = useState(false);
@@ -263,7 +264,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile panel */}
+      {/* Menu panel */}
       {menuOpen && (
         <div
           id="mobile-menu"
@@ -271,36 +272,96 @@ export function Header() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu"
-          className={`mobile-menu-panel fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-paper text-ink ${onHome ? "mobile-menu-home v29-home-menu" : "mobile-menu-inner lg:hidden"}`}
+          className={`mobile-menu-panel fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-paper text-ink ${onHome ? "mobile-menu-home v31-home-menu" : "mobile-menu-inner lg:hidden"}`}
         >
-          <nav aria-label="Mobile" className="mobile-menu-nav">
-            <p className="mobile-menu-label">Services</p>
-            <div className="mobile-menu-primary">
-              {serviceNav.map((item, index) => (
-                <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined} className="mobile-menu-service">
-                  <span>0{index + 1}</span>{item.label}
-                </Link>
-              ))}
-            </div>
+          {onHome ? (
+            <nav aria-label="Main menu" className="v31-menu-shell">
+              <div className="v31-menu-topline" aria-hidden="true">
+                <span>EVERY DETAIL / DECATUR + ATLANTA</span>
+                <span>FULLY MOBILE / POWER + WATER INCLUDED</span>
+              </div>
 
-            <p className="mobile-menu-label mobile-menu-label-more">Explore</p>
-            <div className="mobile-menu-secondary">
-              {primaryNav.filter((item) => item.label !== "Services" && item.label !== "Our Work").map((item) => (
-                <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>{item.label}</Link>
-              ))}
-              {supabaseConfigured && <a href="/account" data-no-transition="true" aria-current={isActive("/account") ? "page" : undefined}>Account</a>}
-              {moreNav.map((item) => item.external ? (
-                <a key={item.href} href={item.href} target="_blank" rel="noopener">{item.label}</a>
-              ) : (
-                <Link key={item.href} href={item.href}>{item.label}</Link>
-              ))}
-            </div>
+              <div className="v31-menu-grid">
+                <div className="v31-menu-links">
+                  {[
+                    { n: "01", label: "Services", href: "/our-services", image: "/images/exterior-hand-wash.jpg", note: "Choose your level of clean" },
+                    { n: "02", label: "Our Work", href: "/our-work", image: "/images/hq-black-suv-finished.jpg", note: "Real cars. Real driveways." },
+                    { n: "03", label: "Detail+", href: "/detailplus", image: "/images/branded-rig-driveway.jpg", note: "Recurring care without the reset" },
+                    { n: "04", label: "About", href: "/about-us", image: "/images/team-rig-setup.jpg", note: "Built by students. Run like a company." },
+                    { n: "05", label: "Gift Cards", href: "/gift-cards", image: "/images/every-detail-flag.jpg", note: "Give somebody their car back" },
+                  ].map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="v31-menu-link"
+                      aria-current={isActive(item.href) ? "page" : undefined}
+                      onMouseEnter={() => setHomeMenuPreview(item.image)}
+                      onFocus={() => setHomeMenuPreview(item.image)}
+                    >
+                      <span className="v31-menu-number">{item.n}</span>
+                      <span className="v31-menu-name">{item.label}</span>
+                      <span className="v31-menu-note">{item.note}</span>
+                      <span className="v31-menu-arrow" aria-hidden="true">↗</span>
+                    </Link>
+                  ))}
+                </div>
 
-            <div className="mobile-menu-actions">
-              <Link href="/book" className="btn btn-primary" onClick={() => track("book_click", { location: "mobile_menu" })}>Book your detail</Link>
-              <a href={site.phone.sms} className="mobile-menu-phone" onClick={() => track("text_click", { location: "mobile_menu" })}>Text {site.phone.display}</a>
-            </div>
-          </nav>
+                <div className="v31-menu-visual" aria-hidden="true">
+                  <div className="v31-menu-image-frame">
+                    <Image key={homeMenuPreview} src={homeMenuPreview} alt="" fill sizes="(max-width: 900px) 1px, 38vw" className="v31-menu-image" />
+                    <span className="v31-menu-scan" />
+                  </div>
+                  <div className="v31-menu-orbit">
+                    <span>EVERY DETAIL • MOBILE CAR CARE • DECATUR • ATLANTA • </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="v31-menu-footer">
+                <div className="v31-menu-secondary">
+                  <Link href="/get-a-quote">Find My Detail</Link>
+                  <Link href="/paint-correction">Paint Correction</Link>
+                  <Link href="/ceramic">Ceramic</Link>
+                  <Link href="/service-areas">Service Areas</Link>
+                  <Link href="/blog">Shine On Blog</Link>
+                  {supabaseConfigured && <a href="/account" data-no-transition="true">Account</a>}
+                </div>
+                <div className="v31-menu-actions">
+                  <a href={site.phone.sms} onClick={() => track("text_click", { location: "home_menu" })}>TEXT {site.phone.display}</a>
+                  <Link href="/book" onClick={() => track("book_click", { location: "home_menu" })}>BOOK A DETAIL <span aria-hidden="true">↗</span></Link>
+                </div>
+              </div>
+            </nav>
+          ) : (
+            <nav aria-label="Mobile" className="mobile-menu-nav">
+              <p className="mobile-menu-label">Services</p>
+              <div className="mobile-menu-primary">
+                {serviceNav.map((item, index) => (
+                  <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined} className="mobile-menu-service">
+                    <span>0{index + 1}</span>{item.label}
+                  </Link>
+                ))}
+              </div>
+
+              <p className="mobile-menu-label mobile-menu-label-more">Explore</p>
+              <div className="mobile-menu-secondary">
+                {primaryNav.filter((item) => item.label !== "Services" && item.label !== "Our Work").map((item) => (
+                  <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>{item.label}</Link>
+                ))}
+                {supabaseConfigured && <a href="/account" data-no-transition="true" aria-current={isActive("/account") ? "page" : undefined}>Account</a>}
+                {moreNav.map((item) => item.external ? (
+                  <a key={item.href} href={item.href} target="_blank" rel="noopener">{item.label}</a>
+                ) : (
+                  <Link key={item.href} href={item.href}>{item.label}</Link>
+                ))}
+              </div>
+
+              <div className="mobile-menu-actions">
+                <Link href="/book" className="btn btn-primary" onClick={() => track("book_click", { location: "mobile_menu" })}>Book your detail</Link>
+                <a href={site.phone.sms} className="mobile-menu-phone" onClick={() => track("text_click", { location: "mobile_menu" })}>Text {site.phone.display}</a>
+              </div>
+            </nav>
+          )}
         </div>
       )}
 

@@ -7,6 +7,7 @@ const clamp = (n: number, a = 0, b = 1) => Math.min(b, Math.max(a, n));
 export function HomeArtMotion() {
   const raf = useRef<number | null>(null);
   const pointerRaf = useRef<number | null>(null);
+  const ribbonRaf = useRef<number | null>(null);
   const pointer = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
 
   useEffect(() => {
@@ -47,6 +48,12 @@ export function HomeArtMotion() {
         const span = Math.max(1, r.height - vh);
         const p = clamp(-r.top / span);
         work.style.setProperty("--work", String(p));
+        const headFade = clamp((0.68 - p) / 0.14);
+        const endIn = clamp((p - 0.72) / 0.16);
+        work.style.setProperty("--work-head-opacity", String(headFade));
+        work.style.setProperty("--work-head-y", `${(1 - headFade) * -34}px`);
+        work.style.setProperty("--work-end-opacity", String(endIn));
+        work.style.setProperty("--work-end-y", `${(1 - endIn) * 42}px`);
 
         const track = work.querySelector<HTMLElement>("[data-v29-work-track]");
         if (track) {
@@ -71,10 +78,12 @@ export function HomeArtMotion() {
         story.style.setProperty("--story-a-rot", `${-11 + p * 7}deg`);
         story.style.setProperty("--story-b-rot", `${12 - p * 8}deg`);
         story.style.setProperty("--story-c-rot", `${-8 + p * 5}deg`);
-        story.style.setProperty("--word-a-x", `${inv * -vw * .11}px`);
-        story.style.setProperty("--word-b-x", `${inv * vw * .12}px`);
-        story.style.setProperty("--word-c-x", `${inv * -vw * .08}px`);
-        story.style.setProperty("--word-d-x", `${inv * vw * .10}px`);
+        story.style.setProperty("--story-slot-a-x", `${inv * -vw * .38}px`);
+        story.style.setProperty("--story-slot-a-y", `${inv * vh * .18}px`);
+        story.style.setProperty("--story-slot-b-x", `${inv * vw * .38}px`);
+        story.style.setProperty("--story-slot-b-y", `${inv * -vh * .14}px`);
+        story.style.setProperty("--story-float-x", `${inv * vw * .26}px`);
+        story.style.setProperty("--story-float-y", `${inv * vh * .16}px`);
       }
 
       const proof = document.querySelector<HTMLElement>("[data-v29-scene='proof']");
@@ -84,8 +93,10 @@ export function HomeArtMotion() {
         proof.style.setProperty("--proof", String(pp));
         proof.style.setProperty("--proof-ring-rot", `${pp * 50}deg`);
         proof.style.setProperty("--proof-ring-scale", String(.78 + pp * .22));
-        proof.style.setProperty("--proof-quote-x", `${(1 - pp) * vw * .06}px`);
-        proof.style.setProperty("--proof-opacity", String(.2 + pp * .8));
+        proof.style.setProperty("--proof-quote-x", `${(1 - pp) * vw * .035}px`);
+        proof.style.setProperty("--proof-quote-y", `${(1 - pp) * 34}px`);
+        proof.style.setProperty("--proof-count-scale", String(.9 + pp * .1));
+        proof.style.setProperty("--proof-opacity", String(.32 + pp * .68));
       }
 
       const beyond = document.querySelector<HTMLElement>("[data-v29-scene='beyond']");
@@ -122,6 +133,11 @@ export function HomeArtMotion() {
       document.documentElement.style.setProperty("--v29-y10", `${pointer.current.y * 10}px`);
       document.documentElement.style.setProperty("--v29-cx", `${50 + pointer.current.x * 28}%`);
       document.documentElement.style.setProperty("--v29-cy", `${50 + pointer.current.y * 24}%`);
+      document.documentElement.style.setProperty("--hero-r1", `${pointer.current.x * -0.8}deg`);
+      document.documentElement.style.setProperty("--hero-r2", `${pointer.current.x * 0.65}deg`);
+      document.documentElement.style.setProperty("--hero-r3", `${pointer.current.x * -0.5}deg`);
+      document.documentElement.style.setProperty("--hero-focus-x", `${pointer.current.x * 16}px`);
+      document.documentElement.style.setProperty("--hero-focus-y", `${pointer.current.y * 10}px`);
       if (Math.abs(pointer.current.tx - pointer.current.x) > .001 || Math.abs(pointer.current.ty - pointer.current.y) > .001) {
         pointerRaf.current = requestAnimationFrame(animatePointer);
       }
@@ -176,6 +192,18 @@ export function HomeArtMotion() {
     };
 
     updateScroll();
+    const animateRibbon = (time: number) => {
+      const track = document.querySelector<HTMLElement>("[data-v30-ribbon-track]");
+      if (track && !reduced.matches) {
+        const half = Math.max(track.scrollWidth / 2, 1);
+        const travel = time * 0.055 + window.scrollY * 0.46;
+        const x = -(travel % half);
+        track.style.setProperty("--ribbon-x", `${x}px`);
+      }
+      ribbonRaf.current = requestAnimationFrame(animateRibbon);
+    };
+
+    ribbonRaf.current = requestAnimationFrame(animateRibbon);
     window.addEventListener("scroll", requestScroll, { passive: true });
     window.addEventListener("resize", requestScroll);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -188,6 +216,7 @@ export function HomeArtMotion() {
       document.removeEventListener("pointerleave", onPointerLeave, true);
       if (raf.current != null) cancelAnimationFrame(raf.current);
       if (pointerRaf.current != null) cancelAnimationFrame(pointerRaf.current);
+      if (ribbonRaf.current != null) cancelAnimationFrame(ribbonRaf.current);
     };
   }, []);
 
