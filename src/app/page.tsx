@@ -112,8 +112,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v29-proof" data-v29-scene="proof" aria-labelledby="v29-proof-title">
+      <section className="v29-proof v32-proof" data-v29-scene="proof" aria-labelledby="v29-proof-title">
         <div className="v29-proof-ring" aria-hidden="true">FIVE STAR / FIVE STAR / FIVE STAR / FIVE STAR /</div>
+        <div className="v32-proof-fragments" aria-hidden="true">
+          <span>“Absolutely spotless.”</span>
+          <span>“On time. Professional.”</span>
+          <span>“Looks brand new.”</span>
+          <span>“Booking was effortless.”</span>
+        </div>
         <div className="v29-shell v29-proof-grid">
           <div className="v29-proof-count"><span><LiveReviewCount /></span><small>FIVE-STAR<br />REVIEWS</small></div>
           <blockquote id="v29-proof-title" data-v29-review>
@@ -123,26 +129,36 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v29-beyond" data-v29-scene="beyond" aria-labelledby="v29-beyond-title">
-        <div className="v29-beyond-marquee" aria-hidden="true"><span>BEYOND THE RESET / BEYOND THE RESET / BEYOND THE RESET /</span></div>
-        <div className="v29-shell">
-          <div className="v29-beyond-head"><p className="v29-kicker">Paint / protection / maintenance</p><h2 id="v29-beyond-title">KEEP GOING.</h2></div>
-          <div className="v29-beyond-stage">
-            <Link href="/ceramic" className="v29-feature v29-feature-paint" data-v29-tilt>
-              <div className="v29-feature-photo"><Photo id="hq-black-suv-finished" sizes="66vw" fill /></div>
-              <div className="v29-feature-shade" />
-              <span>Paint correction + ceramic</span>
-              <strong>BRING BACK GLOSS.<br />KEEP IT PROTECTED.</strong>
-              <b>Explore paint care ↗</b>
-            </Link>
-            <Link href="/detailplus" className="v29-feature v29-feature-plus" data-v29-tilt>
-              <span>Detail+</span>
-              <strong>STAY CLEAN.<br />AUTOMATICALLY.</strong>
-              <p>Choose how often we come back. Same driveway. Same standard.</p>
-              <b>Explore Detail+ ↗</b>
-            </Link>
-            <div className="v29-beyond-stamp" aria-hidden="true">PAINT<br/>CARE<br/>+</div>
+      <section className="v29-beyond v32-beyond" data-v29-scene="beyond" aria-labelledby="v29-beyond-title">
+        <div className="v29-beyond-marquee" aria-hidden="true"><span>RESTORE IT / PROTECT IT / KEEP IT CLEAN / RESTORE IT / PROTECT IT /</span></div>
+        <div className="v29-shell v32-beyond-shell">
+          <div className="v29-beyond-head v32-beyond-head">
+            <p className="v29-kicker">After the reset</p>
+            <h2 id="v29-beyond-title"><span>RESTORE.</span><span>THEN MAINTAIN.</span></h2>
           </div>
+
+          <Link href="/ceramic" className="v32-care-scene v32-care-restore" data-v29-tilt>
+            <div className="v32-care-photo"><Photo id="hq-black-suv-finished" sizes="100vw" fill /></div>
+            <div className="v32-care-shade" />
+            <div className="v32-care-copy">
+              <span>01 / PAINT CORRECTION + CERAMIC</span>
+              <strong>BRING BACK<br />THE GLOSS.</strong>
+              <p>Correct the finish. Lock in the result. Protect the work you just paid for.</p>
+              <b>Explore paint care ↗</b>
+            </div>
+            <div className="v32-care-orbit" aria-hidden="true">CORRECT • PROTECT • GLOSS • CORRECT • PROTECT •</div>
+          </Link>
+
+          <Link href="/detailplus" className="v32-care-scene v32-care-maintain" data-v29-tilt>
+            <div className="v32-maintain-word" aria-hidden="true">MAINTAIN</div>
+            <div className="v32-care-copy">
+              <span>02 / DETAIL+</span>
+              <strong>DON’T LET IT<br />GET BAD AGAIN.</strong>
+              <p>Choose how often we come back. Same driveway. Same standard. No reset required.</p>
+              <b>Explore Detail+ ↗</b>
+            </div>
+            <div className="v32-maintain-disc" aria-hidden="true">DETAIL+<br />ON REPEAT</div>
+          </Link>
         </div>
       </section>
 

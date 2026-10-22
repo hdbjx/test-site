@@ -19,6 +19,19 @@ export function HomeArtMotion() {
       const vh = Math.max(window.innerHeight, 1);
       const vw = Math.max(window.innerWidth, 1);
 
+      let activeScene = "hero";
+      let activeDistance = Number.POSITIVE_INFINITY;
+      document.querySelectorAll<HTMLElement>("[data-v29-scene]").forEach((scene) => {
+        const rect = scene.getBoundingClientRect();
+        const center = rect.top + rect.height * .5;
+        const distance = Math.abs(center - vh * .42);
+        if (distance < activeDistance) {
+          activeDistance = distance;
+          activeScene = scene.dataset.v29Scene || activeScene;
+        }
+      });
+      document.documentElement.dataset.homeScene = activeScene;
+
       document.querySelectorAll<HTMLElement>("[data-v29-scene]").forEach((scene) => {
         const r = scene.getBoundingClientRect();
         const p = clamp((vh - r.top) / Math.max(vh + r.height, 1));
@@ -48,12 +61,13 @@ export function HomeArtMotion() {
         const span = Math.max(1, r.height - vh);
         const p = clamp(-r.top / span);
         work.style.setProperty("--work", String(p));
-        const headFade = clamp((0.68 - p) / 0.14);
-        const endIn = clamp((p - 0.72) / 0.16);
+        const headFade = clamp((0.50 - p) / 0.12);
+        const endIn = clamp((p - 0.80) / 0.11);
         work.style.setProperty("--work-head-opacity", String(headFade));
-        work.style.setProperty("--work-head-y", `${(1 - headFade) * -34}px`);
+        work.style.setProperty("--work-head-y", `${(1 - headFade) * -70}px`);
+        work.style.setProperty("--work-head-scale", String(.94 + headFade * .06));
         work.style.setProperty("--work-end-opacity", String(endIn));
-        work.style.setProperty("--work-end-y", `${(1 - endIn) * 42}px`);
+        work.style.setProperty("--work-end-y", `${(1 - endIn) * 54}px`);
 
         const track = work.querySelector<HTMLElement>("[data-v29-work-track]");
         if (track) {
@@ -84,6 +98,9 @@ export function HomeArtMotion() {
         story.style.setProperty("--story-slot-b-y", `${inv * -vh * .14}px`);
         story.style.setProperty("--story-float-x", `${inv * vw * .26}px`);
         story.style.setProperty("--story-float-y", `${inv * vh * .16}px`);
+        story.style.setProperty("--story-photo-opacity", String(clamp((p - .12) / .35)));
+        story.style.setProperty("--story-photo-scale", String(.72 + clamp((p - .08) / .5) * .28));
+        story.style.setProperty("--story-gap", `${clamp((p - .05) / .65) * 1.0}em`);
       }
 
       const proof = document.querySelector<HTMLElement>("[data-v29-scene='proof']");
@@ -97,6 +114,7 @@ export function HomeArtMotion() {
         proof.style.setProperty("--proof-quote-y", `${(1 - pp) * 34}px`);
         proof.style.setProperty("--proof-count-scale", String(.9 + pp * .1));
         proof.style.setProperty("--proof-opacity", String(.32 + pp * .68));
+        proof.style.setProperty("--proof-fragment", String(pp));
       }
 
       const beyond = document.querySelector<HTMLElement>("[data-v29-scene='beyond']");
@@ -105,6 +123,8 @@ export function HomeArtMotion() {
         const p = clamp((vh - r.top) / Math.max(vh + r.height, 1));
         beyond.style.setProperty("--beyond-x", `${-5 - p * 9}%`);
         beyond.style.setProperty("--stamp-rot", `${-12 + p * 24}deg`);
+        beyond.style.setProperty("--beyond-progress", String(p));
+        beyond.style.setProperty("--beyond-lift", `${(1 - p) * 48}px`);
       }
       const close = document.querySelector<HTMLElement>("[data-v29-scene='close']");
       if (close) {
@@ -217,6 +237,7 @@ export function HomeArtMotion() {
       if (raf.current != null) cancelAnimationFrame(raf.current);
       if (pointerRaf.current != null) cancelAnimationFrame(pointerRaf.current);
       if (ribbonRaf.current != null) cancelAnimationFrame(ribbonRaf.current);
+      delete document.documentElement.dataset.homeScene;
     };
   }, []);
 
