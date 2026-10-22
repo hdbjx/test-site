@@ -1,10 +1,13 @@
 /**
  * Paint correction + ceramic coating. Prices from the current Every Detail
- * ceramic page (Sept 2026). All are "starting at" — final price after inspection.
+ * Wix Bookings catalog (Oct 22, 2026). Starting prices remain useful in summaries;
+ * PAINT_PRICING below contains the exact listed vehicle-size prices.
  */
 
+export type PaintServiceId = "enhancement" | "correction" | "ceramic2yr";
+
 export type PaintService = {
-  id: "enhancement" | "correction" | "ceramic2yr";
+  id: PaintServiceId;
   name: string;
   startingAt: number;
   summary: string;
@@ -48,6 +51,22 @@ export const paintServices: PaintService[] = [
     ],
   },
 ];
+
+
+/**
+ * Vehicle-specific Paint Care pricing copied from the live Wix Bookings catalog
+ * on Oct 22, 2026. Wix groups Small SUV + Small Truck and Large SUV + Large
+ * Truck for these services, so those site vehicle classes intentionally share
+ * the same price here.
+ */
+export const PAINT_PRICING = {
+  sedan: { enhancement: 395, correction: 695, ceramic2yr: 895 },
+  smallSUV: { enhancement: 445, correction: 795, ceramic2yr: 995 },
+  smallTruck: { enhancement: 445, correction: 795, ceramic2yr: 995 },
+  minivan: { enhancement: 495, correction: 895, ceramic2yr: 1020 },
+  largeSUV: { enhancement: 525, correction: 945, ceramic2yr: 1095 },
+  largeTruck: { enhancement: 525, correction: 945, ceramic2yr: 1095 },
+} as const;
 
 export const paintDefects = [
   { name: "Swirl marks", detail: "The spider-web pattern you see around a light source, usually from washing and drying." },

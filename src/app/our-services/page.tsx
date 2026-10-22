@@ -1,81 +1,203 @@
-import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
-import { ServicesDecisionTool } from "@/components/ServicesDecisionTool";
-import { ServiceDepthScroll } from "@/components/ServiceDepthScroll";
+import { LiveReviewCount } from "@/components/GoogleReviewStats";
+import { Photo } from "@/components/Photo";
+import { ServicesCatalogCompare } from "@/components/ServicesCatalogCompare";
+import { TrackedLink } from "@/components/TrackedLink";
 import { homeFaqs } from "@/data/faqs";
-import { paintServices } from "@/data/paint";
-import { PRICING, serviceList, vehicles } from "@/data/services";
+import { PRICING, serviceList, startingPrice, vehicles } from "@/data/services";
+import { PAINT_PRICING, paintServices } from "@/data/paint";
 import { usd } from "@/lib/format";
 import { pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Car Detailing Services & Prices in Decatur, GA | Every Detail",
-  description: "Learn what professional mobile detailing includes, why different vehicles need different levels of cleaning, and compare Every Detail services and pricing.",
+  description:
+    "Compare Every Detail mobile detailing services, see exact pricing for your vehicle, and choose between Maintenance, Premium, Factory Reset, Paint Care, and Detail+.",
   path: "/our-services",
 });
 
+const core = [
+  {
+    id: "maintenance",
+    number: "01",
+    condition: "ALREADY PRETTY CLEAN",
+    name: "Maintenance Detail",
+    statement: "Keep the baseline.",
+    body: "Routine inside-and-out care for a car that is already in good shape and does not need restoration-level labor.",
+    fit: "Best for regularly detailed vehicles and returning clients.",
+    href: "/book?service=maintenance",
+    image: "tesla-foam-wash",
+  },
+  {
+    id: "premium",
+    number: "02",
+    condition: "NEEDS A REAL DETAIL",
+    name: "Premium Detail",
+    statement: "Bring the whole car back.",
+    body: "Our most booked service. A thorough inside-and-out detail for normal daily wear, buildup, and first-time clients.",
+    fit: "Best for most daily drivers that have fallen behind.",
+    href: "/book?service=premium",
+    image: "two-tech-interior-detail",
+    featured: true,
+  },
+  {
+    id: "factoryReset",
+    number: "03",
+    condition: "HEAVY BUILDUP OR NEGLECT",
+    name: "Factory Reset",
+    statement: "Start over.",
+    body: "Our deepest clean, with extraction, decontamination, pet-hair work, and the time needed for heavily used vehicles.",
+    fit: "Best for stains, pets, spills, odor concerns, or years of buildup.",
+    href: "/book?service=factoryReset",
+    image: "interior-detail-team",
+  },
+] as const;
+
 export default function ServicesPage() {
-  const schemas = serviceList.map((s) => {
-    const prices = vehicles.map((v) => PRICING[v.id][s.id].price);
-    return serviceSchema({ name: s.name, description: s.summary, path: `/our-services#${s.slug}`, lowPrice: Math.min(...prices), highPrice: Math.max(...prices) });
-  });
+  const schemas = [
+    ...serviceList.map((service) => {
+      const prices = vehicles.map((vehicle) => PRICING[vehicle.id][service.id].price);
+      return serviceSchema({
+        name: service.name,
+        description: service.summary,
+        path: `/our-services#${service.slug}`,
+        lowPrice: Math.min(...prices),
+        highPrice: Math.max(...prices),
+      });
+    }),
+    ...paintServices.map((service) => {
+      const prices = vehicles.map((vehicle) => PAINT_PRICING[vehicle.id][service.id]);
+      return serviceSchema({
+        name: service.name,
+        description: service.summary,
+        path: "/ceramic#packages",
+        lowPrice: Math.min(...prices),
+        highPrice: Math.max(...prices),
+      });
+    }),
+  ];
 
   return (
     <>
-      <div className="services-v161">
-        <section className="edu-hero">
-          <div className="svc-shell">
-            <div className="mb-6"><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
-            <p className="svc-eyebrow">MOBILE DETAILING / DECATUR, GA</p>
-            <div className="edu-hero-grid">
-              <h1>A detail is more than<br/><span>a car wash.</span></h1>
-              <div className="edu-hero-copy">
-                <p className="edu-lede">A wash cleans the obvious surfaces. Professional detailing is a methodical cleaning of the vehicle as a whole.</p>
-                <p>We work through the interior and exterior area by area, including the places quick washes and basic interior cleanings tend to skip. The goal is not just to make the car look cleaner for the afternoon. It is to properly clean it, protect it where the service calls for it, and establish a condition that can actually be maintained.</p>
+      <main className="services-v61">
+        <section className="svc61-hero">
+          <div className="svc61-shell">
+            <div className="svc61-crumbs"><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
+            <div className="svc61-hero-grid">
+              <div className="svc61-hero-copy">
+                <p className="svc61-kicker">MOBILE DETAILING / DECATUR, GA</p>
+                <h1>THE RIGHT DETAIL.<br /><span>WITHOUT THE GUESSWORK.</span></h1>
+                <p className="svc61-lede">Three core details cover almost every car we see. Start with the condition of yours, then see the exact price for your vehicle.</p>
+                <div className="svc61-hero-actions">
+                  <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_hero" }} className="svc61-btn svc61-btn-primary">Find my detail <span>↗</span></TrackedLink>
+                  <TrackedLink href="/book" event="book_click" params={{ location: "services_hero" }} className="svc61-btn svc61-btn-secondary">Book now <span>↗</span></TrackedLink>
+                </div>
+                <div className="svc61-proof" aria-label="Every Detail service facts">
+                  <span><strong><LiveReviewCount /></strong> five-star reviews</span>
+                  <span><strong>POWER + WATER</strong> included</span>
+                  <span><strong>MOBILE</strong> at your driveway</span>
+                </div>
+              </div>
+
+              <div className="svc61-hero-media" aria-label="Every Detail technicians at work">
+                <div className="svc61-photo-main"><Photo id="two-tech-interior-detail" sizes="(max-width: 900px) 100vw, 45vw" fill priority /></div>
+                <div className="svc61-photo-small"><Photo id="hq-branded-van-side" sizes="(max-width: 900px) 44vw, 18vw" fill /></div>
+                <div className="svc61-photo-label"><span>REAL CREW</span><b>REAL CARS.</b></div>
               </div>
             </div>
           </div>
         </section>
 
+        <section className="svc61-core" aria-labelledby="svc61-core-title">
+          <div className="svc61-shell">
+            <div className="svc61-section-head">
+              <div>
+                <p className="svc61-kicker">START WITH THE CONDITION</p>
+                <h2 id="svc61-core-title">HOW FAR BEHIND<br /><span>IS THE CAR?</span></h2>
+              </div>
+              <p>You do not need to understand detailing terminology. Pick the description that sounds closest. If you are between two, the quote tool will narrow it down.</p>
+            </div>
 
-        <section className="svc-quick-pick" aria-labelledby="svc-quick-title">
-          <div className="svc-shell">
-            <div className="svc-quick-head">
-              <p className="svc-eyebrow">THE FAST VERSION</p>
-              <h2 id="svc-quick-title">How dirty is the car <span>right now?</span></h2>
+            <div className="svc61-core-grid">
+              {core.map((service) => (
+                <article key={service.id} id={service.id === "factoryReset" ? "factory-reset" : `${service.id}-detail`} className={`svc61-core-card ${service.featured ? "is-featured" : ""}`}>
+                  <div className="svc61-core-image"><Photo id={service.image} sizes="(max-width: 760px) 100vw, 33vw" fill /></div>
+                  <div className="svc61-core-body">
+                    <div className="svc61-card-top"><span>{service.number}</span>{service.featured ? <b>MOST BOOKED</b> : null}</div>
+                    <p className="svc61-condition">{service.condition}</p>
+                    <h3>{service.name}</h3>
+                    <strong>{service.statement}</strong>
+                    <p>{service.body}</p>
+                    <p className="svc61-fit">{service.fit}</p>
+                    <div className="svc61-card-bottom">
+                      <span>from <b>{usd(startingPrice(service.id))}</b></span>
+                      <TrackedLink href={service.href} event="book_click" params={{ location: "services_core", service: service.id }} className="svc61-card-link">Book <span>↗</span></TrackedLink>
+                    </div>
+                  </div>
+                </article>
+              ))}
             </div>
-            <div className="svc-quick-grid">
-              <a href="#pricing"><b>01</b><span>Already pretty clean</span><strong>Maintenance Detail</strong><p>Routine upkeep for a car that is already in good shape.</p></a>
-              <a href="#pricing" className="is-featured"><b>02</b><span>Needs a real detail</span><strong>Premium Detail</strong><p>The best fit for most daily drivers that have fallen behind.</p></a>
-              <a href="#pricing"><b>03</b><span>Heavy buildup or neglect</span><strong>Factory Reset</strong><p>Our deepest clean for vehicles that need to start over.</p></a>
+
+            <div className="svc61-unsure">
+              <div><span>NOT SURE?</span><strong>Tell us what the car is like. We will pick the level.</strong></div>
+              <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_core_unsure" }} className="svc61-inline-link">Find my detail <span>↗</span></TrackedLink>
             </div>
-            <div className="svc-quick-actions"><Link href="/get-a-quote" className="btn btn-primary">Find my detail ↗</Link><a href="#pricing" className="btn btn-secondary">See exact pricing</a></div>
           </div>
         </section>
 
-        <ServiceDepthScroll />
-
-        <section className="edu-booking" id="pricing">
-          <div className="svc-shell">
-            <div className="edu-booking-head"><div><p className="svc-eyebrow">NOW THAT YOU KNOW THE DIFFERENCE</p><h2>Find the right price<br/><span>for your car.</span></h2></div><p>Choose your vehicle once to compare all three services. This is where the page shifts from learning to choosing.</p></div>
-            <ServicesDecisionTool />
+        <section className="svc62-catalog" id="all-services" aria-labelledby="svc62-catalog-title">
+          <div className="svc61-shell">
+            <div className="svc61-section-head svc62-section-head">
+              <div>
+                <p className="svc61-kicker">THE FULL LINEUP</p>
+                <h2 id="svc62-catalog-title">EVERY SERVICE.
+                  <br /><span>ONE PLACE.</span>
+                </h2>
+              </div>
+              <p>Choose your vehicle once, see the listed price across the lineup, then compare any two services below. Detail+ uses a plan-based rate because cadence and coverage are built around the car.</p>
+            </div>
+            <ServicesCatalogCompare />
           </div>
         </section>
 
-        <section className="svc-single"><div className="svc-shell svc-single-inner"><div><p className="svc-eyebrow">ONLY NEED ONE SIDE?</p><h2>Interior-only or exterior-only.</h2></div><p>Our core details cover the whole vehicle. Detail+ members can choose interior-only or exterior-only plans. For a one-time standalone job, send us what you need and we will quote it.</p><Link href="/get-a-quote" className="svc-outline-btn">Find my detail <span>↗</span></Link></div></section>
+        <section className="svc61-day" aria-labelledby="svc61-day-title">
+          <div className="svc61-shell">
+            <div className="svc61-day-grid">
+              <div className="svc61-day-intro">
+                <p className="svc61-kicker">DETAIL DAY</p>
+                <h2 id="svc61-day-title">YOUR DRIVEWAY.<br /><span>OUR SETUP.</span></h2>
+                <p>Once you choose the service, the rest is simple. We arrive with the equipment, power, and water needed to do the work where the vehicle is parked.</p>
+              </div>
+              <ol className="svc61-day-steps">
+                <li><b>01</b><div><strong>Choose the service and time.</strong><p>Book directly, or use Find My Detail if the condition is not obvious.</p></div></li>
+                <li><b>02</b><div><strong>We bring the setup.</strong><p>Power, water, products, tools, and the crew required for the selected service.</p></div></li>
+                <li><b>03</b><div><strong>We work the process.</strong><p>The job follows the service level you chose, then the vehicle is checked before we pack up.</p></div></li>
+              </ol>
+            </div>
+          </div>
+        </section>
 
-        <section className="svc-paint" id="paint"><div className="svc-shell"><div className="svc-paint-grid"><div><p className="svc-eyebrow">BEYOND DETAILING</p><h2>Cleaning and paint correction are <span>different jobs.</span></h2><p>Detailing removes dirt and contamination from the vehicle. Paint correction goes a step further by machine-polishing the clear coat to reduce visible swirls, haze and defects. Ceramic coating is protection applied after the paint is properly prepared.</p><Link href="/ceramic" className="svc-light-btn">Explore paint care <span>↗</span></Link></div><div className="svc-paint-list">{paintServices.map((p,i)=><div key={p.id}><b>0{i+1}</b><div><h3>{p.name}</h3><p>{p.bestFor}</p></div><strong>from {usd(p.startingAt)}</strong></div>)}</div></div></div></section>
+        <section className="svc61-faq">
+          <div className="svc61-shell svc61-faq-grid">
+            <div>
+              <p className="svc61-kicker">QUICK ANSWERS</p>
+              <h2>SERVICE<br />QUESTIONS.</h2>
+              <p>The things people usually need to know before choosing a detail.</p>
+            </div>
+            <FaqList faqs={homeFaqs.slice(0, 6)} />
+          </div>
+        </section>
+      </main>
 
-        <section className="svc-plus" id="detail-plus"><div className="svc-shell"><div className="svc-plus-grid"><div><p className="svc-eyebrow">AFTER THE FIRST DETAIL</p><h2>Getting clean is one job.<br/><span>Staying clean is another.</span></h2><p>Detail+ is recurring care for vehicles that already have a clean baseline. Instead of waiting for the car to build up again, we return on a schedule and maintain it.</p><Link href="/detailplus" className="svc-light-btn">Learn how Detail+ works <span>↗</span></Link></div><div className="svc-plus-steps"><div><b>01</b><h3>Establish the baseline</h3><p>Start with the vehicle at the right level of clean.</p></div><div><b>02</b><h3>Choose a schedule</h3><p>Pick a frequency that fits how the vehicle is used.</p></div><div><b>03</b><h3>Maintain it</h3><p>We return before the car needs another major reset.</p></div></div></div></div></section>
-
-        <section className="svc-process"><div className="svc-shell"><div className="svc-section-head compact"><p className="svc-eyebrow">WHAT HAPPENS ON DETAIL DAY</p><h2>Your driveway.<br/><span>Our setup.</span></h2><p>You do not need to drive to a shop or provide a hose and outlet. We arrive prepared to do the job where the car is parked.</p></div><ol><li><b>01</b><h3>We arrive prepared.</h3><p>Our team brings the power, water, products and equipment needed for the service.</p></li><li><b>02</b><h3>We work through the car.</h3><p>The technicians follow the process for the service level you selected rather than rushing the most visible areas.</p></li><li><b>03</b><h3>We finish and check it.</h3><p>The vehicle is inspected, packed up and returned ready to drive.</p></li></ol></div></section>
-
-        <section className="svc-faq"><div className="svc-shell svc-faq-grid"><div><p className="svc-eyebrow">STILL LEARNING?</p><h2>Service questions.</h2><p>Common questions about what we do, what you need to provide and how the service works.</p></div><FaqList faqs={homeFaqs.slice(0,8)} /></div></section>
-      </div>
-      <CtaBand location="services_final" />
+      <CtaBand
+        location="services_final"
+        title="Know what your car needs?"
+        body="Book it directly. If you are still between services, answer three quick questions and we will point you to the right one."
+        quoteLabel="Find my detail"
+      />
       <JsonLd data={schemas} />
     </>
   );
