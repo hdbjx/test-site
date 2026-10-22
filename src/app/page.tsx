@@ -15,7 +15,20 @@ export const metadata = pageMetadata({
   image: "og-default",
 });
 
-const leadReview = reviews[2];
+const proofReviews = [
+  {
+    quote: "They went out of their way to accommodate my schedule, and my car was pristine when they finished.",
+    author: reviews[0]?.author ?? "Google Review",
+  },
+  {
+    quote: "He and his team arrived right on time and were very professional.",
+    author: reviews[1]?.author ?? "Google Review",
+  },
+  {
+    quote: "My 11 year-old car looks brand new.",
+    author: reviews[2]?.author ?? "Google Review",
+  },
+];
 
 export default function Home() {
   return (
@@ -44,8 +57,9 @@ export default function Home() {
         <div className="v30-ribbon-window" aria-hidden="true">
           <div className="v30-ribbon-track" data-v30-ribbon-track>
             {[0, 1].map((copy) => (
-              <svg key={copy} className="v30-ribbon-svg" viewBox="0 0 2400 180" preserveAspectRatio="none">
-                <path id={`v30-ribbon-path-${copy}`} d="M -120 112 C 360 18, 820 18, 1280 112 S 2140 206, 2520 96" fill="none" />
+              <svg key={copy} className="v30-ribbon-svg" viewBox="0 0 2400 220" preserveAspectRatio="none">
+                <path className="v30-ribbon-fill" d="M -120 56 C 360 8, 820 8, 1280 56 S 2140 104, 2520 48 L 2520 178 C 2140 130, 1710 144, 1280 178 S 360 210, -120 168 Z" />
+                <path id={`v30-ribbon-path-${copy}`} d="M -70 116 C 360 54, 830 54, 1280 116 S 2140 176, 2470 108" fill="none" />
                 <text>
                   <textPath href={`#v30-ribbon-path-${copy}`} startOffset="0%">
                     WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • 100% ELECTRIC RIGS •
@@ -88,44 +102,61 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v29-story v30-story" data-v29-story data-v29-scene="story" aria-labelledby="v29-story-title">
+      <section className="v29-story v33-story" data-v29-story data-v29-scene="story" aria-labelledby="v29-story-title">
         <div className="v29-story-field" aria-hidden="true" />
-        <div className="v29-shell v29-story-inner v30-story-inner">
-          <p className="v29-kicker">Since eighth grade</p>
-          <h2 id="v29-story-title" className="v30-story-title">
-            <span className="v30-story-line v30-story-line-a">
-              <span>BUILT BY</span>
-              <span className="v30-story-slot v30-slot-a" data-v29-fly="a"><Photo id="about-team" sizes="28vw" fill /></span>
-              <span>STUDENTS.</span>
-            </span>
-            <span className="v30-story-line v30-story-line-b">
-              <span>RUN LIKE</span>
-              <span className="v30-story-slot v30-slot-b" data-v29-fly="b"><Photo id="hq-branded-van-side" sizes="25vw" fill /></span>
-              <span>A COMPANY.</span>
-            </span>
-          </h2>
-          <span className="v30-story-float" data-v29-fly="c" aria-hidden="true"><Photo id="team-tablet" sizes="18vw" fill /></span>
-          <div className="v29-story-foot">
-            <p>What started with one student and a driveway became trained technicians, purpose-built electric rigs, real operating systems, and a standard every job has to meet.</p>
-            <Link href="/about-us">Meet the team ↗</Link>
+        <div className="v29-shell v29-story-inner v33-story-inner">
+          <div className="v33-story-grid">
+            <div className="v33-story-copy">
+              <p className="v29-kicker">Since eighth grade</p>
+              <h2 id="v29-story-title" className="v33-story-title">
+                <span>BUILT BY STUDENTS.</span>
+                <span>RUN LIKE A COMPANY.</span>
+              </h2>
+              <div className="v29-story-foot v33-story-foot">
+                <p>What started with one student and a driveway became trained technicians, purpose-built electric rigs, real operating systems, and a standard every job has to meet.</p>
+                <Link href="/about-us">Meet the team ↗</Link>
+              </div>
+            </div>
+            <div className="v33-story-photos" aria-hidden="true">
+              <span className="v33-story-photo v33-story-photo-a" data-v29-fly="a"><Photo id="about-team" sizes="(max-width: 900px) 78vw, 24vw" fill /></span>
+              <span className="v33-story-photo v33-story-photo-b" data-v29-fly="b"><Photo id="hq-branded-van-side" sizes="(max-width: 900px) 72vw, 22vw" fill /></span>
+              <span className="v33-story-photo v33-story-photo-c" data-v29-fly="c"><Photo id="team-tablet" sizes="(max-width: 900px) 56vw, 17vw" fill /></span>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="v29-proof v32-proof" data-v29-scene="proof" aria-labelledby="v29-proof-title">
-        <div className="v29-proof-ring" aria-hidden="true">FIVE STAR / FIVE STAR / FIVE STAR / FIVE STAR /</div>
-        <div className="v32-proof-fragments" aria-hidden="true">
-          <span>“Absolutely spotless.”</span>
-          <span>“On time. Professional.”</span>
-          <span>“Looks brand new.”</span>
-          <span>“Booking was effortless.”</span>
-        </div>
-        <div className="v29-shell v29-proof-grid">
-          <div className="v29-proof-count"><span><LiveReviewCount /></span><small>FIVE-STAR<br />REVIEWS</small></div>
-          <blockquote id="v29-proof-title" data-v29-review>
-            <span className="v29-quote-mark">“</span>{leadReview.text}<span className="v29-quote-mark">”</span>
-            <footer>{leadReview.author} / Google review</footer>
-          </blockquote>
+      <section className="v29-proof v33-proof" data-v29-scene="proof" aria-labelledby="v29-proof-title">
+        <div className="v29-shell v33-proof-shell">
+          <div className="v33-proof-head">
+            <p className="v29-kicker">Real reviews</p>
+            <h2 id="v29-proof-title">THE PROOF IS IN THE DRIVEWAY.</h2>
+            <p>Clean work, clear communication, and a student-run crew that shows up ready to deliver.</p>
+          </div>
+
+          <div className="v33-proof-stats">
+            <div className="v33-proof-stat v33-proof-stat-primary">
+              <strong><LiveReviewCount /></strong>
+              <span>five-star reviews</span>
+            </div>
+            <div className="v33-proof-stat">
+              <strong>5.0</strong>
+              <span>Google rating</span>
+            </div>
+            <div className="v33-proof-stat">
+              <strong>Student-run</strong>
+              <span>real team, real systems</span>
+            </div>
+          </div>
+
+          <div className="v33-proof-cards">
+            {proofReviews.map((review) => (
+              <article key={review.author} className="v33-proof-card" data-v29-review>
+                <p>“{review.quote}”</p>
+                <footer>{review.author} / Google review</footer>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -146,18 +177,26 @@ export default function Home() {
               <p>Correct the finish. Lock in the result. Protect the work you just paid for.</p>
               <b>Explore paint care ↗</b>
             </div>
-            <div className="v32-care-orbit" aria-hidden="true">CORRECT • PROTECT • GLOSS • CORRECT • PROTECT •</div>
           </Link>
 
           <Link href="/detailplus" className="v32-care-scene v32-care-maintain" data-v29-tilt>
-            <div className="v32-maintain-word" aria-hidden="true">MAINTAIN</div>
+            <div className="v32-maintain-word" aria-hidden="true">DETAIL+</div>
             <div className="v32-care-copy">
               <span>02 / DETAIL+</span>
               <strong>DON’T LET IT<br />GET BAD AGAIN.</strong>
               <p>Choose how often we come back. Same driveway. Same standard. No reset required.</p>
               <b>Explore Detail+ ↗</b>
             </div>
-            <div className="v32-maintain-disc" aria-hidden="true">DETAIL+<br />ON REPEAT</div>
+            <div className="v33-maintain-stack" aria-hidden="true">
+              <span>Same driveway</span>
+              <span>Same standard</span>
+              <span>No reset</span>
+            </div>
+            <div className="v33-maintain-tiers" aria-hidden="true">
+              <span>Monthly</span>
+              <span>Bi-weekly</span>
+              <span>Custom</span>
+            </div>
           </Link>
         </div>
       </section>
