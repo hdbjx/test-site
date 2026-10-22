@@ -163,6 +163,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
   }, [search, vehicle]);
 
   const activeService = service && vehicle ? services[service] : null;
+  const selectedCondition = condition ? CONDITIONS.find((item) => item.value === condition) ?? null : null;
   const basePrice = service && vehicle ? PRICING[vehicle.vehicle][service].price : 0;
   let addonTotal = 0;
   let hasRange = false;
@@ -392,13 +393,30 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
     if (!desiredTiming) {
       return (
-        <div ref={resultRef} className="quote-rec-result quote-rec-conversation">
+        <div ref={resultRef} className="quote-rec-result quote-rec-conversation q51-result">
           <button type="button" onClick={reset} className="quote-rec-back">← Start over</button>
-          <section className="quote-rec-intent-stage">
+
+          <section className="quote-rec-reveal-card q51-reveal" aria-live="polite">
+            <div className="quote-rec-reveal-copy">
+              <p className="eyebrow">YOUR MATCH</p>
+              <h2>{activeService.name}</h2>
+              <p className="quote-rec-reveal-reason">{personalReason}</p>
+              <div className="quote-rec-reveal-includes">{included.slice(0,3).map((item) => <span key={item}>✓ {item}</span>)}</div>
+              <details className="quote-rec-why-details"><summary>Why this fits your {vehicle.model}</summary><p>{result.why}</p></details>
+            </div>
+            <div className="quote-rec-reveal-price">
+              <span>YOUR PRICE</span>
+              <strong>{totalDisplay}</strong>
+              <small>{activeService.name}{extrasSummary.length ? ` + ${extrasSummary.join(", ")}` : ""}</small>
+              <p>{totalNote}</p>
+            </div>
+          </section>
+
+          <section className="quote-rec-intent-stage q51-intent">
             <div className="quote-rec-intent-context">
-              <p className="eyebrow">Got it</p>
-              <h2>One last thing about your {vehicle.model}.</h2>
-              <p>When are you hoping to get it cleaned?</p>
+              <p className="eyebrow">NEXT STEP</p>
+              <h2>When do you want it done?</h2>
+              <p>We&rsquo;ll shape the next step around your timing. You can also save this recommendation without booking.</p>
               <div className="quote-rec-mini-summary">
                 <span>{vehicleName}</span>
                 <span>{conditionLabel} condition</span>
@@ -412,7 +430,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
                   <span><strong>{item.label}</strong><small>{item.sub}</small></span><b>→</b>
                 </button>
               ))}
-              <p className="quote-rec-intent-note">We'll shape the next step around your timing.</p>
+              <p className="quote-rec-intent-note">No payment required to see availability.</p>
             </div>
           </section>
         </div>
@@ -440,7 +458,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
         };
 
     return (
-      <div ref={resultRef} className="quote-rec-result quote-rec-conversation quote-rec-flow" id="quote-personal-result">
+      <div ref={resultRef} className="quote-rec-result quote-rec-conversation quote-rec-flow q51-result" id="quote-personal-result">
         <div className="quote-rec-answerbar">
           <button type="button" onClick={() => { setDesiredTiming(null); setSent(false); setError(null); }} className="quote-rec-answer-edit">← Change</button>
           <div><span>You said</span><strong>{timingLabel}</strong></div>
@@ -539,77 +557,95 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
   }
 
   return (
-    <div className="quote-rec-shell" onFocus={start} onPointerDown={start}>
-      <div className="quote-rec-progress" aria-label="Quote progress">
-        <span className={vehicle ? "is-done" : "is-active"}><b>{vehicle ? "✓" : "01"}</b> Vehicle</span>
-        <i />
-        <span className={condition ? "is-done" : vehicle ? "is-active" : ""}><b>{condition ? "✓" : "02"}</b> Condition</span>
-        <i />
-        <span className={condition ? "is-active" : ""}><b>03</b> Issues</span>
-      </div>
+    <div className="quote-rec-shell q51-rec" onFocus={start} onPointerDown={start}>
+      <div className="q51-rec-main">
+        <div className="q51-progress" aria-label="Quote progress">
+          <span className={vehicle ? "is-done" : "is-current"}><b>{vehicle ? "✓" : "01"}</b> Vehicle</span>
+          <span className={condition ? "is-done" : vehicle ? "is-current" : ""}><b>{condition ? "✓" : "02"}</b> Condition</span>
+          <span className={condition ? "is-current" : ""}><b>03</b> Issues</span>
+          <span><b>04</b> Recommendation</span>
+        </div>
 
-      <section className={`quote-rec-step ${vehicle ? "is-complete" : "is-active"}`}>
-        <div className="quote-rec-step-number">01</div>
-        <div className="quote-rec-step-content">
-          <p className="eyebrow">Your vehicle</p>
-          <h2>What are you driving?</h2>
+        <section data-art-number="01" className={`q51-step ${vehicle ? "is-complete" : "is-active"}`}>
           {vehicle ? (
-            <div className="quote-rec-selected">
-              <div><strong>{vehicle.make} {vehicle.model}</strong><span>{vehicleLabel(vehicle.vehicle)}</span></div>
-              <button type="button" onClick={() => { setVehicle(null); setCondition(null); setResult(null); }}>Change</button>
+            <div className="q51-complete-row">
+              <span>01</span>
+              <div><small>YOUR VEHICLE</small><strong>{vehicle.make} {vehicle.model}</strong><em>{vehicleLabel(vehicle.vehicle)}</em></div>
+              <button type="button" onClick={() => { setVehicle(null); setSearch(""); setCondition(null); setConcerns(new Set()); setResult(null); setService(null); }}>Change</button>
             </div>
           ) : (
-            <div className="quote-rec-search-wrap">
-              <input className="field quote-rec-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search RAV4, Honda Pilot, F-150..." autoComplete="off" aria-label="Search vehicle make or model" />
-              {search.trim().length >= 2 && (
-                <div className="quote-rec-search-results">
-                  {matches.length ? matches.map((item, index) => (
-                    <button key={`${item.make}-${item.model}-${index}`} type="button" onClick={() => selectVehicle(item)}>
-                      <span><strong>{item.make}</strong> {item.model}</span><small>{vehicleLabel(item.vehicle)}</small>
-                    </button>
-                  )) : <p>No matches. Try another make or model.</p>}
-                </div>
-              )}
+            <div className="q51-step-body">
+              <p className="q51-step-label">01 / YOUR VEHICLE</p>
+              <h2>What are you driving?</h2>
+              <p className="q51-step-help">Search the make or model. We&rsquo;ll handle the vehicle class and pricing.</p>
+              <div className="quote-rec-search-wrap q51-search-wrap">
+                <input className="field quote-rec-search q51-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Try RAV4, Ram 2500, Model Y..." autoComplete="off" aria-label="Search vehicle make or model" />
+                {search.trim().length >= 2 && (
+                  <div className="quote-rec-search-results q51-search-results">
+                    {matches.length ? matches.map((item, index) => (
+                      <button key={`${item.make}-${item.model}-${index}`} type="button" onClick={() => selectVehicle(item)}>
+                        <span><strong>{item.make}</strong> {item.model}</span><small>{vehicleLabel(item.vehicle)}</small>
+                      </button>
+                    )) : <p>No matches. Try another make or model.</p>}
+                  </div>
+                )}
+              </div>
             </div>
           )}
-        </div>
-      </section>
+        </section>
 
-      <section ref={conditionRef} className={`quote-rec-step ${!vehicle ? "is-locked" : condition ? "is-complete" : "is-active"}`}>
-        <div className="quote-rec-step-number">02</div>
-        <div className="quote-rec-step-content">
-          <p className="eyebrow">Current condition</p>
-          <h2>What shape is your car in?</h2>
-          <div className="quote-rec-condition-grid">
-            {CONDITIONS.map((item, index) => (
-              <button key={item.value} type="button" disabled={!vehicle} className={condition === item.value ? "is-selected" : ""} onClick={() => chooseCondition(item.value)} aria-pressed={condition === item.value}>
-                <span>0{index + 1}</span><strong>{item.label}</strong>
-              </button>
-            ))}
-          </div>
-          <p className="quote-rec-condition-desc">{condition ? CONDITIONS.find((item) => item.value === condition)?.desc : "Choose the closest match. You do not need to overthink it."}</p>
-        </div>
-      </section>
+        <section ref={conditionRef} data-art-number="02" className={`q51-step ${!vehicle ? "is-locked" : condition ? "is-complete" : "is-active"}`}>
+          {condition ? (
+            <div className="q51-complete-row">
+              <span>02</span>
+              <div><small>CURRENT CONDITION</small><strong>{selectedCondition?.label}</strong><em>{selectedCondition?.desc}</em></div>
+              <button type="button" onClick={() => { setCondition(null); setConcerns(new Set()); setResult(null); setService(null); }}>Change</button>
+            </div>
+          ) : (
+            <div className="q51-step-body">
+              <p className="q51-step-label">02 / CURRENT CONDITION</p>
+              <h2>What shape is it in?</h2>
+              <p className="q51-step-help">Pick the closest match. This is about scope, not judging the car.</p>
+              <div className="quote-rec-condition-grid q51-condition-grid">
+                {CONDITIONS.map((item, index) => (
+                  <button key={item.value} type="button" disabled={!vehicle} className={condition === item.value ? "is-selected" : ""} onClick={() => chooseCondition(item.value)} aria-pressed={condition === item.value}>
+                    <span>0{index + 1}</span><strong>{item.label}</strong><small>{item.desc}</small>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
 
-      <section ref={concernsRef} className={`quote-rec-step ${!condition ? "is-locked" : "is-active"}`}>
-        <div className="quote-rec-step-number">03</div>
-        <div className="quote-rec-step-content">
-          <p className="eyebrow">Specific issues</p>
-          <h2>Anything we should know about?</h2>
-          <p className="quote-rec-step-lede">Optional. Choose everything that applies.</p>
-          <div className="quote-rec-concern-grid">
-            {CONCERNS.map((item) => {
-              const selected = concerns.has(item.id);
-              return (
-                <button key={item.id} type="button" disabled={!condition} className={selected ? "is-selected" : ""} onClick={() => toggleConcern(item.id)} aria-pressed={selected}>
-                  <span className="quote-rec-check">{selected ? "✓" : ""}</span><span><strong>{item.label}</strong><small>{item.sub}</small></span>
-                </button>
-              );
-            })}
+        <section ref={concernsRef} data-art-number="03" className={`q51-step ${!condition ? "is-locked" : "is-active"}`}>
+          <div className="q51-step-body">
+            <p className="q51-step-label">03 / SPECIFIC ISSUES</p>
+            <h2>Anything bothering you?</h2>
+            <p className="q51-step-help">Optional. Choose everything that applies, or go straight to your recommendation.</p>
+            <div className="quote-rec-concern-grid q51-concern-grid">
+              {CONCERNS.map((item) => {
+                const selected = concerns.has(item.id);
+                return (
+                  <button key={item.id} type="button" disabled={!condition} className={selected ? "is-selected" : ""} onClick={() => toggleConcern(item.id)} aria-pressed={selected}>
+                    <span className="quote-rec-check">{selected ? "✓" : ""}</span><span><strong>{item.label}</strong><small>{item.sub}</small></span>
+                  </button>
+                );
+              })}
+            </div>
+            <button type="button" className="q51-build" disabled={!vehicle || !condition} onClick={buildResult}>
+              <span>BUILD MY RECOMMENDATION</span><b>↗</b>
+            </button>
           </div>
-          <button type="button" className="btn btn-primary quote-rec-build" disabled={!vehicle || !condition} onClick={buildResult}>Build my recommendation ↗</button>
-        </div>
-      </section>
+        </section>
+      </div>
+
+      <aside className="q51-snapshot" aria-label="Your quote inputs">
+        <p className="q51-snapshot-title">What we know</p>
+        <div className={vehicle ? "is-filled" : ""}><span>Vehicle</span><strong>{vehicle ? `${vehicle.make} ${vehicle.model}` : "Not set yet"}</strong>{vehicle && <small>{vehicleLabel(vehicle.vehicle)}</small>}</div>
+        <div className={condition ? "is-filled" : ""}><span>Condition</span><strong>{selectedCondition?.label ?? "Not set yet"}</strong></div>
+        <div className={concerns.size ? "is-filled" : ""}><span>Issues</span><strong>{concerns.size ? [...concerns].map(concernLabel).join(", ") : "None selected"}</strong></div>
+        <div className="q51-snapshot-foot"><b>{condition ? "READY" : vehicle ? "ONE MORE STEP" : "3 QUICK QUESTIONS"}</b><span>Then we show your service + exact vehicle price.</span></div>
+      </aside>
     </div>
   );
 }

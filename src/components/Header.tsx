@@ -119,7 +119,7 @@ export function Header() {
   const headerClass = "fixed inset-x-0 top-0 z-40 text-white site-shared-header";
 
   // The booking funnel renders its own compact header; keep exits to a minimum there.
-  if (pathname === "/book") return null;
+  if (pathname === "/book" || pathname === "/get-a-quote") return null;
 
   return (
     <header className={headerClass}>

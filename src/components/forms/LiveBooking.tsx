@@ -37,6 +37,24 @@ const addDaysKey = (key: string, days: number) => {
   d.setUTCDate(d.getUTCDate() + days);
   return d.toISOString().slice(0, 10);
 };
+const monthStartKey = (key: string) => key ? `${key.slice(0, 7)}-01` : "";
+const addMonthsKey = (key: string, months: number) => {
+  const d = new Date(`${monthStartKey(key)}T12:00:00Z`);
+  d.setUTCMonth(d.getUTCMonth() + months);
+  return d.toISOString().slice(0, 7) + "-01";
+};
+const calendarMonthCells = (monthKey: string) => {
+  if (!monthKey) return [] as Array<{ key: string; inMonth: boolean }>;
+  const first = new Date(`${monthStartKey(monthKey)}T12:00:00Z`);
+  const start = new Date(first);
+  start.setUTCDate(1 - first.getUTCDay());
+  return Array.from({ length: 42 }, (_, index) => {
+    const d = new Date(start);
+    d.setUTCDate(start.getUTCDate() + index);
+    const key = d.toISOString().slice(0, 10);
+    return { key, inMonth: key.slice(0, 7) === monthKey.slice(0, 7) };
+  });
+};
 const utcDayLabel = (key: string, opts: Intl.DateTimeFormatOptions) =>
   new Intl.DateTimeFormat("en-US", { timeZone: "UTC", ...opts }).format(new Date(`${key}T12:00:00Z`));
 
@@ -249,6 +267,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const [slots, setSlots] = useState<Date[] | null>(null);
   const [slotsError, setSlotsError] = useState<string | null>(null);
   const [day, setDay] = useState<string | null>(null);
+  const [calendarMonth, setCalendarMonth] = useState(() => monthStartKey(dayKey(new Date())));
   const [start, setStart] = useState<Date | null>(null);
 
   const [sending, setSending] = useState(false);
@@ -261,7 +280,6 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const [giftCardPreview, setGiftCardPreview] = useState<{ code: string; codeLast4: string; balanceCents: number; recipientName: string | null } | null>(null);
 
   const formRef = useRef<HTMLFormElement>(null);
-  const railRef = useRef<HTMLDivElement>(null);
   const quoteSessionRef = useRef<string | null>(null);
 
   async function recordQuoteBehavior(stage: string, extra: Record<string, unknown> = {}) {
@@ -325,7 +343,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     setSlotsError(null);
     setStart(null);
     const from = dayKey(new Date());
-    const to = dayKey(new Date(Date.now() + 31 * 86_400_000));
+    const to = addDaysKey(from, 62);
     const items = resolved.map((line) => ({ vehicle: line.vehicle, service: line.service }));
     fetch(`/api/availability?items=${encodeURIComponent(JSON.stringify(items))}&from=${from}&to=${to}`)
       .then((r) => r.json().then((j) => ({ ok: r.ok, j })))
@@ -335,7 +353,11 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         const raw: unknown[] = Array.isArray(j.slots) ? j.slots : [];
         const list = raw.filter((s): s is string => typeof s === "string").map((s) => new Date(s)).filter(isValidDate);
         setSlots(list);
-        setDay((current) => (current && list.some((slot) => dayKey(slot) === current) ? current : list[0] ? dayKey(list[0]) : null));
+        setDay((current) => {
+          const nextDay = current && list.some((slot) => dayKey(slot) === current) ? current : list[0] ? dayKey(list[0]) : null;
+          if (nextDay) setCalendarMonth(monthStartKey(nextDay));
+          return nextDay;
+        });
       })
       .catch(() => !cancelled && setSlotsError("We couldn't load open times. Refresh, or text us to book."));
     return () => {
@@ -354,16 +376,13 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     return map;
   }, [slots]);
   const todayKey = dayKey(new Date());
-  const railDays = useMemo(() => (todayKey ? Array.from({ length: 32 }, (_, i) => addDaysKey(todayKey, i)) : []), [todayKey]);
+  const availabilityEndKey = todayKey ? addDaysKey(todayKey, 62) : "";
+  const firstCalendarMonth = monthStartKey(todayKey);
+  const lastCalendarMonth = monthStartKey(availabilityEndKey);
+  const calendarCells = useMemo(() => calendarMonthCells(calendarMonth), [calendarMonth]);
   const daySlots = day ? slotsByDay.get(day) ?? [] : [];
-
-  useEffect(() => {
-    if (!day || !railRef.current) return;
-    const rail = railRef.current;
-    const chip = rail.querySelector<HTMLElement>(`[data-day="${day}"]`);
-    // Horizontal only, so the page itself never jumps.
-    if (chip) rail.scrollTo({ left: chip.offsetLeft - rail.clientWidth / 2 + chip.clientWidth / 2, behavior: "smooth" });
-  }, [day, active]);
+  const canGoPreviousMonth = !!calendarMonth && !!firstCalendarMonth && calendarMonth > firstCalendarMonth;
+  const canGoNextMonth = !!calendarMonth && !!lastCalendarMonth && calendarMonth < lastCalendarMonth;
 
   /* ----- step navigation ----- */
   function scrollToStep(step: StepId) {
@@ -1113,31 +1132,44 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                   ) : slots === null ? (
                     <div className="bk-loading" aria-live="polite" aria-label="Checking the schedule"><span /><span /><span /><span /></div>
                   ) : slots.length === 0 ? (
-                    <p className="bk-note">No open times in the next month for this appointment. <a href={site.phone.sms}>Text us</a> and we&rsquo;ll find one.</p>
+                    <p className="bk-note">No open times in the next two months for this appointment. <a href={site.phone.sms}>Text us</a> and we&rsquo;ll find one.</p>
                   ) : (
                     <>
-                      <div className="bk-rail" ref={railRef} role="radiogroup" aria-label="Appointment date">
-                        {railDays.map((key) => {
-                          const count = slotsByDay.get(key)?.length ?? 0;
-                          const on = day === key;
-                          return (
-                            <button
-                              key={key}
-                              type="button"
-                              role="radio"
-                              aria-checked={on}
-                              data-day={key}
-                              disabled={!count}
-                              className={`bk-day ${on ? "is-on" : ""}`}
-                              onClick={() => { setDay(key); setStart(null); }}
-                              aria-label={`${utcDayLabel(key, { weekday: "long", month: "long", day: "numeric" })}, ${count ? `${count} times` : "full"}`}
-                            >
-                              <span>{utcDayLabel(key, { weekday: "short" })}</span>
-                              <strong>{utcDayLabel(key, { day: "numeric" })}</strong>
-                              <em>{count ? `${count} ${count === 1 ? "time" : "times"}` : "Full"}</em>
-                            </button>
-                          );
-                        })}
+                      <div className="bk-calendar" aria-label="Appointment calendar">
+                        <div className="bk-calendar-head">
+                          <button type="button" onClick={() => setCalendarMonth((month) => addMonthsKey(month, -1))} disabled={!canGoPreviousMonth} aria-label="Previous month">←</button>
+                          <h4>{calendarMonth ? utcDayLabel(calendarMonth, { month: "long", year: "numeric" }) : "Availability"}</h4>
+                          <button type="button" onClick={() => setCalendarMonth((month) => addMonthsKey(month, 1))} disabled={!canGoNextMonth} aria-label="Next month">→</button>
+                        </div>
+                        <div className="bk-calendar-weekdays" aria-hidden="true">
+                          {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((label) => <span key={label}>{label}</span>)}
+                        </div>
+                        <div className="bk-calendar-grid" role="radiogroup" aria-label="Appointment date">
+                          {calendarCells.map(({ key, inMonth }) => {
+                            const count = slotsByDay.get(key)?.length ?? 0;
+                            const on = day === key;
+                            const inWindow = !!todayKey && !!availabilityEndKey && key >= todayKey && key <= availabilityEndKey;
+                            const available = inMonth && inWindow && count > 0;
+                            const isToday = key === todayKey;
+                            return (
+                              <button
+                                key={key}
+                                type="button"
+                                role="radio"
+                                aria-checked={on}
+                                disabled={!available}
+                                className={`bk-cal-day ${on ? "is-on" : ""} ${!inMonth ? "is-outside" : ""}`}
+                                onClick={() => { setDay(key); setStart(null); }}
+                                aria-label={`${utcDayLabel(key, { weekday: "long", month: "long", day: "numeric" })}, ${available ? `${count} ${count === 1 ? "time" : "times"} available` : "unavailable"}`}
+                              >
+                                <span className="bk-cal-num">{utcDayLabel(key, { day: "numeric" })}</span>
+                                {isToday && inMonth && <span className="bk-cal-today">Today</span>}
+                                {available && <span className="bk-cal-avail">{count} {count === 1 ? "time" : "times"}</span>}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <p className="bk-calendar-key"><span /> Open appointments · Select a date to see times</p>
                       </div>
                       {day && (
                         <div className="bk-slots bk-reveal" key={day}>
