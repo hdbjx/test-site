@@ -114,21 +114,11 @@ export function HomeArtMotion() {
         const r = proof.getBoundingClientRect();
         const span = Math.max(1, r.height - vh);
         const pp = clamp(-r.top / span);
-        const countOut = smoothstep(.255, .325, pp);
-        const review1 = windowFade(pp, .325, .385, .50, .56);
-        const review2 = windowFade(pp, .535, .595, .71, .77);
-        const review3 = smoothstep(.745, .815, pp) * (1 - smoothstep(.965, 1, pp));
+        const track = proof.querySelector<HTMLElement>("[data-v42-proof-track]");
+        const maxTravel = track ? Math.max(0, track.scrollWidth - vw) : vw * 4;
+        const flow = pp <= .075 ? 0 : clamp((pp - .075) / .925);
         proof.style.setProperty("--proof", String(pp));
-        proof.style.setProperty("--proof-count-out", String(countOut));
-        proof.style.setProperty("--proof-count-opacity", String(1 - countOut));
-        proof.style.setProperty("--proof-count-y", `${countOut * -10}px`);
-        proof.style.setProperty("--proof-count-scale", String(1 - countOut * .025));
-        proof.style.setProperty("--proof-r1", String(review1));
-        proof.style.setProperty("--proof-r2", String(review2));
-        proof.style.setProperty("--proof-r3", String(review3));
-        proof.style.setProperty("--proof-r1-y", `${(1 - review1) * 18}px`);
-        proof.style.setProperty("--proof-r2-y", `${(1 - review2) * 18}px`);
-        proof.style.setProperty("--proof-r3-y", `${(1 - review3) * 18}px`);
+        proof.style.setProperty("--proof-x", `${-maxTravel * flow}px`);
       }
 
       const beyond = document.querySelector<HTMLElement>("[data-v29-scene='beyond']");
@@ -141,6 +131,9 @@ export function HomeArtMotion() {
         beyond.style.setProperty("--beyond-lift", `${(1 - p) * 48}px`);
         beyond.style.setProperty("--maintain-wipe-scale", String(Math.max(0, 1 - Math.min(1, p * 1.35))));
         beyond.style.setProperty("--maintain-lift", `${(1 - p) * 46}px`);
+        beyond.style.setProperty("--care-keep-x", `${(1 - p) * vw * .07}px`);
+        beyond.style.setProperty("--care-wash-scale", String(.18 + p * .82));
+        beyond.style.setProperty("--care-loop-x", `${p * -18}%`);
       }
       const cleanLife = document.querySelector<HTMLElement>("[data-v39-life]");
       if (cleanLife) {

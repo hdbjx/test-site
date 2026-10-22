@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { HomeArtMotion } from "@/components/HomeArtMotion";
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
+import { DraggableStoryPhoto } from "@/components/DraggableStoryPhoto";
 import { AnimatedReviewCount } from "@/components/GoogleReviewStats";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
@@ -51,9 +52,9 @@ export default function Home() {
       </section>
 
       <section className="v36-tape" data-v36-tape aria-label="Every Detail promise">
-        <svg className="v36-tape-svg" viewBox="0 0 2000 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <path className="v36-tape-shape" d="M-80,54 C280,-4 640,4 1010,66 C1370,128 1700,138 2080,54 L2080,204 C1700,278 1360,254 995,198 C630,142 260,132 -80,194 Z" />
-          <path id="v36-tape-path" d="M-30,122 C310,56 660,62 1010,126 C1360,190 1690,196 2030,120" fill="none" />
+        <svg className="v36-tape-svg" viewBox="0 0 2200 220" preserveAspectRatio="none" aria-hidden="true">
+          <path className="v36-tape-shape" d="M-80,60 C420,34 830,42 1180,76 C1540,112 1870,116 2280,82 L2280,196 C1880,220 1530,216 1160,184 C780,150 380,142 -80,170 Z" />
+          <path id="v36-tape-path" d="M-40,116 C430,88 835,94 1180,126 C1540,160 1880,164 2240,132" fill="none" />
           <text className="v36-tape-text">
             <textPath href="#v36-tape-path" data-v36-tape-text startOffset="0%">
               WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU • 
@@ -96,55 +97,69 @@ export default function Home() {
             <span>RUN LIKE A COMPANY.</span>
           </h2>
 
-          <div className="v37-story-collage" aria-hidden="true">
-            <span className="v37-story-photo v37-story-photo-a" data-v29-fly="a"><Photo id="about-team" sizes="(max-width: 900px) 86vw, 34vw" fill /></span>
-            <span className="v37-story-photo v37-story-photo-b" data-v29-fly="b"><Photo id="hq-branded-van-side" sizes="(max-width: 900px) 70vw, 26vw" fill /></span>
-            <span className="v37-story-photo v37-story-photo-c" data-v29-fly="c"><Photo id="team-tablet" sizes="(max-width: 900px) 52vw, 18vw" fill /></span>
+          <div className="v37-story-collage v42-story-collage">
+            <DraggableStoryPhoto id="team" photoId="about-team" label="Every Detail team photo" className="v37-story-photo v37-story-photo-a v42-story-photo" sizes="(max-width: 900px) 86vw, 34vw" />
+            <DraggableStoryPhoto id="van" photoId="hq-branded-van-side" label="Every Detail branded van" className="v37-story-photo v37-story-photo-b v42-story-photo" sizes="(max-width: 900px) 70vw, 26vw" />
+            <DraggableStoryPhoto id="tablet" photoId="team-tablet" label="Every Detail technician with tablet" className="v37-story-photo v37-story-photo-c v42-story-photo" sizes="(max-width: 900px) 52vw, 18vw" />
+            <span className="v42-drag-hint" aria-hidden="true">DRAG THE PHOTOS AROUND</span>
           </div>
 
         </div>
       </section>
 
-      <section className="v38-proof" data-v36-proof data-v29-scene="proof" aria-label="Customer reviews">
-        <div className="v38-proof-sticky">
-          <div className="v29-shell v38-proof-stage">
-            <div className="v38-proof-count">
-              <strong><AnimatedReviewCount /></strong>
-              <span>FIVE-STAR REVIEWS</span>
-            </div>
-
-            <div className="v38-proof-reviews" aria-live="polite">
-              {proofReviews.map((review, index) => (
-                <article key={review.author} className={`v38-proof-review v38-proof-review-${index + 1}`}>
-                  <p>“{review.quote}”</p>
-                  <footer>{review.author}</footer>
-                </article>
-              ))}
-            </div>
+      <section className="v42-proof" data-v36-proof data-v29-scene="proof" aria-label="Customer reviews">
+        <div className="v42-proof-sticky">
+          <div className="v42-proof-track" data-v42-proof-track>
+            <article className="v42-proof-panel v42-proof-count-panel">
+              <div className="v42-proof-count">
+                <strong><AnimatedReviewCount /></strong>
+                <span>FIVE-STAR REVIEWS</span>
+              </div>
+            </article>
+            {proofReviews.map((review, index) => (
+              <article key={review.author} className={`v42-proof-panel v42-proof-review-panel v42-proof-review-${index + 1}`}>
+                <span className="v42-proof-index">0{index + 1}</span>
+                <blockquote>“{review.quote}”</blockquote>
+                <footer>{review.author} / Google Review</footer>
+              </article>
+            ))}
+            <article className="v42-proof-panel v42-proof-outro">
+              <p>REAL PEOPLE.<br /><span>REAL DRIVEWAYS.</span></p>
+            </article>
           </div>
         </div>
       </section>
 
-      <section className="v38-care-flow" data-v29-scene="beyond" aria-label="Paint care and recurring maintenance">
-        <Link href="/ceramic" className="v38-care-panel v38-care-paint">
-          <div className="v38-care-image"><Photo id="hq-black-suv-finished" sizes="100vw" fill /></div>
-          <div className="v38-care-overlay" />
-          <div className="v38-care-copy">
-            <strong>BRING BACK<br />THE GLOSS.</strong>
-            <b>Explore paint care ↗</b>
-          </div>
-        </Link>
+      <section className="v42-care" data-v29-scene="beyond" aria-label="Paint care and recurring maintenance">
+        <div className="v42-care-intro">
+          <p>THE RESET IS ONLY THE START.</p>
+          <h2>RESTORE IT.<br /><span>KEEP IT THAT WAY.</span></h2>
+        </div>
 
-        <Link href="/detailplus" className="v38-care-panel v38-care-maintain">
-          <div className="v38-care-image"><Photo id="hq-technician-window-detail" sizes="100vw" fill /></div>
-          <div className="v38-maintain-wipe" aria-hidden="true" />
-          <div className="v38-care-overlay" />
-          <div className="v38-care-copy">
-            <strong>STAY CLEAN.<br />WITHOUT THE RESET.</strong>
-            <b>Explore Detail+ ↗</b>
-          </div>
-          <div className="v38-maintain-cadence" aria-hidden="true">MONTHLY&nbsp;&nbsp;•&nbsp;&nbsp;BI-WEEKLY&nbsp;&nbsp;•&nbsp;&nbsp;CUSTOM</div>
-        </Link>
+        <div className="v42-care-stage">
+          <Link href="/ceramic" className="v42-care-card v42-care-restore" data-v29-tilt>
+            <div className="v42-care-media"><Photo id="hq-black-suv-finished" sizes="(max-width: 900px) 100vw, 58vw" fill /></div>
+            <div className="v42-care-glass" />
+            <div className="v42-care-copy">
+              <span>01 / PAINT CARE</span>
+              <strong>BRING BACK<br />THE GLOSS.</strong>
+              <b>Paint correction + ceramic ↗</b>
+            </div>
+          </Link>
+
+          <Link href="/detailplus" className="v42-care-card v42-care-keep" data-v29-tilt>
+            <div className="v42-care-media"><Photo id="hq-technician-window-detail" sizes="(max-width: 900px) 100vw, 58vw" fill /></div>
+            <div className="v42-care-redwash" aria-hidden="true" />
+            <div className="v42-care-copy">
+              <span>02 / DETAIL+</span>
+              <strong>KEEP THE<br />GOOD PART.</strong>
+              <b>Recurring maintenance ↗</b>
+            </div>
+            <div className="v42-care-loop" aria-hidden="true">
+              <span>MONTHLY</span><span>BI-WEEKLY</span><span>CUSTOM</span><span>MONTHLY</span><span>BI-WEEKLY</span><span>CUSTOM</span>
+            </div>
+          </Link>
+        </div>
       </section>
 
       <section className="v39-clean-life" data-v39-life aria-labelledby="v39-clean-life-title">
