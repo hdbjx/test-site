@@ -23,10 +23,10 @@ const COPY = {
     success: "We’ll review your car and paint condition, then reach out with the coating setup we’d recommend.",
   },
   "paint-care": {
-    eyebrow: "Paint plan",
-    title: "Let’s build the right paint plan.",
-    body: "Tell us what you drive and what you are seeing in the finish. We’ll review the paint goal, then recommend the right level of correction and protection instead of automatically pushing the biggest package.",
-    submit: "Build my paint plan ↗",
+    eyebrow: "Paint assessment",
+    title: "Tell us what you’re seeing.",
+    body: "Send us the car and the paint condition. We’ll review it and recommend the right level of correction or protection.",
+    submit: "Send my paint assessment ↗",
     success: "We’ll review your vehicle and paint condition, then reach out with the correction and protection path we’d recommend.",
   },
 } as const;
@@ -87,6 +87,49 @@ export function PaintLeadForm({ kind }: Props) {
         <p className="eyebrow">Sent to Every Detail</p>
         <h3>{firstName ? `Thanks, ${firstName}.` : "Thanks. We’ve got it."}</h3>
         <p>{copy.success}</p>
+      </div>
+    );
+  }
+
+  if (kind === "paint-care") {
+    return (
+      <div className="paint-lead-shell paint-lead-shell-compact">
+        <div className="paint-lead-intro">
+          <p className="eyebrow">{copy.eyebrow}</p>
+          <h2>{copy.title}</h2>
+          <p>{copy.body}</p>
+          <div className="paint-lead-meta"><span>Reviewed by our team</span><span>Built around your paint</span></div>
+        </div>
+
+        <form className="paint-lead-form paint-lead-form-compact" onSubmit={onSubmit}>
+          <input className="paint-hp" type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+
+          <div className="paint-field-grid">
+            <label><span>Name</span><input name="name" autoComplete="name" required placeholder="Your name" /></label>
+            <label><span>Phone</span><input name="phone" type="tel" autoComplete="tel" inputMode="tel" required placeholder="(404) 555-0123" /></label>
+          </div>
+
+          <label><span>Email</span><input name="email" type="email" autoComplete="email" required placeholder="you@example.com" /></label>
+
+          <div className="paint-field-grid">
+            <label><span>Make</span><input name="vehicleMake" autoComplete="off" required placeholder="BMW" /></label>
+            <label><span>Model</span><input name="vehicleModel" autoComplete="off" required placeholder="X5" /></label>
+          </div>
+
+          <fieldset className="paint-choice-field">
+            <legend>Which sounds closest?</legend>
+            <div className="paint-choice-grid paint-choice-grid-compact">
+              {["Mostly clean / want protection","Dull or hazy","Visible swirls / scratches","Not sure yet"].map((option) => (
+                <label className="paint-choice" key={option}><input type="radio" name="paintCondition" value={option} required /><span>{option}</span></label>
+              ))}
+            </div>
+          </fieldset>
+
+          <label><span>Anything else? <em>Optional</em></span><textarea name="notes" rows={2} placeholder="Anything about the paint or the result you want." /></label>
+          {status === "error" && <p className="paint-lead-error" role="alert">{error}</p>}
+          <button className="btn btn-primary paint-lead-submit" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : copy.submit}</button>
+          <p className="paint-lead-fine">We’ll review it and follow up with the path we’d recommend.</p>
+        </form>
       </div>
     );
   }

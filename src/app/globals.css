@@ -13736,3 +13736,312 @@ body:has(.v29-hero) .site-shared-menu-label{font-size:.73rem!important;letter-sp
   /* Keep fixed navigation from sitting on top of the form's right-hand banner label. */
   .pl57-form-banner{padding-right:9.5rem}
 }
+
+/* ============================================================
+   V60 Paint Lab subtraction + conversion pass
+   Keep only what helps customers inspect, understand, choose and inquire.
+   ============================================================ */
+.pl60-page{
+  --pl60-cream:#f4efe5;
+  --pl60-cream-2:#e9dfcf;
+  --pl60-ink:#12100e;
+  --pl60-red:#d56865;
+  --pl60-muted:#5f5a52;
+  --pl60-dark-muted:#c9c1b5;
+  background:var(--pl60-cream);
+  color:var(--pl60-ink);
+}
+.pl60-page .pl57-shell{width:min(1180px,calc(100% - 48px))}
+
+/* Route-specific shared header. Keep it useful and out of the composition. */
+body:has(.pl60-page) .site-shared-logo-control{
+  left:max(3.5vw,28px)!important;
+  right:auto!important;
+  top:24px!important;
+  width:68px!important;
+  height:68px!important;
+  transform:none!important;
+}
+body:has(.pl60-page) .site-shared-logo{
+  width:68px!important;
+  height:68px!important;
+  filter:drop-shadow(0 5px 16px rgba(0,0,0,.28));
+}
+body:has(.pl60-page) .site-shared-menu-button{
+  top:30px!important;
+  right:max(3.5vw,28px)!important;
+  min-width:96px!important;
+  height:46px!important;
+  background:rgba(8,7,6,.72)!important;
+}
+.pl60-status{
+  top:auto;
+  right:22px;
+  bottom:22px;
+  padding:.5rem .65rem;
+  gap:.45rem;
+  border-color:rgba(244,239,229,.28);
+  background:rgba(10,9,8,.82);
+  box-shadow:0 8px 22px rgba(0,0,0,.18);
+}
+.pl60-status span,.pl60-status b{font-size:.56rem;letter-spacing:.12em}
+
+/* One section rhythm everywhere. */
+.pl60-section-intro{
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(280px,.62fr);
+  gap:clamp(2.5rem,5vw,5rem);
+  align-items:end;
+  margin-bottom:2rem;
+}
+.pl60-section-intro>div{min-width:0}
+.pl60-section-intro h2,
+.pl60-trust-copy h2,
+.pl60-faq h2{
+  max-width:820px;
+  margin:.65rem 0 0;
+  font-family:var(--font-display);
+  font-size:clamp(2.9rem,5vw,5.25rem);
+  font-weight:900;
+  line-height:.9;
+  letter-spacing:-.05em;
+  text-transform:uppercase;
+  color:var(--pl60-ink);
+}
+.pl60-section-intro h2 span,.pl60-trust-copy h2 span{color:var(--pl60-red)}
+.pl60-section-intro>p{
+  max-width:500px;
+  margin:0;
+  color:var(--pl60-muted);
+  font-size:1rem;
+  line-height:1.62;
+}
+.pl60-section-intro-dark h2{color:var(--pl60-cream)}
+.pl60-section-intro-dark>p{color:var(--pl60-dark-muted)}
+
+/* Hero: preserve the strongest idea, reduce the decorative report. */
+.pl60-hero{min-height:86svh;padding:8.5rem 0 4.5rem}
+.pl60-hero .pl57-hero-grid{grid-template-columns:minmax(0,1.2fr) minmax(300px,.48fr);gap:clamp(3rem,6vw,5.5rem)}
+.pl60-hero .pl57-hero-copy h1{font-size:clamp(5rem,7.9vw,8.25rem);line-height:.82}
+.pl60-hero .pl57-hero-lede{max-width:570px;color:rgba(244,239,229,.9);font-size:1.08rem;line-height:1.56}
+.pl60-hero .pl57-hero-proof{color:rgba(244,239,229,.75);font-size:.65rem}
+.pl60-hero .pl57-hero-report{
+  padding:1.35rem 1.4rem 1.4rem;
+  transform:rotate(.45deg);
+  background:#f4efe5;
+  background-image:none!important;
+  border:1px solid rgba(18,16,14,.35);
+  box-shadow:0 3px 5px rgba(0,0,0,.12),0 16px 38px rgba(0,0,0,.2);
+}
+.pl60-hero .pl57-hero-report>p,.pl60-hero .pl57-report-clip,.pl60-hero .pl57-report-stamp{display:none}
+.pl60-hero .pl57-hero-report h2{margin:1rem 0 1rem;font-size:clamp(1.8rem,2.5vw,2.65rem);line-height:.95}
+.pl60-hero .pl57-hero-report dd{font-size:.84rem;color:#29251f}
+.pl60-hero .pl57-hero-report dl div{padding:.72rem 0}
+
+/* Inspect: compact enough to fit as one idea, with visible defect reveal. */
+.pl60-inspection{padding:5.5rem 0 5.8rem;background:#0e0c0a}
+.pl60-inspection-stage{
+  aspect-ratio:16/6.6;
+  max-height:500px;
+  border-color:rgba(244,239,229,.3);
+  box-shadow:0 18px 52px rgba(0,0,0,.32);
+}
+.pl60-inspection-stage .pl57-inspection-image{filter:saturate(.72) brightness(.64) contrast(1.1);object-position:center 58%}
+.pl60-inspection-stage .pl57-inspection-dim{background:linear-gradient(0deg,rgba(0,0,0,.16),rgba(0,0,0,.02))}
+.pl60-inspection-defects{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.64;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='420' viewBox='0 0 720 420'%3E%3Cg fill='none' stroke='%23fff8e9' stroke-opacity='.72' stroke-width='1'%3E%3Cpath d='M52 314 C170 197 326 160 487 198 C572 219 637 274 690 344'/%3E%3Cpath d='M36 284 C155 173 304 140 468 169 C570 188 641 250 704 324'/%3E%3Cpath d='M82 345 C192 239 340 207 510 238 C591 253 647 290 692 362'/%3E%3Cpath d='M152 73 C274 129 381 125 516 74'/%3E%3Cpath d='M213 52 C312 104 401 102 562 45'/%3E%3Cpath d='M96 112 L333 80'/%3E%3Cpath d='M319 336 L617 293'/%3E%3Cpath d='M199 268 L489 230'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:cover;
+  mix-blend-mode:screen;
+  -webkit-mask-image:radial-gradient(circle 155px at var(--pl57-lamp-x) var(--pl57-lamp-y),#000 0 52%,transparent 76%);
+  mask-image:radial-gradient(circle 155px at var(--pl57-lamp-x) var(--pl57-lamp-y),#000 0 52%,transparent 76%);
+}
+.pl60-inspection-stage .pl57-inspection-lamp{background:radial-gradient(circle 165px at var(--pl57-lamp-x) var(--pl57-lamp-y),rgba(255,255,239,.52) 0%,rgba(255,244,218,.2) 34%,rgba(255,232,202,.06) 52%,transparent 72%)}
+.pl60-inspection-stage .pl57-inspection-tag{background:rgba(8,7,6,.84);font-size:.62rem}
+.pl60-inspection-stage .pl57-inspection-hint{color:rgba(244,239,229,.9);font-size:.84rem}
+.pl60-inspection .pl57-defect-strip{grid-template-columns:repeat(4,1fr);margin-top:0}
+.pl60-inspection .pl57-defect-strip span{padding:.72rem .5rem;color:rgba(244,239,229,.82);font-size:.61rem}
+
+/* Diagnose: options and recommendation live in the same view. */
+.pl60-plan{padding:5.5rem 0 5.8rem;background:#f4efe5!important;background-image:none!important}
+.pl60-plan .pl57-plan-builder{grid-template-columns:minmax(0,1.16fr) minmax(320px,.72fr);gap:2rem}
+.pl60-plan .pl57-plan-options{gap:10px}
+.pl60-plan .pl57-plan-option{
+  min-height:142px;
+  padding:1rem 1.05rem;
+  background:#fbf8f1;
+  border:1.5px solid rgba(18,16,14,.2);
+  box-shadow:none;
+  transform:none!important;
+}
+.pl60-plan .pl57-plan-option:hover{transform:none;border-color:rgba(18,16,14,.55);background:#fffdf8}
+.pl60-plan .pl57-plan-option.is-on{border-color:var(--pl60-ink);box-shadow:4px 4px 0 var(--pl60-ink);background:#fffdf8}
+.pl60-plan .pl57-plan-option strong{font-size:clamp(1.18rem,1.6vw,1.55rem);line-height:1.08}
+.pl60-plan .pl57-plan-option small{font-size:.83rem;color:#635d54;line-height:1.42}
+.pl60-plan .pl57-plan-result{
+  position:sticky;
+  top:98px;
+  padding:1.25rem 1.3rem 1.3rem;
+  transform:none;
+  background:#fbf8f1;
+  background-image:none!important;
+  border:1.5px solid var(--pl60-ink);
+  box-shadow:6px 6px 0 var(--pl60-red);
+}
+.pl60-plan .pl57-plan-stamp{top:-12px;right:1rem;font-size:.52rem}
+.pl60-plan .pl57-plan-result h3{font-size:clamp(1.9rem,2.7vw,2.85rem);line-height:.94}
+.pl60-plan .pl57-plan-result>p:not(.pl57-mini-label):not(.pl57-plan-fine){font-size:.9rem;color:#4f4941;line-height:1.5}
+.pl60-plan .pl57-plan-price{margin-top:.9rem;padding-top:.8rem}
+.pl60-plan .pl57-plan-price strong{font-size:2.65rem}
+.pl60-plan .pl57-plan-actions{margin-top:1rem;gap:.6rem}
+.pl60-plan .pl57-plan-fine{font-size:.72rem;color:#676057}
+
+/* Process: four steps visible at once, then one real-work proof image. */
+.pl60-process{padding:5.5rem 0 5.8rem;background:#12100e}
+.pl60-process-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pl60-process-card{
+  min-height:250px;
+  padding:1.25rem;
+  color:var(--pl60-ink);
+  background:#f4efe5;
+  border:1px solid rgba(18,16,14,.32);
+  box-shadow:0 10px 26px rgba(0,0,0,.18);
+}
+.pl60-process-number{font-family:var(--font-display);font-size:2.4rem;font-weight:900;line-height:1;color:var(--pl60-red)}
+.pl60-process-card>p{margin:1.35rem 0 .45rem;color:#7b3634;font-family:var(--font-display);font-size:.62rem;font-weight:900;letter-spacing:.14em}
+.pl60-process-card h3{margin:0;font-family:var(--font-display);font-size:1.35rem;line-height:1;text-transform:uppercase}
+.pl60-process-card>span{display:block;margin-top:.7rem;color:#5e574f;font-size:.86rem;line-height:1.5}
+.pl60-proof-photo{position:relative;min-height:360px;margin-top:1.6rem;overflow:hidden;border:1px solid rgba(244,239,229,.22)}
+.pl60-proof-photo img{object-fit:cover;object-position:center 52%}
+.pl60-proof-photo-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,6,5,.86),rgba(7,6,5,.28) 62%,transparent)}
+.pl60-proof-photo-copy{position:absolute;left:1.5rem;bottom:1.5rem;max-width:500px;color:var(--pl60-cream)}
+.pl60-proof-photo-copy p{margin:0 0 .45rem;color:var(--pl60-red);font-family:var(--font-display);font-size:.62rem;font-weight:900;letter-spacing:.14em}
+.pl60-proof-photo-copy strong{font-family:var(--font-display);font-size:clamp(1.45rem,2.5vw,2.4rem);line-height:1.02}
+
+/* Ceramic: truth + prep in one chapter. */
+.pl60-ceramic{padding:5.5rem 0 5.8rem;background:#0f0d0b!important;background-image:none!important}
+.pl60-ceramic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pl60-truth-card{padding:1.3rem 1.4rem;border:1px solid rgba(244,239,229,.22);background:#171411}
+.pl60-truth-card>p{margin:0 0 .45rem;color:var(--pl60-red);font-family:var(--font-display);font-size:.63rem;font-weight:900;letter-spacing:.14em}
+.pl60-truth-card span{display:block;padding:.75rem 0;border-top:1px solid rgba(244,239,229,.15);color:#d8d0c4;font-size:.9rem;line-height:1.48}
+.pl60-prep-strip{display:grid;grid-template-columns:minmax(240px,.55fr) minmax(0,1fr);gap:2rem;align-items:center;margin-top:1.5rem;padding:1.35rem 1.45rem;background:#f1eadf;color:var(--pl60-ink);border:1px solid rgba(18,16,14,.18);box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.pl60-prep-strip p{margin:0;color:#843b37;font-family:var(--font-display);font-size:.62rem;font-weight:900;letter-spacing:.14em}
+.pl60-prep-strip h3{margin:.45rem 0 0;font-family:var(--font-display);font-size:1.55rem;line-height:1.05;text-transform:uppercase}
+.pl60-layer-steps{display:flex;align-items:center;justify-content:flex-end;gap:.55rem;flex-wrap:wrap}
+.pl60-layer-steps span{padding:.62rem .7rem;border:1px solid rgba(18,16,14,.24);font-family:var(--font-display);font-size:.68rem;font-weight:900;letter-spacing:.06em;background:#faf7f0}
+.pl60-layer-steps span b{margin-right:.35rem;color:var(--pl60-red)}
+.pl60-layer-steps i{font-style:normal;color:#8b8378}
+
+/* Services: simple work orders with clear differences and prices. */
+.pl60-tickets{padding:5.5rem 0 5.8rem;background:#e9dfcf}
+.pl60-ticket-grid{gap:16px}
+.pl60-work-ticket{
+  min-height:100%;
+  padding:1.35rem;
+  transform:none!important;
+  background:#f7f1e7;
+  background-image:none!important;
+  border:1.5px solid rgba(18,16,14,.28);
+  box-shadow:0 10px 28px rgba(31,24,17,.09);
+}
+.pl60-work-ticket.is-featured{background:var(--pl60-red);box-shadow:6px 6px 0 #5b1716;color:#1b1211}
+.pl60-work-ticket h3{font-size:clamp(1.75rem,2.35vw,2.35rem);line-height:.98;margin:1rem 0 .55rem}
+.pl60-work-ticket .pl57-ticket-best{min-height:0;color:#5c554d;font-size:.9rem;line-height:1.48}
+.pl60-work-ticket.is-featured .pl57-ticket-best{color:rgba(27,18,17,.78)}
+.pl60-work-ticket .pl57-ticket-price{margin:1rem 0}
+.pl60-work-ticket .pl57-ticket-price strong{font-size:2.7rem}
+.pl60-work-ticket li{font-size:.84rem;line-height:1.43}
+.pl60-work-ticket .pl57-ticket-btn,.pl60-work-ticket .pl57-primary-btn{margin-top:auto;box-shadow:none}
+.pl60-work-ticket.is-featured .pl57-primary-btn{background:#151210;color:#f4efe5;border-color:#151210}
+.pl60-work-ticket .pl57-ticket-fine{display:none}
+
+/* Trust: one proof image and three reasons, no collage. */
+.pl60-trust{padding:5.5rem 0 5.8rem;background:#151311;color:var(--pl60-cream)}
+.pl60-trust-grid{display:grid;grid-template-columns:minmax(0,.88fr) minmax(380px,.85fr);gap:clamp(3rem,6vw,5.5rem);align-items:center}
+.pl60-trust-copy h2{color:var(--pl60-cream)}
+.pl60-trust-list{margin-top:2rem;border-top:1px solid rgba(244,239,229,.2)}
+.pl60-trust-list article{display:grid;grid-template-columns:48px 1fr;gap:.85rem;padding:1rem 0;border-bottom:1px solid rgba(244,239,229,.18)}
+.pl60-trust-list article>span{font-family:var(--font-display);font-size:1rem;font-weight:900;color:var(--pl60-red)}
+.pl60-trust-list h3{margin:0 0 .3rem;font-family:var(--font-display);font-size:1.1rem;letter-spacing:.03em}
+.pl60-trust-list p{margin:0;color:#c9c1b5;font-size:.88rem;line-height:1.52}
+.pl60-trust-photo{position:relative;min-height:480px;margin:0;overflow:hidden;border:1px solid rgba(244,239,229,.22)}
+.pl60-trust-photo img{object-fit:cover;object-position:center 58%}
+.pl60-trust-photo figcaption{position:absolute;left:1rem;bottom:1rem;padding:.5rem .62rem;background:rgba(8,7,6,.78);border:1px solid rgba(244,239,229,.22);font-family:var(--font-display);font-size:.58rem;font-weight:900;letter-spacing:.12em;color:var(--pl60-cream)}
+
+/* Assessment: fewer fields, no application-form feeling. */
+.pl60-form{padding:5.5rem 0 5.8rem;background:#f4efe5!important;background-image:none!important;color:var(--pl60-ink)}
+.pl60-form .paint-lead-shell-compact{
+  display:grid;
+  grid-template-columns:minmax(0,.58fr) minmax(0,1.12fr);
+  gap:2rem;
+  padding:1.3rem;
+  border:1.5px solid rgba(18,16,14,.65);
+  background:#ece3d5;
+  box-shadow:0 14px 36px rgba(36,24,16,.1);
+}
+.pl60-form .paint-lead-shell-compact .paint-lead-intro{position:static;max-width:none;padding:.35rem .4rem}
+.pl60-form .paint-lead-shell-compact .paint-lead-intro h2{margin:.65rem 0 1rem;font-size:clamp(2.2rem,3.4vw,3.55rem);line-height:.96;letter-spacing:-.045em}
+.pl60-form .paint-lead-shell-compact .paint-lead-intro>p:last-of-type{font-size:.94rem;line-height:1.56;color:#5e574f}
+.pl60-form .paint-lead-meta{margin-top:1.2rem}
+.pl60-form .paint-lead-meta span{border-radius:3px;background:#f6f0e6;border-color:rgba(18,16,14,.22);font-size:.62rem}
+.pl60-form .paint-lead-form-compact{padding:1.1rem;gap:.85rem;border:1px solid rgba(18,16,14,.18);border-radius:4px;background:#faf7f0;box-shadow:none}
+.pl60-form .paint-lead-form-compact label>span,.pl60-form .paint-lead-form-compact .paint-choice-field legend{font-size:.7rem;color:#4f4942}
+.pl60-form .paint-lead-form-compact input,.pl60-form .paint-lead-form-compact textarea{border-radius:4px;background:#fffdfa;border-color:rgba(18,16,14,.24);padding:.78rem .85rem}
+.pl60-form .paint-lead-form-compact textarea{min-height:4.9rem}
+.pl60-form .paint-choice-grid-compact{grid-template-columns:1fr 1fr;gap:.5rem}
+.pl60-form .paint-choice-grid-compact .paint-choice span{min-height:2.75rem;border-radius:4px;background:#fffdfa;font-size:.82rem!important;padding:.65rem .75rem}
+.pl60-form .paint-lead-submit{min-height:3.05rem;margin-top:0;border-radius:4px;box-shadow:none}
+.pl60-form .paint-lead-fine{font-size:.7rem}
+
+/* FAQ is a quiet closer, not another hero section. */
+.pl60-faq{padding:4.5rem 0 5rem;background:#e9dfcf!important;background-image:none!important;color:var(--pl60-ink);border-top:1px solid rgba(18,16,14,.12)}
+.pl60-faq-grid{display:grid;grid-template-columns:minmax(230px,.42fr) minmax(0,1fr);gap:clamp(2.5rem,5vw,4.5rem);align-items:start}
+.pl60-faq h2{font-size:clamp(2.4rem,3.5vw,3.65rem);line-height:.95}
+
+@media(max-width:1000px){
+  .pl60-page .pl57-shell{width:min(92vw,1180px)}
+  .pl60-section-intro{grid-template-columns:1fr;gap:.75rem;margin-bottom:1.8rem}
+  .pl60-section-intro>p{max-width:640px}
+  .pl60-process-grid{grid-template-columns:1fr 1fr}
+  .pl60-trust-grid{grid-template-columns:1fr}
+  .pl60-trust-photo{min-height:430px}
+  .pl60-form .paint-lead-shell-compact{grid-template-columns:1fr}
+}
+
+@media(max-width:700px){
+  body:has(.pl60-page) .site-shared-logo-control{left:16px!important;top:14px!important;width:58px!important;height:58px!important}
+  body:has(.pl60-page) .site-shared-logo{width:58px!important;height:58px!important}
+  body:has(.pl60-page) .site-shared-menu-button{top:20px!important;right:16px!important;min-width:82px!important;height:42px!important}
+  .pl60-status{display:none}
+  .pl60-page .pl57-shell{width:min(91vw,1180px)}
+  .pl60-hero{min-height:auto;padding:7rem 0 3.3rem}
+  .pl60-hero .pl57-hero-copy h1{font-size:clamp(3.7rem,16vw,5.2rem);line-height:.85}
+  .pl60-section-intro h2,.pl60-trust-copy h2{font-size:clamp(2.7rem,11.5vw,4rem);line-height:.92}
+  .pl60-inspection,.pl60-plan,.pl60-process,.pl60-ceramic,.pl60-tickets,.pl60-trust,.pl60-form{padding:4.25rem 0}
+  .pl60-inspection-stage{aspect-ratio:4/3.6;max-height:none}
+  .pl60-inspection .pl57-defect-strip{grid-template-columns:1fr 1fr}
+  .pl60-plan .pl57-plan-options{grid-template-columns:1fr}
+  .pl60-plan .pl57-plan-result{position:relative;top:auto}
+  .pl60-process-grid{grid-template-columns:1fr}
+  .pl60-process-card{min-height:0}
+  .pl60-proof-photo{min-height:300px}
+  .pl60-ceramic-grid{grid-template-columns:1fr}
+  .pl60-prep-strip{grid-template-columns:1fr;gap:1rem}
+  .pl60-layer-steps{justify-content:flex-start}
+  .pl60-layer-steps i{display:none}
+  .pl60-layer-steps span{width:100%}
+  .pl60-ticket-grid{grid-template-columns:1fr}
+  .pl60-trust-photo{min-height:360px}
+  .pl60-form .paint-field-grid,.pl60-form .paint-choice-grid-compact{grid-template-columns:1fr}
+  .pl60-faq-grid{grid-template-columns:1fr;gap:1.5rem}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .pl60-inspection-defects{display:none}
+}
+@media(max-width:700px){
+  .pl60-inspection .pl57-defect-strip span:last-child{grid-column:auto}
+}

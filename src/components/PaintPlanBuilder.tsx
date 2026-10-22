@@ -66,7 +66,7 @@ export function PaintPlanBuilder() {
               role="radio"
               aria-checked={on}
               key={item.id}
-              className={`pl57-plan-option ed-paper ${on ? "is-on" : ""}`}
+              className={`pl57-plan-option ${on ? "is-on" : ""}`}
               onClick={() => setSelected(item.id)}
             >
               <span className="pl57-plan-no">{item.number}</span>
@@ -78,7 +78,7 @@ export function PaintPlanBuilder() {
         })}
       </div>
 
-      <aside className="pl57-plan-result ed-paper ed-paper--crumpled" aria-live="polite">
+      <aside className="pl57-plan-result ed-paper" aria-live="polite">
         <div className="pl57-plan-stamp">LIKELY STARTING POINT</div>
         <p className="pl57-mini-label">PAINT LAB / RECOMMENDATION</p>
         <h3>{service.name}</h3>
@@ -92,9 +92,9 @@ export function PaintPlanBuilder() {
           <small>starting at</small>
           <strong>{usd(service.startingAt)}</strong>
         </div>
-        <p className="pl57-plan-fine">This is a likely starting point, not a blind diagnosis. We confirm paint condition before correction.</p>
+        <p className="pl57-plan-fine">Likely starting point only. We confirm the finish before correction begins.</p>
         <div className="pl57-plan-actions">
-          <a href="#paint-quote" className="pl57-primary-btn">BUILD MY PAINT PLAN ↗</a>
+          <a href="#paint-quote" className="pl57-primary-btn">ASK ABOUT MY PAINT ↗</a>
           {service.id !== "ceramic2yr" ? <Link href="/paint-correction">See correction details →</Link> : null}
         </div>
       </aside>

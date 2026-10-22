@@ -17,21 +17,21 @@ export function PaintInspectionLight() {
   }
 
   return (
-    <div className="pl57-inspection-stage" ref={stage} onPointerMove={move}>
+    <div className="pl57-inspection-stage pl60-inspection-stage" ref={stage} onPointerMove={move}>
       <Image
         src="/images/red-paint-detail.jpg"
-        alt="Close-up of a glossy vehicle finish used to demonstrate paint inspection lighting"
+        alt="Close-up of a vehicle finish under inspection lighting"
         fill
-        sizes="(max-width: 900px) 100vw, 62vw"
+        sizes="(max-width: 900px) 100vw, 72vw"
         className="pl57-inspection-image"
         priority={false}
       />
       <div className="pl57-inspection-dim" aria-hidden="true" />
+      <div className="pl60-inspection-defects" aria-hidden="true" />
       <div className="pl57-inspection-lamp" aria-hidden="true" />
       <div className="pl57-inspection-crosshair" aria-hidden="true"><i /><i /></div>
-      <span className="pl57-inspection-tag pl57-inspection-tag-a">INSPECTION LIGHT</span>
-      <span className="pl57-inspection-tag pl57-inspection-tag-b">CLARITY / HAZE / MARRING</span>
-      <p className="pl57-inspection-hint">Move the light across the finish.</p>
+      <span className="pl57-inspection-tag pl57-inspection-tag-a">SIMULATED INSPECTION LIGHT</span>
+      <p className="pl57-inspection-hint">Defects become easier to see under direct light.</p>
     </div>
   );
 }

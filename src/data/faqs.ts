@@ -64,7 +64,7 @@ export const homeFaqs: Faq[] = [
 
 export const paintFaqs: Faq[] = [
   {
-    q: "Enhancement polish or full correction — which one do I need?",
+    q: "Enhancement polish or full correction: which one do I need?",
     a: "An enhancement polish suits newer paint or paint that has lost its gloss. Full correction is for visible swirls, scratches and neglected paint. If you're not sure, request a quote. We'll look at the paint in person and match the process to the car.",
     confirmed: true,
   },
