@@ -32,7 +32,7 @@ export default function DetailPlusPage() {
           </div>
 
           <div className="dp56-hero-art" aria-label="Detail Plus service club preview">
-            <figure className="dp56-polaroid dp56-polaroid-main ed-paper">
+            <figure className="dp56-polaroid dp56-polaroid-main">
               <Photo id="hq-black-suv-finished" priority sizes="(min-width: 900px) 34vw, 88vw" />
               <figcaption>STAYS CLEAN / STAYS READY</figcaption>
             </figure>
@@ -42,12 +42,12 @@ export default function DetailPlusPage() {
               <dl><dt>MEMBER</dt><dd>YOUR CAR</dd><dt>STATUS</dt><dd>ON REPEAT</dd><dt>NEXT VISIT</dt><dd>ALREADY HANDLED</dd></dl>
               <i>+</i>
             </div>
-            <div className="dp56-paper-tag ed-paper">CLEAN SHOULD BE<br/><b>THE BASELINE.</b></div>
+            <div className="dp56-paper-tag">CLEAN SHOULD BE<br/><b>THE BASELINE.</b></div>
           </div>
         </div>
       </section>
 
-      <section className="dp56-thesis ed-paper ed-paper--crumpled">
+      <section className="dp56-thesis">
         <div className="dp56-shell">
           <p className="dp56-kicker dark">WHY THE CLUB EXISTS</p>
           <div className="dp56-thesis-grid">
@@ -55,11 +55,11 @@ export default function DetailPlusPage() {
             <p>Most cars do not suddenly become a disaster. They slowly slide backward. Detail+ changes the timing by bringing us back while the car is still easy to keep right.</p>
           </div>
           <div className="dp56-compare">
-            <article className="dp56-compare-card ed-paper">
+            <article className="dp56-compare-card">
               <span>WITHOUT DETAIL+</span>
               <ol><li><b>01</b> Get it clean</li><li><b>02</b> Life happens</li><li><b>03</b> Put it off</li><li><b>04</b> Need another reset</li></ol>
             </article>
-            <article className="dp56-compare-card ed-paper ed-paper--coral ed-paper--crumpled">
+            <article className="dp56-compare-card dp56-compare-accent">
               <span>WITH DETAIL+</span>
               <ol><li><b>01</b> Get it clean</li><li><b>02</b> Stay on schedule</li><li><b>03</b> We come back</li><li><b>04</b> It still feels right</li></ol>
             </article>
@@ -67,7 +67,7 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section id="club-builder" className="dp56-builder ed-paper">
+      <section id="club-builder" className="dp56-builder">
         <div className="dp56-shell">
           <div className="dp56-section-head">
             <div><p className="dp56-kicker dark">PICK YOUR RHYTHM</p><h2>Your car.<br/><span>Your clean cycle.</span></h2></div>
@@ -77,17 +77,17 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section className="dp56-club-rules ed-paper ed-paper--ink ed-paper--crumpled">
+      <section className="dp56-club-rules">
         <div className="dp56-shell">
           <div className="dp56-rules-band">
             <div><span>01</span><strong>REAL CREW.</strong><p>Your visits are handled by Every Detail technicians, not random contractors.</p></div>
-            <div className="ed-paper ed-paper--coral ed-paper--crumpled"><span>02</span><strong>ONE FLAT RATE.</strong><p>Your plan gets one per-visit price so maintenance stays predictable.</p></div>
+            <div className="dp56-rule-accent"><span>02</span><strong>ONE FLAT RATE.</strong><p>Your plan gets one per-visit price so maintenance stays predictable.</p></div>
             <div><span>03</span><strong>NO CONTRACT.</strong><p>Change the cadence, pause it, or stop when life changes.</p></div>
           </div>
         </div>
       </section>
 
-      <section className="dp56-covered ed-paper ed-paper--crumpled">
+      <section className="dp56-covered">
         <div className="dp56-shell">
           <div className="dp56-section-head">
             <div><p className="dp56-kicker dark">THE DETAIL+ RULE</p><h2>If it&rsquo;s in the plan,<br/><span>it&rsquo;s covered.</span></h2></div>
@@ -95,13 +95,13 @@ export default function DetailPlusPage() {
           </div>
           <div className="dp56-benefit-grid">
             {detailPlusBenefits.map((benefit, index) => (
-              <article key={benefit.title} className="ed-paper">
+              <article key={benefit.title} className="dp56-benefit-card">
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <h3>{benefit.title}</h3>
                 <p>{benefit.body}</p>
               </article>
             ))}
-            <figure className="dp56-benefit-photo ed-paper">
+            <figure className="dp56-benefit-photo">
               <Photo id="hq-interior-team-front-seats" sizes="(min-width: 900px) 31vw, 92vw" />
               <figcaption>REAL CARE / BEFORE IT PILES UP</figcaption>
             </figure>
@@ -118,7 +118,7 @@ export default function DetailPlusPage() {
           </div>
           <div className="dp56-how-steps">
             {detailPlusSteps.map((step, index) => (
-              <article className="ed-paper" key={step.title}>
+              <article className="dp56-how-card" key={step.title}>
                 <b>0{index + 1}</b><h3>{step.title}</h3><p>{step.body}</p>
               </article>
             ))}
@@ -126,7 +126,7 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section className="dp56-faq ed-paper">
+      <section className="dp56-faq">
         <div className="dp56-shell dp56-faq-grid">
           <div><p className="dp56-kicker dark">CLUB QUESTIONS</p><h2>Before you put it<br/><span>on repeat.</span></h2><p>Still want to start with one visit? <Link href="/book">Book a regular detail ↗</Link></p></div>
           <FaqList faqs={detailPlusFaqs} />

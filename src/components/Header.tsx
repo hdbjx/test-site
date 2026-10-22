@@ -219,7 +219,7 @@ export function Header() {
               <div className="site-shared-menu-utility">
                 <Link href="/get-a-quote">Find My Detail</Link>
                 <Link href="/paint-correction">Paint Correction</Link>
-                <Link href="/ceramic">Ceramic</Link>
+                <Link href="/ceramic">Paint Care</Link>
                 <Link href="/service-areas">Service Areas</Link>
                 <Link href="/blog">Shine On Blog</Link>
                 {supabaseConfigured && <a href="/account" data-no-transition="true">Account</a>}

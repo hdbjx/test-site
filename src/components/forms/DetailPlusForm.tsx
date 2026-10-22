@@ -74,7 +74,7 @@ export function DetailPlusForm() {
 
   if (status === "sent") {
     return (
-      <div className="dp56-success ed-paper ed-paper--crumpled">
+      <div className="dp56-success">
         <Success title="Welcome to the list">
           <p>Your plan: {summary}.</p>
           <p>We&rsquo;ll put together your flat per-visit rate and reach out to set the first visit.</p>
@@ -110,7 +110,7 @@ export function DetailPlusForm() {
                   type="button"
                   role="radio"
                   aria-checked={selected}
-                  className={`dp56-cadence-ticket ed-paper ${selected ? "is-selected" : ""}`}
+                  className={`dp56-cadence-ticket ${selected ? "is-selected" : ""}`}
                   onClick={() => { setFreq(option.id); touch(); }}
                 >
                   <small>0{index + 1}</small>
@@ -122,7 +122,7 @@ export function DetailPlusForm() {
           </div>
 
           {freq === "custom" && (
-            <div className="dp56-slider-sheet ed-paper ed-paper--crumpled">
+            <div className="dp56-slider-sheet">
               <div className="dp56-slider-readout">
                 <span>CUSTOM INTERVAL</span>
                 <strong>{displayFrequency}</strong>
@@ -141,7 +141,7 @@ export function DetailPlusForm() {
             </div>
           )}
 
-          <div className="dp56-cycle-card ed-paper ed-paper--ink ed-paper--crumpled">
+          <div className="dp56-cycle-card">
             <div className="dp56-cycle-top"><span>13-WEEK SERVICE CYCLE</span><b>{displayFrequency.toUpperCase()}</b></div>
             <div className="dp56-week-strip" aria-label={`Preview of ${displayFrequency.toLowerCase()} visits across thirteen weeks`}>
               {cycleMarks.map((active, index) => (
@@ -188,7 +188,7 @@ export function DetailPlusForm() {
             <small>MEMBER CARD / PLAN PREVIEW</small>
           </div>
 
-          <div className="dp56-rate-note ed-paper">
+          <div className="dp56-rate-note">
             <span>YOUR RATE</span>
             <strong>ONE FLAT PRICE / VISIT</strong>
             <p>No contract. Pause or change the rhythm whenever you need to.</p>
@@ -196,7 +196,7 @@ export function DetailPlusForm() {
         </aside>
       </div>
 
-      <div className="dp56-contact-sheet ed-paper ed-paper--crumpled">
+      <div className="dp56-contact-sheet">
         <div className="dp56-contact-copy">
           <span>04 / GET YOUR CLUB RATE</span>
           <h3>We&rsquo;ll price your exact plan.</h3>

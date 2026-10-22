@@ -55,7 +55,7 @@ export default function PaintCorrectionPage() {
       <div className="container-ed pv38-options">
         {[enhancement, correction].map((p,i)=><article key={p.id} className={i===1?"is-featured":""}><div className="pv38-option-top"><span>0{i+1}</span><p>{i===0?"LIGHT SWIRLS + HAZE":"VISIBLE / HEAVIER DEFECTS"}</p></div><h3>{p.name}</h3><p className="pv38-option-summary">{p.summary}</p><div className="pv38-price"><small>starting at</small><strong>{usd(p.startingAt)}</strong></div><p className="pv38-best"><b>Best for:</b> {p.bestFor}</p><ul>{p.includes.map(x=><li key={x}>{x}</li>)}</ul><TrackedLink href={quote} event="paint_inquiry" params={{location:`correction_${p.id}`}} className={i===1?"btn btn-primary":"btn btn-secondary"}>Ask about this level</TrackedLink></article>)}
       </div>
-      <div className="container-ed pv38-bridge"><div><p className="pv38-kicker dark">After correction</p><h3>Want to protect the finish for longer?</h3><p>Our ceramic coating service includes the paint preparation it needs before coating.</p></div><Link href="/ceramic" className="pv38-arrow-link">See Ceramic Coating →</Link></div>
+      <div className="container-ed pv38-bridge"><div><p className="pv38-kicker dark">After correction</p><h3>Want to protect the finish for longer?</h3><p>Our ceramic coating service includes the paint preparation it needs before coating.</p></div><Link href="/ceramic" className="pv38-arrow-link">Explore Paint Care →</Link></div>
     </section>
 
     <section id="paint-quote" className="pv38-form"><div className="container-ed"><PaintLeadForm kind="paint-correction"/></div></section>

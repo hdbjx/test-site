@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { submitLead } from "@/lib/submit";
 
-type Kind = "paint-correction" | "ceramic";
+type Kind = "paint-correction" | "ceramic" | "paint-care";
 
 type Props = { kind: Kind };
 
@@ -21,6 +21,13 @@ const COPY = {
     body: "Tell us a little about the vehicle and how the paint looks today. We’ll review it and let you know what preparation and protection we’d recommend before anything is booked.",
     submit: "Get my coating recommendation ↗",
     success: "We’ll review your car and paint condition, then reach out with the coating setup we’d recommend.",
+  },
+  "paint-care": {
+    eyebrow: "Paint plan",
+    title: "Let’s build the right paint plan.",
+    body: "Tell us what you drive and what you are seeing in the finish. We’ll review the paint goal, then recommend the right level of correction and protection instead of automatically pushing the biggest package.",
+    submit: "Build my paint plan ↗",
+    success: "We’ll review your vehicle and paint condition, then reach out with the correction and protection path we’d recommend.",
   },
 } as const;
 
@@ -55,9 +62,9 @@ export function PaintLeadForm({ kind }: Props) {
       email: String(form.get("email") ?? ""),
       vehicleMake,
       vehicleModel,
-      interest: kind === "paint-correction" ? "Paint Correction" : "Ceramic Coating",
-      service: kind === "paint-correction" ? "Paint Correction" : "2-Year Ceramic Coating",
-      source: kind === "paint-correction" ? "Website Paint Correction Page" : "Website Ceramic Coating Page",
+      interest: kind === "paint-correction" ? "Paint Correction" : kind === "ceramic" ? "Ceramic Coating" : "Paint Care",
+      service: kind === "paint-correction" ? "Paint Correction" : kind === "ceramic" ? "2-Year Ceramic Coating" : "Paint Correction / Ceramic",
+      source: kind === "paint-correction" ? "Website Paint Correction Page" : kind === "ceramic" ? "Website Ceramic Coating Page" : "Website Paint Care Page",
       message: context,
       company: String(form.get("company") ?? ""),
     });
