@@ -103,7 +103,7 @@ export const detailPlusFaqs: Faq[] = [
   },
   {
     q: "How often can visits be?",
-    a: "Every 2 weeks, monthly, every 6 weeks, every 2 months, or quarterly.",
+    a: "Bi-weekly, monthly, every 6 weeks, or a custom interval from weekly to quarterly in one-week steps.",
     confirmed: true,
   },
   {

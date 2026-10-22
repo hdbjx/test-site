@@ -2,201 +2,147 @@ import Link from "next/link";
 import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
-import { ReviewGrid } from "@/components/ReviewGrid";
-import { SeasonalDecor } from "@/components/SeasonalDecor";
 import { DetailPlusForm } from "@/components/forms/DetailPlusForm";
-import { detailPlusBenefits, detailPlusGuarantee, frequencies } from "@/data/detailplus";
+import { detailPlusBenefits, detailPlusGuarantee, detailPlusSteps } from "@/data/detailplus";
 import { detailPlusFaqs } from "@/data/faqs";
 import { pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Detail+ Recurring Car Detailing Membership | Every Detail",
-  description: "Recurring mobile detailing in Decatur and Atlanta. Choose every 2 weeks to quarterly, interior, exterior or both, for one flat rate per visit. No contracts.",
+  description: "Recurring mobile detailing in Decatur and Atlanta. Choose bi-weekly, monthly, every six weeks, or a custom 1 to 13 week rhythm, with no contracts.",
   path: "/detailplus",
 });
 
-const loopSteps = [
-  {
-    n: "01",
-    eyebrow: "START CLEAN",
-    title: "Reset the baseline.",
-    body: "Detail+ works best once the car is where you want it. Start with a full detail if needed, then recurring care keeps it from sliding backward.",
-    image: "clean-white-interior",
-    note: "START FROM A CLEAN BASELINE",
-  },
-  {
-    n: "02",
-    eyebrow: "PICK THE RHYTHM",
-    title: "Your schedule, already handled.",
-    body: "Every two weeks, monthly, every six weeks, every two months or quarterly. Pick the cadence that matches how you actually use the car.",
-    image: "technician-branded-van",
-    note: "2 WEEKS → QUARTERLY",
-  },
-  {
-    n: "03",
-    eyebrow: "WE COME BACK",
-    title: "No rebooking ritual.",
-    body: "Your visits recur automatically and we remind you before each one. The mobile setup comes back to you, so staying clean does not become another errand.",
-    image: "mobile-rig-open-driveway",
-    note: "YOUR DRIVEWAY / OUR RIG",
-  },
-  {
-    n: "04",
-    eyebrow: "STAY AHEAD",
-    title: "The mess never gets a head start.",
-    body: "Crumbs, spills, muddy weeks and pet hair get handled as part of the coverage you chose. The point is not another rescue detail. It is avoiding one.",
-    image: "hq-interior-front-seat-work",
-    note: "IF IT'S IN THE PLAN, IT'S COVERED",
-  },
-] as const;
-
 export default function DetailPlusPage() {
   return (
-    <div className="plus-brand plus-v177">
-      <section className="plus-brand-hero plus-v177-hero seasonal-host">
-        <SeasonalDecor variant="web" corner="tl" />
-        <SeasonalDecor variant="sprig" corner="tr" />
-        <div className="plus-v177-ghost" aria-hidden="true">DETAIL+</div>
-        <div className="plus-brand-shell">
-          <div className="plus-brand-hero-grid">
-            <div className="plus-brand-hero-copy">
-              <p className="plus-brand-kicker">DETAIL+ / RECURRING CARE</p>
-              <h1>Clean once.<br/><span>Stay clean.</span></h1>
-              <p className="plus-brand-lede">Detail+ turns car care into a system. Choose the schedule once, then we keep coming back before the mess gets ahead of you.</p>
-              <div className="plus-brand-actions">
-                <a href="#build" className="plus-brand-btn plus-brand-btn-light">Build my plan ↗</a>
-                <a href="#loop" className="plus-brand-text-link">See the loop ↓</a>
-              </div>
-              <div className="plus-v177-hero-proof" aria-label="Detail Plus plan highlights">
-                <span><b>01</b> NO CONTRACT</span>
-                <span><b>02</b> FLAT RATE / VISIT</span>
-                <span><b>03</b> WE COME TO YOU</span>
-              </div>
+    <div className="dp56-page">
+      <section className="dp56-hero ed-paper ed-paper--ink ed-paper--crumpled">
+        <div className="dp56-shell dp56-hero-grid">
+          <div className="dp56-hero-copy">
+            <p className="dp56-kicker">EVERY DETAIL / SERVICE CLUB</p>
+            <h1>STAY CLEAN.<br/><span>SKIP THE RESET.</span></h1>
+            <p className="dp56-hero-lede">Detail+ is recurring mobile detailing for cars that already feel right. Pick the rhythm once, then we come back before the mess turns into another reset.</p>
+            <div className="dp56-hero-actions">
+              <a href="#club-builder" className="dp56-btn dp56-btn-light">JOIN DETAIL+ ↗</a>
+              <a href="#how-it-works" className="dp56-text-link">SEE HOW IT WORKS ↓</a>
             </div>
-            <figure className="plus-brand-photo plus-v177-hero-photo seasonal-host">
-              <Photo id="hq-black-suv-finished" priority sizes="(min-width: 900px) 42vw, 94vw"/>
-              <div className="plus-v177-photo-wash" aria-hidden="true" />
-              <div className="plus-brand-stamp plus-brand-hero-stamp">DETAIL+<br/>ON REPEAT</div>
-              <figcaption>YOUR DRIVEWAY / OUR STANDARD / ON REPEAT</figcaption>
+            <div className="dp56-proof-row" aria-label="Detail Plus plan highlights">
+              <span>NO CONTRACT</span><span>FLAT RATE / VISIT</span><span>WE COME TO YOU</span>
+            </div>
+          </div>
+
+          <div className="dp56-hero-art" aria-label="Detail Plus service club preview">
+            <figure className="dp56-polaroid dp56-polaroid-main ed-paper">
+              <Photo id="hq-black-suv-finished" priority sizes="(min-width: 900px) 34vw, 88vw" />
+              <figcaption>STAYS CLEAN / STAYS READY</figcaption>
+            </figure>
+            <div className="dp56-club-card ed-paper ed-paper--coral ed-paper--crumpled">
+              <div><span>EVERY DETAIL</span><b>DETAIL+</b></div>
+              <p>SERVICE CLUB</p>
+              <dl><dt>MEMBER</dt><dd>YOUR CAR</dd><dt>STATUS</dt><dd>ON REPEAT</dd><dt>NEXT VISIT</dt><dd>ALREADY HANDLED</dd></dl>
+              <i>+</i>
+            </div>
+            <div className="dp56-paper-tag ed-paper">CLEAN SHOULD BE<br/><b>THE BASELINE.</b></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="dp56-thesis ed-paper ed-paper--crumpled">
+        <div className="dp56-shell">
+          <p className="dp56-kicker dark">WHY THE CLUB EXISTS</p>
+          <div className="dp56-thesis-grid">
+            <h2>Clean once is a moment.<br/><span>Staying clean is a system.</span></h2>
+            <p>Most cars do not suddenly become a disaster. They slowly slide backward. Detail+ changes the timing by bringing us back while the car is still easy to keep right.</p>
+          </div>
+          <div className="dp56-compare">
+            <article className="dp56-compare-card ed-paper">
+              <span>WITHOUT DETAIL+</span>
+              <ol><li><b>01</b> Get it clean</li><li><b>02</b> Life happens</li><li><b>03</b> Put it off</li><li><b>04</b> Need another reset</li></ol>
+            </article>
+            <article className="dp56-compare-card ed-paper ed-paper--coral ed-paper--crumpled">
+              <span>WITH DETAIL+</span>
+              <ol><li><b>01</b> Get it clean</li><li><b>02</b> Stay on schedule</li><li><b>03</b> We come back</li><li><b>04</b> It still feels right</li></ol>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="club-builder" className="dp56-builder ed-paper">
+        <div className="dp56-shell">
+          <div className="dp56-section-head">
+            <div><p className="dp56-kicker dark">PICK YOUR RHYTHM</p><h2>Your car.<br/><span>Your clean cycle.</span></h2></div>
+            <p>Bi-weekly, monthly, every six weeks, or completely custom. Slide Custom anywhere from weekly to quarterly in one-week steps.</p>
+          </div>
+          <DetailPlusForm />
+        </div>
+      </section>
+
+      <section className="dp56-club-rules ed-paper ed-paper--ink ed-paper--crumpled">
+        <div className="dp56-shell">
+          <div className="dp56-rules-band">
+            <div><span>01</span><strong>REAL CREW.</strong><p>Your visits are handled by Every Detail technicians, not random contractors.</p></div>
+            <div className="ed-paper ed-paper--coral ed-paper--crumpled"><span>02</span><strong>ONE FLAT RATE.</strong><p>Your plan gets one per-visit price so maintenance stays predictable.</p></div>
+            <div><span>03</span><strong>NO CONTRACT.</strong><p>Change the cadence, pause it, or stop when life changes.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="dp56-covered ed-paper ed-paper--crumpled">
+        <div className="dp56-shell">
+          <div className="dp56-section-head">
+            <div><p className="dp56-kicker dark">THE DETAIL+ RULE</p><h2>If it&rsquo;s in the plan,<br/><span>it&rsquo;s covered.</span></h2></div>
+            <blockquote>&ldquo;{detailPlusGuarantee}&rdquo;</blockquote>
+          </div>
+          <div className="dp56-benefit-grid">
+            {detailPlusBenefits.map((benefit, index) => (
+              <article key={benefit.title} className="ed-paper">
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <h3>{benefit.title}</h3>
+                <p>{benefit.body}</p>
+              </article>
+            ))}
+            <figure className="dp56-benefit-photo ed-paper">
+              <Photo id="hq-interior-team-front-seats" sizes="(min-width: 900px) 31vw, 92vw" />
+              <figcaption>REAL CARE / BEFORE IT PILES UP</figcaption>
             </figure>
           </div>
         </div>
-        <div className="plus-v177-cadence-rail" aria-label="Available Detail Plus frequencies">
-          <span>YOUR CADENCE</span>
-          {frequencies.map((f, i) => <b key={f.id}>{f.label}{i < frequencies.length - 1 ? <i>•</i> : null}</b>)}
-        </div>
       </section>
 
-
-      <section className="plus-offer-clarity" aria-label="Detail Plus plan summary">
-        <div className="plus-brand-shell plus-offer-grid">
-          <div><span>CHOOSE YOUR FREQUENCY</span><strong>Every 2 weeks → Quarterly</strong></div>
-          <div><span>CHOOSE YOUR COVERAGE</span><strong>Interior · Exterior · Both</strong></div>
-          <div><span>ONE FLAT RATE</span><strong>Per visit · No contract</strong></div>
-          <a href="#build">Build my plan ↗</a>
-        </div>
-      </section>
-
-      <section className="plus-v177-manifesto plus-v180-manifesto seasonal-host">
-        <SeasonalDecor variant="leafPile" corner="bl" />
-        <div className="plus-brand-shell plus-v180-manifesto-grid">
-          <div className="plus-v180-manifesto-copy">
-            <p className="plus-brand-kicker">THE IDEA IS SIMPLE</p>
-            <h2>Clean should be the <span>baseline.</span></h2>
-            <p>Most cars do not get wrecked overnight. They slowly fall behind. Detail+ changes the timing by bringing us back while the car is still manageable.</p>
-            <div className="plus-v180-manifesto-points">
-              <span><b>01</b> LESS BUILDUP</span>
-              <span><b>02</b> FEWER RESCUE CLEANS</span>
-              <span><b>03</b> CONSISTENTLY CLEAN</span>
-            </div>
+      <section id="how-it-works" className="dp56-how ed-paper ed-paper--coral ed-paper--crumpled">
+        <div className="dp56-shell dp56-how-grid">
+          <div className="dp56-how-copy">
+            <p className="dp56-kicker">THE LOOP</p>
+            <h2>Set it once.<br/><span>Keep it moving.</span></h2>
+            <p>Detail+ is supposed to remove decisions from car care, not add more of them.</p>
           </div>
-          <figure className="plus-v180-manifesto-photo seasonal-host">
-            <SeasonalDecor variant="web" corner="tr" />
-            <Photo id="hq-interior-team-front-seats" sizes="(min-width: 900px) 44vw, 94vw" />
-            <figcaption>REAL CARE / BEFORE IT PILES UP</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section id="loop" className="plus-v177-loop seasonal-host">
-        <SeasonalDecor variant="web" corner="tr" />
-        <div className="plus-brand-shell plus-v177-loop-grid">
-          <aside className="plus-v177-loop-sticky">
-            <p className="plus-brand-kicker">HOW DETAIL+ WORKS</p>
-            <h2>One loop.<br/><span>That keeps working.</span></h2>
-            <div className="plus-v177-orbit" aria-hidden="true">
-              <div className="plus-v177-orbit-ring"><b>+</b></div>
-              <span className="p1">RESET</span><span className="p2">SCHEDULE</span><span className="p3">RETURN</span><span className="p4">REPEAT</span>
-            </div>
-            <p className="plus-v177-loop-sub">Pick the cadence once. We return on that rhythm and handle the work before the car falls behind again.</p>
-          </aside>
-          <div className="plus-v177-loop-steps">
-            {loopSteps.map((s) => (
-              <article className="plus-v177-loop-step seasonal-host" key={s.n}>
-                <figure className="seasonal-host">
-                  {s.n === "02" ? <SeasonalDecor variant="sprig" corner="tr" /> : null}
-                  {s.n === "04" ? <SeasonalDecor variant="leafPile" corner="br" /> : null}
-                  <Photo id={s.image} sizes="(min-width: 900px) 46vw, 94vw" />
-                  <figcaption>{s.note}</figcaption>
-                </figure>
-                <div className="plus-v177-step-copy">
-                  <div className="plus-v177-step-top"><b>{s.n}</b><span>{s.eyebrow}</span></div>
-                  <h3>{s.title}</h3>
-                  <p>{s.body}</p>
-                </div>
+          <div className="dp56-how-steps">
+            {detailPlusSteps.map((step, index) => (
+              <article className="ed-paper" key={step.title}>
+                <b>0{index + 1}</b><h3>{step.title}</h3><p>{step.body}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="plus-v177-covered seasonal-host">
-        <SeasonalDecor variant="sprig" corner="tr" />
-        <div className="plus-brand-shell">
-          <div className="plus-v177-covered-head">
-            <div><p className="plus-brand-kicker">THE DETAIL+ RULE</p><h2>Life happens.<br/><span>Your price doesn’t.</span></h2></div>
-            <blockquote>“{detailPlusGuarantee}”</blockquote>
-          </div>
-          <div className="plus-v177-benefit-grid plus-v180-benefit-grid">
-            {detailPlusBenefits.map((b, i) => <article key={b.title}><span>{String(i + 1).padStart(2, "0")}</span><h3>{b.title}</h3><p>{b.body}</p></article>)}
-            <figure className="plus-v180-benefit-photo seasonal-host">
-              <SeasonalDecor variant="leafPile" corner="br" /><Photo id="classic-red-wheel" sizes="(min-width: 900px) 28vw, 94vw"/><figcaption>THE STANDARD / EVERY VISIT</figcaption></figure>
-          </div>
+      <section className="dp56-faq ed-paper">
+        <div className="dp56-shell dp56-faq-grid">
+          <div><p className="dp56-kicker dark">CLUB QUESTIONS</p><h2>Before you put it<br/><span>on repeat.</span></h2><p>Still want to start with one visit? <Link href="/book">Book a regular detail ↗</Link></p></div>
+          <FaqList faqs={detailPlusFaqs} />
         </div>
       </section>
 
-      <section id="build" className="plus-brand-build plus-v177-build seasonal-host">
-        <SeasonalDecor variant="web" corner="tl" />
-        <div className="plus-brand-shell plus-brand-build-grid">
-          <div className="plus-brand-build-copy">
-            <p className="plus-brand-kicker">BUILD YOUR PLAN</p>
-            <h2>Set the rhythm.<br/><span>We’ll handle the rest.</span></h2>
-            <p>Choose your vehicle, frequency and coverage. We’ll put together the flat per-visit rate and reach out to get the first visit on the calendar.</p>
-            <div className="plus-v177-build-notes">
-              <span>NO CONTRACT</span><span>PAUSE OR CHANGE ANYTIME</span><span>REMINDER BEFORE EACH VISIT</span>
-            </div>
-            <div className="plus-brand-mini"><b>NOT READY FOR RECURRING?</b><p>Start with one detail. Move into Detail+ once you know the work.</p><Link href="/book">Book one detail first ↗</Link></div>
-          </div>
-          <div className="plus-brand-form-wrap seasonal-host"><SeasonalDecor variant="leafPile" corner="br" /><div className="plus-brand-form-label"><span>YOUR DETAIL+ PLAN</span><b>BUILD IT ↓</b></div><DetailPlusForm /></div>
+      <section className="dp56-final ed-paper ed-paper--ink ed-paper--crumpled">
+        <div className="dp56-shell">
+          <p className="dp56-kicker">DETAIL+ / READY WHEN YOU ARE</p>
+          <h2>NEVER THINK ABOUT<br/><span>A DIRTY CAR AGAIN.</span></h2>
+          <p>Pick the rhythm. Get the flat rate. We&rsquo;ll keep showing up.</p>
+          <a href="#club-builder" className="dp56-btn dp56-btn-light">BUILD MY DETAIL+ PLAN ↗</a>
         </div>
       </section>
 
-      <section className="plus-brand-reviews plus-v177-reviews plus-v180-reviews seasonal-host">
-        <SeasonalDecor variant="web" corner="tr" />
-        <div className="plus-brand-shell plus-v180-reviews-grid">
-          <div className="plus-v180-reviews-intro">
-            <p className="plus-brand-kicker">WHY PEOPLE COME BACK</p>
-            <h2>The standard stays.<br/><span>So do they.</span></h2>
-            <figure className="seasonal-host"><SeasonalDecor variant="sprig" corner="tr" /><Photo id="crew-shirt-van" sizes="(min-width: 900px) 28vw, 94vw"/><figcaption>LOCAL CREW / RECURRING CARE</figcaption></figure>
-          </div>
-          <div className="plus-v180-review-grid"><ReviewGrid /></div>
-        </div>
-      </section>
-
-      <section className="plus-brand-faq seasonal-host"><SeasonalDecor variant="leafPile" corner="bl" /><div className="plus-brand-shell plus-brand-faq-grid"><div><p className="plus-brand-kicker">BEFORE YOU PUT IT ON REPEAT</p><h2>Good questions.<br/><span>Clear answers.</span></h2></div><FaqList faqs={detailPlusFaqs}/></div></section>
-
-      <section className="plus-brand-final plus-v177-final seasonal-host"><SeasonalDecor variant="pumpkin" corner="br" /><SeasonalDecor variant="web" corner="tl" /><div className="plus-brand-shell"><div className="plus-v177-final-loop" aria-hidden="true">↻</div><p className="plus-brand-kicker">DETAIL+ / READY WHEN YOU ARE</p><h2>Stop re-deciding<br/><span>to clean the car.</span></h2><p>Set the plan once. We’ll keep showing up.</p><a href="#build" className="plus-brand-btn plus-brand-btn-light">Build my Detail+ plan ↗</a></div></section>
-      <JsonLd data={serviceSchema({name:"Detail+ recurring detailing membership",description:"Recurring mobile car detailing on a set schedule for one flat rate per visit.",path:"/detailplus"})}/>
+      <JsonLd data={serviceSchema({ name: "Detail+ recurring detailing membership", description: "Recurring mobile car detailing on a set schedule for one flat rate per visit.", path: "/detailplus" })} />
     </div>
   );
 }

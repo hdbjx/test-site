@@ -1,14 +1,13 @@
 /**
- * Detail+ recurring membership. Pulled from the current Detail+ page.
+ * Detail+ recurring membership.
  * Pricing is a custom flat rate quoted per plan, so no prices are published.
  */
 
 export const frequencies = [
-  { id: "biweekly", label: "Every 2 weeks" },
-  { id: "monthly", label: "Monthly" },
-  { id: "6weeks", label: "Every 6 weeks" },
-  { id: "bimonthly", label: "Every 2 months" },
-  { id: "quarterly", label: "Quarterly" },
+  { id: "biweekly", label: "Bi-weekly", hint: "Every 2 weeks", weeks: 2 },
+  { id: "monthly", label: "Monthly", hint: "About every 4 weeks", weeks: 4 },
+  { id: "6weeks", label: "Six weeks", hint: "Every 6 weeks", weeks: 6 },
+  { id: "custom", label: "Custom", hint: "1 to 13 weeks", weeks: null },
 ] as const;
 
 export const coverages = [
@@ -41,9 +40,9 @@ export const detailPlusBenefits = [
 ];
 
 export const detailPlusSteps = [
-  { title: "Build your plan", body: "Pick how often and what gets cleaned: interior, exterior, or both." },
+  { title: "Choose your rhythm", body: "Pick a cadence from weekly to quarterly and choose what gets cleaned." },
   { title: "Get your flat rate", body: "We quote a price for your car and plan. That's what you pay every visit." },
-  { title: "We keep it clean", body: "Visits land on your schedule with a reminder beforehand. You don't have to think about it." },
+  { title: "Stay on the schedule", body: "Visits recur with a reminder beforehand, so the car gets handled before it falls behind." },
 ];
 
 export const detailPlusGuarantee = "If it's in your plan, it's covered.";
