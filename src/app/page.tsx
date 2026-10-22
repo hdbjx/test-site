@@ -40,10 +40,9 @@ export default function Home() {
         <div className="v29-hero-shade" aria-hidden="true" />
         <div className="v30-hero-focus" aria-hidden="true" />
         <div className="v29-shell v29-hero-inner">
-          <h1 id="v29-hero-title" className="v29-hero-title" data-v29-hero-type>
+          <h1 id="v29-hero-title" className="v29-hero-title v43-hero-title" data-v29-hero-type>
             <span>YOUR CAR.</span>
-            <span>BACK TO</span>
-            <span>ITS BEST.</span>
+            <span>BACK TO ITS BEST.</span>
           </h1>
           <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_hero" }} className="v29-hero-cta" data-v29-magnetic>Book a detail <span>↗</span></TrackedLink>
         </div>

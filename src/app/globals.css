@@ -10996,3 +10996,181 @@ html[data-proof-active="true"] body:has(.v29-hero) .site-shared-logo-control.hom
   .v41-proof-rail{transform:none!important}
   .v41-story-collage .v37-story-photo{transform:none!important;cursor:default}
 }
+
+
+/* ============================================================
+   V43 — HERO ART-DIRECTION PASS
+   Clean / dramatic / retro-premium. Homepage only.
+   ============================================================ */
+
+/* Let the photography read like a campaign frame instead of a bright driveway snapshot. */
+.v29-hero{
+  min-height:100svh;
+  background:#080806;
+}
+.v29-hero-photo{
+  transform:translate3d(calc(var(--v29-x15) * -.65),calc(var(--v29-y10) * -.55),0) scale(1.055)!important;
+}
+.v29-hero-photo img{
+  object-position:50% 52%!important;
+  transform:scale(calc(var(--hero-scale,1.02) + .035))!important;
+  animation:v43HeroImageIn 1.05s cubic-bezier(.16,1,.3,1) both!important;
+}
+@keyframes v43HeroImageIn{
+  from{opacity:.68;filter:brightness(.48) saturate(.62) contrast(1.08) sepia(.06)}
+  to{opacity:1;filter:brightness(.69) saturate(.78) contrast(1.09) sepia(.055)}
+}
+.v29-hero-shade{
+  background:
+    linear-gradient(180deg,rgba(7,7,5,.50) 0%,rgba(7,7,5,.10) 31%,rgba(7,7,5,.12) 52%,rgba(7,7,5,.60) 100%),
+    radial-gradient(ellipse 66% 70% at 50% 54%,transparent 0 34%,rgba(4,4,3,.18) 58%,rgba(4,4,3,.52) 100%),
+    linear-gradient(90deg,rgba(5,5,4,.20),transparent 22%,transparent 78%,rgba(5,5,4,.24));
+}
+.v30-hero-focus{
+  top:53%!important;
+  width:min(1180px,78vw)!important;
+  height:min(510px,52vh)!important;
+  background:rgba(0,0,0,.18)!important;
+  filter:blur(34px)!important;
+}
+
+/* Two-line editorial lockup. One cream statement, one coral payoff. */
+.v29-hero-inner{
+  padding-top:164px!important;
+  padding-bottom:72px!important;
+  justify-content:center!important;
+}
+.v29-hero-title.v43-hero-title{
+  width:min(1320px,91vw)!important;
+  max-width:none!important;
+  gap:.115em!important;
+  line-height:.78!important;
+  letter-spacing:-.052em!important;
+}
+.v29-hero-title.v43-hero-title span{
+  margin:0!important;
+  align-self:center!important;
+  filter:drop-shadow(0 8px 26px rgba(0,0,0,.25))!important;
+  white-space:nowrap;
+}
+.v29-hero-title.v43-hero-title span:nth-child(1){
+  color:#f3eddf!important;
+  font-size:clamp(7.3rem,12.8vw,13.2rem)!important;
+  letter-spacing:-.058em!important;
+  transform:translate3d(calc(var(--v29-x15) * -.44),calc(var(--v29-y9) * -.4),0) rotate(var(--hero-r1,0deg))!important;
+}
+.v29-hero-title.v43-hero-title span:nth-child(2){
+  color:#d56865!important;
+  font-size:clamp(5.55rem,8.55vw,9rem)!important;
+  letter-spacing:-.055em!important;
+  transform:translate3d(calc(var(--v29-x12) * .34),calc(var(--v29-y5) * .34),0) rotate(var(--hero-r2,0deg))!important;
+}
+@media(pointer:fine){
+  .v29-hero-title.v43-hero-title:hover span:nth-child(1){letter-spacing:-.052em!important}
+  .v29-hero-title.v43-hero-title:hover span:nth-child(2){letter-spacing:-.049em!important}
+}
+
+/* The CTA reads like a tactile vintage label, not a generic web button. */
+.v29-hero-cta{
+  margin-top:2.55rem!important;
+  min-height:54px!important;
+  padding:0 1.55rem!important;
+  gap:1.35rem!important;
+  border:1px solid rgba(10,10,8,.82)!important;
+  background:#f3eddf!important;
+  color:#0a0a08!important;
+  box-shadow:4px 4px 0 rgba(0,0,0,.58),0 14px 36px rgba(0,0,0,.16)!important;
+  font-size:.80rem!important;
+  letter-spacing:.145em!important;
+}
+.v29-hero-cta:hover{
+  background:#d56865!important;
+  color:#fff!important;
+  box-shadow:6px 6px 0 rgba(0,0,0,.58),0 16px 38px rgba(0,0,0,.18)!important;
+}
+
+/* Keep the logo. Refine the surrounding chrome so it does not compete with it. */
+body:has(.v29-hero) .site-shared-logo-control.home-logo-control{
+  top:24px!important;
+  width:92px!important;
+  height:92px!important;
+}
+body:has(.v29-hero) .site-shared-menu-button{
+  top:62px!important;
+  right:max(3.55vw,30px)!important;
+  min-width:106px!important;
+  height:49px!important;
+  padding:0 15px!important;
+  border-color:rgba(243,237,223,.52)!important;
+  background:rgba(8,8,7,.28)!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.10)!important;
+  backdrop-filter:blur(9px)!important;
+  -webkit-backdrop-filter:blur(9px)!important;
+}
+body:has(.v29-hero) .site-shared-menu-label{font-size:.73rem!important;letter-spacing:.17em!important;gap:.72rem!important}
+
+/* A shallow curved tape physically overlaps the photo edge without becoming a giant block. */
+.v36-tape.v41-tape{
+  width:calc(100% + 84px)!important;
+  height:126px!important;
+  margin:-57px 0 -15px -42px!important;
+  transform:rotate(-.28deg)!important;
+  clip-path:polygon(
+    0 18%, 10% 11%, 24% 6%, 40% 3%, 50% 2%, 60% 3%, 76% 6%, 90% 11%, 100% 18%,
+    100% 91%, 90% 86%, 76% 82%, 60% 80%, 50% 79%, 40% 80%, 24% 82%, 10% 86%, 0 91%
+  )!important;
+  filter:drop-shadow(0 10px 0 rgba(75,25,27,.08))!important;
+}
+.v41-tape-track{top:49.5%!important}
+.v41-tape-track span{
+  font-size:clamp(2.5rem,3.85vw,3.95rem)!important;
+  letter-spacing:-.04em!important;
+}
+
+@media(max-width:1100px){
+  .v29-hero-title.v43-hero-title{width:min(950px,92vw)!important;gap:.13em!important}
+  .v29-hero-title.v43-hero-title span:nth-child(1){font-size:clamp(6.1rem,14.2vw,9.2rem)!important}
+  .v29-hero-title.v43-hero-title span:nth-child(2){font-size:clamp(4.75rem,9.55vw,6.6rem)!important}
+}
+
+@media(max-width:900px){
+  .v29-hero-photo{transform:scale(1.04)!important}
+  .v29-hero-photo img{object-position:57% 52%!important;transform:scale(calc(var(--hero-scale,1.02) + .025))!important}
+  .v29-hero-shade{
+    background:
+      linear-gradient(180deg,rgba(6,6,5,.45) 0%,rgba(6,6,5,.08) 27%,rgba(6,6,5,.20) 55%,rgba(6,6,5,.74) 100%),
+      radial-gradient(ellipse 92% 68% at 50% 55%,transparent 0 34%,rgba(4,4,3,.36) 100%);
+  }
+  .v29-hero-inner{padding:128px 0 64px!important}
+  .v29-hero-title.v43-hero-title{width:100%!important;gap:.12em!important;line-height:.80!important}
+  .v29-hero-title.v43-hero-title span:nth-child(1){font-size:clamp(4.9rem,19.6vw,7rem)!important}
+  .v29-hero-title.v43-hero-title span:nth-child(2){font-size:clamp(3.35rem,12.2vw,4.9rem)!important;white-space:nowrap!important}
+  .v29-hero-cta{margin-top:2rem!important;min-height:52px!important}
+  body:has(.v29-hero) .site-shared-logo-control.home-logo-control{top:max(12px,env(safe-area-inset-top))!important;width:72px!important;height:72px!important}
+  body:has(.v29-hero) .site-shared-menu-button{top:max(22px,calc(env(safe-area-inset-top) + 10px))!important;right:16px!important;min-width:82px!important;height:44px!important;padding:0 12px!important}
+  body:has(.v29-hero) .site-shared-menu-label{font-size:.68rem!important;letter-spacing:.145em!important;gap:.52rem!important}
+  .v36-tape.v41-tape{
+    width:calc(100% + 48px)!important;
+    height:100px!important;
+    margin:-42px 0 -9px -24px!important;
+    transform:rotate(-.38deg)!important;
+    clip-path:polygon(
+      0 17%, 12% 10%, 30% 5%, 50% 2%, 70% 5%, 88% 10%, 100% 17%,
+      100% 92%, 88% 87%, 70% 83%, 50% 81%, 30% 83%, 12% 87%, 0 92%
+    )!important;
+  }
+  .v41-tape-track span{font-size:2.35rem!important}
+}
+
+@media(max-width:520px){
+  .v29-hero-inner{padding:116px 0 58px!important}
+  .v29-hero-title.v43-hero-title span:nth-child(1){font-size:clamp(4.4rem,20.2vw,5.9rem)!important}
+  .v29-hero-title.v43-hero-title span:nth-child(2){font-size:clamp(2.95rem,12.4vw,4rem)!important}
+  .v29-hero-cta{margin-top:1.75rem!important;min-height:50px!important;padding-inline:1.3rem!important}
+  .v36-tape.v41-tape{height:92px!important;margin-top:-38px!important}
+  .v41-tape-track span{font-size:2rem!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .v29-hero-photo img{animation:none!important;filter:brightness(.69) saturate(.78) contrast(1.09) sepia(.055)!important}
+}
