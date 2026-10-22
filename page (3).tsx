@@ -21,34 +21,33 @@ export default function Home() {
 
   return (
     <>
-      <section className="hero-full v23-hero" aria-label="Every Detail mobile car detailing">
+      <section className="hero-full" aria-label="Every Detail mobile car detailing">
         <div className="hero-shade" />
-        <div className="container-ed hero-inner v23-hero-inner">
-          <div className="hero-copy v23-hero-copy rise">
-            <p className="hero-kicker">Mobile detailing · Decatur + Atlanta</p>
-            <h1 className="hero-title v23-hero-title"><span>Your car.</span><span>Back to its best.</span></h1>
-            <p className="hero-lede v23-hero-lede">Full inside-and-out mobile detailing at your driveway. We bring the crew, power, water, tools, and everything else.</p>
-            <div className="v23-hero-actions">
-              <Link href="/get-a-quote" className="btn btn-primary">Get my quote</Link>
-              <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="v23-text-action">Book a detail <span aria-hidden="true">↗</span></TrackedLink>
+        <div className="container-ed hero-inner">
+          <div className="hero-copy rise">
+            <p className="hero-kicker">Mobile detailing / Decatur + Atlanta</p>
+            <h1 className="hero-title"><span>Your car.</span><span>Back to its best.</span></h1>
+            <p className="hero-lede">Professional mobile car detailing in Decatur and Atlanta, right at your driveway.<br />We bring the power and water.</p>
+            <div className="mt-7 flex flex-wrap gap-4">
+              <Link href="/get-a-quote" className="btn btn-primary">Get my quote ↗</Link>
+              <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-quote">Book a detail</TrackedLink>
             </div>
           </div>
-          <p className="v23-photo-caption" aria-hidden="true">Every Detail · Decatur, Georgia</p>
         </div>
       </section>
 
-      <section className="proof-row v23-proof" aria-label="Why people choose Every Detail">
-        <div className="container-ed v23-proof-grid">
-          <span className="proof-stars"><strong><LiveReviewCount /></strong> five-star reviews</span>
+      <section className="proof-row" aria-label="Why people choose Every Detail">
+        <div className="container-ed grid gap-3 py-5 text-center sm:grid-cols-2 lg:grid-cols-4">
+          <span className="proof-stars">★★★★★ <strong><LiveReviewCount /></strong> five-star reviews</span>
           <span>{site.award.title}</span><span>Power + water included</span><span>100% electric rigs</span>
         </div>
       </section>
 
       <section id="pricing" className="home-services home-services-v14">
         <div className="container-ed">
-          <div className="home-section-head v14-service-head v23-service-head">
-            <div><p className="eyebrow">Three levels. That’s it.</p><h2 id="pricing-heading" className="home-display">Choose the clean<br />your car needs.</h2></div>
-            <p className="home-section-copy">No package maze. Start with the condition of your car, then we’ll show you the right service and exact price for your vehicle.</p>
+          <div className="home-section-head v14-service-head">
+            <div><p className="eyebrow">Start here</p><h2 id="pricing-heading" className="home-display">Choose what<br />your car needs.</h2></div>
+            <p className="home-section-copy">Three details. No package maze. Pick the level of clean you want, then tell us what you drive.</p>
           </div>
           <HomeBookingFlow />
           <div className="home-text-links v14-service-links"><Link href="/our-services" className="link">Compare every service ↗</Link><Link href="/get-a-quote" className="link">Not sure what you need? Ask us</Link></div>
@@ -57,10 +56,10 @@ export default function Home() {
 
       <section className="home-work home-work-v157" aria-labelledby="work-heading">
         <div className="work-v157-shell">
-          <div className="work-v157-head v23-work-head">
-            <p className="eyebrow">Recent work</p>
-            <h2 id="work-heading" className="home-display">Real cars.<br /><span>Real driveways.</span></h2>
-            <p className="work-proof-copy">Every photo here is ours. Our crew, our rigs, and actual jobs around Decatur and Atlanta.</p>
+          <div className="work-v157-head">
+            <p className="eyebrow">Real cars. Real driveways. Real crew.</p>
+            <h2 id="work-heading" className="home-display">This is what the work <span>actually looks like.</span></h2>
+            <p className="work-proof-copy">No stock photos and no mystery shop. Just our crew, our rigs, and real jobs around Decatur and Atlanta.</p>
           </div>
 
           <figure className="work-v157-lead">
