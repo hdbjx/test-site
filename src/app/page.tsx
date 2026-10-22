@@ -1,13 +1,11 @@
 import Link from "next/link";
-import { FaqList } from "@/components/FaqList";
-import { Photo } from "@/components/Photo";
+import { HomeArtMotion } from "@/components/HomeArtMotion";
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
+import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
-import { HomeCinematicMotion } from "@/components/HomeCinematicMotion";
-import { homeFaqs } from "@/data/faqs";
-import { reviewCountLabel, site } from "@/data/site";
 import { reviews } from "@/data/reviews";
+import { reviewCountLabel } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -17,189 +15,120 @@ export const metadata = pageMetadata({
   image: "og-default",
 });
 
-const processStages = [
-  {
-    no: "01",
-    label: "Interior",
-    title: "Reset the cabin.",
-    body: "Vacuuming, surfaces, glass, seats, mats, cupholders, cargo space. The places you touch and notice every day get handled first.",
-    image: "two-tech-interior-detail",
-  },
-  {
-    no: "02",
-    label: "Exterior",
-    title: "Work the outside.",
-    body: "Wheels, tires, foam, hand wash, details, drying. Our rigs arrive with the power, water, tools, and products already onboard.",
-    image: "work-mateo-0670",
-  },
-  {
-    no: "03",
-    label: "Finish",
-    title: "Hand it back right.",
-    body: "Final checks happen before we call it done. The goal is simple: the car should feel meaningfully better the second you get back in.",
-    image: "work-finished-0771",
-  },
-];
+const leadReview = reviews[2];
 
 export default function Home() {
-  const featuredFaqs = [homeFaqs[2], homeFaqs[4], homeFaqs[7], homeFaqs[5]];
-  const leadReview = reviews[2];
-
   return (
     <>
-      <HomeCinematicMotion />
+      <HomeArtMotion />
 
-      <section className="ed26-hero" data-ed26-hero aria-labelledby="home-hero-title">
-        <div className="ed26-hero-media"><Photo id="hero" sizes="100vw" fill priority /></div>
-        <div className="ed26-hero-wash" aria-hidden="true" />
-        <div className="ed26-shell ed26-hero-grid">
-          <div className="ed26-hero-copy">
-            <p className="ed26-meta">Mobile car detailing · Decatur + Atlanta</p>
-            <h1 id="home-hero-title" className="ed26-hero-title">
-              <span>Your car.</span>
-              <span>Back to its best.</span>
-            </h1>
-            <p className="ed26-hero-lede">A trained local crew, fully equipped at your driveway. We bring the water, power, tools, and time.</p>
-            <div className="ed26-hero-actions">
-              <Link href="/get-a-quote" className="ed26-button ed26-button-red">Find My Detail</Link>
-              <TrackedLink href="/book" event="book_click" params={{ location: "hero_v26" }} className="ed26-text-link">Book directly ↗</TrackedLink>
-            </div>
-          </div>
-          <div className="ed26-hero-caption" aria-hidden="true">
-            <span>Every Detail</span><span>Rig / 01</span><span>Decatur, GA</span>
+      <section className="v27-hero" data-v27-hero data-v28-scene="hero" aria-labelledby="v27-hero-title">
+        <div className="v27-hero-photo" data-v28-depth="hero-photo"><Photo id="hero" sizes="100vw" fill priority /></div>
+        <div className="v27-hero-shade" aria-hidden="true" />
+        <div className="v27-shell v27-hero-inner">
+          <p className="v27-location">Mobile detailing / Decatur + Atlanta</p>
+          <h1 id="v27-hero-title" className="v27-hero-title">
+            <span className="line-a">Your car.</span>
+            <span className="line-b">Back to</span>
+            <span className="line-c">its best.</span>
+          </h1>
+          <div className="v27-hero-bottom">
+            <p>We bring the crew, water, power, tools, and time. You hand us the keys.</p>
+            <TrackedLink href="/book" event="book_click" params={{ location: "home_v27_hero" }} className="v27-main-cta" data-v28-magnetic data-v28-cursor="BOOK">Book a detail <span>↗</span></TrackedLink>
           </div>
         </div>
-        <div className="ed26-proof-rail" aria-label="Why people choose Every Detail">
-          <div className="ed26-shell ed26-proof-grid">
-            <span><b><LiveReviewCount /></b> five-star reviews</span>
-            <span>{site.award.title}</span>
-            <span>Power + water included</span>
-            <span>100% electric rigs</span>
+        <div className="v27-sweep" aria-hidden="true" />
+      </section>
+
+      <section className="v27-choice" id="pricing" data-v28-scene="choice" aria-labelledby="v27-choice-title">
+        <div className="v27-shell">
+          <div className="v27-choice-intro" data-v27-reveal>
+            <p className="v27-kicker">Choose the clean</p>
+            <h2 id="v27-choice-title"><span>One car.</span><span>Three ways back.</span></h2>
+            <p>Pick how far you want us to take it. Then tell us what you drive and we’ll show the exact price.</p>
+          </div>
+          <div className="v27-booking" data-v28-services><HomeBookingFlow /></div>
+          <div className="v27-inline-links"><Link href="/our-services">See every service ↗</Link><Link href="/get-a-quote">Help me choose ↗</Link></div>
+        </div>
+      </section>
+
+      <section className="v27-work" data-v27-work data-v28-scene="work" aria-labelledby="v27-work-title">
+        <div className="v27-work-sticky">
+          <div className="v27-work-title-wrap v27-shell">
+            <p className="v27-kicker v27-kicker-light">The work</p>
+            <h2 id="v27-work-title">No stock cars.<br /><span>No mystery shop.</span></h2>
+          </div>
+          <div className="v27-work-track">
+            <figure className="v27-shot v27-shot-a" data-v28-tilt data-v28-cursor="VIEW"><Photo id="work-mateo-0670" sizes="72vw" fill /><figcaption><b>01</b><span>Foam wash / Decatur</span></figcaption></figure>
+            <figure className="v27-shot v27-shot-b" data-v28-tilt data-v28-cursor="VIEW"><Photo id="two-tech-interior-detail" sizes="42vw" fill /><figcaption><b>02</b><span>Two-tech interior</span></figcaption></figure>
+            <figure className="v27-shot v27-shot-c" data-v28-tilt data-v28-cursor="VIEW"><Photo id="work-finished-0771" sizes="66vw" fill /><figcaption><b>03</b><span>Finished / handoff</span></figcaption></figure>
+            <figure className="v27-shot v27-shot-d" data-v28-tilt data-v28-cursor="VIEW"><Photo id="hq-mobile-rig-fleet" sizes="48vw" fill /><figcaption><b>04</b><span>Our rigs / our crew</span></figcaption></figure>
+            <div className="v27-work-end"><strong>Real driveways.<br />Real crew.<br /><span>Every detail.</span></strong><Link href="/our-work">See the full archive ↗</Link></div>
           </div>
         </div>
       </section>
 
-      <section className="ed26-services" id="pricing" aria-labelledby="pricing-heading">
-        <div className="ed26-shell">
-          <div className="ed26-split-head" data-reveal>
-            <p className="ed26-index">01 / Choose your clean</p>
-            <div>
-              <h2 id="pricing-heading">Three levels.<br />No package maze.</h2>
-              <p>Pick how far you want us to take the car. Then tell us what you drive and we’ll show the exact price.</p>
-            </div>
-          </div>
-          <div className="ed26-booking-wrap"><HomeBookingFlow /></div>
-          <div className="ed26-section-links"><Link href="/our-services">Compare every service ↗</Link><Link href="/get-a-quote">Not sure? Find my detail ↗</Link></div>
-        </div>
-      </section>
-
-      <section className="ed26-process" data-process-scene aria-labelledby="process-heading">
-        <div className="ed26-process-sticky">
-          <div className="ed26-shell ed26-process-layout">
-            <div className="ed26-process-copy">
-              <p className="ed26-index">02 / What happens at the driveway</p>
-              <h2 id="process-heading">One car.<br /><span>Three passes.</span></h2>
-              <div className="ed26-process-stages">
-                {processStages.map((stage, index) => (
-                  <article key={stage.no} className={`ed26-process-stage stage-${index}`}>
-                    <div className="ed26-process-stage-head"><b>{stage.no}</b><span>{stage.label}</span></div>
-                    <h3>{stage.title}</h3>
-                    <p>{stage.body}</p>
-                  </article>
-                ))}
-              </div>
-              <Link href="/our-services" className="ed26-text-link ed26-text-link-light">See exactly what’s included ↗</Link>
-            </div>
-            <div className="ed26-process-visual" aria-hidden="true">
-              {processStages.map((stage, index) => (
-                <figure key={stage.image} className={`ed26-process-photo stage-${index}`}><Photo id={stage.image} sizes="(min-width: 900px) 48vw, 100vw" fill /></figure>
-              ))}
-              <div className="ed26-process-counter"><span>PASS</span><b>01</b><i>/03</i></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="ed26-archive" data-archive-scene aria-labelledby="archive-heading">
-        <div className="ed26-archive-sticky">
-          <div className="ed26-archive-head ed26-shell">
-            <p className="ed26-index">03 / The work</p>
-            <h2 id="archive-heading">Real jobs.<br />No stock photos.</h2>
-            <Link href="/our-work" className="ed26-text-link">See all work ↗</Link>
-          </div>
-          <div className="ed26-archive-track">
-            <figure className="ed26-archive-card ed26-archive-card-wide"><Photo id="hq-mobile-rig-fleet" sizes="70vw" fill /><figcaption><b>01</b><span>Mobile rigs / Decatur</span></figcaption></figure>
-            <figure className="ed26-archive-card ed26-archive-card-tall"><Photo id="tesla-foam-wash" sizes="38vw" fill /><figcaption><b>02</b><span>Foam wash</span></figcaption></figure>
-            <figure className="ed26-archive-card ed26-archive-card-wide"><Photo id="hq-interior-team-front-seats" sizes="64vw" fill /><figcaption><b>03</b><span>Two-tech interior</span></figcaption></figure>
-            <figure className="ed26-archive-card ed26-archive-card-tall"><Photo id="hq-black-suv-finished" sizes="38vw" fill /><figcaption><b>04</b><span>Finished</span></figcaption></figure>
-            <figure className="ed26-archive-card ed26-archive-card-wide"><Photo id="classic-car-cockpit" sizes="64vw" fill /><figcaption><b>05</b><span>Cabin detail</span></figcaption></figure>
-          </div>
-        </div>
-      </section>
-
-      <section className="ed26-story" data-story-scene aria-labelledby="story-heading">
-        <div className="ed26-shell">
-          <p className="ed26-index">04 / Since eighth grade</p>
-          <h2 id="story-heading" className="ed26-story-line">
+      <section className="v27-story" data-v27-story data-v28-scene="story" aria-labelledby="v27-story-title">
+        <div className="v27-shell">
+          <p className="v27-kicker">Since eighth grade</p>
+          <h2 id="v27-story-title" className="v27-story-title">
             <span>Built by</span>
-            <span className="ed26-story-image"><Photo id="about-team" sizes="22vw" fill /></span>
+            <span className="v27-inline-photo" data-v28-float><Photo id="about-team" sizes="26vw" fill /></span>
             <span>students.</span>
             <span>Run like</span>
-            <span className="ed26-story-image ed26-story-image-rig"><Photo id="hq-branded-van-side" sizes="22vw" fill /></span>
+            <span className="v27-inline-photo v27-inline-rig" data-v28-float><Photo id="hq-branded-van-side" sizes="26vw" fill /></span>
             <span>a company.</span>
           </h2>
-          <div className="ed26-story-foot">
-            <p>What started as one student detailing cars has grown into a trained team, purpose-built mobile rigs, custom booking systems, and a standard we expect every technician to hit.</p>
-            <Link href="/about-us" className="ed26-text-link">Meet the team ↗</Link>
+          <div className="v27-story-foot" data-v27-reveal>
+            <p>What started with one student and a driveway turned into trained technicians, purpose-built electric rigs, real operating systems, and a standard every job has to meet.</p>
+            <Link href="/about-us">Meet the team ↗</Link>
           </div>
         </div>
       </section>
 
-      <section className="ed26-review" aria-label="Customer review">
-        <div className="ed26-shell ed26-review-grid" data-reveal>
-          <p className="ed26-index">05 / Word of mouth</p>
-          <blockquote>
+      <section className="v27-proof" data-v28-scene="proof" aria-labelledby="v27-proof-title">
+        <div className="v27-shell v27-proof-grid">
+          <div className="v27-proof-number" data-v27-reveal><span><LiveReviewCount /></span><small>five-star<br />reviews</small></div>
+          <blockquote data-v27-reveal data-v28-float>
             “{leadReview.text}”
-            <footer>{leadReview.author} · Google review</footer>
+            <footer>{leadReview.author} / Google review</footer>
           </blockquote>
+          <div className="v27-proof-facts" data-v27-reveal>
+            <div><b>100%</b><span>electric mobile rigs</span></div>
+            <div><b>0</b><span>power or water hookups needed</span></div>
+            <div><b>1</b><span>trained local crew at your driveway</span></div>
+          </div>
         </div>
       </section>
 
-      <section className="ed26-beyond" aria-labelledby="beyond-heading">
-        <div className="ed26-shell">
-          <div className="ed26-split-head" data-reveal>
-            <p className="ed26-index">06 / Go further</p>
-            <div><h2 id="beyond-heading">Beyond the reset.</h2><p>Protect the paint or keep the whole car on a recurring schedule.</p></div>
-          </div>
-          <div className="ed26-beyond-grid">
-            <Link href="/ceramic" className="ed26-beyond-panel ed26-beyond-paint">
+      <section className="v27-beyond" data-v28-scene="beyond" aria-labelledby="v27-beyond-title">
+        <div className="v27-shell">
+          <div className="v27-beyond-head" data-v27-reveal><p className="v27-kicker">Beyond the reset</p><h2 id="v27-beyond-title">Keep going.</h2></div>
+          <div className="v27-beyond-grid">
+            <Link href="/ceramic" className="v27-feature v27-feature-paint" data-v28-tilt data-v28-cursor="OPEN">
+              <div className="v27-feature-photo"><Photo id="hq-black-suv-finished" sizes="58vw" fill /></div>
+              <div className="v27-feature-shade" />
               <span>Paint correction + ceramic</span>
               <strong>Bring back gloss.<br />Keep it protected.</strong>
               <b>Explore paint care ↗</b>
             </Link>
-            <Link href="/detailplus" className="ed26-beyond-panel ed26-beyond-plus">
+            <Link href="/detailplus" className="v27-feature v27-feature-plus" data-v28-tilt data-v28-cursor="OPEN">
               <span>Detail+</span>
               <strong>Stay clean.<br />Automatically.</strong>
+              <p>Choose how often we come back. Same driveway. Same standard.</p>
               <b>Explore Detail+ ↗</b>
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="ed26-faq" aria-labelledby="faq-heading">
-        <div className="ed26-shell ed26-faq-grid">
-          <div data-reveal><p className="ed26-index">07 / Before you book</p><h2 id="faq-heading">The questions<br />people actually ask.</h2><p>We’d rather answer it now than make you dig for it.</p></div>
-          <div><FaqList faqs={featuredFaqs} /></div>
-        </div>
-      </section>
-
-      <section className="ed26-final" aria-labelledby="final-heading">
-        <div className="ed26-final-photo"><Photo id="hq-van-through-flowers" sizes="100vw" fill /></div>
-        <div className="ed26-final-wash" aria-hidden="true" />
-        <div className="ed26-shell ed26-final-inner" data-reveal>
-          <p className="ed26-meta">Decatur + Atlanta · We come to you</p>
-          <h2 id="final-heading">Your driveway.<br /><span>Our detail shop.</span></h2>
-          <div className="ed26-final-actions"><Link href="/get-a-quote" className="ed26-button ed26-button-red">Find My Detail</Link><TrackedLink href="/book" event="book_click" params={{ location: "home_final_v26" }} className="ed26-text-link ed26-text-link-light">Book directly ↗</TrackedLink></div>
+      <section className="v27-close" data-v28-scene="close" aria-labelledby="v27-close-title">
+        <div className="v27-close-photo" data-v28-depth="close-photo"><Photo id="hq-van-through-flowers" sizes="100vw" fill /></div>
+        <div className="v27-close-shade" />
+        <div className="v27-shell v27-close-inner" data-v27-reveal>
+          <p className="v27-kicker v27-kicker-light">Decatur + Atlanta / We come to you</p>
+          <h2 id="v27-close-title">Your driveway.<br /><span>Our detail shop.</span></h2>
+          <TrackedLink href="/book" event="book_click" params={{ location: "home_v27_close" }} className="v27-main-cta v27-main-cta-light" data-v28-magnetic data-v28-cursor="BOOK">Book a detail <span>↗</span></TrackedLink>
         </div>
       </section>
     </>
