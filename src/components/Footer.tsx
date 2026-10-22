@@ -9,102 +9,20 @@ import { TrackedLink } from "./TrackedLink";
 export function Footer() {
   const year = new Date().getFullYear();
   const companyLinks = [...primaryNav.filter((n) => n.href !== "/ceramic"), ...moreNav];
-
   return (
-    <footer className="bg-oxblood text-paper">
-      <div className="container-ed grid gap-12 py-16 md:grid-cols-12 md:py-20">
-        <div className="md:col-span-4">
-          <Image
-            src="/brand/every-detail-logo.png"
-            alt="Every Detail"
-            width={1000}
-            height={1000}
-            className="h-28 w-28 object-contain"
-          />
-          <p className="mt-6 max-w-xs text-paper/80">
-            Mobile car detailing in Decatur and nearby Atlanta neighborhoods. {site.tagline}
-          </p>
-          <p className="mt-3 text-paper/80">
-            {site.award.title}
-            <br />
-            <LiveReviewCount /> five-star reviews · <GoogleMapsAttribution className="google-maps-attribution-on-dark" />
-          </p>
-          <TrackedLink href="/book" event="book_click" params={{ location: "footer" }} className="btn btn-on-dark mt-8">
-            Book your detail
-          </TrackedLink>
+    <footer className="site-footer">
+      <div className="container-ed site-footer-grid">
+        <div className="site-footer-brand">
+          <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} />
+          <h2>YOUR CAR.<br/><span>BACK TO ITS BEST.</span></h2>
+          <p>Mobile car detailing in Decatur and nearby Atlanta neighborhoods.</p>
+          <TrackedLink href="/book" event="book_click" params={{ location: "footer" }} className="site-footer-book">Book a detail ↗</TrackedLink>
         </div>
-
-        <nav aria-label="Services" className="md:col-span-2">
-          <h2 className="font-display text-sm font-semibold text-sand">Services</h2>
-          <ul className="mt-4 space-y-2.5 text-[0.9375rem]">
-            {footerServiceLinks.map((l) => (
-              <li key={l.href}>
-                <Link href={l.href} className="text-paper/85 hover:text-paper hover:underline">
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-label="Company" className="md:col-span-2">
-          <h2 className="font-display text-sm font-semibold text-sand">Every Detail</h2>
-          <ul className="mt-4 space-y-2.5 text-[0.9375rem]">
-            {companyLinks.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  {...(l.external ? { target: "_blank", rel: "noopener" } : {})}
-                  className="text-paper/85 hover:text-paper hover:underline"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className="md:col-span-4">
-          <h2 className="font-display text-sm font-semibold text-sand">Contact</h2>
-          <ul className="mt-4 space-y-2.5 text-[0.9375rem]">
-            <li>
-              <TrackedLink href={site.phone.href} event="phone_click" params={{ location: "footer" }} className="text-paper hover:underline">
-                {site.phone.display}
-              </TrackedLink>
-            </li>
-            <li>
-              <a href={`mailto:${site.email}`} className="text-paper hover:underline">
-                {site.email}
-              </a>
-            </li>
-            {site.social.map((s) => (
-              <li key={s.href}>
-                <a href={s.href} target="_blank" rel="noopener" className="text-paper/85 hover:text-paper hover:underline">
-                  {s.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <h2 className="mt-8 font-display text-sm font-semibold text-sand">
-            <Link href="/service-areas" className="hover:underline">
-              Service areas
-            </Link>
-          </h2>
-          <p className="mt-3 text-[0.9375rem] leading-relaxed text-paper/80">{areas.map((a) => a.name).join(", ")}</p>
-        </div>
+        <nav aria-label="Services" className="site-footer-column"><h3>Services</h3>{footerServiceLinks.map(l=><Link key={l.href} href={l.href}>{l.label}</Link>)}</nav>
+        <nav aria-label="Company" className="site-footer-column"><h3>Every Detail</h3>{companyLinks.map(l=><Link key={l.href} href={l.href} {...(l.external?{target:"_blank",rel:"noopener"}:{})}>{l.label}</Link>)}</nav>
+        <div className="site-footer-column site-footer-contact"><h3>Contact</h3><TrackedLink href={site.phone.href} event="phone_click" params={{location:"footer"}}>{site.phone.display}</TrackedLink><a href={`mailto:${site.email}`}>{site.email}</a>{site.social.map(s=><a key={s.href} href={s.href} target="_blank" rel="noopener">{s.label}</a>)}<p><LiveReviewCount /> five-star reviews · <GoogleMapsAttribution className="google-maps-attribution-on-dark" /></p></div>
       </div>
-      <div className="border-t border-paper/15">
-        <div className="container-ed flex flex-col gap-2 py-6 text-sm text-paper/65 md:flex-row md:justify-between">
-          <p>
-            © {year} {site.legalName}. Decatur, Georgia.
-          </p>
-          <div className="flex flex-wrap gap-x-5 gap-y-2 md:justify-end">
-            <Link href="/terms" className="text-paper/75 hover:text-paper hover:underline">Terms</Link>
-            <Link href="/privacy-policy" className="text-paper/75 hover:text-paper hover:underline">Privacy</Link>
-            <span>Student-run. Professionally detailed.</span>
-          </div>
-        </div>
-      </div>
+      <div className="container-ed site-footer-bottom"><span>© {year} {site.legalName}. Decatur, Georgia.</span><span>{areas.map(a=>a.name).slice(0,5).join(" / ")}</span><span><Link href="/terms">Terms</Link> / <Link href="/privacy-policy">Privacy</Link></span></div>
     </footer>
   );
 }

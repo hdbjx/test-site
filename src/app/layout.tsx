@@ -7,6 +7,7 @@ import { GoogleReviewStatsProvider } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
 import { MobileBookBar } from "@/components/MobileBookBar";
 import { RouteTransition } from "@/components/RouteTransition";
+import { SitewideMotion } from "@/components/SitewideMotion";
 import { site } from "@/data/site";
 import { localBusinessSchema } from "@/lib/seo";
 
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <GoogleReviewStatsProvider>
         <RouteTransition />
+        <SitewideMotion />
         <Header />
         <main id="main" tabIndex={-1} className="outline-none">
           {children}

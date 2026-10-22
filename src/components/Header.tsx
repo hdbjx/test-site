@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { moreNav, primaryNav, serviceNav } from "@/data/navigation";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { supabaseConfigured } from "@/lib/supabase/config";
@@ -12,13 +11,8 @@ import { supabaseConfigured } from "@/lib/supabase/config";
 export function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
-  const [servicesOpen, setServicesOpen] = useState(false);
   const [availabilityOpen, setAvailabilityOpen] = useState(false);
   const [showAvailabilityBanner, setShowAvailabilityBanner] = useState(false);
-  const [detailPlusHeaderScrolled, setDetailPlusHeaderScrolled] = useState(false);
-  const moreRef = useRef<HTMLDivElement>(null);
-  const servicesRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -55,31 +49,8 @@ export function Header() {
   // Close menus on navigation
   useEffect(() => {
     setMenuOpen(false);
-    setMoreOpen(false);
-    setServicesOpen(false);
     setAvailabilityOpen(false);
   }, [pathname]);
-
-  // Desktop dropdowns: close on outside click / Escape
-  useEffect(() => {
-    if (!moreOpen && !servicesOpen) return;
-    const onDown = (e: MouseEvent) => {
-      if (!moreRef.current?.contains(e.target as Node)) setMoreOpen(false);
-      if (!servicesRef.current?.contains(e.target as Node)) setServicesOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setMoreOpen(false);
-        setServicesOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [moreOpen, servicesOpen]);
 
   // Mobile panel: lock scroll, Escape closes, keep focus inside
   useEffect(() => {
@@ -125,22 +96,6 @@ export function Header() {
     return () => document.removeEventListener("pointerdown", onPointerDown, true);
   }, [menuOpen]);
 
-  useEffect(() => {
-    if (pathname !== "/detailplus") {
-      setDetailPlusHeaderScrolled(false);
-      return;
-    }
-    const updateDetailPlusHeader = () => {
-      setDetailPlusHeaderScrolled(window.scrollY > Math.max(420, window.innerHeight * 0.72));
-    };
-    updateDetailPlusHeader();
-    window.addEventListener("scroll", updateDetailPlusHeader, { passive: true });
-    window.addEventListener("resize", updateDetailPlusHeader);
-    return () => {
-      window.removeEventListener("scroll", updateDetailPlusHeader);
-      window.removeEventListener("resize", updateDetailPlusHeader);
-    };
-  }, [pathname]);
 
   useEffect(() => {
     if (!availabilityOpen) return;
@@ -158,11 +113,7 @@ export function Header() {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
   const onHome = pathname === "/";
-  const onDetailPlus = pathname === "/detailplus";
-  const onDarkHero = onHome || pathname === "/paint-correction" || pathname === "/ceramic" || pathname === "/gift-cards" || onDetailPlus;
-  const headerClass = onDarkHero
-    ? `fixed inset-x-0 top-0 z-40 text-white home-header${onDetailPlus ? ` detailplus-header${detailPlusHeaderScrolled ? " detailplus-header--scrolled" : ""}` : ""}`
-    : "sticky inset-x-0 top-0 z-40 text-white inner-header";
+  const headerClass = "fixed inset-x-0 top-0 z-40 text-white site-shared-header";
 
   return (
     <header className={headerClass}>
@@ -187,123 +138,50 @@ export function Header() {
           <span className="sr-only">View scheduling information for our student-run team</span>
         </button>
       )}
-      <div className={onDarkHero ? "home-nav-shell flex items-center justify-between gap-6" : "inner-nav-shell flex items-center justify-between gap-6"}>
-        <Link href="/" className={onDarkHero ? "home-logo-control flex shrink-0 items-center" : "inner-logo-control flex shrink-0 items-center"} aria-label="Every Detail home">
+      <div className="site-shared-nav-shell">
+        <Link href="/" className={`site-shared-logo-control ${onHome ? "home-logo-control" : ""}`} aria-label="Every Detail home">
           {onHome ? (
             <>
               <span className="home-logo-mark" aria-hidden="true" />
               <span className="sr-only">Every Detail home</span>
             </>
           ) : (
-            <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className={onDarkHero ? "h-[4.15rem] w-[4.15rem] object-contain" : "inner-logo object-contain"} priority />
+            <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className="site-shared-logo" priority />
           )}
         </Link>
 
-        {/* Desktop */}
-        <nav aria-label="Main" className={onDarkHero ? "home-nav-links hidden items-center gap-1 lg:flex" : "inner-nav-links hidden items-center gap-1 lg:flex"}>
-          <div
-            ref={servicesRef}
-            className="services-menu relative"
-            onMouseEnter={() => setServicesOpen(true)}
-            onMouseLeave={() => setServicesOpen(false)}
-            onFocus={() => setServicesOpen(true)}
-            onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setServicesOpen(false); }}
-          >
-            <button
-              type="button"
-              className={`rounded px-3 py-2 font-display text-[0.9375rem] font-semibold transition-colors ${onDarkHero ? "text-white/90 hover:text-white" : "text-ink/80 hover:text-ink"}`}
-              aria-expanded={servicesOpen}
-              aria-haspopup="menu"
-              onClick={() => setServicesOpen((v) => !v)}
-            >
-              Services <span aria-hidden="true" className="ml-1 text-[.7em]">▾</span>
-            </button>
-            {servicesOpen && (
-              <div role="menu" className={`services-dropdown absolute left-1/2 top-[calc(100%+.75rem)] min-w-[14rem] -translate-x-1/2 overflow-hidden rounded-xl border p-2 shadow-2xl ${onDarkHero ? "border-white/15 bg-[#111]/95 text-white" : "border-line bg-paper text-ink"}`}>
-                {serviceNav.map((item) => (
-                  <Link key={item.href} role="menuitem" href={item.href} className="block rounded-lg px-4 py-3 font-display text-[.98rem] font-semibold transition-colors hover:bg-white/10">
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-          {primaryNav.filter((item) => item.label !== "Services" && item.label !== "Our Work").map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={isActive(item.href) ? "page" : undefined}
-              className={`rounded px-3 py-2 font-display text-[0.9375rem] font-semibold transition-colors aria-[current=page]:underline aria-[current=page]:decoration-red aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8 ${onDarkHero ? "text-white/90 hover:text-white" : "text-ink/80 hover:text-ink aria-[current=page]:text-ink"}`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className={onDarkHero ? "home-nav-actions flex items-center gap-3" : "inner-nav-actions flex items-center gap-3"}>
-          {supabaseConfigured && (
-            <a
-              href="/account"
-              data-no-transition="true"
-              aria-current={isActive("/account") ? "page" : undefined}
-              className={`account-link hidden px-3 py-2 font-display text-[0.9375rem] font-semibold lg:block ${onDarkHero ? "text-white/85 hover:text-white" : "text-ink/80 hover:text-ink"}`}
-            >
-              Account
-            </a>
-          )}
-          <Link
-            href="/book"
-            onClick={() => track("book_click", { location: "header" })}
-            className="btn btn-primary btn-sm"
-          >
-            Book now
-          </Link>
-          <button
-            ref={menuButtonRef}
-            type="button"
-            className={onHome ? "v29-menu-button" : "-mr-2 flex h-11 w-11 items-center justify-center rounded lg:hidden"}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-menu"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            onClick={() => setMenuOpen((v) => !v)}
-          >
-            {onHome ? (
-              <span className="v29-menu-label">{menuOpen ? "CLOSE" : "MENU"}<i aria-hidden="true">{menuOpen ? "×" : "↘"}</i></span>
-            ) : (
-              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6">
-                {menuOpen ? (
-                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" />
-                ) : (
-                  <path d="M4 8h16M4 16h16" stroke="currentColor" strokeWidth="1.8" />
-                )}
-              </svg>
-            )}
-          </button>
-        </div>
+        <button
+          ref={menuButtonRef}
+          type="button"
+          className={`site-shared-menu-button ${onHome ? "v29-menu-button" : ""}`}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span className="site-shared-menu-label">{menuOpen ? "CLOSE" : "MENU"}<i aria-hidden="true">{menuOpen ? "×" : "↘"}</i></span>
+        </button>
       </div>
 
-      {/* Menu panel */}
+      {/* Shared menu panel */}
       {menuOpen && (
         <>
-          {onHome && (
-            <button
-              type="button"
-              className="v36-menu-backdrop"
-              aria-label="Close menu"
-              onClick={() => { setMenuOpen(false); menuButtonRef.current?.focus(); }}
-            />
-          )}
+          <button
+            type="button"
+            className="site-shared-menu-backdrop"
+            aria-label="Close menu"
+            onClick={() => { setMenuOpen(false); menuButtonRef.current?.focus(); }}
+          />
           <div
             id="mobile-menu"
             ref={panelRef}
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
-            className={`mobile-menu-panel fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-paper text-ink ${onHome ? "mobile-menu-home v31-home-menu v33-home-menu v36-home-menu" : "mobile-menu-inner lg:hidden"}`}
+            className="site-shared-menu-panel"
           >
-          {onHome ? (
-            <nav aria-label="Main menu" className="v33-menu-shell">
-              <div className="v33-menu-main">
+            <nav aria-label="Main menu" className="site-shared-menu-shell">
+              <div className="site-shared-menu-main">
                 {[
                   { n: "01", label: "Services", href: "/our-services" },
                   { n: "02", label: "Our Work", href: "/our-work" },
@@ -311,20 +189,12 @@ export function Header() {
                   { n: "04", label: "About", href: "/about-us" },
                   { n: "05", label: "Gift Cards", href: "/gift-cards" },
                 ].map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="v33-menu-link"
-                    aria-current={isActive(item.href) ? "page" : undefined}
-                  >
-                    <span className="v33-menu-number">{item.n}</span>
-                    <span className="v33-menu-name">{item.label}</span>
-                    <span className="v33-menu-arrow" aria-hidden="true">↗</span>
+                  <Link key={item.href} href={item.href} className="site-shared-menu-link" aria-current={isActive(item.href) ? "page" : undefined}>
+                    <span>{item.n}</span><strong>{item.label}</strong><i aria-hidden="true">↗</i>
                   </Link>
                 ))}
               </div>
-
-              <div className="v36-menu-utility">
+              <div className="site-shared-menu-utility">
                 <Link href="/get-a-quote">Find My Detail</Link>
                 <Link href="/paint-correction">Paint Correction</Link>
                 <Link href="/ceramic">Ceramic</Link>
@@ -332,45 +202,11 @@ export function Header() {
                 <Link href="/blog">Shine On Blog</Link>
                 {supabaseConfigured && <a href="/account" data-no-transition="true">Account</a>}
               </div>
-
-              <div className="v33-menu-bottom">
-                <span className="v35-menu-note">Mobile detailing / Decatur + Atlanta</span>
-                <div className="v33-menu-actions">
-                  <a href={site.phone.sms} onClick={() => track("text_click", { location: "home_menu" })}>Text us</a>
-                  <Link href="/book" onClick={() => track("book_click", { location: "home_menu" })}>Book a detail <span aria-hidden="true">↗</span></Link>
-                </div>
+              <div className="site-shared-menu-actions">
+                <a href={site.phone.sms} onClick={() => track("text_click", { location: "shared_menu" })}>Text us</a>
+                <Link href="/book" onClick={() => track("book_click", { location: "shared_menu" })}>Book a detail <span aria-hidden="true">↗</span></Link>
               </div>
             </nav>
-          ) : (
-            <nav aria-label="Mobile" className="mobile-menu-nav">
-              <p className="mobile-menu-label">Services</p>
-              <div className="mobile-menu-primary">
-                {serviceNav.map((item, index) => (
-                  <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined} className="mobile-menu-service">
-                    <span>0{index + 1}</span>{item.label}
-                  </Link>
-                ))}
-              </div>
-
-              <p className="mobile-menu-label mobile-menu-label-more">Explore</p>
-              <div className="mobile-menu-secondary">
-                {primaryNav.filter((item) => item.label !== "Services" && item.label !== "Our Work").map((item) => (
-                  <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>{item.label}</Link>
-                ))}
-                {supabaseConfigured && <a href="/account" data-no-transition="true" aria-current={isActive("/account") ? "page" : undefined}>Account</a>}
-                {moreNav.map((item) => item.external ? (
-                  <a key={item.href} href={item.href} target="_blank" rel="noopener">{item.label}</a>
-                ) : (
-                  <Link key={item.href} href={item.href}>{item.label}</Link>
-                ))}
-              </div>
-
-              <div className="mobile-menu-actions">
-                <Link href="/book" className="btn btn-primary" onClick={() => track("book_click", { location: "mobile_menu" })}>Book your detail</Link>
-                <a href={site.phone.sms} className="mobile-menu-phone" onClick={() => track("text_click", { location: "mobile_menu" })}>Text {site.phone.display}</a>
-              </div>
-            </nav>
-          )}
           </div>
         </>
       )}
