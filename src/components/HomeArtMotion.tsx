@@ -3,6 +3,12 @@
 import { useEffect, useRef } from "react";
 
 const clamp = (n: number, a = 0, b = 1) => Math.min(b, Math.max(a, n));
+const smoothstep = (a: number, b: number, n: number) => {
+  const t = clamp((n - a) / Math.max(b - a, 0.0001));
+  return t * t * (3 - 2 * t);
+};
+const windowFade = (n: number, inA: number, inB: number, outA: number, outB: number) =>
+  smoothstep(inA, inB, n) * (1 - smoothstep(outA, outB, n));
 
 export function HomeArtMotion() {
   const raf = useRef<number | null>(null);
@@ -108,21 +114,21 @@ export function HomeArtMotion() {
         const r = proof.getBoundingClientRect();
         const span = Math.max(1, r.height - vh);
         const pp = clamp(-r.top / span);
-        const countOut = clamp((pp - .20) / .12);
-        const review1 = clamp(1 - Math.abs(pp - .43) / .14);
-        const review2 = clamp(1 - Math.abs(pp - .64) / .14);
-        const review3 = clamp(1 - Math.abs(pp - .85) / .14);
+        const countOut = smoothstep(.255, .325, pp);
+        const review1 = windowFade(pp, .325, .385, .50, .56);
+        const review2 = windowFade(pp, .535, .595, .71, .77);
+        const review3 = smoothstep(.745, .815, pp) * (1 - smoothstep(.965, 1, pp));
         proof.style.setProperty("--proof", String(pp));
         proof.style.setProperty("--proof-count-out", String(countOut));
         proof.style.setProperty("--proof-count-opacity", String(1 - countOut));
-        proof.style.setProperty("--proof-count-y", `${countOut * -24}px`);
-        proof.style.setProperty("--proof-count-scale", String(1 - countOut * .06));
+        proof.style.setProperty("--proof-count-y", `${countOut * -10}px`);
+        proof.style.setProperty("--proof-count-scale", String(1 - countOut * .025));
         proof.style.setProperty("--proof-r1", String(review1));
         proof.style.setProperty("--proof-r2", String(review2));
         proof.style.setProperty("--proof-r3", String(review3));
-        proof.style.setProperty("--proof-r1-x", `${(1 - review1) * 8}vw`);
-        proof.style.setProperty("--proof-r2-x", `${(1 - review2) * 8}vw`);
-        proof.style.setProperty("--proof-r3-x", `${(1 - review3) * 8}vw`);
+        proof.style.setProperty("--proof-r1-y", `${(1 - review1) * 18}px`);
+        proof.style.setProperty("--proof-r2-y", `${(1 - review2) * 18}px`);
+        proof.style.setProperty("--proof-r3-y", `${(1 - review3) * 18}px`);
       }
 
       const beyond = document.querySelector<HTMLElement>("[data-v29-scene='beyond']");
@@ -136,6 +142,17 @@ export function HomeArtMotion() {
         beyond.style.setProperty("--maintain-wipe-scale", String(Math.max(0, 1 - Math.min(1, p * 1.35))));
         beyond.style.setProperty("--maintain-lift", `${(1 - p) * 46}px`);
       }
+      const cleanLife = document.querySelector<HTMLElement>("[data-v39-life]");
+      if (cleanLife) {
+        const r = cleanLife.getBoundingClientRect();
+        const p = clamp((vh * .9 - r.top) / Math.max(vh + r.height * .45, 1));
+        cleanLife.style.setProperty("--life", String(p));
+        cleanLife.style.setProperty("--life-a-x", `${(1 - p) * -6}vw`);
+        cleanLife.style.setProperty("--life-b-x", `${(1 - p) * 7}vw`);
+        cleanLife.style.setProperty("--life-c-y", `${(1 - p) * 28}px`);
+        cleanLife.style.setProperty("--life-d-x", `${(1 - p) * -4}vw`);
+      }
+
       const close = document.querySelector<HTMLElement>("[data-v29-scene='close']");
       if (close) {
         const r = close.getBoundingClientRect();

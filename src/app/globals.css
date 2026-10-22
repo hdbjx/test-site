@@ -9720,3 +9720,250 @@ html[data-home-scene="choice"] body:has(.v29-hero) .home-logo-control{
 body:has(.v36-home-menu) .mobile-menu-panel{z-index:40!important}
 body:has(.v36-home-menu) .v29-menu-button{z-index:42!important}
 
+
+/* ============================================================
+   V39 — PRECISION HANDOFFS + CALM PROOF
+   ============================================================ */
+
+/* Hard-center the homepage logo to the viewport, independent of the header grid. */
+body:has(.v29-hero) .home-logo-control{
+  position:fixed!important;
+  left:50%!important;
+  top:clamp(20px,3vh,30px)!important;
+  right:auto!important;
+  grid-column:auto!important;
+  justify-self:auto!important;
+  width:auto!important;
+  height:auto!important;
+  margin:0!important;
+  transform:translate3d(-50%,-8px,0) scale(.94)!important;
+  transform-origin:center center!important;
+  z-index:41!important;
+}
+html[data-home-scene="hero"] body:has(.v29-hero) .home-logo-control,
+html[data-home-scene="work"] body:has(.v29-hero) .home-logo-control,
+html[data-home-scene="story"] body:has(.v29-hero) .home-logo-control{
+  transform:translate3d(-50%,0,0) scale(1)!important;
+}
+
+/* The tape physically overlaps the hero and owns the hero -> services handoff. */
+.v36-tape{
+  z-index:18!important;
+  height:268px!important;
+  margin-top:-102px!important;
+  margin-bottom:-46px!important;
+  overflow:visible!important;
+  background:linear-gradient(to bottom,transparent 0 96px,var(--v29-paper) 96px 100%)!important;
+}
+.v36-tape-svg{
+  width:calc(100% + 80px)!important;
+  height:276px!important;
+  margin-left:-40px!important;
+  filter:drop-shadow(0 10px 0 rgba(75,25,27,.10))!important;
+}
+.v36-tape-text{font-size:68px!important;letter-spacing:-.025em!important}
+.v29-choice{position:relative;z-index:4;padding-top:8.1rem!important}
+
+/* Reviews: stable editorial sequence, no bounce or spring behavior. */
+.v38-proof{height:420svh!important}
+.v38-proof-count{
+  opacity:var(--proof-count-opacity,1)!important;
+  transform:translate3d(0,var(--proof-count-y,0px),0) scale(var(--proof-count-scale,1))!important;
+  transition:none!important;
+}
+.v38-proof-count strong{
+  font-size:clamp(6rem,10.5vw,9.4rem)!important;
+  line-height:.82!important;
+  letter-spacing:-.055em!important;
+}
+.v38-proof-count>span{margin-top:1.15rem!important}
+.v38-proof-review{
+  left:50%!important;
+  right:auto!important;
+  top:50%!important;
+  width:min(900px,70vw)!important;
+  transform:translate3d(-50%,calc(-50% + var(--proof-r1-y,18px)),0)!important;
+  transition:none!important;
+}
+.v38-proof-review-1{
+  opacity:var(--proof-r1,0)!important;
+  transform:translate3d(-50%,calc(-50% + var(--proof-r1-y,18px)),0)!important;
+}
+.v38-proof-review-2{
+  opacity:var(--proof-r2,0)!important;
+  transform:translate3d(-50%,calc(-50% + var(--proof-r2-y,18px)),0)!important;
+}
+.v38-proof-review-3{
+  opacity:var(--proof-r3,0)!important;
+  transform:translate3d(-50%,calc(-50% + var(--proof-r3-y,18px)),0)!important;
+}
+.v38-proof-review p{
+  font-size:clamp(3.1rem,5vw,5.8rem)!important;
+  line-height:.95!important;
+  text-align:left!important;
+}
+.v38-proof-review footer{text-align:left!important}
+
+/* Detail+ now hands into a playful breathing scene instead of dropping to the CTA. */
+.v38-care-flow{padding-bottom:0!important}
+.v39-clean-life{
+  --life:0;
+  position:relative;
+  z-index:6;
+  min-height:72svh;
+  margin-top:-56px;
+  margin-bottom:-54px;
+  overflow:hidden;
+  background:var(--v29-paper);
+  color:var(--v29-ink);
+  border-radius:0 0 50% 50% / 0 0 11% 11%;
+  isolation:isolate;
+}
+.v39-clean-life::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  left:-5%;
+  top:-74px;
+  width:110%;
+  height:144px;
+  border-radius:50% 50% 0 0 / 100% 100% 0 0;
+  background:var(--v29-paper);
+}
+.v39-clean-life-grain{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.32;
+  background-image:radial-gradient(rgba(17,17,17,.13) .55px,transparent .65px);
+  background-size:5px 5px;
+  mask-image:linear-gradient(to bottom,transparent 0,#000 18%,#000 82%,transparent 100%);
+}
+.v39-clean-life-inner{
+  width:min(100% - 68px,1468px);
+  min-height:72svh;
+  margin-inline:auto;
+  padding:clamp(7rem,12vh,10rem) 0 clamp(6.5rem,10vh,8rem);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.v39-clean-life-title{
+  position:relative;
+  z-index:2;
+  margin:0;
+  display:grid;
+  grid-template-columns:auto auto;
+  align-items:end;
+  justify-content:center;
+  column-gap:.13em;
+  row-gap:.06em;
+  font-family:var(--font-display);
+  font-weight:900;
+  line-height:.78;
+  letter-spacing:-.055em;
+  text-transform:uppercase;
+  text-align:center;
+}
+.v39-life-word{display:block;will-change:transform}
+.v39-life-a{
+  color:var(--v29-ink);
+  font-size:clamp(5rem,9vw,9rem);
+  transform:translate3d(calc(var(--life-a-x,0px) + var(--v29-x5)),0,0) rotate(-1.6deg);
+}
+.v39-life-b{
+  color:var(--v29-red);
+  font-size:clamp(5.4rem,9.6vw,9.6rem);
+  transform:translate3d(calc(var(--life-b-x,0px) - var(--v29-x5)),0,0) rotate(1.2deg);
+}
+.v39-life-c{
+  grid-column:1;
+  justify-self:end;
+  align-self:center;
+  margin-right:.28em;
+  padding:.34em .48em .3em;
+  background:var(--v29-ink);
+  color:var(--v29-paper);
+  font-size:clamp(1.35rem,2.2vw,2.2rem);
+  line-height:1;
+  letter-spacing:.04em;
+  transform:translate3d(0,var(--life-c-y,0px),0) rotate(-5deg);
+}
+.v39-life-d{
+  grid-column:2;
+  color:var(--v29-red);
+  font-size:clamp(5.4rem,10vw,10.2rem);
+  white-space:nowrap;
+  transform:translate3d(var(--life-d-x,0px),0,0) rotate(-.6deg);
+}
+.v39-clean-life+ .v29-close{z-index:1}
+
+@media(max-width:900px){
+  .v36-tape{
+    height:176px!important;
+    margin-top:-62px!important;
+    margin-bottom:-28px!important;
+    background:linear-gradient(to bottom,transparent 0 58px,var(--v29-paper) 58px 100%)!important;
+  }
+  .v36-tape-svg{height:184px!important;width:1380px!important;margin-left:0!important;transform:translateX(-23%)!important}
+  .v36-tape-text{font-size:56px!important}
+  .v29-choice{padding-top:6.5rem!important}
+
+  .v38-proof{height:390svh!important}
+  .v38-proof-count strong{font-size:clamp(5.5rem,21vw,7.8rem)!important}
+  .v38-proof-review{
+    left:20px!important;
+    right:20px!important;
+    width:auto!important;
+  }
+  .v38-proof-review-1{transform:translate3d(0,calc(-50% + var(--proof-r1-y,18px)),0)!important}
+  .v38-proof-review-2{transform:translate3d(0,calc(-50% + var(--proof-r2-y,18px)),0)!important}
+  .v38-proof-review-3{transform:translate3d(0,calc(-50% + var(--proof-r3-y,18px)),0)!important}
+  .v38-proof-review p{font-size:clamp(2.55rem,10.6vw,4.1rem)!important;line-height:.96!important}
+
+  .v39-clean-life{
+    min-height:68svh;
+    margin-top:-38px;
+    margin-bottom:-34px;
+    border-radius:0 0 50% 50% / 0 0 7% 7%;
+  }
+  .v39-clean-life::before{top:-52px;height:104px}
+  .v39-clean-life-inner{
+    width:calc(100% - 28px);
+    min-height:68svh;
+    padding:7rem 0 6rem;
+  }
+  .v39-clean-life-title{
+    grid-template-columns:1fr;
+    justify-items:center;
+    row-gap:.02em;
+  }
+  .v39-life-a,.v39-life-b,.v39-life-d{font-size:clamp(4.5rem,19vw,7rem)}
+  .v39-life-c{
+    grid-column:1;
+    justify-self:center;
+    margin:.25em 0 .15em;
+    font-size:1.1rem;
+  }
+  .v39-life-d{grid-column:1;white-space:normal;text-align:center}
+}
+
+@media(max-width:520px){
+  body:has(.v29-hero) .home-logo-control{top:max(14px,env(safe-area-inset-top))!important}
+  .v36-tape-svg{width:1220px!important;transform:translateX(-29%)!important}
+  .v39-clean-life{min-height:64svh}
+  .v39-clean-life-inner{min-height:64svh;padding:6rem 0 5.4rem}
+  .v39-life-a,.v39-life-b,.v39-life-d{font-size:clamp(3.9rem,18.5vw,5.8rem)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .v39-life-word,
+  .v38-proof-count,
+  .v38-proof-review{transform:none!important;transition:none!important}
+}
+
+/* V39 arc correction: let the clean-car interlude physically overlap both neighbors. */
+.v39-clean-life{overflow:visible!important}
+.v39-clean-life::before{z-index:0!important}
+.v39-clean-life-grain{z-index:1}
+.v39-clean-life-inner{position:relative;z-index:2}

@@ -147,6 +147,18 @@ export default function Home() {
         </Link>
       </section>
 
+      <section className="v39-clean-life" data-v39-life aria-labelledby="v39-clean-life-title">
+        <div className="v39-clean-life-grain" aria-hidden="true" />
+        <div className="v39-clean-life-inner">
+          <h2 id="v39-clean-life-title" className="v39-clean-life-title">
+            <span className="v39-life-word v39-life-a">LIFE’S</span>
+            <span className="v39-life-word v39-life-b">BETTER</span>
+            <span className="v39-life-word v39-life-c">IN A</span>
+            <span className="v39-life-word v39-life-d">CLEAN CAR.</span>
+          </h2>
+        </div>
+      </section>
+
       <section className="v29-close" data-v29-scene="close" aria-labelledby="v29-close-title">
         <div className="v29-close-photo"><Photo id="hq-van-through-flowers" sizes="100vw" fill /></div>
         <div className="v29-close-shade" />
