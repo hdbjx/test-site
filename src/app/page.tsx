@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { FaqList } from "@/components/FaqList";
 import { Photo } from "@/components/Photo";
-import { ReviewStoryScroll } from "@/components/ReviewStoryScroll";
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { TrackedLink } from "@/components/TrackedLink";
-import { HomeScrollMotion } from "@/components/HomeScrollMotion";
-import { SeasonalDecor } from "@/components/SeasonalDecor";
+import { HomeCinematicMotion } from "@/components/HomeCinematicMotion";
 import { homeFaqs } from "@/data/faqs";
 import { reviewCountLabel, site } from "@/data/site";
+import { reviews } from "@/data/reviews";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -18,193 +17,189 @@ export const metadata = pageMetadata({
   image: "og-default",
 });
 
+const processStages = [
+  {
+    no: "01",
+    label: "Interior",
+    title: "Reset the cabin.",
+    body: "Vacuuming, surfaces, glass, seats, mats, cupholders, cargo space. The places you touch and notice every day get handled first.",
+    image: "two-tech-interior-detail",
+  },
+  {
+    no: "02",
+    label: "Exterior",
+    title: "Work the outside.",
+    body: "Wheels, tires, foam, hand wash, details, drying. Our rigs arrive with the power, water, tools, and products already onboard.",
+    image: "work-mateo-0670",
+  },
+  {
+    no: "03",
+    label: "Finish",
+    title: "Hand it back right.",
+    body: "Final checks happen before we call it done. The goal is simple: the car should feel meaningfully better the second you get back in.",
+    image: "work-finished-0771",
+  },
+];
+
 export default function Home() {
-  const featuredFaqs = [homeFaqs[2], homeFaqs[4], homeFaqs[7], homeFaqs[5], homeFaqs[8]];
+  const featuredFaqs = [homeFaqs[2], homeFaqs[4], homeFaqs[7], homeFaqs[5]];
+  const leadReview = reviews[2];
 
   return (
     <>
-      <HomeScrollMotion />
-      <section className="hero-full seasonal-host" aria-label="Every Detail mobile car detailing">
-        <SeasonalDecor variant="web" corner="tl" />
-        <SeasonalDecor variant="sprig" corner="tr" />
-        <div className="hero-shade" />
-        <div className="container-ed hero-inner">
-          <div className="hero-copy rise">
-            <p className="hero-kicker">Mobile detailing / Decatur + Atlanta</p>
-            <h1 className="hero-title"><span>Your car.</span><span>Back to its best.</span></h1>
-            <p className="hero-lede">Mobile detailing that comes fully equipped to your driveway.<br />We bring the power, water, tools, and trained crew.</p>
-            <div className="mt-7 flex flex-wrap gap-4">
-              <Link href="/get-a-quote" className="btn btn-primary">Find my detail ↗</Link>
-              <TrackedLink href="/book" event="book_click" params={{ location: "hero" }} className="btn btn-quote">Book now</TrackedLink>
+      <HomeCinematicMotion />
+
+      <section className="ed26-hero" data-ed26-hero aria-labelledby="home-hero-title">
+        <div className="ed26-hero-media"><Photo id="hero" sizes="100vw" fill priority /></div>
+        <div className="ed26-hero-wash" aria-hidden="true" />
+        <div className="ed26-shell ed26-hero-grid">
+          <div className="ed26-hero-copy">
+            <p className="ed26-meta">Mobile car detailing · Decatur + Atlanta</p>
+            <h1 id="home-hero-title" className="ed26-hero-title">
+              <span>Your car.</span>
+              <span>Back to its best.</span>
+            </h1>
+            <p className="ed26-hero-lede">A trained local crew, fully equipped at your driveway. We bring the water, power, tools, and time.</p>
+            <div className="ed26-hero-actions">
+              <Link href="/get-a-quote" className="ed26-button ed26-button-red">Find My Detail</Link>
+              <TrackedLink href="/book" event="book_click" params={{ location: "hero_v26" }} className="ed26-text-link">Book directly ↗</TrackedLink>
             </div>
           </div>
+          <div className="ed26-hero-caption" aria-hidden="true">
+            <span>Every Detail</span><span>Rig / 01</span><span>Decatur, GA</span>
+          </div>
         </div>
-
-        <section className="proof-row seasonal-host" aria-label="Why people choose Every Detail">
-          <SeasonalDecor variant="leafPile" corner="bl" />
-          <SeasonalDecor variant="scattered" corner="tr" />
-          <div className="container-ed grid gap-3 text-center sm:grid-cols-2 lg:grid-cols-4">
-            <span className="proof-stars">★★★★★ <strong><LiveReviewCount /></strong> five-star reviews</span>
-            <span>{site.award.title}</span><span>Power + water included</span><span>100% electric rigs</span>
+        <div className="ed26-proof-rail" aria-label="Why people choose Every Detail">
+          <div className="ed26-shell ed26-proof-grid">
+            <span><b><LiveReviewCount /></b> five-star reviews</span>
+            <span>{site.award.title}</span>
+            <span>Power + water included</span>
+            <span>100% electric rigs</span>
           </div>
-        </section>
-      </section>
-
-      <section id="pricing" className="home-services home-services-v14 seasonal-host">
-        <SeasonalDecor variant="scattered" corner="tr" />
-        <div className="container-ed">
-          <div className="home-section-head v14-service-head">
-            <div><p className="eyebrow">Start here</p><h2 id="pricing-heading" className="home-display">Choose what<br />your car needs.</h2></div>
-            <p className="home-section-copy">Three details. No package maze. Pick the level of clean you want, then tell us what you drive.</p>
-          </div>
-          <HomeBookingFlow />
-          <div className="home-text-links v14-service-links"><Link href="/our-services" className="link">Compare every service ↗</Link><Link href="/get-a-quote" className="link">Not sure? Find my detail</Link></div>
         </div>
       </section>
 
-      <section className="home-work home-work-v157" aria-labelledby="work-heading">
-        <div className="work-v157-shell">
-          <div className="work-v157-head">
-            <p className="eyebrow">Real cars. Real driveways. Real crew.</p>
-            <h2 id="work-heading" className="home-display">This is what the work <span>actually looks like.</span></h2>
-            <p className="work-proof-copy">No stock photos and no mystery shop. Just our crew, our rigs, and real jobs around Decatur and Atlanta.</p>
-          </div>
-
-          <figure className="work-v157-lead seasonal-host">
-            <SeasonalDecor variant="web" corner="tl" />
-            <SeasonalDecor variant="leafPile" corner="br" />
-            <Photo id="work-mateo-0670" sizes="(min-width: 1500px) 1480px, 94vw" ratio="21/9" />
-            <figcaption><span>01 / ON THE JOB</span><strong>Mateo · Foam wash</strong></figcaption>
-          </figure>
-
-          <div className="work-v157-grid">
-            <figure className="seasonal-host">
-              <SeasonalDecor variant="sprig" corner="tr" />
-              <Photo id="two-tech-interior-detail" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
-              <figcaption><span>02 / INTERIOR</span><strong>Two-person cabin detail</strong></figcaption>
-            </figure>
-
-            <figure className="seasonal-host">
-              <SeasonalDecor variant="web" corner="tr" />
-              <Photo id="work-finished-0771" sizes="(min-width: 900px) 46vw, 94vw" ratio="4/3" />
-              <figcaption><span>05 / FINISHED</span><strong>The result</strong></figcaption>
-            </figure>
-          </div>
-
-          <div className="work-instagram-cta">
+      <section className="ed26-services" id="pricing" aria-labelledby="pricing-heading">
+        <div className="ed26-shell">
+          <div className="ed26-split-head" data-reveal>
+            <p className="ed26-index">01 / Choose your clean</p>
             <div>
-              <span className="work-instagram-label">MORE OF THE WORK</span>
-              <strong>See the jobs behind the photos.</strong>
-              <p>Real vehicles, real problems, what we did, and how they turned out.</p>
-              <Link href="/our-work" className="link">Explore our work ↗</Link>
+              <h2 id="pricing-heading">Three levels.<br />No package maze.</h2>
+              <p>Pick how far you want us to take the car. Then tell us what you drive and we’ll show the exact price.</p>
             </div>
-            <a
-              href="https://www.instagram.com/everydetail.atl/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="work-instagram-link"
-              aria-label="Follow Every Detail on Instagram at @everydetail.atl"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <rect x="3" y="3" width="18" height="18" rx="5" />
-                <circle cx="12" cy="12" r="4" />
-                <circle cx="17.5" cy="6.5" r="1" className="instagram-dot" />
-              </svg>
-              <span>Follow @everydetail.atl</span>
-              <b>↗</b>
-            </a>
           </div>
+          <div className="ed26-booking-wrap"><HomeBookingFlow /></div>
+          <div className="ed26-section-links"><Link href="/our-services">Compare every service ↗</Link><Link href="/get-a-quote">Not sure? Find my detail ↗</Link></div>
         </div>
       </section>
 
-      <ReviewStoryScroll reviewCount={<LiveReviewCount />} />
-
-      <section className="home-team-proof" aria-labelledby="team-proof-heading">
-        <div className="container-ed home-team-proof-grid">
-          <figure><Photo id="about-team" sizes="(min-width: 900px) 48vw, 94vw" ratio="3/2" /></figure>
-          <div className="home-team-proof-copy"><p className="eyebrow">THE PEOPLE SHOWING UP</p><h2 id="team-proof-heading" className="home-display">Local crew.<br/><span>Serious standard.</span></h2><p>Every Detail started with one student and a driveway. Today, a trained team works from purpose-built electric rigs across Decatur and Atlanta.</p><div className="home-team-proof-points"><span>TRAINED TECHNICIANS</span><span>REAL LOCAL TEAM</span><span>100% ELECTRIC RIGS</span></div><Link href="/about-us" className="btn btn-secondary">Meet the team ↗</Link></div>
-        </div>
-      </section>
-
-      <section className="home-how" aria-labelledby="how-heading">
-        <div className="container-ed">
-          <div className="how-head"><p className="eyebrow">How it works</p><h2 id="how-heading" className="home-display">We make detailing<br /><span>the easy part.</span></h2></div>
-          <div className="how-grid how-stack">
-            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="web" corner="tr" /><b>01</b><div><span>START HERE</span><h3>Find your detail</h3><p>Tell us what you drive and what it needs. We’ll recommend the right detail and show you the price.</p></div></article>
-            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="leafPile" corner="br" /><b>02</b><div><span>LOCK IT IN</span><h3>Pick a time</h3><p>Choose an available appointment that works for you. No back-and-forth required.</p></div></article>
-            <article className="how-stack-card seasonal-host"><SeasonalDecor variant="sprig" corner="bl" /><b>03</b><div><span>YOUR DRIVEWAY</span><h3>We come to you</h3><p>Our 100% electric mobile rig arrives with its own water, battery power, tools, and products. We work through the detail, check the result, and let you know when the car is ready.</p></div></article>
-          </div>
-          <Link href="/get-a-quote" className="btn btn-primary how-cta">Find my detail ↗</Link>
-        </div>
-      </section>
-
-      <section className="home-gift-card" aria-labelledby="home-gift-heading">
-        <div className="container-ed home-gift-card-grid">
-          <div><p className="eyebrow">Give Every Detail</p><h2 id="home-gift-heading" className="home-display">A clean car makes a<br /><span>surprisingly good gift.</span></h2></div>
-          <div><p>Birthdays, new cars, parents, teachers, thank-yous, or the person whose interior has seen better days. Choose any value and let them use it toward the detail they want.</p><Link href="/gift-cards" className="btn btn-secondary">Buy a gift card ↗</Link></div>
-        </div>
-      </section>
-
-      <section className="home-next home-next-v158">
-        <div className="container-ed next-v158-wrap">
-          <div className="next-v158-heading">
-            <p className="eyebrow">More than a detail</p>
-            <h2 className="home-display">Take it <span>further.</span></h2>
-            <p>Two ways to go beyond a one-time detail: improve and protect the paint, or put keeping the whole car clean on repeat.</p>
-          </div>
-
-          <div className="upgrade-stack">
-          <div className="upgrade-board upgrade-board-paint seasonal-host"><SeasonalDecor variant="leafPile" corner="br" /><SeasonalDecor variant="web" corner="tl" />
-            <div className="upgrade-index">01 / PAINT</div>
-            <div className="upgrade-main">
-              <p className="upgrade-label">Paint correction + ceramic coating</p>
-              <h3>Make the paint<br />look better.<br /><span>Keep it that way.</span></h3>
-            </div>
-            <div className="upgrade-side">
-              <p>Machine polishing removes or reduces swirls and haze to bring back gloss. Ceramic coating adds durable protection and makes maintenance easier.</p>
-              <div className="upgrade-chips"><span>SWIRL + HAZE CORRECTION</span><span>GLOSS RESTORATION</span><span>LONG-TERM PROTECTION</span></div>
-              <div className="upgrade-actions">
-                <Link href="/ceramic" className="tactile-link">Explore paint + ceramic <b>↗</b></Link>
+      <section className="ed26-process" data-process-scene aria-labelledby="process-heading">
+        <div className="ed26-process-sticky">
+          <div className="ed26-shell ed26-process-layout">
+            <div className="ed26-process-copy">
+              <p className="ed26-index">02 / What happens at the driveway</p>
+              <h2 id="process-heading">One car.<br /><span>Three passes.</span></h2>
+              <div className="ed26-process-stages">
+                {processStages.map((stage, index) => (
+                  <article key={stage.no} className={`ed26-process-stage stage-${index}`}>
+                    <div className="ed26-process-stage-head"><b>{stage.no}</b><span>{stage.label}</span></div>
+                    <h3>{stage.title}</h3>
+                    <p>{stage.body}</p>
+                  </article>
+                ))}
               </div>
+              <Link href="/our-services" className="ed26-text-link ed26-text-link-light">See exactly what’s included ↗</Link>
             </div>
-            <div className="upgrade-stamp">PAINT<br />CARE</div>
-          </div>
-
-          <div className="upgrade-board upgrade-board-plus seasonal-host"><SeasonalDecor variant="web" corner="tr" />
-            <div className="upgrade-index">02 / RECURRING CARE</div>
-            <div className="upgrade-main">
-              <p className="upgrade-label">Detail+</p>
-              <h3>Your car stays clean.<br /><span>Automatically.</span></h3>
+            <div className="ed26-process-visual" aria-hidden="true">
+              {processStages.map((stage, index) => (
+                <figure key={stage.image} className={`ed26-process-photo stage-${index}`}><Photo id={stage.image} sizes="(min-width: 900px) 48vw, 100vw" fill /></figure>
+              ))}
+              <div className="ed26-process-counter"><span>PASS</span><b>01</b><i>/03</i></div>
             </div>
-            <div className="upgrade-side">
-              <p>Choose how often we come back. Same driveway, same standard, and a car that never has to get far behind again.</p>
-              <div className="plus-steps">
-                <div><b>01</b><span>Book once</span></div>
-                <div><b>02</b><span>We come back</span></div>
-                <div><b>03</b><span>Stay clean</span></div>
-              </div>
-              <div className="upgrade-actions"><Link href="/detailplus" className="tactile-link tactile-link-light">See Detail+ <b>↗</b></Link></div>
-            </div>
-            <div className="upgrade-stamp upgrade-stamp-light">REPEAT<br />CARE</div>
-          </div>
           </div>
         </div>
       </section>
 
-      <section className="home-faq seasonal-host">
-        <SeasonalDecor variant="sprig" corner="tr" />
-        <SeasonalDecor variant="leafPile" corner="bl" />
-        <div className="container-ed faq-layout"><div className="faq-title"><p className="eyebrow">Before you book</p><h2 className="home-display">The stuff you’re<br />probably wondering.</h2><p>We’d rather answer the question before it becomes a reason not to book. Still unsure about something? Call or text us and a real person will answer.</p></div><div className="faq-list-home"><FaqList faqs={featuredFaqs} /><Link href="/our-services" className="link">See all service details ↗</Link></div></div>
+      <section className="ed26-archive" data-archive-scene aria-labelledby="archive-heading">
+        <div className="ed26-archive-sticky">
+          <div className="ed26-archive-head ed26-shell">
+            <p className="ed26-index">03 / The work</p>
+            <h2 id="archive-heading">Real jobs.<br />No stock photos.</h2>
+            <Link href="/our-work" className="ed26-text-link">See all work ↗</Link>
+          </div>
+          <div className="ed26-archive-track">
+            <figure className="ed26-archive-card ed26-archive-card-wide"><Photo id="hq-mobile-rig-fleet" sizes="70vw" fill /><figcaption><b>01</b><span>Mobile rigs / Decatur</span></figcaption></figure>
+            <figure className="ed26-archive-card ed26-archive-card-tall"><Photo id="tesla-foam-wash" sizes="38vw" fill /><figcaption><b>02</b><span>Foam wash</span></figcaption></figure>
+            <figure className="ed26-archive-card ed26-archive-card-wide"><Photo id="hq-interior-team-front-seats" sizes="64vw" fill /><figcaption><b>03</b><span>Two-tech interior</span></figcaption></figure>
+            <figure className="ed26-archive-card ed26-archive-card-tall"><Photo id="hq-black-suv-finished" sizes="38vw" fill /><figcaption><b>04</b><span>Finished</span></figcaption></figure>
+            <figure className="ed26-archive-card ed26-archive-card-wide"><Photo id="classic-car-cockpit" sizes="64vw" fill /><figcaption><b>05</b><span>Cabin detail</span></figcaption></figure>
+          </div>
+        </div>
       </section>
 
-      <section className="final-book final-book-v12 seasonal-host">
-        <SeasonalDecor variant="pumpkin" corner="br" />
-        <SeasonalDecor variant="web" corner="tl" />
-        <div className="container-ed final-inner">
-          <p className="eyebrow">We come to you</p>
-          <h2 className="final-title">Your driveway.<br /><span>Our detail shop.</span></h2>
-          <p>Tell us what you drive. We’ll recommend the right detail, show you the exact price, and bring everything else.</p>
-          <div className="final-actions"><Link href="/get-a-quote" className="btn btn-primary">Find my detail ↗</Link><TrackedLink href="/book" event="book_click" params={{ location: "home_final" }} className="final-quote">Already know what you want? Book now</TrackedLink></div>
+      <section className="ed26-story" data-story-scene aria-labelledby="story-heading">
+        <div className="ed26-shell">
+          <p className="ed26-index">04 / Since eighth grade</p>
+          <h2 id="story-heading" className="ed26-story-line">
+            <span>Built by</span>
+            <span className="ed26-story-image"><Photo id="about-team" sizes="22vw" fill /></span>
+            <span>students.</span>
+            <span>Run like</span>
+            <span className="ed26-story-image ed26-story-image-rig"><Photo id="hq-branded-van-side" sizes="22vw" fill /></span>
+            <span>a company.</span>
+          </h2>
+          <div className="ed26-story-foot">
+            <p>What started as one student detailing cars has grown into a trained team, purpose-built mobile rigs, custom booking systems, and a standard we expect every technician to hit.</p>
+            <Link href="/about-us" className="ed26-text-link">Meet the team ↗</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="ed26-review" aria-label="Customer review">
+        <div className="ed26-shell ed26-review-grid" data-reveal>
+          <p className="ed26-index">05 / Word of mouth</p>
+          <blockquote>
+            “{leadReview.text}”
+            <footer>{leadReview.author} · Google review</footer>
+          </blockquote>
+        </div>
+      </section>
+
+      <section className="ed26-beyond" aria-labelledby="beyond-heading">
+        <div className="ed26-shell">
+          <div className="ed26-split-head" data-reveal>
+            <p className="ed26-index">06 / Go further</p>
+            <div><h2 id="beyond-heading">Beyond the reset.</h2><p>Protect the paint or keep the whole car on a recurring schedule.</p></div>
+          </div>
+          <div className="ed26-beyond-grid">
+            <Link href="/ceramic" className="ed26-beyond-panel ed26-beyond-paint">
+              <span>Paint correction + ceramic</span>
+              <strong>Bring back gloss.<br />Keep it protected.</strong>
+              <b>Explore paint care ↗</b>
+            </Link>
+            <Link href="/detailplus" className="ed26-beyond-panel ed26-beyond-plus">
+              <span>Detail+</span>
+              <strong>Stay clean.<br />Automatically.</strong>
+              <b>Explore Detail+ ↗</b>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="ed26-faq" aria-labelledby="faq-heading">
+        <div className="ed26-shell ed26-faq-grid">
+          <div data-reveal><p className="ed26-index">07 / Before you book</p><h2 id="faq-heading">The questions<br />people actually ask.</h2><p>We’d rather answer it now than make you dig for it.</p></div>
+          <div><FaqList faqs={featuredFaqs} /></div>
+        </div>
+      </section>
+
+      <section className="ed26-final" aria-labelledby="final-heading">
+        <div className="ed26-final-photo"><Photo id="hq-van-through-flowers" sizes="100vw" fill /></div>
+        <div className="ed26-final-wash" aria-hidden="true" />
+        <div className="ed26-shell ed26-final-inner" data-reveal>
+          <p className="ed26-meta">Decatur + Atlanta · We come to you</p>
+          <h2 id="final-heading">Your driveway.<br /><span>Our detail shop.</span></h2>
+          <div className="ed26-final-actions"><Link href="/get-a-quote" className="ed26-button ed26-button-red">Find My Detail</Link><TrackedLink href="/book" event="book_click" params={{ location: "home_final_v26" }} className="ed26-text-link ed26-text-link-light">Book directly ↗</TrackedLink></div>
         </div>
       </section>
     </>
