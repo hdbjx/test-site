@@ -106,19 +106,23 @@ export function HomeArtMotion() {
       const proof = document.querySelector<HTMLElement>("[data-v36-proof]");
       if (proof) {
         const r = proof.getBoundingClientRect();
-        document.documentElement.dataset.proofActive = String(r.top <= vh * .18 && r.bottom >= vh * .82);
         const span = Math.max(1, r.height - vh);
         const pp = clamp(-r.top / span);
-        const countOut = clamp((pp - .16) / .16);
-        const review1 = clamp(1 - Math.abs(pp - .36) / .17);
-        const review2 = clamp(1 - Math.abs(pp - .60) / .17);
-        const review3 = clamp(1 - Math.abs(pp - .84) / .17);
+        const countOut = clamp((pp - .20) / .12);
+        const review1 = clamp(1 - Math.abs(pp - .43) / .14);
+        const review2 = clamp(1 - Math.abs(pp - .64) / .14);
+        const review3 = clamp(1 - Math.abs(pp - .85) / .14);
         proof.style.setProperty("--proof", String(pp));
         proof.style.setProperty("--proof-count-out", String(countOut));
+        proof.style.setProperty("--proof-count-opacity", String(1 - countOut));
+        proof.style.setProperty("--proof-count-y", `${countOut * -24}px`);
+        proof.style.setProperty("--proof-count-scale", String(1 - countOut * .06));
         proof.style.setProperty("--proof-r1", String(review1));
         proof.style.setProperty("--proof-r2", String(review2));
         proof.style.setProperty("--proof-r3", String(review3));
-        proof.style.setProperty("--proof-progress", `${Math.max(4, pp * 100)}%`);
+        proof.style.setProperty("--proof-r1-x", `${(1 - review1) * 8}vw`);
+        proof.style.setProperty("--proof-r2-x", `${(1 - review2) * 8}vw`);
+        proof.style.setProperty("--proof-r3-x", `${(1 - review3) * 8}vw`);
       }
 
       const beyond = document.querySelector<HTMLElement>("[data-v29-scene='beyond']");
@@ -129,6 +133,8 @@ export function HomeArtMotion() {
         beyond.style.setProperty("--stamp-rot", `${-12 + p * 24}deg`);
         beyond.style.setProperty("--beyond-progress", String(p));
         beyond.style.setProperty("--beyond-lift", `${(1 - p) * 48}px`);
+        beyond.style.setProperty("--maintain-wipe-scale", String(Math.max(0, 1 - Math.min(1, p * 1.35))));
+        beyond.style.setProperty("--maintain-lift", `${(1 - p) * 46}px`);
       }
       const close = document.querySelector<HTMLElement>("[data-v29-scene='close']");
       if (close) {
@@ -240,7 +246,6 @@ export function HomeArtMotion() {
       if (pointerRaf.current != null) cancelAnimationFrame(pointerRaf.current);
       if (ribbonRaf.current != null) cancelAnimationFrame(ribbonRaf.current);
       delete document.documentElement.dataset.homeScene;
-      delete document.documentElement.dataset.proofActive;
     };
   }, []);
 

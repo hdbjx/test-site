@@ -114,6 +114,18 @@ export function Header() {
   }, [menuOpen]);
 
   useEffect(() => {
+    if (!menuOpen) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (panelRef.current?.contains(target) || menuButtonRef.current?.contains(target)) return;
+      setMenuOpen(false);
+      window.requestAnimationFrame(() => menuButtonRef.current?.focus());
+    };
+    document.addEventListener("pointerdown", onPointerDown, true);
+    return () => document.removeEventListener("pointerdown", onPointerDown, true);
+  }, [menuOpen]);
+
+  useEffect(() => {
     if (pathname !== "/detailplus") {
       setDetailPlusHeaderScrolled(false);
       return;
