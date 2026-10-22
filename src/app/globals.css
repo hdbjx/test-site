@@ -11174,3 +11174,165 @@ body:has(.v29-hero) .site-shared-menu-label{font-size:.73rem!important;letter-sp
 @media(prefers-reduced-motion:reduce){
   .v29-hero-photo img{animation:none!important;filter:brightness(.69) saturate(.78) contrast(1.09) sepia(.055)!important}
 }
+
+/* ============================================================
+   V44 — homepage hero cleanup follow-up
+   Hide the daytime school-hours bar on the homepage and turn
+   the hero marquee into a real wave band.
+   ============================================================ */
+
+.v36-tape.v41-tape{
+  position:relative!important;
+  z-index:18!important;
+  width:calc(100% + 72px)!important;
+  height:172px!important;
+  margin:-68px 0 -30px -36px!important;
+  overflow:hidden!important;
+  background:linear-gradient(to bottom, transparent 0 42px, var(--v29-paper) 42px 100%)!important;
+  transform:none!important;
+  clip-path:none!important;
+  filter:none!important;
+  pointer-events:none!important;
+}
+.v41-tape-track{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  gap:0!important;
+  width:max-content!important;
+  will-change:transform!important;
+  transform:translate3d(0,0,0);
+}
+.v41-wave-unit{
+  display:block;
+  width:min(1800px, 150vw);
+  height:172px;
+  flex:0 0 auto;
+  overflow:visible;
+}
+.v41-wave-fill{fill:var(--v29-red)}
+.v41-wave-text{
+  fill:var(--v29-paper);
+  font-family:var(--font-display);
+  font-size:56px;
+  font-weight:900;
+  letter-spacing:-1px;
+  text-transform:uppercase;
+}
+.v36-tape.v41-tape + .v29-choice{padding-top:6.2rem!important}
+
+@media(min-width:1200px){
+  .v41-wave-unit{width:1900px;height:182px}
+  .v41-wave-text{font-size:60px}
+}
+
+@media(max-width:1100px){
+  .v36-tape.v41-tape{
+    width:calc(100% + 56px)!important;
+    height:144px!important;
+    margin:-58px 0 -24px -28px!important;
+    background:linear-gradient(to bottom, transparent 0 34px, var(--v29-paper) 34px 100%)!important;
+  }
+  .v41-wave-unit{width:1480px;height:144px}
+  .v41-wave-text{font-size:46px}
+  .v36-tape.v41-tape + .v29-choice{padding-top:5.6rem!important}
+}
+
+@media(max-width:767px){
+  .v36-tape.v41-tape{
+    width:calc(100% + 28px)!important;
+    height:118px!important;
+    margin:-42px 0 -16px -14px!important;
+    background:linear-gradient(to bottom, transparent 0 26px, var(--v29-paper) 26px 100%)!important;
+  }
+  .v41-wave-unit{width:1160px;height:118px}
+  .v41-wave-text{font-size:36px}
+  .v36-tape.v41-tape + .v29-choice{padding-top:4.8rem!important}
+}
+
+@media(max-width:520px){
+  .v36-tape.v41-tape{height:102px!important;margin-top:-36px!important;margin-bottom:-10px!important}
+  .v41-wave-unit{width:1020px;height:102px}
+  .v41-wave-text{font-size:31px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .v41-tape-track{transform:none!important}
+}
+
+
+/* V45 — homepage school-hours cue without disturbing the hero composition. */
+.home-school-availability{
+  position:fixed;
+  left:max(3.55vw,30px);
+  top:62px;
+  z-index:48;
+  display:flex;
+  align-items:center;
+  gap:.7rem;
+  min-height:46px;
+  padding:0 14px 0 12px;
+  border:1px solid rgba(243,237,223,.42);
+  background:rgba(8,8,7,.26);
+  color:#f3eddf;
+  box-shadow:0 10px 28px rgba(0,0,0,.10);
+  backdrop-filter:blur(9px);
+  -webkit-backdrop-filter:blur(9px);
+  pointer-events:auto;
+  cursor:pointer;
+  transition:background-color .2s ease,border-color .2s ease,transform .2s ease;
+}
+.home-school-availability:hover{
+  background:rgba(8,8,7,.5);
+  border-color:rgba(243,237,223,.72);
+  transform:translateY(-1px);
+}
+.home-school-availability-dot{
+  width:8px;
+  height:8px;
+  flex:0 0 auto;
+  border-radius:50%;
+  background:var(--v29-red);
+  box-shadow:0 0 0 4px rgba(213,104,101,.14);
+}
+.home-school-availability-copy{display:flex;align-items:baseline;gap:.55rem;white-space:nowrap}
+.home-school-availability-copy strong,
+.home-school-availability-copy span,
+.home-school-availability i{
+  font-family:var(--font-display);
+  font-style:normal;
+  text-transform:uppercase;
+}
+.home-school-availability-copy strong{font-size:.72rem;font-weight:900;letter-spacing:.15em}
+.home-school-availability-copy span{font-size:.64rem;font-weight:800;letter-spacing:.11em;color:rgba(243,237,223,.7)}
+.home-school-availability i{margin-left:.08rem;font-size:.88rem;font-weight:900}
+.home-school-availability-mobile{display:none}
+
+@media(max-width:900px){
+  .home-school-availability{
+    left:14px;
+    top:max(22px,calc(env(safe-area-inset-top) + 10px));
+    min-height:42px;
+    padding:0 11px;
+    gap:.55rem;
+    border-color:rgba(243,237,223,.36);
+  }
+  .home-school-availability-desktop{display:none}
+  .home-school-availability-mobile{display:inline}
+  .home-school-availability-copy{gap:.42rem}
+  .home-school-availability-copy strong{font-size:.64rem;letter-spacing:.13em}
+  .home-school-availability-copy span{font-size:.59rem}
+  .home-school-availability-dot{width:7px;height:7px;box-shadow:0 0 0 3px rgba(213,104,101,.14)}
+}
+
+@media(max-width:420px){
+  .home-school-availability{left:10px;min-height:40px;padding-inline:10px}
+  .home-school-availability-copy strong{font-size:.61rem}
+  .home-school-availability-copy span{font-size:.56rem}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .home-school-availability{transition:none}
+}

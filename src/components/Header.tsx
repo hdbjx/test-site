@@ -124,7 +124,7 @@ export function Header() {
         Skip to content
       </a>
 
-      {showAvailabilityBanner && (
+      {showAvailabilityBanner && !onHome && (
         <button
           type="button"
           className="availability-banner"
@@ -136,6 +136,22 @@ export function Header() {
             <span>STUDENT-RUN TEAM&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY&nbsp;&nbsp;•&nbsp;&nbsp;FULLY MOBILE&nbsp;&nbsp;•&nbsp;&nbsp;POWER + WATER INCLUDED&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
           </span>
           <span className="sr-only">View scheduling information for our student-run team</span>
+        </button>
+      )}
+      {showAvailabilityBanner && onHome && (
+        <button
+          type="button"
+          className="home-school-availability"
+          onClick={() => setAvailabilityOpen(true)}
+          aria-haspopup="dialog"
+        >
+          <span className="home-school-availability-dot" aria-hidden="true" />
+          <span className="home-school-availability-copy">
+            <strong>IN SCHOOL</strong>
+            <span className="home-school-availability-desktop">AFTER-SCHOOL APPOINTMENTS</span>
+            <span className="home-school-availability-mobile">TEXT US</span>
+          </span>
+          <i aria-hidden="true">↗</i>
         </button>
       )}
       <div className="site-shared-nav-shell">
