@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { HomeArtMotion } from "@/components/HomeArtMotion";
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
-import { DraggableStoryPhoto } from "@/components/DraggableStoryPhoto";
 import { AnimatedReviewCount } from "@/components/GoogleReviewStats";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
@@ -51,16 +50,11 @@ export default function Home() {
         <div className="v29-sweep" aria-hidden="true" />
       </section>
 
-      <section className="v36-tape" data-v36-tape aria-label="Every Detail promise">
-        <svg className="v36-tape-svg" viewBox="0 0 2200 220" preserveAspectRatio="none" aria-hidden="true">
-          <path className="v36-tape-shape" d="M-80,60 C420,34 830,42 1180,76 C1540,112 1870,116 2280,82 L2280,196 C1880,220 1530,216 1160,184 C780,150 380,142 -80,170 Z" />
-          <path id="v36-tape-path" d="M-40,116 C430,88 835,94 1180,126 C1540,160 1880,164 2240,132" fill="none" />
-          <text className="v36-tape-text">
-            <textPath href="#v36-tape-path" data-v36-tape-text startOffset="0%">
-              WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU • 
-            </textPath>
-          </text>
-        </svg>
+      <section className="v36-tape v41-tape" data-v36-tape aria-label="Every Detail promise">
+        <div className="v41-tape-track" data-v41-tape-track aria-hidden="true">
+          <span>WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU •</span>
+          <span>WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU •</span>
+        </div>
       </section>
 
       <section className="v29-choice" id="pricing" data-v29-scene="choice" aria-labelledby="v29-choice-title">
@@ -97,79 +91,81 @@ export default function Home() {
             <span>RUN LIKE A COMPANY.</span>
           </h2>
 
-          <div className="v37-story-collage v42-story-collage">
-            <DraggableStoryPhoto id="team" photoId="about-team" label="Every Detail team photo" className="v37-story-photo v37-story-photo-a v42-story-photo" sizes="(max-width: 900px) 86vw, 34vw" />
-            <DraggableStoryPhoto id="van" photoId="hq-branded-van-side" label="Every Detail branded van" className="v37-story-photo v37-story-photo-b v42-story-photo" sizes="(max-width: 900px) 70vw, 26vw" />
-            <DraggableStoryPhoto id="tablet" photoId="team-tablet" label="Every Detail technician with tablet" className="v37-story-photo v37-story-photo-c v42-story-photo" sizes="(max-width: 900px) 52vw, 18vw" />
-            <span className="v42-drag-hint" aria-hidden="true">DRAG THE PHOTOS AROUND</span>
+          <div className="v37-story-collage v41-story-collage" aria-label="Student-built Every Detail photo collage">
+            <span className="v37-story-photo v37-story-photo-a" data-v29-fly="a" data-v41-drag><Photo id="about-team" sizes="(max-width: 900px) 86vw, 34vw" fill /></span>
+            <span className="v37-story-photo v37-story-photo-b" data-v29-fly="b" data-v41-drag><Photo id="hq-branded-van-side" sizes="(max-width: 900px) 70vw, 26vw" fill /></span>
+            <span className="v37-story-photo v37-story-photo-c" data-v29-fly="c" data-v41-drag><Photo id="team-tablet" sizes="(max-width: 900px) 52vw, 18vw" fill /></span>
+            <span className="v41-drag-hint" aria-hidden="true">DRAG THE PHOTOS</span>
           </div>
 
         </div>
       </section>
 
-      <section className="v42-proof" data-v36-proof data-v29-scene="proof" aria-label="Customer reviews">
-        <div className="v42-proof-sticky">
-          <div className="v42-proof-track" data-v42-proof-track>
-            <article className="v42-proof-panel v42-proof-count-panel">
-              <div className="v42-proof-count">
+      <section className="v38-proof" data-v36-proof data-v29-scene="proof" aria-label="Customer reviews">
+        <div className="v38-proof-sticky">
+          <div className="v38-proof-stage">
+            <div className="v41-proof-rail" data-v41-proof-rail>
+              <div className="v38-proof-count v41-proof-count">
                 <strong><AnimatedReviewCount /></strong>
                 <span>FIVE-STAR REVIEWS</span>
+                <small>REAL CUSTOMERS. REAL CARS.</small>
               </div>
-            </article>
-            {proofReviews.map((review, index) => (
-              <article key={review.author} className={`v42-proof-panel v42-proof-review-panel v42-proof-review-${index + 1}`}>
-                <span className="v42-proof-index">0{index + 1}</span>
-                <blockquote>“{review.quote}”</blockquote>
-                <footer>{review.author} / Google Review</footer>
-              </article>
-            ))}
-            <article className="v42-proof-panel v42-proof-outro">
-              <p>REAL PEOPLE.<br /><span>REAL DRIVEWAYS.</span></p>
-            </article>
+
+              <div className="v38-proof-reviews v41-proof-reviews" aria-label="Customer review highlights">
+                {proofReviews.map((review, index) => (
+                  <article key={review.author} className={`v38-proof-review v38-proof-review-${index + 1} v41-proof-review`}>
+                    <span className="v41-proof-index">0{index + 1}</span>
+                    <p>“{review.quote}”</p>
+                    <footer>{review.author}</footer>
+                  </article>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="v42-care" data-v29-scene="beyond" aria-label="Paint care and recurring maintenance">
-        <div className="v42-care-intro">
-          <p>THE RESET IS ONLY THE START.</p>
-          <h2>RESTORE IT.<br /><span>KEEP IT THAT WAY.</span></h2>
-        </div>
+      <section className="v41-care" data-v29-scene="beyond" aria-labelledby="v41-care-title">
+        <div className="v29-shell v41-care-inner">
+          <div className="v41-care-heading">
+            <span>AFTER THE RESET</span>
+            <h2 id="v41-care-title">KEEP THE CAR<br /><em>FEELING RIGHT.</em></h2>
+            <p>Protect the finish, or keep the whole car on a regular clean cycle. Two different jobs. One cleaner way to own a car.</p>
+          </div>
 
-        <div className="v42-care-stage">
-          <Link href="/ceramic" className="v42-care-card v42-care-restore" data-v29-tilt>
-            <div className="v42-care-media"><Photo id="hq-black-suv-finished" sizes="(max-width: 900px) 100vw, 58vw" fill /></div>
-            <div className="v42-care-glass" />
-            <div className="v42-care-copy">
-              <span>01 / PAINT CARE</span>
-              <strong>BRING BACK<br />THE GLOSS.</strong>
-              <b>Paint correction + ceramic ↗</b>
-            </div>
-          </Link>
+          <div className="v41-care-grid">
+            <Link href="/ceramic" className="v41-care-card v41-care-card-paint">
+              <div className="v41-care-card-image"><Photo id="hq-black-suv-finished" sizes="(max-width: 900px) 100vw, 58vw" fill /></div>
+              <div className="v41-care-card-shade" />
+              <div className="v41-care-card-top"><span>01</span><b>PAINT CARE</b></div>
+              <div className="v41-care-card-copy">
+                <h3>BRING BACK<br />THE GLOSS.</h3>
+                <p>Correction and protection for paint that deserves more than a wash.</p>
+                <strong>Explore paint care ↗</strong>
+              </div>
+            </Link>
 
-          <Link href="/detailplus" className="v42-care-card v42-care-keep" data-v29-tilt>
-            <div className="v42-care-media"><Photo id="hq-technician-window-detail" sizes="(max-width: 900px) 100vw, 58vw" fill /></div>
-            <div className="v42-care-redwash" aria-hidden="true" />
-            <div className="v42-care-copy">
-              <span>02 / DETAIL+</span>
-              <strong>KEEP THE<br />GOOD PART.</strong>
-              <b>Recurring maintenance ↗</b>
-            </div>
-            <div className="v42-care-loop" aria-hidden="true">
-              <span>MONTHLY</span><span>BI-WEEKLY</span><span>CUSTOM</span><span>MONTHLY</span><span>BI-WEEKLY</span><span>CUSTOM</span>
-            </div>
-          </Link>
+            <Link href="/detailplus" className="v41-care-card v41-care-card-plus">
+              <div className="v41-care-card-image"><Photo id="hq-technician-window-detail" sizes="(max-width: 900px) 100vw, 42vw" fill /></div>
+              <div className="v41-care-card-shade" />
+              <div className="v41-care-card-top"><span>02</span><b>DETAIL+</b></div>
+              <div className="v41-care-card-copy">
+                <h3>STAY CLEAN.<br />SKIP THE RESET.</h3>
+                <p>Recurring maintenance built around how often you actually drive.</p>
+                <strong>Explore Detail+ ↗</strong>
+              </div>
+              <div className="v41-care-cadence">MONTHLY • BI-WEEKLY • CUSTOM</div>
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="v39-clean-life" data-v39-life aria-labelledby="v39-clean-life-title">
+      <section className="v39-clean-life v41-clean-life" data-v39-life aria-labelledby="v39-clean-life-title">
         <div className="v39-clean-life-grain" aria-hidden="true" />
-        <div className="v39-clean-life-inner">
-          <h2 id="v39-clean-life-title" className="v39-clean-life-title">
-            <span className="v39-life-word v39-life-a">LIFE’S</span>
-            <span className="v39-life-word v39-life-b">BETTER</span>
-            <span className="v39-life-word v39-life-c">IN A</span>
-            <span className="v39-life-word v39-life-d">CLEAN CAR.</span>
+        <div className="v39-clean-life-inner v41-clean-life-inner">
+          <h2 id="v39-clean-life-title" className="v39-clean-life-title v41-clean-life-title">
+            <span className="v41-life-line v41-life-line-one">LIFE’S GOOD</span>
+            <span className="v41-life-line v41-life-line-two">IN A CLEAN CAR.</span>
           </h2>
         </div>
       </section>

@@ -3,13 +3,6 @@
 import { useEffect, useRef } from "react";
 
 const clamp = (n: number, a = 0, b = 1) => Math.min(b, Math.max(a, n));
-const smoothstep = (a: number, b: number, n: number) => {
-  const t = clamp((n - a) / Math.max(b - a, 0.0001));
-  return t * t * (3 - 2 * t);
-};
-const windowFade = (n: number, inA: number, inB: number, outA: number, outB: number) =>
-  smoothstep(inA, inB, n) * (1 - smoothstep(outA, outB, n));
-
 export function HomeArtMotion() {
   const raf = useRef<number | null>(null);
   const pointerRaf = useRef<number | null>(null);
@@ -114,11 +107,13 @@ export function HomeArtMotion() {
         const r = proof.getBoundingClientRect();
         const span = Math.max(1, r.height - vh);
         const pp = clamp(-r.top / span);
-        const track = proof.querySelector<HTMLElement>("[data-v42-proof-track]");
-        const maxTravel = track ? Math.max(0, track.scrollWidth - vw) : vw * 4;
-        const flow = pp <= .075 ? 0 : clamp((pp - .075) / .925);
-        proof.style.setProperty("--proof", String(pp));
-        proof.style.setProperty("--proof-x", `${-maxTravel * flow}px`);
+        const rail = proof.querySelector<HTMLElement>("[data-v41-proof-rail]");
+        if (rail && vw >= 901) {
+          const travel = Math.max(0, rail.scrollWidth - vw);
+          proof.style.setProperty("--proof-x", `${-pp * travel}px`);
+        } else {
+          proof.style.setProperty("--proof-x", "0px");
+        }
       }
 
       const beyond = document.querySelector<HTMLElement>("[data-v29-scene='beyond']");
@@ -131,9 +126,6 @@ export function HomeArtMotion() {
         beyond.style.setProperty("--beyond-lift", `${(1 - p) * 48}px`);
         beyond.style.setProperty("--maintain-wipe-scale", String(Math.max(0, 1 - Math.min(1, p * 1.35))));
         beyond.style.setProperty("--maintain-lift", `${(1 - p) * 46}px`);
-        beyond.style.setProperty("--care-keep-x", `${(1 - p) * vw * .07}px`);
-        beyond.style.setProperty("--care-wash-scale", String(.18 + p * .82));
-        beyond.style.setProperty("--care-loop-x", `${p * -18}%`);
       }
       const cleanLife = document.querySelector<HTMLElement>("[data-v39-life]");
       if (cleanLife) {
@@ -233,13 +225,64 @@ export function HomeArtMotion() {
 
     updateScroll();
     const animateRibbon = (time: number) => {
-      const textPath = document.querySelector<SVGTextPathElement>("[data-v36-tape-text]");
-      if (textPath && !reduced.matches) {
-        const offset = -((time * .0038 + window.scrollY * .035) % 52);
-        textPath.setAttribute("startOffset", `${offset}%`);
+      const track = document.querySelector<HTMLElement>("[data-v41-tape-track]");
+      if (track && !reduced.matches) {
+        const loop = Math.max(1, track.scrollWidth / 2);
+        const offset = -((time * .055 + window.scrollY * .075) % loop);
+        track.style.transform = `translate3d(${offset}px,0,0)`;
       }
       ribbonRaf.current = requestAnimationFrame(animateRibbon);
     };
+
+    const dragCleanups = Array.from(document.querySelectorAll<HTMLElement>("[data-v41-drag]")).map((photo) => {
+      let dragging = false;
+      let pointerId = -1;
+      let startX = 0;
+      let startY = 0;
+      let baseX = Number(photo.dataset.dragX || 0);
+      let baseY = Number(photo.dataset.dragY || 0);
+
+      const down = (event: PointerEvent) => {
+        if (reduced.matches || !fine.matches || event.pointerType === "touch") return;
+        dragging = true;
+        pointerId = event.pointerId;
+        startX = event.clientX;
+        startY = event.clientY;
+        baseX = Number(photo.dataset.dragX || 0);
+        baseY = Number(photo.dataset.dragY || 0);
+        photo.setPointerCapture(pointerId);
+        photo.dataset.dragging = "true";
+        event.preventDefault();
+      };
+
+      const move = (event: PointerEvent) => {
+        if (!dragging || event.pointerId !== pointerId) return;
+        const nextX = Math.max(-240, Math.min(240, baseX + event.clientX - startX));
+        const nextY = Math.max(-180, Math.min(180, baseY + event.clientY - startY));
+        photo.style.setProperty("--drag-x", `${nextX}px`);
+        photo.style.setProperty("--drag-y", `${nextY}px`);
+        photo.dataset.dragX = String(nextX);
+        photo.dataset.dragY = String(nextY);
+      };
+
+      const up = (event: PointerEvent) => {
+        if (!dragging || event.pointerId !== pointerId) return;
+        dragging = false;
+        if (photo.hasPointerCapture(pointerId)) photo.releasePointerCapture(pointerId);
+        delete photo.dataset.dragging;
+      };
+
+      photo.addEventListener("pointerdown", down);
+      photo.addEventListener("pointermove", move);
+      photo.addEventListener("pointerup", up);
+      photo.addEventListener("pointercancel", up);
+      return () => {
+        photo.removeEventListener("pointerdown", down);
+        photo.removeEventListener("pointermove", move);
+        photo.removeEventListener("pointerup", up);
+        photo.removeEventListener("pointercancel", up);
+      };
+    });
 
     ribbonRaf.current = requestAnimationFrame(animateRibbon);
     window.addEventListener("scroll", requestScroll, { passive: true });
@@ -255,6 +298,7 @@ export function HomeArtMotion() {
       if (raf.current != null) cancelAnimationFrame(raf.current);
       if (pointerRaf.current != null) cancelAnimationFrame(pointerRaf.current);
       if (ribbonRaf.current != null) cancelAnimationFrame(ribbonRaf.current);
+      dragCleanups.forEach((cleanup) => cleanup());
       delete document.documentElement.dataset.homeScene;
     };
   }, []);
