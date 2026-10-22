@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { HomeArtMotion } from "@/components/HomeArtMotion";
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
+import { CurvedTape } from "@/components/CurvedTape";
 import { AnimatedReviewCount } from "@/components/GoogleReviewStats";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
@@ -49,27 +50,7 @@ export default function Home() {
         <div className="v29-sweep" aria-hidden="true" />
       </section>
 
-      <section className="v36-tape v41-tape" data-v36-tape aria-label="Every Detail promise">
-        <div className="v41-tape-track" data-v41-tape-track aria-hidden="true">
-          {[0, 1].map((index) => (
-            <svg key={index} className="v41-wave-unit" viewBox="0 0 1800 220" preserveAspectRatio="none" role="presentation" aria-hidden="true">
-              <path
-                className="v41-wave-fill"
-                d="M0 74C142 48 300 36 472 46C630 56 786 94 940 96C1098 98 1250 64 1406 52C1562 40 1694 46 1800 66V174C1674 186 1524 194 1360 188C1182 182 1024 152 864 150C688 148 538 178 382 182C232 186 104 178 0 168Z"
-              />
-              <path
-                id={`v41-wave-text-path-${index}`}
-                d="M-36 118C112 92 274 80 448 88C620 96 784 128 944 128C1104 128 1262 96 1418 88C1576 80 1708 86 1836 104"
-              />
-              <text className="v41-wave-text">
-                <textPath href={`#v41-wave-text-path-${index}`} startOffset="0%">
-                  WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU •
-                </textPath>
-              </text>
-            </svg>
-          ))}
-        </div>
-      </section>
+      <CurvedTape text="WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU • " label="Every Detail promise" />
 
       <section className="v29-choice" id="pricing" data-v29-scene="choice" aria-labelledby="v29-choice-title">
         <div className="v29-shell">
