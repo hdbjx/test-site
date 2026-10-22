@@ -283,11 +283,6 @@ export function Header() {
         >
           {onHome ? (
             <nav aria-label="Main menu" className="v33-menu-shell">
-              <div className="v33-menu-topline" aria-hidden="true">
-                <span>Every Detail / Decatur + Atlanta</span>
-                <span>Fully mobile / power + water included</span>
-              </div>
-
               <div className="v33-menu-main">
                 {[
                   { n: "01", label: "Services", href: "/our-services" },
@@ -310,16 +305,9 @@ export function Header() {
               </div>
 
               <div className="v33-menu-bottom">
-                <div className="v33-menu-secondary">
-                  <Link href="/get-a-quote">Find My Detail</Link>
-                  <Link href="/paint-correction">Paint Correction</Link>
-                  <Link href="/ceramic">Ceramic</Link>
-                  <Link href="/service-areas">Service Areas</Link>
-                  <Link href="/blog">Shine On Blog</Link>
-                  {supabaseConfigured && <a href="/account" data-no-transition="true">Account</a>}
-                </div>
+                <span className="v35-menu-note">Mobile detailing / Decatur + Atlanta</span>
                 <div className="v33-menu-actions">
-                  <a href={site.phone.sms} onClick={() => track("text_click", { location: "home_menu" })}>Text {site.phone.display}</a>
+                  <Link href="/get-a-quote">Find my detail</Link>
                   <Link href="/book" onClick={() => track("book_click", { location: "home_menu" })}>Book a detail <span aria-hidden="true">↗</span></Link>
                 </div>
               </div>

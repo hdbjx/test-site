@@ -53,20 +53,18 @@ export default function Home() {
         <div className="v29-sweep" aria-hidden="true" />
       </section>
 
-      <section className="v30-ribbon" data-v30-ribbon aria-label="Every Detail promise">
+      <section className="v30-ribbon v35-ribbon" data-v30-ribbon aria-label="Every Detail promise">
         <div className="v30-ribbon-window" aria-hidden="true">
-          <div className="v30-ribbon-track" data-v30-ribbon-track>
-            {[0, 1].map((copy) => (
-              <svg key={copy} className="v30-ribbon-svg" viewBox="0 0 2400 220" preserveAspectRatio="none">
-                <path className="v30-ribbon-fill" d="M -120 56 C 360 8, 820 8, 1280 56 S 2140 104, 2520 48 L 2520 178 C 2140 130, 1710 144, 1280 178 S 360 210, -120 168 Z" />
-                <path id={`v30-ribbon-path-${copy}`} d="M -70 116 C 360 54, 830 54, 1280 116 S 2140 176, 2470 108" fill="none" />
-                <text>
-                  <textPath href={`#v30-ribbon-path-${copy}`} startOffset="0%">
-                    WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • 100% ELECTRIC RIGS •
-                  </textPath>
-                </text>
-              </svg>
-            ))}
+          <div className="v30-ribbon-track v35-ribbon-track" data-v30-ribbon-track>
+            <svg className="v30-ribbon-svg v35-ribbon-svg" viewBox="0 0 4800 220" preserveAspectRatio="none">
+              <path className="v35-ribbon-fill" d="M -100 48 C 320 2 760 10 1200 62 S 2070 116 2400 58 S 3340 4 3820 58 S 4480 112 4900 50 L 4900 174 C 4440 214 4040 204 3590 162 S 2760 118 2390 166 S 1430 214 980 164 S 290 116 -100 168 Z" />
+              <path id="v35-ribbon-path" d="M -20 110 C 360 56 790 58 1210 108 S 2050 158 2410 108 S 3330 56 3810 108 S 4470 158 4820 108" fill="none" />
+              <text>
+                <textPath href="#v35-ribbon-path" startOffset="0%">
+                  WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • 100% ELECTRIC RIGS • WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • 100% ELECTRIC RIGS •
+                </textPath>
+              </text>
+            </svg>
           </div>
         </div>
       </section>
@@ -126,36 +124,23 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v29-proof v33-proof" data-v29-scene="proof" aria-labelledby="v29-proof-title">
-        <div className="v29-shell v33-proof-shell">
-          <div className="v33-proof-head">
-            <p className="v29-kicker">Real reviews</p>
-            <h2 id="v29-proof-title">THE PROOF IS IN THE DRIVEWAY.</h2>
-            <p>Clean work, clear communication, and a student-run crew that shows up ready to deliver.</p>
+      <section className="v35-proof" data-v29-scene="proof" aria-labelledby="v35-proof-title">
+        <div className="v29-shell v35-proof-inner">
+          <div className="v35-proof-number">
+            <strong><LiveReviewCount /></strong>
+            <span>five-star reviews</span>
           </div>
-
-          <div className="v33-proof-stats">
-            <div className="v33-proof-stat v33-proof-stat-primary">
-              <strong><LiveReviewCount /></strong>
-              <span>five-star reviews</span>
+          <div className="v35-proof-copy">
+            <p className="v29-kicker v29-kicker-light">The proof</p>
+            <h2 id="v35-proof-title">PEOPLE NOTICE THE DIFFERENCE.</h2>
+            <div className="v35-review-reel">
+              {proofReviews.map((review) => (
+                <article key={review.author} className="v35-review-line" data-v29-review>
+                  <p>“{review.quote}”</p>
+                  <footer>{review.author} / Google review</footer>
+                </article>
+              ))}
             </div>
-            <div className="v33-proof-stat">
-              <strong>5.0</strong>
-              <span>Google rating</span>
-            </div>
-            <div className="v33-proof-stat">
-              <strong>Student-run</strong>
-              <span>real team, real systems</span>
-            </div>
-          </div>
-
-          <div className="v33-proof-cards">
-            {proofReviews.map((review) => (
-              <article key={review.author} className="v33-proof-card" data-v29-review>
-                <p>“{review.quote}”</p>
-                <footer>{review.author} / Google review</footer>
-              </article>
-            ))}
           </div>
         </div>
       </section>
@@ -179,24 +164,18 @@ export default function Home() {
             </div>
           </Link>
 
-          <Link href="/detailplus" className="v32-care-scene v32-care-maintain" data-v29-tilt>
-            <div className="v32-maintain-word" aria-hidden="true">DETAIL+</div>
-            <div className="v32-care-copy">
+          <Link href="/detailplus" className="v32-care-scene v35-care-maintain" data-v29-tilt>
+            <div className="v35-maintain-lines" aria-hidden="true"><span /><span /><span /><span /></div>
+            <div className="v32-care-copy v35-maintain-copy">
               <span>02 / DETAIL+</span>
-              <strong>DON’T LET IT<br />GET BAD AGAIN.</strong>
+              <strong>STAY CLEAN.<br />WITHOUT THE RESET.</strong>
               <p>Choose how often we come back. Same driveway. Same standard. No reset required.</p>
               <b>Explore Detail+ ↗</b>
             </div>
-            <div className="v33-maintain-stack" aria-hidden="true">
-              <span>Same driveway</span>
-              <span>Same standard</span>
-              <span>No reset</span>
+            <div className="v35-maintain-cadence" aria-hidden="true">
+              <span>MONTHLY</span><span>BI-WEEKLY</span><span>CUSTOM</span>
             </div>
-            <div className="v33-maintain-tiers" aria-hidden="true">
-              <span>Monthly</span>
-              <span>Bi-weekly</span>
-              <span>Custom</span>
-            </div>
+            <div className="v35-maintain-ghost" aria-hidden="true">KEEP IT CLEAN / KEEP IT CLEAN / KEEP IT CLEAN</div>
           </Link>
         </div>
       </section>
