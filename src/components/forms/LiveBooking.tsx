@@ -343,15 +343,30 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     setSlotsError(null);
     setStart(null);
     const from = dayKey(new Date());
-    const to = addDaysKey(from, 62);
+    const firstTo = addDaysKey(from, 31);
+    const secondFrom = addDaysKey(from, 32);
+    const secondTo = addDaysKey(from, 62);
     const items = resolved.map((line) => ({ vehicle: line.vehicle, service: line.service }));
-    fetch(`/api/availability?items=${encodeURIComponent(JSON.stringify(items))}&from=${from}&to=${to}`)
-      .then((r) => r.json().then((j) => ({ ok: r.ok, j })))
-      .then(({ ok, j }) => {
+    const itemsParam = encodeURIComponent(JSON.stringify(items));
+
+    const loadRange = async (rangeFrom: string, rangeTo: string) => {
+      const response = await fetch(`/api/availability?items=${itemsParam}&from=${rangeFrom}&to=${rangeTo}`);
+      const json = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(json.error || "Availability unavailable");
+      return (Array.isArray(json.slots) ? json.slots : []) as unknown[];
+    };
+
+    Promise.allSettled([loadRange(from, firstTo), loadRange(secondFrom, secondTo)])
+      .then((results) => {
         if (cancelled) return;
-        if (!ok) throw new Error(j.error);
-        const raw: unknown[] = Array.isArray(j.slots) ? j.slots : [];
-        const list = raw.filter((s): s is string => typeof s === "string").map((s) => new Date(s)).filter(isValidDate);
+        const successful = results.filter((result): result is PromiseFulfilledResult<unknown[]> => result.status === "fulfilled");
+        if (!successful.length) throw new Error("Availability unavailable");
+        const raw = successful.flatMap((result) => result.value);
+        const list = raw
+          .filter((s): s is string => typeof s === "string")
+          .map((s) => new Date(s))
+          .filter(isValidDate)
+          .sort((a, b) => a.getTime() - b.getTime());
         setSlots(list);
         setDay((current) => {
           const nextDay = current && list.some((slot) => dayKey(slot) === current) ? current : list[0] ? dayKey(list[0]) : null;

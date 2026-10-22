@@ -100,19 +100,6 @@ export function QuoteBookingContinuation({
     return chosen;
   }, [slots]);
 
-  useEffect(() => {
-    if (!slots?.length) return;
-    const timer = window.setTimeout(() => availabilityRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
-    return () => window.clearTimeout(timer);
-  }, [slots]);
-
-  useEffect(() => {
-    if (!selected) return;
-    const timer = window.setTimeout(() => finishRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 90);
-    return () => window.clearTimeout(timer);
-  }, [selected]);
-
-
 
   async function book(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -156,7 +143,7 @@ export function QuoteBookingContinuation({
     {!selected && <div className="quote-inline-more"><Link href={`${bookingHref}${bookingHref.includes("?") ? "&" : "?"}focus=time`}>See the full calendar →</Link></div>}
 
     {selected && <form ref={finishRef} className="quote-inline-finish scroll-mt-28" onSubmit={book}>
-      <div className="quote-inline-selected"><span>Your time</span><strong>{fmtDay(selected)} at {fmtTime(selected)}</strong><button type="button" onClick={() => { setSelected(null); window.setTimeout(() => availabilityRef.current?.scrollIntoView({behavior:"smooth",block:"start"}), 60); }}>Change</button></div>
+      <div className="quote-inline-selected"><span>Your time</span><strong>{fmtDay(selected)} at {fmtTime(selected)}</strong><button type="button" onClick={() => setSelected(null)}>Change</button></div>
       <div><p className="field-label">Where are we coming?</p><p className="quote-inline-help">You already gave us your name, phone, email, vehicle and service. We only need the service address.</p><AddressFields /></div>
       <div className="quote-inline-source"><LeadSourceField /></div>
       {error && <p className="quote-rec-error" role="alert">{error}</p>}
