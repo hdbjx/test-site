@@ -11728,3 +11728,152 @@ body:has(.v29-hero) .site-shared-menu-label{font-size:.73rem!important;letter-sp
 @media(prefers-reduced-motion:reduce){
   .bk-skip{transition:none}
 }
+
+
+/* ============================================================
+   V49 — booking vehicle search parity with quote flow
+   ============================================================ */
+.bk-vehicle-search{
+  max-width:42rem;
+  margin-top:.4rem;
+}
+.bk-vehicle-search .quote-rec-search{
+  min-height:64px;
+  border:1.5px solid var(--bk-ink);
+  border-radius:6px;
+  background:var(--bk-field);
+  font-family:var(--font-body);
+  font-size:1.12rem;
+  font-weight:600;
+}
+.bk-vehicle-search .quote-rec-search:focus{
+  border-color:var(--bk-coral);
+  box-shadow:0 0 0 3px rgba(213,104,101,.2);
+}
+.bk-vehicle-search .quote-rec-search-results{
+  border:1.5px solid var(--bk-ink);
+  border-radius:6px;
+  box-shadow:0 18px 44px rgba(11,10,9,.16);
+}
+.bk-vehicle-search .quote-rec-search-results button{
+  min-height:54px;
+  padding:.9rem 1rem;
+  background:#fff;
+}
+.bk-vehicle-search .quote-rec-search-results button:hover,
+.bk-vehicle-search .quote-rec-search-results button:focus-visible{
+  background:var(--bk-paper2,#ebe6dd);
+}
+.bk-vehicle-search .quote-rec-search-results button span{
+  font-size:1rem;
+}
+.bk-vehicle-search .quote-rec-search-results button small{
+  font-family:var(--font-display);
+  font-size:.68rem;
+  font-weight:800;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.bk-vehicle-selected{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:.85rem 1rem;
+  max-width:42rem;
+  margin-top:.4rem;
+  padding:1rem 1.1rem;
+  border:1.5px solid var(--bk-ink);
+  border-radius:6px;
+  background:var(--bk-field);
+}
+.bk-vehicle-selected>div strong{
+  font-size:1.2rem;
+  font-weight:900;
+}
+.bk-vehicle-selected>div span{
+  font-family:var(--font-display);
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.bk-vehicle-selected>button{
+  justify-self:end;
+  padding:0;
+  border:0;
+  background:none;
+  color:var(--bk-coral)!important;
+  font-family:var(--font-display);
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.bk-year-inline{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:auto minmax(120px,160px);
+  align-items:center;
+  justify-content:start;
+  gap:.8rem;
+  padding-top:.8rem;
+  border-top:1px dashed var(--bk-line);
+}
+.bk-year-inline>span{
+  font-family:var(--font-display);
+  font-size:.7rem;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.bk-year-inline em{
+  font-family:var(--font-body);
+  font-style:normal;
+  font-weight:400;
+  letter-spacing:0;
+  text-transform:none;
+  color:var(--bk-gray);
+}
+.bk-year-inline .bk-input{min-height:44px}
+.bk-type-fallback{margin-top:.8rem}
+.bk-size-fallback{margin-top:1rem;max-width:52rem}
+.bk-size-fallback>.bk-label{margin-bottom:.65rem}
+.bk-size-fallback-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+}
+.bk-size-text{
+  display:flex;
+  min-height:72px;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:.15rem;
+  padding:.85rem .95rem;
+  border:1.5px solid var(--bk-line);
+  border-radius:6px;
+  background:var(--bk-card);
+  text-align:left;
+}
+.bk-size-text strong{
+  font-family:var(--font-display);
+  font-size:.92rem;
+  font-weight:900;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+}
+.bk-size-text span{font-size:.82rem;color:var(--bk-gray)}
+.bk-size-text:hover{border-color:var(--bk-ink)}
+.bk-size-text.is-on{
+  border:2px solid var(--bk-ink);
+  box-shadow:inset 0 -4px 0 var(--bk-coral);
+}
+/* Old silhouette/card picker is intentionally retired in V49. */
+.bk-sil{display:none!important}
+@media(max-width:640px){
+  .bk-vehicle-search,.bk-vehicle-selected{max-width:none}
+  .bk-size-fallback-grid{grid-template-columns:1fr 1fr}
+  .bk-vehicle-selected{grid-template-columns:1fr auto}
+  .bk-year-inline{grid-template-columns:1fr}
+}

@@ -62,56 +62,20 @@ function useSchoolHours() {
 /* Vehicle classification                                              */
 /* ------------------------------------------------------------------ */
 
-const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
-const MAKES = Array.from(new Set(recommenderVehicles.map((v) => v.make))).sort((a, b) => a.localeCompare(b));
-const modelsFor = (make: string) => {
-  const m = norm(make);
-  return m ? recommenderVehicles.filter((v) => norm(v.make) === m).map((v) => v.model) : [];
-};
-function classify(make: string, model: string): VehicleId | undefined {
-  const m = norm(make);
-  const mo = norm(model);
-  if (!m || !mo) return undefined;
-  const candidates = recommenderVehicles.filter((v) => norm(v.make) === m);
-  const exact = candidates.find((v) => norm(v.model) === mo);
-  if (exact) return exact.vehicle;
-  // "Model Y Long Range" → "Model Y": longest catalog model that the typed model starts with.
-  const prefix = candidates
-    .filter((v) => mo.startsWith(norm(v.model)))
-    .sort((a, b) => norm(b.model).length - norm(a.model).length)[0];
-  if (prefix) return prefix.vehicle;
-  // "Tah" → "Tahoe" only when every match agrees on size.
-  if (mo.length >= 3) {
-    const partial = candidates.filter((v) => norm(v.model).startsWith(mo));
-    const sizes = new Set(partial.map((v) => v.vehicle));
-    if (sizes.size === 1) return partial[0].vehicle;
-  }
-  return undefined;
+function vehicleMatches(query: string) {
+  const cleaned = query.trim().toLowerCase().replace(/\b(?:19|20)\d{2}\b/g, "").replace(/\s+/g, " ").trim();
+  if (cleaned.length < 2) return [];
+  return recommenderVehicles
+    .filter((item) =>
+      `${item.make} ${item.model}`.toLowerCase().includes(cleaned) ||
+      item.make.toLowerCase().startsWith(cleaned) ||
+      item.model.toLowerCase().startsWith(cleaned),
+    )
+    .slice(0, 10);
 }
 
-const SILHOUETTES: Record<VehicleId, { body: string; wheels: [number, number] }> = {
-  sedan: { body: "M6 35 L8 28 L28 24 L42 14 L78 13 L94 23 L112 26 L114 35 Z", wheels: [28, 92] },
-  smallSUV: { body: "M6 35 L7 23 L20 21 L32 11 L88 11 L100 21 L112 24 L114 35 Z", wheels: [28, 94] },
-  smallTruck: { body: "M5 35 L5 23 L56 23 L58 13 L82 13 L94 23 L112 25 L114 35 Z", wheels: [26, 94] },
-  largeSUV: { body: "M5 35 L5 17 L16 15 L26 7 L104 7 L110 17 L115 21 L115 35 Z", wheels: [26, 96] },
-  minivan: { body: "M5 35 L6 20 L24 8 L104 8 L112 16 L114 26 L114 35 Z", wheels: [26, 96] },
-  largeTruck: { body: "M3 35 L3 19 L54 19 L56 7 L86 7 L98 19 L115 21 L116 35 Z", wheels: [24, 98] },
-};
-
-function Silhouette({ id }: { id: VehicleId }) {
-  const s = SILHOUETTES[id];
-  return (
-    <svg className="bk-sil" viewBox="0 0 120 46" aria-hidden="true" focusable="false">
-      <path d={s.body} />
-      {s.wheels.map((x) => (
-        <g key={x}>
-          <circle cx={x} cy={36} r={8} />
-          <circle className="bk-sil-hub" cx={x} cy={36} r={3} />
-        </g>
-      ))}
-      <line x1="0" y1="44.5" x2="120" y2="44.5" />
-    </svg>
-  );
+function yearFromQuery(query: string) {
+  return query.match(/\b((?:19|20)\d{2})\b/)?.[1] ?? "";
 }
 
 /* ------------------------------------------------------------------ */
@@ -272,6 +236,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const [reached, setReached] = useState(STEPS.indexOf(firstStep));
   const [stepError, setStepError] = useState<{ step: StepId; message: string } | null>(null);
   const [gridOpen, setGridOpen] = useState<Record<number, boolean>>({});
+  const [vehicleSearch, setVehicleSearch] = useState<Record<number, string>>({});
   const [moreOpen, setMoreOpen] = useState<Record<number, boolean>>({});
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -461,13 +426,6 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     if (problem) {
       setStepError({ step: active, message: problem.message });
       setBadField(problem.field ?? null);
-      if (active === "car") {
-        setGridOpen((open) => {
-          const next = { ...open };
-          resolved.forEach((l) => { if (!l.vehicle) next[l.key] = true; });
-          return next;
-        });
-      }
       setDrawerOpen(false);
       scrollToStep(active);
       return;
@@ -486,18 +444,6 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     track("vehicle_select", { vehicle: size, location: "book", vehicleNumber: index + 1 });
   }
 
-  function typeVehicle(line: (typeof resolved)[number], index: number, patch: Partial<Pick<BookingLine, "make" | "model" | "year">>) {
-    const next = { ...line, ...patch };
-    const guess = classify(next.make, next.model);
-    if (line.sizeManual) {
-      updateLine(line.key, patch);
-    } else if (guess) {
-      updateLine(line.key, { ...patch, size: guess });
-      if (guess !== line.size) track("vehicle_select", { vehicle: guess, location: "book_classifier", vehicleNumber: index + 1 });
-    } else {
-      updateLine(line.key, { ...patch, size: undefined });
-    }
-  }
 
   function chooseService(line: (typeof resolved)[number], index: number, service: ServiceId) {
     updateLine(line.key, { service, addons: line.addons.filter((addon) => !isAddonIncludedInService(service, addon)) });
@@ -754,24 +700,26 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
 
   function renderSizeGrid(line: (typeof resolved)[number], index: number) {
     return (
-      <div className="bk-sizes" role="radiogroup" aria-label={`Vehicle ${index + 1} type`}>
-        {vehicles.map((v) => (
-          <button
-            key={v.id}
-            type="button"
-            role="radio"
-            aria-checked={line.size === v.id}
-            className={`bk-size ${line.size === v.id ? "is-on" : ""}`}
-            onClick={() => {
-              setSize(line, index, v.id, true);
-              setGridOpen((o) => ({ ...o, [line.key]: false }));
-            }}
-          >
-            <Silhouette id={v.id} />
-            <strong>{v.label}</strong>
-            <span>{v.hint}</span>
-          </button>
-        ))}
+      <div className="bk-size-fallback" role="radiogroup" aria-label={`Vehicle ${index + 1} type`}>
+        <p className="bk-label">Choose the closest vehicle type</p>
+        <div className="bk-size-fallback-grid">
+          {vehicles.map((v) => (
+            <button
+              key={v.id}
+              type="button"
+              role="radio"
+              aria-checked={line.size === v.id}
+              className={`bk-size-text ${line.size === v.id ? "is-on" : ""}`}
+              onClick={() => {
+                setSize(line, index, v.id, true);
+                setGridOpen((o) => ({ ...o, [line.key]: false }));
+              }}
+            >
+              <strong>{v.label}</strong>
+              <span>{v.hint}</span>
+            </button>
+          ))}
+        </div>
       </div>
     );
   }
@@ -779,9 +727,17 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   function renderVehicleEditor(line: (typeof resolved)[number], index: number) {
     const usedSaved = new Set(lines.filter((o) => o.key !== line.key).map((o) => o.savedId));
     const typing = line.savedId === "size" || (line.saved && !line.savedSize);
-    const guess = classify(line.make, line.model);
-    const typedBoth = !!line.make.trim() && !!line.model.trim();
-    const showGrid = !!gridOpen[line.key] || (typing && typedBoth && !guess && !line.size);
+    const query = vehicleSearch[line.key] ?? [line.make, line.model].filter(Boolean).join(" ");
+    const matches = vehicleMatches(query);
+    const showResults = typing && !line.make && !line.model && query.trim().length >= 2;
+    const showGrid = !!gridOpen[line.key];
+
+    const clearVehicle = () => {
+      updateLine(line.key, { make: "", model: "", year: "", size: undefined, sizeManual: false, savedId: "size" });
+      setVehicleSearch((current) => ({ ...current, [line.key]: "" }));
+      setGridOpen((current) => ({ ...current, [line.key]: false }));
+    };
+
     return (
       <div key={line.key} className="bk-vehicle">
         {lines.length > 1 && (
@@ -813,67 +769,113 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                   disabled={taken}
                   aria-pressed={line.savedId === g.id}
                   className={`bk-saved-opt ${line.savedId === g.id ? "is-on" : ""}`}
-                  onClick={() => updateLine(line.key, { savedId: g.id, size, sizeManual: !!size })}
+                  onClick={() => {
+                    updateLine(line.key, { savedId: g.id, size, sizeManual: !!size, make: "", model: "", year: "" });
+                    setVehicleSearch((current) => ({ ...current, [line.key]: "" }));
+                  }}
                 >
-                  {size && <Silhouette id={size} />}
                   <strong>{vName(g)}</strong>
                   <span>{[g.color, size ? sizeLabel(size) : "Size not set"].filter(Boolean).join(" · ")}</span>
                 </button>
               );
             })}
-            <button type="button" aria-pressed={line.savedId === "size"} className={`bk-saved-opt ${line.savedId === "size" ? "is-on" : ""}`} onClick={() => updateLine(line.key, { savedId: "size", size: undefined, sizeManual: false })}>
+            <button type="button" aria-pressed={line.savedId === "size"} className={`bk-saved-opt ${line.savedId === "size" ? "is-on" : ""}`} onClick={clearVehicle}>
               <strong>A different vehicle</strong>
-              <span>Tell us the make and model</span>
+              <span>Search make or model</span>
             </button>
           </div>
         )}
 
-        {typing && (
-          <>
-            <div className="bk-mm">
-              <label className="bk-field">
-                <span>Make</span>
-                <input className="bk-input bk-input-xl" list="bk-makes" value={line.make} placeholder="Tesla" autoComplete="off" autoCapitalize="words" onChange={(e) => typeVehicle(line, index, { make: e.target.value })} />
-              </label>
-              <label className="bk-field">
-                <span>Model</span>
-                <input className="bk-input bk-input-xl" list={`bk-models-${line.key}`} value={line.model} placeholder="Model Y" autoComplete="off" autoCapitalize="words" onChange={(e) => typeVehicle(line, index, { model: e.target.value })} />
-                <datalist id={`bk-models-${line.key}`}>{modelsFor(line.make).map((m) => <option key={m} value={m} />)}</datalist>
-              </label>
-              <label className="bk-field bk-field-year">
-                <span>Year <em>optional</em></span>
-                <input className="bk-input bk-input-xl" inputMode="numeric" maxLength={4} value={line.year} placeholder="2024" autoComplete="off" onChange={(e) => typeVehicle(line, index, { year: e.target.value.replace(/\D/g, "").slice(0, 4) })} />
-              </label>
-            </div>
-
-            {line.size && !showGrid ? (
-              <div className="bk-got" aria-live="polite">
-                <Silhouette id={line.size} />
-                <div>
-                  <p>{guess && !line.sizeManual ? "We've got it" : "Vehicle type"}</p>
-                  <strong>{sizeLabel(line.size)}</strong>
-                  <button type="button" onClick={() => setGridOpen((o) => ({ ...o, [line.key]: true }))}>That doesn&rsquo;t look right → Change vehicle type</button>
-                </div>
-              </div>
-            ) : typedBoth && !guess && !line.size ? (
-              <p className="bk-note" aria-live="polite">We don&rsquo;t have that one on file. Pick the closest type:</p>
-            ) : !showGrid ? (
-              <button type="button" className="bk-link" onClick={() => setGridOpen((o) => ({ ...o, [line.key]: true }))}>Not sure of the model? Pick a vehicle type instead</button>
-            ) : null}
-          </>
-        )}
-
-        {!typing && line.vehicle && !showGrid && (
-          <div className="bk-got">
-            <Silhouette id={line.vehicle} />
+        {typing && line.make && line.model && line.size && !showGrid ? (
+          <div className="quote-rec-selected bk-vehicle-selected">
             <div>
-              <p>Saved vehicle</p>
-              <strong>{sizeLabel(line.vehicle)}</strong>
+              <strong>{line.make} {line.model}</strong>
+              <span>{sizeLabel(line.size)}</span>
             </div>
+            <button type="button" onClick={clearVehicle}>Change</button>
+            <label className="bk-year-inline">
+              <span>Year <em>optional</em></span>
+              <input
+                className="bk-input"
+                inputMode="numeric"
+                maxLength={4}
+                value={line.year}
+                placeholder="2025"
+                autoComplete="off"
+                onChange={(e) => updateLine(line.key, { year: e.target.value.replace(/\D/g, "").slice(0, 4) })}
+              />
+            </label>
+          </div>
+        ) : typing && line.size && !line.make && !line.model && !showGrid ? (
+          <div className="quote-rec-selected bk-vehicle-selected">
+            <div>
+              <strong>{sizeLabel(line.size)}</strong>
+              <span>Vehicle type carried into booking</span>
+            </div>
+            <button type="button" onClick={clearVehicle}>Search exact vehicle</button>
+          </div>
+        ) : typing && !showGrid ? (
+          <>
+            <div className="quote-rec-search-wrap bk-vehicle-search">
+              <input
+                className="field quote-rec-search"
+                value={query}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setVehicleSearch((current) => ({ ...current, [line.key]: value }));
+                  if (line.make || line.model || line.size) updateLine(line.key, { make: "", model: "", size: undefined, sizeManual: false });
+                }}
+                placeholder="Search Ram 2500, RAV4, Model Y..."
+                autoComplete="off"
+                aria-label={`Search vehicle ${index + 1} make or model`}
+              />
+              {showResults && (
+                <div className="quote-rec-search-results">
+                  {matches.length ? matches.map((item, resultIndex) => (
+                    <button
+                      key={`${item.make}-${item.model}-${resultIndex}`}
+                      type="button"
+                      onClick={() => {
+                        updateLine(line.key, {
+                          savedId: "size",
+                          make: item.make,
+                          model: item.model,
+                          year: yearFromQuery(query) || line.year,
+                          size: item.vehicle,
+                          sizeManual: false,
+                        });
+                        setVehicleSearch((current) => ({ ...current, [line.key]: `${item.make} ${item.model}` }));
+                        setStepError(null);
+                        track("vehicle_select", { vehicle: item.vehicle, location: "book_search", vehicleNumber: index + 1 });
+                      }}
+                    >
+                      <span><strong>{item.make}</strong> {item.model}</span>
+                      <small>{sizeLabel(item.vehicle)}</small>
+                    </button>
+                  )) : <p>No matches. Try another make or model.</p>}
+                </div>
+              )}
+            </div>
+            <button type="button" className="bk-link bk-type-fallback" onClick={() => setGridOpen((o) => ({ ...o, [line.key]: true }))}>Can&rsquo;t find it? Choose the closest vehicle type</button>
+          </>
+        ) : null}
+
+        {!typing && line.vehicle && (
+          <div className="quote-rec-selected bk-vehicle-selected">
+            <div>
+              <strong>{line.saved ? vName(line.saved) : sizeLabel(line.vehicle)}</strong>
+              <span>{sizeLabel(line.vehicle)}</span>
+            </div>
+            <button type="button" onClick={clearVehicle}>Use a different vehicle</button>
           </div>
         )}
 
-        {showGrid && renderSizeGrid(line, index)}
+        {showGrid && (
+          <>
+            {renderSizeGrid(line, index)}
+            <button type="button" className="bk-link" onClick={() => setGridOpen((o) => ({ ...o, [line.key]: false }))}>← Back to vehicle search</button>
+          </>
+        )}
       </div>
     );
   }
@@ -1006,7 +1008,6 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       </div>
 
       <form id="booking-main" ref={formRef} noValidate onSubmit={onSubmit} className="bk-layout">
-        <datalist id="bk-makes">{MAKES.map((m) => <option key={m} value={m} />)}</datalist>
         <div className="bk-flow">
           {renderStep("service", "01", "What does your car need?", (
             <div className="bk-pkgs" role="radiogroup" aria-label="Choose your detail">
