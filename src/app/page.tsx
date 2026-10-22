@@ -22,113 +22,126 @@ export default function Home() {
     <>
       <HomeArtMotion />
 
-      <section className="v27-hero" data-v27-hero data-v28-scene="hero" aria-labelledby="v27-hero-title">
-        <div className="v27-hero-photo" data-v28-depth="hero-photo"><Photo id="hero" sizes="100vw" fill priority /></div>
-        <div className="v27-hero-shade" aria-hidden="true" />
-        <div className="v27-shell v27-hero-inner">
-          <p className="v27-location">Mobile detailing / Decatur + Atlanta</p>
-          <h1 id="v27-hero-title" className="v27-hero-title">
-            <span className="line-a">Your car.</span>
-            <span className="line-b">Back to</span>
-            <span className="line-c">its best.</span>
+      <section className="v29-hero" data-v29-scene="hero" aria-labelledby="v29-hero-title">
+        <div className="v29-hero-photo" data-v29-depth><Photo id="hero" sizes="100vw" fill priority /></div>
+        <div className="v29-hero-shade" aria-hidden="true" />
+        <div className="v29-hero-orbit v29-orbit-left" aria-hidden="true">DETAILING / DECATUR + ATLANTA / MOBILE / ELECTRIC RIGS</div>
+        <div className="v29-hero-orbit v29-orbit-right" aria-hidden="true">POWER + WATER INCLUDED / REAL CREW / REAL DRIVEWAYS</div>
+        <div className="v29-shell v29-hero-inner">
+          <p className="v29-hero-kicker">Mobile car detailing, brought to you.</p>
+          <h1 id="v29-hero-title" className="v29-hero-title" data-v29-hero-type>
+            <span>YOUR CAR.</span>
+            <span>BACK TO</span>
+            <span>ITS BEST.</span>
           </h1>
-          <div className="v27-hero-bottom">
-            <p>We bring the crew, water, power, tools, and time. You hand us the keys.</p>
-            <TrackedLink href="/book" event="book_click" params={{ location: "home_v27_hero" }} className="v27-main-cta" data-v28-magnetic data-v28-cursor="BOOK">Book a detail <span>↗</span></TrackedLink>
-          </div>
+          <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_hero" }} className="v29-hero-cta" data-v29-magnetic>Book a detail <span>↗</span></TrackedLink>
         </div>
-        <div className="v27-sweep" aria-hidden="true" />
+        <div className="v29-sweep" aria-hidden="true" />
       </section>
 
-      <section className="v27-choice" id="pricing" data-v28-scene="choice" aria-labelledby="v27-choice-title">
-        <div className="v27-shell">
-          <div className="v27-choice-intro" data-v27-reveal>
-            <p className="v27-kicker">Choose the clean</p>
-            <h2 id="v27-choice-title"><span>One car.</span><span>Three ways back.</span></h2>
-            <p>Pick how far you want us to take it. Then tell us what you drive and we’ll show the exact price.</p>
-          </div>
-          <div className="v27-booking" data-v28-services><HomeBookingFlow /></div>
-          <div className="v27-inline-links"><Link href="/our-services">See every service ↗</Link><Link href="/get-a-quote">Help me choose ↗</Link></div>
+      <section className="v29-bridge" data-v29-scene="bridge" aria-label="Every Detail promise">
+        <div className="v29-bridge-track" aria-hidden="true">
+          <span>WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY.</span>
+          <span>WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY.</span>
+        </div>
+        <div className="v29-shell v29-bridge-copy">
+          <p>Choose how far you want us to take it.</p>
+          <a href="#pricing">Pick your detail ↓</a>
         </div>
       </section>
 
-      <section className="v27-work" data-v27-work data-v28-scene="work" aria-labelledby="v27-work-title">
-        <div className="v27-work-sticky">
-          <div className="v27-work-title-wrap v27-shell">
-            <p className="v27-kicker v27-kicker-light">The work</p>
-            <h2 id="v27-work-title">No stock cars.<br /><span>No mystery shop.</span></h2>
+      <section className="v29-choice" id="pricing" data-v29-scene="choice" aria-labelledby="v29-choice-title">
+        <div className="v29-shell">
+          <div className="v29-choice-intro">
+            <p className="v29-kicker">Choose the clean</p>
+            <h2 id="v29-choice-title"><span>ONE CAR.</span><span>THREE WAYS BACK.</span></h2>
+            <p>Pick the level. Tell us what you drive. We show the exact price.</p>
           </div>
-          <div className="v27-work-track">
-            <figure className="v27-shot v27-shot-a" data-v28-tilt data-v28-cursor="VIEW"><Photo id="work-mateo-0670" sizes="72vw" fill /><figcaption><b>01</b><span>Foam wash / Decatur</span></figcaption></figure>
-            <figure className="v27-shot v27-shot-b" data-v28-tilt data-v28-cursor="VIEW"><Photo id="two-tech-interior-detail" sizes="42vw" fill /><figcaption><b>02</b><span>Two-tech interior</span></figcaption></figure>
-            <figure className="v27-shot v27-shot-c" data-v28-tilt data-v28-cursor="VIEW"><Photo id="work-finished-0771" sizes="66vw" fill /><figcaption><b>03</b><span>Finished / handoff</span></figcaption></figure>
-            <figure className="v27-shot v27-shot-d" data-v28-tilt data-v28-cursor="VIEW"><Photo id="hq-mobile-rig-fleet" sizes="48vw" fill /><figcaption><b>04</b><span>Our rigs / our crew</span></figcaption></figure>
-            <div className="v27-work-end"><strong>Real driveways.<br />Real crew.<br /><span>Every detail.</span></strong><Link href="/our-work">See the full archive ↗</Link></div>
+          <div className="v29-booking" data-v29-services><HomeBookingFlow /></div>
+          <div className="v29-inline-links"><Link href="/our-services">See every service ↗</Link><Link href="/get-a-quote">Help me choose ↗</Link></div>
+        </div>
+      </section>
+
+      <section className="v29-work" data-v29-work data-v29-scene="work" aria-labelledby="v29-work-title">
+        <div className="v29-work-sticky">
+          <div className="v29-work-heading v29-shell">
+            <p className="v29-kicker v29-kicker-light">The work</p>
+            <h2 id="v29-work-title"><span>NO STOCK CARS.</span><span>NO MYSTERY SHOP.</span></h2>
+          </div>
+          <div className="v29-work-track" data-v29-work-track>
+            <figure className="v29-shot v29-shot-a" data-v29-tilt><Photo id="work-mateo-0670" sizes="70vw" fill /><figcaption><b>01</b><span>Foam wash / Decatur</span></figcaption></figure>
+            <figure className="v29-shot v29-shot-b" data-v29-tilt><Photo id="two-tech-interior-detail" sizes="46vw" fill /><figcaption><b>02</b><span>Two-tech interior</span></figcaption></figure>
+            <figure className="v29-shot v29-shot-c" data-v29-tilt><Photo id="work-finished-0771" sizes="64vw" fill /><figcaption><b>03</b><span>Finished / handoff</span></figcaption></figure>
+            <figure className="v29-shot v29-shot-d" data-v29-tilt><Photo id="hq-mobile-rig-fleet" sizes="52vw" fill /><figcaption><b>04</b><span>Our rigs / our crew</span></figcaption></figure>
+            <div className="v29-work-end">
+              <p>REAL DRIVEWAYS.</p><p>REAL CREW.</p><strong>EVERY DETAIL.</strong>
+              <Link href="/our-work">See the full archive ↗</Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="v27-story" data-v27-story data-v28-scene="story" aria-labelledby="v27-story-title">
-        <div className="v27-shell">
-          <p className="v27-kicker">Since eighth grade</p>
-          <h2 id="v27-story-title" className="v27-story-title">
-            <span>Built by</span>
-            <span className="v27-inline-photo" data-v28-float><Photo id="about-team" sizes="26vw" fill /></span>
-            <span>students.</span>
-            <span>Run like</span>
-            <span className="v27-inline-photo v27-inline-rig" data-v28-float><Photo id="hq-branded-van-side" sizes="26vw" fill /></span>
-            <span>a company.</span>
+      <section className="v29-story" data-v29-story data-v29-scene="story" aria-labelledby="v29-story-title">
+        <div className="v29-story-field" aria-hidden="true" />
+        <div className="v29-shell v29-story-inner">
+          <p className="v29-kicker">Since eighth grade</p>
+          <h2 id="v29-story-title" className="v29-story-title">
+            <span className="story-word story-a">BUILT BY</span>
+            <span className="story-word story-b">STUDENTS.</span>
+            <span className="story-word story-c">RUN LIKE</span>
+            <span className="story-word story-d">A COMPANY.</span>
           </h2>
-          <div className="v27-story-foot" data-v27-reveal>
-            <p>What started with one student and a driveway turned into trained technicians, purpose-built electric rigs, real operating systems, and a standard every job has to meet.</p>
+          <div className="v29-story-photo v29-story-photo-a" data-v29-fly="a"><Photo id="about-team" sizes="34vw" fill /></div>
+          <div className="v29-story-photo v29-story-photo-b" data-v29-fly="b"><Photo id="hq-branded-van-side" sizes="32vw" fill /></div>
+          <div className="v29-story-photo v29-story-photo-c" data-v29-fly="c"><Photo id="team-tablet" sizes="24vw" fill /></div>
+          <div className="v29-story-foot">
+            <p>What started with one student and a driveway became trained technicians, purpose-built electric rigs, real operating systems, and a standard every job has to meet.</p>
             <Link href="/about-us">Meet the team ↗</Link>
           </div>
         </div>
       </section>
 
-      <section className="v27-proof" data-v28-scene="proof" aria-labelledby="v27-proof-title">
-        <div className="v27-shell v27-proof-grid">
-          <div className="v27-proof-number" data-v27-reveal><span><LiveReviewCount /></span><small>five-star<br />reviews</small></div>
-          <blockquote data-v27-reveal data-v28-float>
-            “{leadReview.text}”
+      <section className="v29-proof" data-v29-scene="proof" aria-labelledby="v29-proof-title">
+        <div className="v29-proof-ring" aria-hidden="true">FIVE STAR / FIVE STAR / FIVE STAR / FIVE STAR /</div>
+        <div className="v29-shell v29-proof-grid">
+          <div className="v29-proof-count"><span><LiveReviewCount /></span><small>FIVE-STAR<br />REVIEWS</small></div>
+          <blockquote id="v29-proof-title" data-v29-review>
+            <span className="v29-quote-mark">“</span>{leadReview.text}<span className="v29-quote-mark">”</span>
             <footer>{leadReview.author} / Google review</footer>
           </blockquote>
-          <div className="v27-proof-facts" data-v27-reveal>
-            <div><b>100%</b><span>electric mobile rigs</span></div>
-            <div><b>0</b><span>power or water hookups needed</span></div>
-            <div><b>1</b><span>trained local crew at your driveway</span></div>
-          </div>
         </div>
       </section>
 
-      <section className="v27-beyond" data-v28-scene="beyond" aria-labelledby="v27-beyond-title">
-        <div className="v27-shell">
-          <div className="v27-beyond-head" data-v27-reveal><p className="v27-kicker">Beyond the reset</p><h2 id="v27-beyond-title">Keep going.</h2></div>
-          <div className="v27-beyond-grid">
-            <Link href="/ceramic" className="v27-feature v27-feature-paint" data-v28-tilt data-v28-cursor="OPEN">
-              <div className="v27-feature-photo"><Photo id="hq-black-suv-finished" sizes="58vw" fill /></div>
-              <div className="v27-feature-shade" />
+      <section className="v29-beyond" data-v29-scene="beyond" aria-labelledby="v29-beyond-title">
+        <div className="v29-beyond-marquee" aria-hidden="true"><span>BEYOND THE RESET / BEYOND THE RESET / BEYOND THE RESET /</span></div>
+        <div className="v29-shell">
+          <div className="v29-beyond-head"><p className="v29-kicker">Paint / protection / maintenance</p><h2 id="v29-beyond-title">KEEP GOING.</h2></div>
+          <div className="v29-beyond-stage">
+            <Link href="/ceramic" className="v29-feature v29-feature-paint" data-v29-tilt>
+              <div className="v29-feature-photo"><Photo id="hq-black-suv-finished" sizes="66vw" fill /></div>
+              <div className="v29-feature-shade" />
               <span>Paint correction + ceramic</span>
-              <strong>Bring back gloss.<br />Keep it protected.</strong>
+              <strong>BRING BACK GLOSS.<br />KEEP IT PROTECTED.</strong>
               <b>Explore paint care ↗</b>
             </Link>
-            <Link href="/detailplus" className="v27-feature v27-feature-plus" data-v28-tilt data-v28-cursor="OPEN">
+            <Link href="/detailplus" className="v29-feature v29-feature-plus" data-v29-tilt>
               <span>Detail+</span>
-              <strong>Stay clean.<br />Automatically.</strong>
+              <strong>STAY CLEAN.<br />AUTOMATICALLY.</strong>
               <p>Choose how often we come back. Same driveway. Same standard.</p>
               <b>Explore Detail+ ↗</b>
             </Link>
+            <div className="v29-beyond-stamp" aria-hidden="true">PAINT<br/>CARE<br/>+</div>
           </div>
         </div>
       </section>
 
-      <section className="v27-close" data-v28-scene="close" aria-labelledby="v27-close-title">
-        <div className="v27-close-photo" data-v28-depth="close-photo"><Photo id="hq-van-through-flowers" sizes="100vw" fill /></div>
-        <div className="v27-close-shade" />
-        <div className="v27-shell v27-close-inner" data-v27-reveal>
-          <p className="v27-kicker v27-kicker-light">Decatur + Atlanta / We come to you</p>
-          <h2 id="v27-close-title">Your driveway.<br /><span>Our detail shop.</span></h2>
-          <TrackedLink href="/book" event="book_click" params={{ location: "home_v27_close" }} className="v27-main-cta v27-main-cta-light" data-v28-magnetic data-v28-cursor="BOOK">Book a detail <span>↗</span></TrackedLink>
+      <section className="v29-close" data-v29-scene="close" aria-labelledby="v29-close-title">
+        <div className="v29-close-photo"><Photo id="hq-van-through-flowers" sizes="100vw" fill /></div>
+        <div className="v29-close-shade" />
+        <div className="v29-shell v29-close-inner">
+          <p className="v29-kicker v29-kicker-light">Decatur + Atlanta / We come to you</p>
+          <h2 id="v29-close-title">YOUR DRIVEWAY.<br /><span>OUR DETAIL SHOP.</span></h2>
+          <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_close" }} className="v29-close-cta" data-v29-magnetic>Book a detail <span>↗</span></TrackedLink>
         </div>
       </section>
     </>

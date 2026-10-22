@@ -242,19 +242,23 @@ export function Header() {
           <button
             ref={menuButtonRef}
             type="button"
-            className="-mr-2 flex h-11 w-11 items-center justify-center rounded lg:hidden"
+            className={onHome ? "v29-menu-button" : "-mr-2 flex h-11 w-11 items-center justify-center rounded lg:hidden"}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             onClick={() => setMenuOpen((v) => !v)}
           >
-            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6">
-              {menuOpen ? (
-                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" />
-              ) : (
-                <path d="M4 8h16M4 16h16" stroke="currentColor" strokeWidth="1.8" />
-              )}
-            </svg>
+            {onHome ? (
+              <span className="v29-menu-label">{menuOpen ? "CLOSE" : "MENU"}<i aria-hidden="true">{menuOpen ? "×" : "↘"}</i></span>
+            ) : (
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6">
+                {menuOpen ? (
+                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" />
+                ) : (
+                  <path d="M4 8h16M4 16h16" stroke="currentColor" strokeWidth="1.8" />
+                )}
+              </svg>
+            )}
           </button>
         </div>
       </div>
@@ -267,7 +271,7 @@ export function Header() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu"
-          className={`mobile-menu-panel fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-paper text-ink lg:hidden ${onHome ? "mobile-menu-home" : "mobile-menu-inner"}`}
+          className={`mobile-menu-panel fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-paper text-ink ${onHome ? "mobile-menu-home v29-home-menu" : "mobile-menu-inner lg:hidden"}`}
         >
           <nav aria-label="Mobile" className="mobile-menu-nav">
             <p className="mobile-menu-label">Services</p>
