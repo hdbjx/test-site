@@ -21,6 +21,8 @@ export function Header() {
   const servicesRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const availabilityButtonRef = useRef<HTMLButtonElement>(null);
+  const availabilityDialogRef = useRef<HTMLElement>(null);
 
   // The school-hours scheduling ticker is only relevant while the team is in school.
   // Evaluate in Every Detail’s local timezone so visitors elsewhere see the same schedule.
@@ -134,8 +136,27 @@ export function Header() {
     if (!availabilityOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const dialog = availabilityDialogRef.current;
+    dialog?.querySelector<HTMLElement>("button,a[href],input,select,textarea,[tabindex]:not([tabindex='-1'])")?.focus();
+
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setAvailabilityOpen(false);
+      if (event.key === "Escape") {
+        setAvailabilityOpen(false);
+        availabilityButtonRef.current?.focus();
+        return;
+      }
+      if (event.key === "Tab" && dialog) {
+        const focusable = dialog.querySelectorAll<HTMLElement>("button,a[href],input,select,textarea,[tabindex]:not([tabindex='-1'])");
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => {
@@ -163,6 +184,7 @@ export function Header() {
 
       {showAvailabilityBanner && (
         <button
+          ref={availabilityButtonRef}
           type="button"
           className="availability-banner"
           onClick={() => setAvailabilityOpen(true)}
@@ -302,7 +324,7 @@ export function Header() {
 
       {availabilityOpen && (
         <div className="availability-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAvailabilityOpen(false); }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="availability-title" className="availability-modal">
+          <section ref={availabilityDialogRef} role="dialog" aria-modal="true" aria-labelledby="availability-title" className="availability-modal">
             <button type="button" className="availability-modal-close" aria-label="Close scheduling information" onClick={() => setAvailabilityOpen(false)}>×</button>
             <p className="availability-modal-kicker">OUR AVAILABILITY</p>
             <h2 id="availability-title">Student-run, professionally scheduled.</h2>

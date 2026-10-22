@@ -491,7 +491,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
               {error && <p className="quote-rec-error" role="alert">{error}</p>}
               <button type="button" className={`btn btn-primary quote-rec-conversion-button ${submitReady ? "is-ready" : ""}`} onClick={sendBuild} disabled={sending || !submitReady}>
-                {sending ? "Saving..." : contactPrompt.cta}
+                {sending ? "Saving…" : contactPrompt.cta}
               </button>
               <p className="quote-rec-privacy">No spam. Your info is only used to help with this detail and scheduling.</p>
             </div>
@@ -528,7 +528,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
                 {result.upgradeMessage && result.upgradeService && <button type="button" className="quote-rec-upgrade" onClick={applyUpgrade}><span>Consider upgrading</span><strong>{result.upgradeMessage}</strong><b>Upgrade to {services[result.upgradeService].name} ↗</b></button>}
                 {result.addons.length > 0 && <div className="quote-rec-customize-group"><h4>Add-ons</h4><div className="quote-rec-addon-list">{result.addons.map((addon) => { const checked = checkedAddons.has(addon.id); return <button key={addon.id} type="button" className={`quote-rec-addon ${checked ? "is-selected" : ""}`} onClick={() => toggleAddon(addon.id)} aria-pressed={checked}><span className="quote-rec-check">{checked ? "✓" : ""}</span><strong>{addon.name}</strong>{addon.recommended && <small>Recommended</small>}<b>{addon.price}</b></button>; })}</div></div>}
                 <div className="quote-rec-customize-group"><h4>Paint correction + protection</h4><div className="quote-rec-paint-grid">{(Object.keys(PAINT_UPGRADES) as PaintUpgradeId[]).map((id) => { const item = PAINT_UPGRADES[id]; const selected = paint.has(id); return <button key={id} type="button" className={`quote-rec-paint-card ${selected ? "is-selected" : ""}`} onClick={() => togglePaint(id)} aria-pressed={selected}><span>{item.tag}</span><strong>{item.name}</strong><b>${item.prices[vehicle.vehicle]}</b><p>{item.why}</p></button>; })}</div></div>
-                <div className="quote-rec-customize-footer"><div><span>Updated estimate</span><strong>{totalDisplay}</strong><p>{totalNote}</p></div><button type="button" className="btn btn-primary" onClick={sendBuild} disabled={sending || !quoteDirty}>{sending ? "Saving..." : quoteDirty ? "Save changes ↗" : "Saved ✓"}</button></div>
+                <div className="quote-rec-customize-footer"><div><span>Updated estimate</span><strong>{totalDisplay}</strong><p>{totalNote}</p></div><button type="button" className="btn btn-primary" onClick={sendBuild} disabled={sending || !quoteDirty}>{sending ? "Saving…" : quoteDirty ? "Save changes ↗" : "Saved ✓"}</button></div>
                 {error && <p className="quote-rec-error" role="alert">{error}</p>}
               </section>
             )}
@@ -560,7 +560,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
             </div>
           ) : (
             <div className="quote-rec-search-wrap">
-              <input className="field quote-rec-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search RAV4, Honda Pilot, F-150..." autoComplete="off" aria-label="Search vehicle make or model" />
+              <input className="field quote-rec-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search RAV4, Honda Pilot, F-150…" autoComplete="off" aria-label="Search vehicle make or model" />
               {search.trim().length >= 2 && (
                 <div className="quote-rec-search-results">
                   {matches.length ? matches.map((item, index) => (

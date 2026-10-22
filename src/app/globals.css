@@ -7331,3 +7331,689 @@ body:not(.halloween-site) [data-seasonal] {
     line-height: 1.3;
   }
 }
+
+
+/* Web Interface Guidelines baseline, 2026-10 */
+@layer base {
+  html {
+    color-scheme: light;
+    overscroll-behavior-x: none;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6, [id]) {
+    scroll-margin-top: 7rem;
+  }
+
+  :where(button, a, input, select, textarea, summary, [role="button"], [role="radio"], [role="menuitem"]) {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgb(184 54 61 / 0.16);
+  }
+
+  :where(input, select, textarea) {
+    font-size: max(16px, 1em);
+  }
+
+  select {
+    background-color: #fff;
+    color: var(--color-ink);
+  }
+
+  :where(button, a, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 3px solid var(--color-red);
+    outline-offset: 3px;
+  }
+
+  @media (pointer: fine) {
+    html { overscroll-behavior-y: none; }
+  }
+
+  @media (pointer: coarse) {
+    :where(button, a, summary, [role="button"], [role="radio"], [role="menuitem"]) {
+      min-height: 44px;
+    }
+  }
+}
+
+@layer components {
+  .field:focus-visible,
+  .paint-lead-form input:focus-visible,
+  .paint-lead-form select:focus-visible,
+  .paint-lead-form textarea:focus-visible,
+  .gift-purchase-form input:focus-visible,
+  .gift-purchase-form select:focus-visible,
+  .gift-purchase-form textarea:focus-visible {
+    outline: 3px solid var(--color-red);
+    outline-offset: 2px;
+  }
+
+  .availability-modal-backdrop {
+    overscroll-behavior: contain;
+  }
+
+  .availability-modal,
+  .mobile-menu-panel {
+    overscroll-behavior: contain;
+  }
+
+  .btn:disabled, button:disabled {
+    cursor: wait;
+  }
+}
+
+/* =====================================================================
+   V19 STUDIO PASS
+   A quieter, more premium visual system for the primary marketing path.
+   This deliberately overrides older homepage experiments without changing
+   booking logic or content architecture.
+   ===================================================================== */
+:root {
+  --studio-paper:#f6f4ef;
+  --studio-paper-2:#ece8df;
+  --studio-ink:#171714;
+  --studio-muted:#66635d;
+  --studio-red:#b9202c;
+  --studio-line:rgb(23 23 20 / .12);
+  --studio-radius:1rem;
+  --studio-section:clamp(5.5rem,9vw,9rem);
+}
+
+body { background:var(--studio-paper); }
+.container-ed { max-width:82rem; }
+
+/* One restrained button language. */
+.btn {
+  min-height:3.15rem;
+  padding:.78rem 1.35rem;
+  border:1px solid transparent;
+  border-radius:999px;
+  box-shadow:none!important;
+  font-family:var(--font-display);
+  font-size:.94rem;
+  font-weight:700;
+  letter-spacing:-.01em;
+  transition:background-color 180ms ease,color 180ms ease,border-color 180ms ease,transform 180ms ease!important;
+}
+.btn:hover { transform:translateY(-1px)!important; box-shadow:none!important; }
+.btn:active { transform:translateY(0)!important; }
+.btn-primary { background:var(--studio-red); border-color:var(--studio-red); color:#fff; }
+.btn-primary:hover { background:#a91b27; border-color:#a91b27; }
+.btn-secondary { background:transparent; border-color:rgb(23 23 20 / .25); color:var(--studio-ink); }
+.btn-secondary:hover { background:#fff; border-color:rgb(23 23 20 / .45); }
+.btn-quote { background:rgb(255 255 255 / .1)!important; border-color:rgb(255 255 255 / .34)!important; color:#fff!important; backdrop-filter:blur(14px); }
+.btn-quote:hover { background:rgb(255 255 255 / .17)!important; }
+
+/* Navigation reads as a single premium control, not a floating card. */
+.home-header { padding:1rem 1rem 0; }
+.home-nav-shell {
+  width:min(80rem,calc(100vw - 2rem));
+  height:4.5rem;
+  padding:0 .7rem 0 .9rem;
+  border:1px solid rgb(255 255 255 / .16);
+  border-radius:999px;
+  background:rgb(14 14 13 / .48);
+  box-shadow:0 8px 32px rgb(0 0 0 / .12);
+  backdrop-filter:blur(24px) saturate(125%);
+  -webkit-backdrop-filter:blur(24px) saturate(125%);
+}
+.home-nav-shell .home-logo-control img { height:3.45rem!important; width:3.45rem!important; }
+.home-nav-shell nav a,.home-nav-shell nav button { font-size:.88rem!important; font-weight:600!important; letter-spacing:-.01em; }
+.home-nav-shell .btn-sm { min-height:2.65rem; padding:.62rem 1rem; font-size:.86rem; }
+
+/* Hero: editorial composition, stronger photography, less visual noise. */
+.hero-full { min-height:100svh; background-position:center 48%; }
+.hero-shade {
+  background:
+    linear-gradient(90deg,rgb(10 10 9 / .72) 0%,rgb(10 10 9 / .43) 40%,rgb(10 10 9 / .08) 72%),
+    linear-gradient(0deg,rgb(10 10 9 / .42) 0%,transparent 48%);
+}
+.hero-full > .seasonal-decor,.hero-copy ~ .seasonal-decor { opacity:.35; }
+.hero-inner { min-height:calc(100svh - 4.75rem); align-items:center; padding-top:8.75rem; padding-bottom:5.5rem; }
+.hero-copy { width:min(45rem,62vw); }
+.hero-kicker {
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  margin-bottom:1.25rem;
+  color:rgb(255 255 255 / .72);
+  font-size:.68rem;
+  font-weight:700;
+  letter-spacing:.13em;
+}
+.hero-kicker::before { content:""; width:2.25rem; height:1px; background:rgb(255 255 255 / .5); }
+.hero-title {
+  max-width:8.4ch;
+  font-size:clamp(4.4rem,7.1vw,7.5rem)!important;
+  font-weight:600;
+  letter-spacing:-.067em!important;
+  line-height:.86!important;
+  text-wrap:balance;
+}
+.hero-title span { white-space:normal!important; }
+.hero-title span:last-child { color:#f0ece3; }
+.hero-lede { max-width:34rem; margin-top:1.6rem; font-size:clamp(1.02rem,1.25vw,1.16rem); line-height:1.55; color:rgb(255 255 255 / .76); }
+.hero-copy .mt-7 { margin-top:1.8rem; gap:.7rem!important; }
+.hero-copy .btn { min-width:9.6rem; }
+
+/* Proof becomes a quiet trust strip instead of another designed section. */
+.hero-full > .proof-row {
+  position:absolute!important;
+  inset:auto 0 0!important;
+  z-index:4;
+  border-top:1px solid rgb(255 255 255 / .16)!important;
+  border-bottom:0!important;
+  background:rgb(12 12 11 / .36)!important;
+  color:#fff!important;
+  backdrop-filter:blur(18px);
+}
+.hero-full > .proof-row > .container-ed { min-height:4.75rem!important; max-width:82rem!important; padding-top:0!important; padding-bottom:0!important; }
+.hero-full > .proof-row span,.hero-full > .proof-row strong { color:rgb(255 255 255 / .78)!important; font-size:.67rem!important; letter-spacing:.07em!important; }
+.hero-full > .proof-row .proof-stars { color:#fff!important; }
+.hero-full > .proof-row span + span { border-left:1px solid rgb(255 255 255 / .14); }
+
+/* Shared homepage typography. */
+.home-display {
+  font-family:var(--font-display)!important;
+  font-size:clamp(3.25rem,5.5vw,5.75rem)!important;
+  font-weight:600!important;
+  line-height:.94!important;
+  letter-spacing:-.058em!important;
+}
+.home-display span { color:var(--studio-red); }
+.eyebrow { color:var(--studio-red); font-size:.68rem; font-weight:800; letter-spacing:.13em; }
+
+/* Service selector: remove the poster/badge treatment and make the decision feel easy. */
+.home-services-v14 { padding:var(--studio-section) 0; background:var(--studio-paper); }
+.home-services-v14 > .container-ed { max-width:82rem; }
+.home-services-v14 .v14-service-head { grid-template-columns:minmax(0,1fr) minmax(18rem,.42fr); gap:clamp(3rem,8vw,8rem); margin-bottom:3rem; }
+.home-services-v14 .v14-service-head .eyebrow { display:block; padding:0; border:0; box-shadow:none; background:transparent; }
+.home-services-v14 .v14-service-head .eyebrow::before { content:none; }
+.home-services-v14 .home-display { max-width:10ch; margin-top:.75rem; font-size:clamp(3.6rem,6vw,6.4rem)!important; line-height:.9!important; }
+.home-services-v14 .home-section-copy { max-width:25rem; padding:0 0 .3rem; color:var(--studio-muted); font-size:1rem; line-height:1.65; }
+.v15-services { border:1px solid var(--studio-line)!important; border-radius:var(--studio-radius)!important; overflow:hidden; background:rgb(255 255 255 / .45)!important; box-shadow:0 18px 55px rgb(23 23 20 / .045); }
+.v15-service { border-color:var(--studio-line)!important; background:transparent!important; box-shadow:none!important; transition:background-color 180ms ease,transform 180ms ease!important; }
+.v15-service:hover { background:#fff!important; transform:none!important; }
+.v15-service.is-active { background:var(--studio-ink)!important; color:#fff!important; }
+.v15-service-num { opacity:.45; }
+.v15-service-cue,.v15-most { border-radius:999px!important; box-shadow:none!important; }
+.v15-stage { border-radius:var(--studio-radius)!important; box-shadow:none!important; }
+.v15-vehicle { border-radius:.8rem!important; box-shadow:none!important; }
+.v14-service-links { margin-top:1.6rem!important; gap:1.5rem!important; }
+
+/* Work: let the photography carry the section. */
+.home-work-v157 { padding:var(--studio-section) 0; background:#171714!important; color:#f6f4ef; }
+.work-v157-shell { width:min(calc(100vw - 3rem),82rem); }
+.work-v157-head { display:grid; grid-template-columns:minmax(0,1fr) minmax(18rem,.42fr); gap:clamp(2rem,7vw,7rem); align-items:end; margin-bottom:3rem; }
+.work-v157-head .eyebrow { grid-column:1/-1; margin:0; color:#e66b72; }
+.work-v157-head .home-display { max-width:11ch; color:#f6f4ef; }
+.work-v157-head .home-display span { color:#bdb7ac; }
+.work-proof-copy { color:rgb(246 244 239 / .62)!important; line-height:1.65; }
+.work-v157-lead > div:first-child,.work-v157-grid figure > div:first-child { border:0!important; border-radius:.8rem!important; box-shadow:none!important; overflow:hidden; transition:transform 280ms ease!important; }
+.work-v157-lead:hover > div:first-child,.work-v157-grid figure:hover > div:first-child { transform:scale(.997)!important; }
+.work-v157-lead figcaption,.work-v157-grid figcaption { color:rgb(246 244 239 / .72)!important; }
+.work-v157-lead figcaption span,.work-v157-grid figcaption span { color:rgb(246 244 239 / .42)!important; }
+.work-instagram-cta { border-color:rgb(255 255 255 / .14)!important; }
+.work-instagram-link { border-color:rgb(255 255 255 / .18)!important; border-radius:999px!important; }
+
+/* Crew proof: magazine-like split, no scrapbook rotation. */
+.home-team-proof { padding:var(--studio-section) 0; background:var(--studio-paper); }
+.home-team-proof-grid { gap:clamp(3rem,8vw,8rem); }
+.home-team-proof figure { transform:none; border-radius:.85rem; overflow:hidden; box-shadow:none; }
+.home-team-proof-copy p:not(.eyebrow) { color:var(--studio-muted); }
+.home-team-proof-points { gap:.45rem; }
+.home-team-proof-points span { border-color:var(--studio-line); background:#fff; padding:.48rem .7rem; font-size:.62rem; }
+
+/* How it works: dark, spacious, architectural. */
+.home-how { padding:var(--studio-section) 0; background:#171714; }
+.home-how .home-display span { color:#aaa49a; }
+.how-head { margin-bottom:3rem!important; }
+.how-stack { border-top:1px solid rgb(255 255 255 / .15); }
+.how-stack-card { border-color:rgb(255 255 255 / .14)!important; box-shadow:none!important; background:transparent!important; }
+.how-stack-card b { color:#e66b72!important; }
+.home-how .how-cta { margin-top:2.25rem; }
+
+/* Gift and next-step sections share the same calm rhythm. */
+.home-gift-card { padding:clamp(4.5rem,7vw,7rem) 0; background:#e9e4da; border-color:var(--studio-line); }
+.home-gift-card-grid { gap:clamp(3rem,8vw,8rem); }
+.home-next-v158 { padding:var(--studio-section) 0; background:var(--studio-paper); }
+.upgrade-board { box-shadow:none!important; border-color:var(--studio-line)!important; border-radius:var(--studio-radius)!important; overflow:hidden; }
+
+/* Seasonal art is an accent, not the layout. */
+.home-services .seasonal-host > [class*="SeasonalDecor"],
+.home-work .seasonal-host > [class*="SeasonalDecor"],
+.home-how .seasonal-host > [class*="SeasonalDecor"],
+.home-next .seasonal-host > [class*="SeasonalDecor"] { opacity:.28; pointer-events:none; }
+
+@media (max-width:900px) {
+  .home-nav-shell { width:calc(100vw - 1.25rem); height:4.1rem; }
+  .hero-inner { align-items:flex-end; min-height:calc(100svh - 4.2rem); padding:7.5rem 1.25rem 7.2rem; }
+  .hero-copy { width:100%; }
+  .hero-title { max-width:8ch; font-size:clamp(3.6rem,15.8vw,5.7rem)!important; line-height:.88!important; }
+  .hero-lede { max-width:29rem; font-size:1rem; }
+  .hero-full > .proof-row > .container-ed { grid-template-columns:repeat(2,minmax(0,1fr))!important; gap:0!important; }
+  .hero-full > .proof-row span { display:flex; align-items:center; justify-content:center; min-height:2.5rem; padding:.25rem .45rem; }
+  .hero-full > .proof-row span:nth-child(3),.hero-full > .proof-row span:nth-child(4) { display:none; }
+  .home-services-v14 .v14-service-head,.work-v157-head,.home-team-proof-grid,.home-gift-card-grid { grid-template-columns:1fr; gap:1.35rem; }
+  .home-services-v14 .home-section-copy { max-width:34rem; }
+  .work-v157-head .eyebrow { grid-column:auto; }
+  .work-v157-shell { width:calc(100vw - 2.5rem); }
+}
+
+@media (max-width:640px) {
+  :root { --studio-section:4.75rem; }
+  .container-ed { padding-inline:1.15rem; }
+  .hero-full { background-position:58% center; }
+  .hero-shade { background:linear-gradient(0deg,rgb(10 10 9 / .84) 0%,rgb(10 10 9 / .52) 48%,rgb(10 10 9 / .12) 78%); }
+  .hero-kicker { font-size:.62rem; }
+  .hero-title { font-size:clamp(3.35rem,16vw,4.9rem)!important; }
+  .hero-copy .mt-7 { width:100%; }
+  .hero-copy .btn { flex:1 1 9rem; }
+  .home-display { font-size:clamp(2.85rem,13vw,4.15rem)!important; }
+  .home-services-v14 .home-display { font-size:clamp(3.1rem,14vw,4.7rem)!important; }
+  .work-v157-shell { width:calc(100vw - 2rem); }
+  .home-team-proof-points span { font-size:.58rem; }
+}
+
+/* =====================================================================
+   V20 FULL-SITE STUDIO SYSTEM
+   Carries the V19 homepage art direction through all customer-facing pages.
+   ===================================================================== */
+
+/* Shared marketing-page rhythm */
+:where(.about-v2,.blog-v2,.areas-v2,.area-v2,.services-v161,.mobile-detailing-page,.paint-v38,.plus-brand,.gift-page,.work-page-v18,.legal-v1) {
+  --page-line:rgb(23 23 20 / .12);
+  --page-muted:#69655f;
+}
+:where(.about-v2-shell,.areas-v2-shell,.blog-v2-shell,.plus-brand-shell,.legal-v1-shell,.svc-shell) { width:min(82rem,calc(100% - 3rem)); }
+:where(.about-v2-kicker,.areas-v2-kicker,.blog-v2-kicker,.pv38-kicker,.plus-brand-kicker,.svc-eyebrow,.legal-v1-kicker) { font-size:.67rem!important; letter-spacing:.13em!important; font-weight:800!important; }
+
+/* Services and mobile detailing */
+.edu-hero { padding:clamp(8.5rem,12vw,11rem) 0 clamp(5rem,8vw,7.5rem); border-bottom:1px solid var(--page-line); background:var(--studio-paper); }
+.edu-hero-grid { gap:clamp(3rem,8vw,8rem); }
+.edu-hero h1 { max-width:9ch; font-size:clamp(4rem,7vw,7.5rem); font-weight:600; letter-spacing:-.065em; line-height:.88; }
+.edu-hero-copy { border-top:1px solid var(--page-line); padding-top:1.5rem; }
+.edu-hero-copy .edu-lede { font-weight:600; letter-spacing:-.035em; }
+.svc-quick-pick { padding:var(--studio-section) 0; border-bottom:1px solid var(--page-line); }
+.svc-quick-grid { border:1px solid var(--page-line); border-radius:var(--studio-radius); overflow:hidden; background:rgb(255 255 255 / .4); }
+.svc-quick-grid a { min-height:18rem; border-color:var(--page-line); padding:1.8rem; }
+.svc-quick-grid a:hover { transform:none; background:#fff; }
+.svc-quick-grid a.is-featured { background:var(--studio-ink); }
+.svc-single,.edu-booking,.edu-anatomy { border-color:var(--page-line)!important; }
+.svc-outline-btn { border-radius:999px!important; box-shadow:none!important; border-width:1px!important; }
+
+/* About */
+.about-v2-hero { padding:clamp(8rem,11vw,10rem) 0 clamp(5rem,8vw,7rem); border-bottom:1px solid var(--page-line); }
+.about-v2-hero h1 { font-weight:600; letter-spacing:-.06em; }
+.about-v2-hero-photo>div:first-child,.about-v2-work-grid figure>div { border:0; border-radius:.85rem; box-shadow:none; overflow:hidden; }
+.about-v2-origin,.about-v2-timeline { border-bottom:1px solid var(--page-line); background:#ece8df; }
+.about-v2-proof { background:var(--studio-ink); border-bottom:0; }
+.about-v2-proof-grid>div { border-color:rgb(255 255 255 / .14); }
+.about-v2-standards { border:1px solid var(--page-line); border-radius:var(--studio-radius); box-shadow:none; overflow:hidden; background:rgb(255 255 255 / .45); }
+.about-v2-standards article { border-bottom:1px solid var(--page-line); }
+.about-v2-work { background:var(--studio-ink); }
+.about-v2-milestones { border:1px solid var(--page-line); border-radius:var(--studio-radius); overflow:hidden; }
+.about-v2-milestones article { border-right:1px solid var(--page-line); }
+.about-v2-belief { background:#8f252b; }
+.about-v2-button { border:1px solid var(--studio-red); border-radius:999px; box-shadow:none; padding:.85rem 1.35rem; }
+.about-v2-button:hover { transform:translateY(-1px); box-shadow:none; }
+
+/* Our Work */
+.work-page-hero { padding:clamp(8rem,11vw,10rem) 0 clamp(5rem,8vw,7rem); background:var(--studio-ink); }
+.work-page-hero h1 { font-weight:600; }
+.work-page-jobs { padding:var(--studio-section) 0; }
+.work-case-media,.work-case-inset { border-radius:.85rem!important; overflow:hidden; }
+.work-page-crew { background:#e9e4da; }
+.work-page-final { background:#7f2027; }
+
+/* Service areas */
+.areas-v2-hero { padding:clamp(8rem,11vw,10rem) 0 clamp(5rem,8vw,7rem); border-bottom:1px solid var(--page-line); }
+.areas-v2-hero h1,.area-v2 h1,.blog-v2 h1 { font-weight:600; }
+.areas-v2-hero-photo { border-radius:.85rem; overflow:hidden; }
+.areas-v2-hero-photo figcaption { left:0; bottom:0; border-radius:0 .5rem 0 0; }
+.areas-v2-proof { background:#e9e4da; border-bottom:1px solid var(--page-line); }
+.areas-v2-proof span { border-color:var(--page-line); }
+.areas-v2-grid { border-top:1px solid var(--page-line); }
+.areas-v2-card { border-color:var(--page-line)!important; padding:1.6rem 1.25rem; }
+.areas-v2-how { background:var(--studio-ink); }
+.areas-v2-how-list { border-top:1px solid rgb(255 255 255 / .2); }
+.areas-v2-edge { background:#e9e4da; border-bottom:1px solid var(--page-line); }
+
+/* Paint correction + ceramic */
+.paint-v38 { background:var(--studio-paper); }
+.pv38-hero { min-height:auto!important; padding:clamp(8.5rem,12vw,11rem) 0 clamp(5rem,8vw,7rem)!important; }
+.pv38-hero-copy h1 { font-weight:600!important; letter-spacing:-.065em!important; }
+.pv38-paper { background:#ece8df!important; }
+.pv38-white { background:var(--studio-paper)!important; }
+.pv38-section { padding:var(--studio-section) 0!important; }
+.pv38-photo { border-radius:.85rem; overflow:hidden; }
+.pv38-package,.pv38-truth,.pv38-defects,.pv38-process-list { border-color:var(--page-line)!important; box-shadow:none!important; }
+.pv38-text-link { text-underline-offset:5px; }
+
+/* Detail+ */
+.plus-brand { background:var(--studio-paper)!important; }
+.plus-brand-hero { padding-top:clamp(8rem,11vw,10rem)!important; }
+.plus-brand-hero h1 { font-weight:600!important; letter-spacing:-.065em!important; }
+.plus-brand-photo { transform:none!important; border-radius:.9rem!important; overflow:hidden; box-shadow:none!important; }
+.plus-brand-stamp { box-shadow:none!important; }
+.plus-brand-rule { border-width:1px!important; }
+.plus-offer-clarity,.plus-v177-loop,.plus-v180-manifesto { border-color:var(--page-line)!important; }
+.plus-brand-btn { border-radius:999px!important; box-shadow:none!important; }
+
+/* Gift cards */
+.gift-page { background:var(--studio-paper); }
+.gift-showcase { padding:clamp(8rem,11vw,10rem) 0 var(--studio-section)!important; }
+.gift-builder-grid { gap:clamp(3rem,7vw,7rem); }
+.gift-card-preview { transform:none; box-shadow:0 24px 70px rgb(38 16 13 / .14); }
+.gift-form-shell { border:1px solid var(--page-line)!important; border-radius:var(--studio-radius)!important; box-shadow:none!important; background:rgb(255 255 255 / .55)!important; }
+.gift-how-v2,.gift-rewards-bridge-v2 { border-color:var(--page-line)!important; }
+
+/* Blog */
+.blog-v2-hero { padding:clamp(8rem,11vw,10rem) 0 clamp(5rem,8vw,7rem)!important; border-bottom:1px solid var(--page-line)!important; }
+.blog-v2-feature-card,.blog-v2-card { border-color:var(--page-line)!important; box-shadow:none!important; border-radius:var(--studio-radius)!important; overflow:hidden; }
+.blog-v2-card:hover { transform:translateY(-2px)!important; }
+
+/* Legal */
+.legal-v1 { background:var(--studio-paper); }
+.legal-v1-hero { background:var(--studio-ink); padding-top:clamp(8rem,11vw,10rem); }
+.legal-v1-hero::after { opacity:.55; }
+.legal-v1-hero h1 { font-weight:600; }
+.legal-v1-aside { border-top:1px solid var(--page-line); }
+.legal-v1-copy section { border-color:var(--page-line); }
+.legal-v1-contact { border:1px solid var(--page-line)!important; border-radius:var(--studio-radius); background:#e9e4da; }
+
+/* Booking, quote, info and account surfaces: product UI rather than poster UI. */
+.booking-page,.bg-paper2 { background:var(--studio-paper)!important; }
+.booking-page .page-header-shell { padding-top:clamp(8rem,11vw,10rem)!important; }
+.booking-page .page-header-shell .t-page { font-weight:600!important; letter-spacing:-.055em!important; }
+:where(.booking-page,.quote-page,.info-page,.account-page) :where(.panel,[class*="card"],[class*="Card"]) { box-shadow:none; }
+.panel { border:1px solid var(--page-line)!important; border-radius:var(--studio-radius)!important; box-shadow:none!important; background:rgb(255 255 255 / .62)!important; }
+.field { border:1px solid rgb(23 23 20 / .18)!important; border-radius:.72rem!important; background:#fff!important; box-shadow:none!important; }
+.field:hover { border-color:rgb(23 23 20 / .34)!important; }
+.field:focus { border-color:var(--studio-red)!important; }
+
+/* Footer polish */
+.site-footer { border-top:1px solid rgb(255 255 255 / .12)!important; }
+
+@media (max-width:900px) {
+  :where(.about-v2-shell,.areas-v2-shell,.blog-v2-shell,.plus-brand-shell,.legal-v1-shell,.svc-shell) { width:min(100% - 2.25rem,82rem); }
+  .about-v2-hero-grid,.about-v2-origin-grid,.about-v2-section-head,.about-v2-work-head,.about-v2-join-grid,.areas-v2-hero-grid,.areas-v2-head,.areas-v2-how-grid,.work-page-hero-grid { grid-template-columns:1fr!important; gap:2rem!important; }
+  .about-v2-section-head .about-v2-kicker { grid-column:auto; margin-bottom:0; }
+  .about-v2-proof-grid { grid-template-columns:repeat(2,1fr); }
+  .about-v2-milestones { grid-template-columns:repeat(2,1fr); }
+  .about-v2-milestones article:nth-child(2) { border-right:0; }
+  .svc-quick-grid { grid-template-columns:1fr; }
+  .svc-quick-grid a { min-height:14rem; border-right:0; border-bottom:1px solid var(--page-line); }
+  .svc-quick-grid a:last-child { border-bottom:0; }
+}
+
+@media (max-width:640px) {
+  :where(.about-v2-shell,.areas-v2-shell,.blog-v2-shell,.plus-brand-shell,.legal-v1-shell,.svc-shell) { width:calc(100% - 2rem); }
+  .edu-hero h1,.about-v2-hero h1,.areas-v2-hero h1,.blog-v2 h1,.work-page-hero h1 { font-size:clamp(3.25rem,15vw,5rem)!important; }
+  .about-v2-proof-grid,.about-v2-milestones { grid-template-columns:1fr; }
+  .about-v2-proof-grid>div,.about-v2-milestones article { border-right:0; border-bottom:1px solid var(--page-line); }
+  .about-v2-milestones article:last-child { border-bottom:0; }
+  .areas-v2-grid { grid-template-columns:1fr; }
+  .areas-v2-card:nth-child(odd) { border-right:0; }
+  .legal-v1-grid { grid-template-columns:1fr; gap:2.5rem; }
+  .legal-v1-aside { position:static; }
+  .gift-card-preview { min-height:16rem; }
+}
+
+/* =====================================================================
+   V21 RETRO STUDIO LAYER
+   Professionally executed vintage automotive identity over V20's UX.
+   Retro lives in the brand layer; interaction surfaces stay modern.
+   ===================================================================== */
+:root{
+  --retro-cream:#f2eee4;
+  --retro-paper:#faf7ef;
+  --retro-ink:#181714;
+  --retro-red:#9f2028;
+  --retro-faded:#756f65;
+  --retro-rule:rgb(24 23 20 / .22);
+  --retro-fine:rgb(24 23 20 / .11);
+  --retro-shadow:#251d17;
+}
+
+/* Print-like grain, subtle enough to disappear behind content. */
+body{background-color:var(--retro-cream);}
+body::before{
+  content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+}
+
+/* Shared editorial labels */
+:where(.about-v2-kicker,.areas-v2-kicker,.blog-v2-kicker,.pv38-kicker,.plus-brand-kicker,.svc-eyebrow,.legal-v1-kicker,.work-page-eyebrow){
+  display:inline-flex;align-items:center;gap:.6rem;text-transform:uppercase;font-weight:900!important;letter-spacing:.16em!important;
+}
+:where(.about-v2-kicker,.areas-v2-kicker,.blog-v2-kicker,.pv38-kicker,.plus-brand-kicker,.svc-eyebrow,.legal-v1-kicker,.work-page-eyebrow)::before{
+  content:"";width:1.7rem;height:2px;background:currentColor;flex:none;
+}
+
+/* Stronger vintage editorial headlines without sacrificing modern spacing. */
+:where(.edu-hero,.about-v2-hero,.areas-v2-hero,.blog-v2-hero,.work-page-hero,.pv38-hero,.plus-brand-hero) h1{
+  text-wrap:balance;text-transform:uppercase;
+}
+:where(.edu-hero,.about-v2-hero,.areas-v2-hero,.blog-v2-hero) h1 em,
+:where(.edu-hero,.about-v2-hero,.areas-v2-hero,.blog-v2-hero) h1 i{font-style:italic;color:var(--retro-red);}
+
+/* Section rules feel like magazine furniture, not UI borders. */
+:where(.about-v2,.blog-v2,.areas-v2,.area-v2,.services-v161,.mobile-detailing-page,.paint-v38,.plus-brand,.gift-page,.work-page-v18,.legal-v1) section{
+  position:relative;
+}
+:where(.about-v2,.blog-v2,.areas-v2,.services-v161,.mobile-detailing-page,.paint-v38,.plus-brand,.gift-page,.work-page-v18) section + section::before{
+  content:"";position:absolute;top:0;left:50%;width:min(82rem,calc(100% - 3rem));height:1px;transform:translateX(-50%);background:var(--retro-fine);pointer-events:none;
+}
+
+/* Buttons: a restrained old-shop-ticket silhouette. */
+:where(.about-v2,.blog-v2,.areas-v2,.area-v2,.services-v161,.mobile-detailing-page,.paint-v38,.plus-brand,.gift-page,.work-page-v18) :where(.btn,.about-v2-button,.plus-brand-btn,.svc-outline-btn){
+  text-transform:uppercase;letter-spacing:.075em;font-weight:850;
+}
+:where(.about-v2-button,.plus-brand-btn,.svc-outline-btn){border-radius:.28rem!important;}
+
+/* SERVICES: vintage garage menu, disciplined grid. */
+.services-v161 .edu-hero{background:var(--retro-cream);}
+.services-v161 .edu-hero-copy{border-top:2px solid var(--retro-ink);}
+.services-v161 .svc-quick-grid{border:2px solid var(--retro-ink);border-radius:0;background:var(--retro-paper);box-shadow:7px 7px 0 rgb(24 23 20 / .08);}
+.services-v161 .svc-quick-grid a{position:relative;border-color:var(--retro-rule);}
+.services-v161 .svc-quick-grid a::before{content:"SERVICE";position:absolute;top:1.2rem;right:1.2rem;font-size:.58rem;font-weight:900;letter-spacing:.16em;color:var(--retro-faded);}
+.services-v161 .svc-quick-grid a.is-featured{background:var(--retro-red);color:#fff;}
+.services-v161 .svc-quick-grid a.is-featured::before{content:"MOST POPULAR";color:rgb(255 255 255 / .72);}
+.services-v161 .svc-single{border-top:2px solid var(--retro-ink)!important;}
+
+/* ABOUT: magazine profile. */
+.about-v2-hero-photo>div:first-child{border-radius:.15rem;box-shadow:10px 10px 0 var(--retro-red);}
+.about-v2-hero-photo{padding:0 10px 10px 0;}
+.about-v2-origin{background:var(--retro-paper);}
+.about-v2-standards{border:2px solid var(--retro-ink);border-radius:0;box-shadow:7px 7px 0 rgb(159 32 40 / .12);}
+.about-v2-milestones{border:2px solid var(--retro-ink);border-radius:0;background:var(--retro-paper);}
+.about-v2-milestones article{position:relative;}
+.about-v2-milestones article::after{content:"✦";position:absolute;right:.8rem;top:.65rem;font-size:.7rem;color:var(--retro-red);}
+.about-v2-belief{background:var(--retro-red);}
+
+/* OUR WORK: contact sheet / photo lab. */
+.work-page-v18{background:var(--retro-cream);}
+.work-page-hero{background:var(--retro-ink);}
+.work-case-media,.work-case-inset{border-radius:.1rem!important;border:7px solid var(--retro-paper);box-shadow:0 0 0 1px rgb(24 23 20 / .22),7px 8px 0 rgb(24 23 20 / .10);}
+.work-page-jobs figure{position:relative;}
+.work-page-jobs figure::after{content:"EVERY DETAIL / DECATUR GA";display:block;margin-top:.65rem;font-size:.58rem;font-weight:850;letter-spacing:.13em;color:var(--retro-faded);}
+.work-page-crew{background:#e5dfd2;}
+.work-page-final{background:var(--retro-red);}
+
+/* SERVICE AREAS: route-map / field-guide feel. */
+.areas-v2-hero{background:var(--retro-paper);}
+.areas-v2-hero-photo{border-radius:.1rem;border:6px solid #fff;box-shadow:7px 8px 0 rgb(24 23 20 / .10);}
+.areas-v2-grid{border-top:2px solid var(--retro-ink);border-bottom:2px solid var(--retro-ink);}
+.areas-v2-card{position:relative;}
+.areas-v2-card::after{content:"→";position:absolute;right:1.2rem;bottom:1.1rem;font-weight:900;color:var(--retro-red);}
+.areas-v2-how{background:var(--retro-ink);}
+
+/* PAINT + CERAMIC: workshop technical sheet. */
+.paint-v38{background:var(--retro-paper);}
+.paint-v38 .pv38-paper{background:#e9e3d6!important;}
+.paint-v38 .pv38-photo{border-radius:.12rem;border:5px solid #fff;box-shadow:6px 7px 0 rgb(24 23 20 / .10);}
+.paint-v38 :where(.pv38-package,.pv38-truth,.pv38-defects,.pv38-process-list){border:1px solid var(--retro-rule)!important;border-top:3px solid var(--retro-ink)!important;border-radius:0!important;background:rgb(250 247 239 / .8);}
+.paint-v38 :where(.pv38-package,.pv38-truth,.pv38-defects,.pv38-process-list)::before{content:"SHOP SPEC";display:block;margin-bottom:1rem;font-size:.58rem;font-weight:900;letter-spacing:.16em;color:var(--retro-red);}
+
+/* DETAIL+: members club rather than SaaS subscription. */
+.plus-brand{background:var(--retro-cream)!important;}
+.plus-brand-photo{border-radius:.15rem!important;border:6px solid #fff;box-shadow:8px 9px 0 rgb(24 23 20 / .11)!important;}
+.plus-brand-stamp{border:2px solid currentColor!important;border-radius:50%!important;transform:rotate(-7deg);}
+.plus-brand-rule{border-width:2px!important;border-color:var(--retro-ink)!important;}
+.plus-offer-clarity{border:2px solid var(--retro-ink)!important;border-radius:0!important;background:var(--retro-paper);box-shadow:7px 7px 0 rgb(159 32 40 / .11)!important;}
+.plus-brand-btn{border-radius:.25rem!important;}
+
+/* GIFT CARDS: physical certificate language. */
+.gift-page{background:#e9e2d4;}
+.gift-card-preview{transform:rotate(-1.25deg);border:1px solid rgb(24 23 20 / .18);box-shadow:12px 16px 0 rgb(24 23 20 / .10);}
+.gift-form-shell{border:2px solid var(--retro-ink)!important;border-radius:.15rem!important;background:var(--retro-paper)!important;box-shadow:7px 7px 0 rgb(24 23 20 / .08)!important;}
+.gift-how-v2{background:var(--retro-paper);}
+
+/* BLOG: actual automotive publication. */
+.blog-v2{background:var(--retro-cream);}
+.blog-v2-hero{background:var(--retro-paper);}
+.blog-v2-feature-card{border:2px solid var(--retro-ink)!important;border-radius:0!important;background:var(--retro-paper);box-shadow:8px 8px 0 rgb(24 23 20 / .09)!important;}
+.blog-v2-card{border-radius:0!important;border-top:2px solid var(--retro-ink)!important;background:transparent;}
+.blog-v2-card:hover{transform:translateY(-3px)!important;}
+
+/* LEGAL: clean editorial print, minimal nostalgia. */
+.legal-v1{background:var(--retro-paper);}
+.legal-v1-contact{border-radius:0;border-left:4px solid var(--retro-red)!important;background:#e9e3d6;}
+
+/* Booking/quote/account remain product UI. Only small brand cues. */
+.booking-page .page-header-shell::after{content:"BOOKING DESK • EVERY DETAIL • DECATUR, GEORGIA";display:block;width:max-content;max-width:100%;margin:1.2rem auto 0;padding:.38rem .62rem;border:1px solid rgb(24 23 20 / .18);font-size:.57rem;font-weight:850;letter-spacing:.12em;color:var(--retro-faded);}
+.booking-flow-section{border-top:2px solid var(--retro-ink);}
+.booking-flow-section>legend{text-transform:uppercase;letter-spacing:-.025em;}
+.booking-summary-card{border-top:3px solid var(--retro-red)!important;}
+
+/* Footer gets the feel of a shop sign / magazine colophon. */
+.site-footer{position:relative;}
+.site-footer::before{content:"EVERY DETAIL • MOBILE AUTO DETAILING • DECATUR, GEORGIA";display:block;padding:1rem 1.5rem;border-bottom:1px solid rgb(255 255 255 / .14);text-align:center;font-size:.6rem;font-weight:850;letter-spacing:.16em;color:rgb(255 255 255 / .58);}
+
+@media(max-width:640px){
+  body::before{opacity:.025;}
+  :where(.about-v2,.blog-v2,.areas-v2,.services-v161,.mobile-detailing-page,.paint-v38,.plus-brand,.gift-page,.work-page-v18) section + section::before{width:calc(100% - 2rem);}
+  .about-v2-hero-photo>div:first-child{box-shadow:6px 6px 0 var(--retro-red);}
+  .services-v161 .svc-quick-grid,.about-v2-standards,.about-v2-milestones,.plus-offer-clarity,.gift-form-shell,.blog-v2-feature-card{box-shadow:4px 4px 0 rgb(24 23 20 / .08)!important;}
+  .work-case-media,.work-case-inset{border-width:4px;box-shadow:4px 5px 0 rgb(24 23 20 / .09);}
+  .site-footer::before{font-size:.52rem;letter-spacing:.11em;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .gift-card-preview,.plus-brand-stamp{transform:none;}
+}
+
+/* =====================================================================
+   V22 FIELD JOURNAL — BESPOKE ART DIRECTION
+   No SaaS bento language. No glass. No gradient theatre. No pill soup.
+   Every Detail expressed as a working automotive publication.
+   ===================================================================== */
+:root{--journal:#f1eadc;--journal-paper:#fbf6e9;--journal-ink:#161411;--journal-red:#a51f28;--journal-muted:#71695d;--journal-rule:#1b1814;}
+
+/* Kill generic UI softness on editorial surfaces. */
+:where(.home-services,.home-work,.home-team-proof,.home-how,.home-gift-card,.home-next,.home-faq,.final-book,.services-v161,.about-v2,.work-page-v18,.paint-v38,.plus-brand,.gift-page,.blog-v2) :where(.btn,.tactile-link,.about-v2-button,.plus-brand-btn,.svc-outline-btn){border-radius:0!important;}
+
+/* COVER */
+.hero-full{min-height:min(900px,92svh)!important;background-position:center 42%!important;}
+.hero-full::before{content:"EVERY DETAIL  /  FIELD JOURNAL  /  VOL. 22";position:absolute;z-index:4;top:clamp(7.5rem,11vw,9rem);right:max(1.25rem,calc((100vw - 82rem)/2));writing-mode:vertical-rl;color:rgba(255,255,255,.72);font-size:.62rem;font-weight:900;letter-spacing:.2em;}
+.hero-copy{max-width:74rem!important;padding-top:clamp(7rem,14vh,10rem)!important;}
+.hero-kicker{display:inline-block!important;border-top:2px solid currentColor;padding-top:.7rem!important;letter-spacing:.18em!important;}
+.hero-title{max-width:12ch!important;text-transform:uppercase!important;line-height:.82!important;letter-spacing:-.065em!important;text-wrap:balance;}
+.hero-title span{display:block;}
+.hero-lede{max-width:40rem!important;border-left:1px solid rgba(255,255,255,.5);padding-left:1.2rem;}
+.hero-copy .btn{border-radius:0!important;text-transform:uppercase;letter-spacing:.08em;}
+.proof-row{background:var(--journal-red)!important;border:0!important;}
+.proof-row .container-ed{display:flex!important;justify-content:space-between;gap:1rem!important;text-align:left!important;overflow:hidden;}
+.proof-row span{white-space:nowrap;font-size:.7rem!important;letter-spacing:.1em;text-transform:uppercase;}
+
+/* SERVICE MANUAL, not pricing cards */
+.home-services{background:var(--journal-paper)!important;}
+.home-services .container-ed{position:relative;}
+.home-services .container-ed::before{content:"ED / SERVICE MANUAL / 2026";display:block;border-bottom:2px solid var(--journal-ink);padding-bottom:.65rem;margin-bottom:clamp(3rem,6vw,6rem);font-size:.65rem;font-weight:900;letter-spacing:.18em;}
+.home-section-head{grid-template-columns:minmax(0,1.45fr) minmax(16rem,.55fr)!important;align-items:end!important;border-bottom:1px solid var(--journal-rule);padding-bottom:2rem;}
+.home-display{text-transform:uppercase;line-height:.88!important;}
+.home-section-copy{font-family:Georgia,serif;font-size:1.04rem!important;line-height:1.6!important;}
+.home-services :where(.booking-card,.service-card,[class*="service-card"]){border-radius:0!important;box-shadow:none!important;}
+.home-text-links{border-top:1px solid var(--journal-rule);padding-top:1rem!important;}
+
+/* FIELD REPORT */
+.home-work{background:var(--journal-ink)!important;}
+.work-v157-shell{max-width:100%!important;padding-inline:max(1.25rem,calc((100vw - 92rem)/2))!important;}
+.work-v157-head{display:grid!important;grid-template-columns:.7fr 1.5fr .8fr;align-items:end;gap:2rem;border-top:1px solid rgba(255,255,255,.35);padding-top:1rem;}
+.work-v157-head .eyebrow{grid-column:1;color:#d6cbb9!important;}
+.work-v157-head h2{grid-column:2;color:#fff!important;}
+.work-v157-head .work-proof-copy{grid-column:3;color:#c8bdae!important;font-family:Georgia,serif;}
+.work-v157-lead{margin-top:4rem!important;}
+.work-v157-lead img,.work-v157-grid img{filter:saturate(.88) contrast(1.03);}
+.work-v157-lead figcaption,.work-v157-grid figcaption{border-radius:0!important;background:var(--journal-paper)!important;color:var(--journal-ink)!important;border-top:3px solid var(--journal-red);}
+.work-v157-grid{gap:1rem!important;}
+.work-instagram-cta{border-radius:0!important;border-top:1px solid rgba(255,255,255,.25)!important;border-bottom:1px solid rgba(255,255,255,.25)!important;background:transparent!important;}
+
+/* COMPANY NOTE, intentionally not a feature card. */
+.home-team-proof{background:var(--journal)!important;}
+.home-team-proof-grid{grid-template-columns:1.35fr .65fr!important;gap:clamp(2rem,6vw,7rem)!important;align-items:start!important;}
+.home-team-proof figure{position:relative;}
+.home-team-proof figure::after{content:"FIELD NOTE  /  THE CREW";position:absolute;bottom:-1.8rem;left:0;font-size:.62rem;font-weight:900;letter-spacing:.16em;}
+.home-team-proof figure>div{border-radius:0!important;}
+.home-team-proof-copy{border-top:3px solid var(--journal-red);padding-top:1rem!important;}
+.home-team-proof-copy>p:not(.eyebrow){font-family:Georgia,serif;font-size:1.08rem!important;}
+.home-team-proof-points{display:block!important;border-top:1px solid var(--journal-rule);border-bottom:1px solid var(--journal-rule);margin:2rem 0!important;}
+.home-team-proof-points span{display:block;padding:.7rem 0;border-bottom:1px solid rgba(22,20,17,.14);font-size:.68rem;letter-spacing:.13em;}
+.home-team-proof-points span:last-child{border-bottom:0;}
+
+/* PROCESS becomes a numbered workshop ledger. */
+.home-how{background:var(--journal-paper)!important;}
+.how-head{display:grid!important;grid-template-columns:.45fr 1.55fr;align-items:start;border-bottom:2px solid var(--journal-ink);padding-bottom:2rem;}
+.how-stack{display:block!important;border-bottom:2px solid var(--journal-ink);}
+.how-stack-card{display:grid!important;grid-template-columns:9rem 1fr!important;min-height:0!important;border:0!important;border-top:1px solid var(--journal-rule)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:1.6rem 0!important;}
+.how-stack-card>b{font-size:clamp(3rem,7vw,6rem)!important;line-height:.8;color:var(--journal-red)!important;}
+.how-stack-card h3{font-size:clamp(1.8rem,4vw,3.2rem)!important;text-transform:uppercase;}
+.how-stack-card p{max-width:44rem;}
+
+/* Gift is an inserted print advert. */
+.home-gift-card{background:var(--journal-red)!important;color:#fff!important;}
+.home-gift-card-grid{border:2px solid rgba(255,255,255,.72);padding:clamp(2rem,5vw,4rem)!important;position:relative;}
+.home-gift-card-grid::after{content:"GIFT CERTIFICATE / AVAILABLE ONLINE";position:absolute;right:1rem;top:1rem;font-size:.58rem;font-weight:900;letter-spacing:.15em;}
+.home-gift-card .eyebrow,.home-gift-card p,.home-gift-card h2{color:#fff!important;}
+
+/* Two upgrades as classified/editorial notices rather than rounded product cards. */
+.home-next{background:var(--journal)!important;}
+.next-v158-heading{border-top:2px solid var(--journal-ink);padding-top:1rem;}
+.upgrade-stack{gap:0!important;border-top:1px solid var(--journal-rule);}
+.upgrade-board{border-radius:0!important;box-shadow:none!important;border:0!important;border-bottom:1px solid var(--journal-rule)!important;}
+.upgrade-board-paint{background:var(--journal-paper)!important;color:var(--journal-ink)!important;}
+.upgrade-board-plus{background:var(--journal-ink)!important;}
+.upgrade-stamp{border-radius:50%!important;transform:rotate(-8deg);}
+
+/* FAQ resembles back matter. */
+.home-faq{background:#ded5c6!important;}
+.faq-layout{border-top:3px double var(--journal-ink);padding-top:2rem;}
+
+/* Close like the back cover. */
+.final-book{background:var(--journal-ink)!important;min-height:70svh;display:grid;place-items:center;text-align:center;}
+.final-inner{max-width:70rem!important;}
+.final-title{text-transform:uppercase;font-size:clamp(4rem,11vw,10rem)!important;line-height:.78!important;}
+.final-inner>p:not(.eyebrow){max-width:40rem;margin-inline:auto!important;font-family:Georgia,serif;}
+.final-actions{justify-content:center!important;}
+
+/* Secondary-page mastheads get publication folios. */
+:where(.services-v161,.about-v2,.work-page-v18,.paint-v38,.plus-brand,.gift-page,.blog-v2) :where(.edu-hero,.about-v2-hero,.work-page-hero,.pv38-hero,.plus-brand-hero,.gift-showcase,.blog-v2-hero)::after{content:"EVERY DETAIL / DECATUR, GEORGIA / 2026";position:absolute;bottom:1rem;right:max(1rem,calc((100vw - 82rem)/2));font-size:.56rem;font-weight:900;letter-spacing:.17em;opacity:.58;}
+
+/* Editorial typography, without importing another trendy display font. */
+:where(.about-v2-origin-copy,.about-v2-belief blockquote,.work-case-copy>p,.svc-section-head>p,.edu-hero-copy p,.pv38-intro p,.blog-v2-feature-copy p){font-family:Georgia,"Times New Roman",serif;}
+
+/* Mobile preserves composition without pretending desktop is a stack of cards. */
+@media(max-width:800px){
+  .hero-full::before{display:none;}
+  .hero-title{font-size:clamp(4rem,17vw,7rem)!important;}
+  .proof-row .container-ed{overflow-x:auto!important;justify-content:flex-start!important;padding-bottom:.2rem;scrollbar-width:none;}
+  .home-section-head,.work-v157-head,.home-team-proof-grid,.how-head{grid-template-columns:1fr!important;}
+  .work-v157-head>*{grid-column:1!important;}
+  .work-v157-head .work-proof-copy{max-width:32rem;}
+  .how-stack-card{grid-template-columns:4.8rem 1fr!important;}
+  .home-gift-card-grid::after{position:static;display:block;margin-top:2rem;}
+}
+@media(max-width:520px){
+  .how-stack-card{grid-template-columns:1fr!important;gap:.7rem!important;}
+  .how-stack-card>b{font-size:3rem!important;}
+  .hero-lede{border-left:0;padding-left:0;}
+}
