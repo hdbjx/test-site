@@ -12874,3 +12874,213 @@ body:has(.v29-hero) .site-shared-menu-label{font-size:.73rem!important;letter-sp
   .q53-page .q51-condition-grid.quote-rec-condition-grid button,
   .q53-page .q51-condition-grid.quote-rec-condition-grid button:last-child{grid-column:auto;min-height:94px}
 }
+
+/* ============================================================
+   V54 — homepage dual-path hero CTA
+   Booking stays primary; quote/recommender is the quieter path.
+   ============================================================ */
+.v54-hero-actions{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.8rem;
+  margin-top:2.55rem;
+}
+.v54-hero-actions .v29-hero-cta{margin-top:0!important}
+.v54-hero-quote{
+  --mag-x:0px;
+  --mag-y:0px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:1.2rem;
+  min-height:54px;
+  padding:0 1.45rem;
+  border:1px solid rgba(243,237,223,.72);
+  background:rgba(8,8,7,.26);
+  color:#f3eddf;
+  box-shadow:0 12px 32px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(9px);
+  -webkit-backdrop-filter:blur(9px);
+  font-family:var(--font-display);
+  font-size:.78rem;
+  font-weight:900;
+  letter-spacing:.145em;
+  text-transform:uppercase;
+  text-decoration:none;
+  transform:translate3d(var(--mag-x),var(--mag-y),0);
+  transition:transform .18s ease,background .18s ease,border-color .18s ease,color .18s ease;
+}
+.v54-hero-quote span{font-size:1.08rem}
+.v54-hero-quote:hover{
+  background:rgba(213,104,101,.92);
+  border-color:#d56865;
+  color:#fff;
+}
+
+@media(max-width:900px){
+  .v54-hero-actions{margin-top:2rem;gap:.65rem;flex-wrap:wrap}
+  .v54-hero-actions .v29-hero-cta{min-height:52px!important}
+  .v54-hero-quote{min-height:52px;padding-inline:1.3rem;font-size:.74rem}
+}
+
+@media(max-width:520px){
+  .v54-hero-actions{margin-top:1.75rem;width:100%;gap:.55rem}
+  .v54-hero-actions .v29-hero-cta,
+  .v54-hero-quote{
+    flex:1 1 0;
+    min-width:0;
+    min-height:50px!important;
+    padding-inline:.95rem!important;
+    gap:.7rem;
+    font-size:.68rem!important;
+    letter-spacing:.115em!important;
+  }
+}
+
+@media(max-width:365px){
+  .v54-hero-actions{flex-direction:column;width:min(280px,100%)}
+  .v54-hero-actions .v29-hero-cta,
+  .v54-hero-quote{width:100%;flex:auto}
+}
+
+/* ============================================================
+   V55 — BOOKING COMPACT DENSITY PASS
+   Same booking architecture, one visual tier smaller on desktop.
+   ============================================================ */
+@media(min-width:1000px){
+  .bk-page{--bk-gutter:clamp(20px,3vw,38px)}
+
+  /* top bar + progress */
+  .bk-top-row{padding:7px var(--bk-gutter)}
+  .bk-top-logo{width:40px;height:40px}
+  .bk-top-title{font-size:.72rem;letter-spacing:.17em}
+  .bk-top-help{font-size:.66rem;letter-spacing:.12em}
+  .bk-progress{gap:9px;padding:0 var(--bk-gutter) 9px}
+  .bk-progress li{padding-top:6px;border-top-width:2px;font-size:.62rem;letter-spacing:.14em}
+
+  /* overall page proportions */
+  .bk-intro,.bk-layout{max-width:1200px}
+  .bk-intro{padding-top:1.25rem;padding-bottom:1rem}
+  .bk-intro-title{font-size:clamp(2.65rem,5vw,4.8rem);line-height:.88}
+  .bk-intro-sub{margin-top:.5rem;font-size:1.05rem}
+  .bk-intro-facts{margin-top:.65rem;font-size:.64rem;letter-spacing:.14em}
+  .bk-intro-signin,.bk-intro-quote{margin-top:.7rem;font-size:.88rem}
+  .bk-layout{grid-template-columns:minmax(0,1fr) 300px;gap:36px;padding-bottom:5rem}
+
+  /* step rhythm */
+  .bk-step{scroll-margin-top:96px}
+  .bk-step.is-active{padding:1.45rem 0 2rem}
+  .bk-step-row{grid-template-columns:1.9rem auto minmax(0,1fr) auto;gap:.8rem;padding:.82rem 0}
+  .bk-step-row b{font-size:.72rem}
+  .bk-step-row-label{font-size:.66rem;letter-spacing:.14em}
+  .bk-step-row-value{font-size:.9rem}
+  .bk-step-row-edit{font-size:.76rem}
+  .bk-step-num{font-size:.65rem;letter-spacing:.16em}
+  .bk-q{margin:.35rem 0 1.2rem;font-size:clamp(2rem,3.4vw,3.35rem);line-height:.9}
+  .bk-q-sm{margin-bottom:.75rem;font-size:clamp(1.55rem,2.4vw,2.15rem)}
+  .bk-note{margin:.6rem 0;font-size:.88rem}
+  .bk-error{margin-top:.9rem;padding:.7rem .85rem;font-size:.9rem}
+  .bk-link{margin-top:.75rem;font-size:.88rem}
+
+  /* buttons + fields */
+  .bk-btn{min-height:46px;padding:0 1.15rem;font-size:.76rem;letter-spacing:.105em}
+  .bk-field{gap:.3rem}
+  .bk-field>span{font-size:.64rem;letter-spacing:.13em}
+  .bk-input{min-height:46px;padding:.62rem .78rem;font-size:.96rem}
+  .bk-input-xl{min-height:50px;font-size:1.08rem}
+
+  /* service + extras */
+  .bk-pkgs{gap:10px}
+  .bk-pkg{gap:.42rem;padding:1rem .95rem .95rem}
+  .bk-pkg-name{font-size:clamp(1.35rem,1.65vw,1.8rem)}
+  .bk-pkg-points{margin:.25rem 0}
+  .bk-pkg-points span{padding:.32rem 0;font-size:.86rem}
+  .bk-pkg-price{font-size:1.2rem}
+  .bk-pkg-price small{font-size:.7rem}
+  .bk-pkg-cta{padding:.65rem;font-size:.64rem}
+  .bk-addons{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+  .bk-addon{padding:.85rem}
+  .bk-addon strong{font-size:.93rem}
+  .bk-addon span{font-size:.8rem}
+  .bk-addon em{font-size:1rem}
+  .bk-addon b{margin-top:.4rem;padding:.32rem .6rem;font-size:.6rem}
+
+  /* vehicle search */
+  .bk-vehicle-search,.bk-vehicle-selected{max-width:38rem}
+  .bk-vehicle-search .quote-rec-search{min-height:52px;font-size:1rem}
+  .bk-vehicle-search .quote-rec-search-results{max-height:min(300px,40dvh)}
+  .bk-vehicle-search .quote-rec-search-results button{min-height:46px;padding:.7rem .85rem}
+  .bk-vehicle-search .quote-rec-search-results button span{font-size:.92rem}
+  .bk-vehicle-search .quote-rec-search-results button small{font-size:.61rem}
+  .bk-vehicle-selected{padding:.8rem .9rem}
+  .bk-vehicle-selected>div strong{font-size:1.08rem}
+  .bk-year-inline{padding-top:.6rem}
+
+  /* address + school note */
+  .bk-address{gap:9px}
+  .bk-yep{gap:.55rem;margin-top:.9rem;font-size:.98rem}
+  .bk-yep b{width:24px;height:24px;font-size:.75rem}
+  .bk-time{margin-top:1.55rem;padding-top:1.3rem}
+  .bk-school{gap:.7rem;margin-bottom:.9rem;padding:.75rem .9rem}
+  .bk-school strong{font-size:.9rem}
+  .bk-school p{font-size:.84rem}
+
+  /* calendar */
+  .bk-calendar{width:min(100%,640px);margin-top:.3rem}
+  .bk-calendar-head{grid-template-columns:42px 1fr 42px;min-height:50px}
+  .bk-calendar-head h4{font-size:1.18rem}
+  .bk-calendar-head button{font-size:1rem}
+  .bk-calendar-weekdays span{padding:.42rem .2rem .38rem;font-size:.54rem;letter-spacing:.11em}
+  .bk-cal-day{min-height:60px;padding:.42rem .5rem .38rem;gap:.15rem}
+  .bk-cal-num{font-size:1rem}
+  .bk-cal-avail{gap:.26rem;font-size:.49rem;letter-spacing:.055em}
+  .bk-cal-avail::before{width:5px;height:5px;flex-basis:5px}
+  .bk-cal-today{top:.45rem;right:.45rem;font-size:.42rem}
+  .bk-calendar-key{gap:.4rem;padding:.55rem .7rem;font-size:.7rem}
+  .bk-pills{grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:8px}
+  .bk-pill{min-height:48px;font-size:1rem}
+  .bk-slots-day{margin:1rem 0 .6rem;font-size:1.2rem}
+  .bk-tz{margin-top:.65rem;font-size:.6rem}
+
+  /* contact/review */
+  .bk-info{gap:12px 10px}
+  .bk-receipt{padding:1rem 1.1rem;box-shadow:4px 4px 0 rgba(11,10,9,.09)}
+  .bk-receipt-block{padding:.65rem 0}
+  .bk-receipt-block strong{font-size:1.12rem}
+  .bk-receipt-block p{font-size:.92rem}
+  .bk-receipt-lines{padding-top:.75rem}
+  .bk-receipt-lines p{margin:.22rem 0;font-size:.92rem}
+  .bk-receipt-lines p.is-sub{font-size:.86rem}
+  .bk-receipt-lines .bk-receipt-total{margin-top:.6rem;padding-top:.55rem;font-size:1.25rem}
+  .bk-receipt-lines small,.bk-gift small{font-size:.76rem}
+  .bk-gift{margin-top:1rem;padding-top:.9rem}
+  .bk-gift-entry{margin-top:.4rem}
+  .bk-gift-entry button,.bk-gift-on button{font-size:.66rem}
+  .bk-next{margin:1.4rem 0 1rem}
+  .bk-next h3{margin-bottom:.55rem;font-size:.66rem}
+  .bk-next ol{gap:.38rem}
+  .bk-next li{font-size:1rem}
+  .bk-next li b{margin-right:.55rem}
+  .bk-confirm{min-height:56px;font-size:1rem;letter-spacing:.12em}
+
+  /* sticky summary */
+  .bk-aside-inner{top:104px;margin-top:1.45rem;padding:1rem 1.05rem 1.1rem}
+  .bk-sum-title{padding-bottom:.48rem;font-size:1rem}
+  .bk-sum-block{padding:.52rem 0}
+  .bk-sum-block strong{font-size:.92rem}
+  .bk-sum-block span{font-size:.82rem}
+  .bk-sum-money{padding-top:.45rem}
+  .bk-sum-money p{margin:.22rem 0;font-size:.7rem;letter-spacing:.1em}
+  .bk-sum-money .bk-sum-total{margin-top:.48rem;padding-top:.48rem;font-size:1.12rem}
+  .bk-sum-money small{margin-top:.4rem;font-size:.74rem}
+  .bk-aside-go{margin-top:.85rem}
+}
+
+@media(min-width:1000px) and (max-height:820px){
+  .bk-calendar{width:min(100%,600px)}
+  .bk-cal-day{min-height:54px;padding:.35rem .42rem}
+  .bk-calendar-head{min-height:46px}
+  .bk-calendar-weekdays span{padding:.34rem .15rem .3rem}
+  .bk-school{padding:.65rem .8rem}
+}

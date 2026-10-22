@@ -45,7 +45,10 @@ export default function Home() {
             <span>YOUR CAR.</span>
             <span>BACK TO ITS BEST.</span>
           </h1>
-          <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_hero" }} className="v29-hero-cta" data-v29-magnetic>Book a detail <span>↗</span></TrackedLink>
+          <div className="v54-hero-actions" aria-label="Homepage actions">
+            <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_hero" }} className="v29-hero-cta" data-v29-magnetic>Book a detail <span>↗</span></TrackedLink>
+            <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "home_v29_hero" }} className="v54-hero-quote" data-v29-magnetic>Find my detail <span>↗</span></TrackedLink>
+          </div>
         </div>
         <div className="v29-sweep" aria-hidden="true" />
       </section>
