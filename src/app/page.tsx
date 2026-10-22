@@ -53,20 +53,16 @@ export default function Home() {
         <div className="v29-sweep" aria-hidden="true" />
       </section>
 
-      <section className="v30-ribbon v35-ribbon" data-v30-ribbon aria-label="Every Detail promise">
-        <div className="v30-ribbon-window" aria-hidden="true">
-          <div className="v30-ribbon-track v35-ribbon-track" data-v30-ribbon-track>
-            <svg className="v30-ribbon-svg v35-ribbon-svg" viewBox="0 0 4800 220" preserveAspectRatio="none">
-              <path className="v35-ribbon-fill" d="M -100 48 C 320 2 760 10 1200 62 S 2070 116 2400 58 S 3340 4 3820 58 S 4480 112 4900 50 L 4900 174 C 4440 214 4040 204 3590 162 S 2760 118 2390 166 S 1430 214 980 164 S 290 116 -100 168 Z" />
-              <path id="v35-ribbon-path" d="M -20 110 C 360 56 790 58 1210 108 S 2050 158 2410 108 S 3330 56 3810 108 S 4470 158 4820 108" fill="none" />
-              <text>
-                <textPath href="#v35-ribbon-path" startOffset="0%">
-                  WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • 100% ELECTRIC RIGS • WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • 100% ELECTRIC RIGS •
-                </textPath>
-              </text>
-            </svg>
-          </div>
-        </div>
+      <section className="v36-tape" data-v36-tape aria-label="Every Detail promise">
+        <svg className="v36-tape-svg" viewBox="0 0 2000 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <path className="v36-tape-shape" d="M-60,66 C330,6 670,18 1010,72 C1350,126 1620,126 2060,52 L2060,194 C1640,244 1325,230 995,182 C665,134 330,132 -60,190 Z" />
+          <path id="v36-tape-path" d="M-20,126 C330,67 670,76 1010,126 C1350,176 1650,176 2020,116" fill="none" />
+          <text className="v36-tape-text">
+            <textPath href="#v36-tape-path" data-v36-tape-text startOffset="0%">
+              WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • 100% ELECTRIC RIGS • WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY •
+            </textPath>
+          </text>
+        </svg>
       </section>
 
       <section className="v29-choice" id="pricing" data-v29-scene="choice" aria-labelledby="v29-choice-title">
@@ -100,47 +96,50 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v29-story v33-story" data-v29-story data-v29-scene="story" aria-labelledby="v29-story-title">
-        <div className="v29-story-field" aria-hidden="true" />
-        <div className="v29-shell v29-story-inner v33-story-inner">
-          <div className="v33-story-grid">
-            <div className="v33-story-copy">
-              <p className="v29-kicker">Since eighth grade</p>
-              <h2 id="v29-story-title" className="v33-story-title">
-                <span>BUILT BY STUDENTS.</span>
-                <span>RUN LIKE A COMPANY.</span>
-              </h2>
-              <div className="v29-story-foot v33-story-foot">
-                <p>What started with one student and a driveway became trained technicians, purpose-built electric rigs, real operating systems, and a standard every job has to meet.</p>
-                <Link href="/about-us">Meet the team ↗</Link>
-              </div>
-            </div>
-            <div className="v33-story-photos" aria-hidden="true">
-              <span className="v33-story-photo v33-story-photo-a" data-v29-fly="a"><Photo id="about-team" sizes="(max-width: 900px) 78vw, 24vw" fill /></span>
-              <span className="v33-story-photo v33-story-photo-b" data-v29-fly="b"><Photo id="hq-branded-van-side" sizes="(max-width: 900px) 72vw, 22vw" fill /></span>
-              <span className="v33-story-photo v33-story-photo-c" data-v29-fly="c"><Photo id="team-tablet" sizes="(max-width: 900px) 56vw, 17vw" fill /></span>
-            </div>
+      <section className="v36-story" data-v29-story data-v29-scene="story" aria-labelledby="v36-story-title">
+        <div className="v29-shell v36-story-inner">
+          <p className="v29-kicker">Since eighth grade</p>
+          <h2 id="v36-story-title" className="v36-story-title">
+            <span>BUILT BY</span>
+            <span>STUDENTS.</span>
+            <span>RUN LIKE</span>
+            <span>A COMPANY.</span>
+          </h2>
+
+          <div className="v36-story-collage" aria-hidden="true">
+            <span className="v36-story-photo v36-story-photo-a" data-v29-fly="a"><Photo id="about-team" sizes="(max-width: 900px) 82vw, 34vw" fill /></span>
+            <span className="v36-story-photo v36-story-photo-b" data-v29-fly="b"><Photo id="hq-branded-van-side" sizes="(max-width: 900px) 68vw, 25vw" fill /></span>
+            <span className="v36-story-photo v36-story-photo-c" data-v29-fly="c"><Photo id="team-tablet" sizes="(max-width: 900px) 48vw, 18vw" fill /></span>
+          </div>
+
+          <div className="v36-story-foot">
+            <p>What started with one student and a driveway became trained technicians, purpose-built electric rigs, real operating systems, and a standard every job has to meet.</p>
+            <Link href="/about-us">Meet the team ↗</Link>
           </div>
         </div>
       </section>
 
-      <section className="v35-proof" data-v29-scene="proof" aria-labelledby="v35-proof-title">
-        <div className="v29-shell v35-proof-inner">
-          <div className="v35-proof-number">
-            <strong><LiveReviewCount /></strong>
-            <span>five-star reviews</span>
-          </div>
-          <div className="v35-proof-copy">
-            <p className="v29-kicker v29-kicker-light">The proof</p>
-            <h2 id="v35-proof-title">PEOPLE NOTICE THE DIFFERENCE.</h2>
-            <div className="v35-review-reel">
-              {proofReviews.map((review) => (
-                <article key={review.author} className="v35-review-line" data-v29-review>
+      <section className="v36-proof" data-v36-proof data-v29-scene="proof" aria-labelledby="v36-proof-title">
+        <div className="v36-proof-sticky">
+          <div className="v29-shell v36-proof-stage">
+            <div className="v36-proof-count">
+              <p className="v29-kicker v29-kicker-light">Five-star reviews</p>
+              <strong><LiveReviewCount /></strong>
+              <span>people noticed.</span>
+            </div>
+
+            <div className="v36-proof-reviews" aria-live="polite">
+              <h2 id="v36-proof-title" className="sr-only">Customer reviews</h2>
+              {proofReviews.map((review, index) => (
+                <article key={review.author} className={`v36-proof-review v36-proof-review-${index + 1}`}>
+                  <span className="v36-proof-index">0{index + 1} / 03</span>
                   <p>“{review.quote}”</p>
                   <footer>{review.author} / Google review</footer>
                 </article>
               ))}
             </div>
+
+            <div className="v36-proof-progress" aria-hidden="true"><span /></div>
           </div>
         </div>
       </section>

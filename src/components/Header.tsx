@@ -12,7 +12,6 @@ import { supabaseConfigured } from "@/lib/supabase/config";
 export function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [homeMenuPreview, setHomeMenuPreview] = useState("/images/hero.jpg");
   const [moreOpen, setMoreOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [availabilityOpen, setAvailabilityOpen] = useState(false);
@@ -273,14 +272,23 @@ export function Header() {
 
       {/* Menu panel */}
       {menuOpen && (
-        <div
-          id="mobile-menu"
-          ref={panelRef}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Menu"
-          className={`mobile-menu-panel fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-paper text-ink ${onHome ? "mobile-menu-home v31-home-menu v33-home-menu" : "mobile-menu-inner lg:hidden"}`}
-        >
+        <>
+          {onHome && (
+            <button
+              type="button"
+              className="v36-menu-backdrop"
+              aria-label="Close menu"
+              onClick={() => { setMenuOpen(false); menuButtonRef.current?.focus(); }}
+            />
+          )}
+          <div
+            id="mobile-menu"
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu"
+            className={`mobile-menu-panel fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-paper text-ink ${onHome ? "mobile-menu-home v31-home-menu v33-home-menu v36-home-menu" : "mobile-menu-inner lg:hidden"}`}
+          >
           {onHome ? (
             <nav aria-label="Main menu" className="v33-menu-shell">
               <div className="v33-menu-main">
@@ -304,10 +312,19 @@ export function Header() {
                 ))}
               </div>
 
+              <div className="v36-menu-utility">
+                <Link href="/get-a-quote">Find My Detail</Link>
+                <Link href="/paint-correction">Paint Correction</Link>
+                <Link href="/ceramic">Ceramic</Link>
+                <Link href="/service-areas">Service Areas</Link>
+                <Link href="/blog">Shine On Blog</Link>
+                {supabaseConfigured && <a href="/account" data-no-transition="true">Account</a>}
+              </div>
+
               <div className="v33-menu-bottom">
                 <span className="v35-menu-note">Mobile detailing / Decatur + Atlanta</span>
                 <div className="v33-menu-actions">
-                  <Link href="/get-a-quote">Find my detail</Link>
+                  <a href={site.phone.sms} onClick={() => track("text_click", { location: "home_menu" })}>Text us</a>
                   <Link href="/book" onClick={() => track("book_click", { location: "home_menu" })}>Book a detail <span aria-hidden="true">↗</span></Link>
                 </div>
               </div>
@@ -342,7 +359,8 @@ export function Header() {
               </div>
             </nav>
           )}
-        </div>
+          </div>
+        </>
       )}
 
       {availabilityOpen && (

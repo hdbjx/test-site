@@ -103,18 +103,22 @@ export function HomeArtMotion() {
         story.style.setProperty("--story-gap", `${clamp((p - .05) / .65) * 1.0}em`);
       }
 
-      const proof = document.querySelector<HTMLElement>("[data-v29-scene='proof']");
+      const proof = document.querySelector<HTMLElement>("[data-v36-proof]");
       if (proof) {
         const r = proof.getBoundingClientRect();
-        const pp = clamp((vh * .82 - r.top) / (vh * .9));
+        document.documentElement.dataset.proofActive = String(r.top <= vh * .18 && r.bottom >= vh * .82);
+        const span = Math.max(1, r.height - vh);
+        const pp = clamp(-r.top / span);
+        const countOut = clamp((pp - .16) / .16);
+        const review1 = clamp(1 - Math.abs(pp - .36) / .17);
+        const review2 = clamp(1 - Math.abs(pp - .60) / .17);
+        const review3 = clamp(1 - Math.abs(pp - .84) / .17);
         proof.style.setProperty("--proof", String(pp));
-        proof.style.setProperty("--proof-ring-rot", `${pp * 50}deg`);
-        proof.style.setProperty("--proof-ring-scale", String(.78 + pp * .22));
-        proof.style.setProperty("--proof-quote-x", `${(1 - pp) * vw * .035}px`);
-        proof.style.setProperty("--proof-quote-y", `${(1 - pp) * 34}px`);
-        proof.style.setProperty("--proof-count-scale", String(.9 + pp * .1));
-        proof.style.setProperty("--proof-opacity", String(.32 + pp * .68));
-        proof.style.setProperty("--proof-fragment", String(pp));
+        proof.style.setProperty("--proof-count-out", String(countOut));
+        proof.style.setProperty("--proof-r1", String(review1));
+        proof.style.setProperty("--proof-r2", String(review2));
+        proof.style.setProperty("--proof-r3", String(review3));
+        proof.style.setProperty("--proof-progress", `${Math.max(4, pp * 100)}%`);
       }
 
       const beyond = document.querySelector<HTMLElement>("[data-v29-scene='beyond']");
@@ -213,12 +217,10 @@ export function HomeArtMotion() {
 
     updateScroll();
     const animateRibbon = (time: number) => {
-      const track = document.querySelector<HTMLElement>("[data-v30-ribbon-track]");
-      if (track && !reduced.matches) {
-        const half = Math.max(track.scrollWidth / 2, 1);
-        const travel = time * 0.055 + window.scrollY * 0.46;
-        const x = -(travel % half);
-        track.style.setProperty("--ribbon-x", `${x}px`);
+      const textPath = document.querySelector<SVGTextPathElement>("[data-v36-tape-text]");
+      if (textPath && !reduced.matches) {
+        const offset = -((time * .0038 + window.scrollY * .035) % 52);
+        textPath.setAttribute("startOffset", `${offset}%`);
       }
       ribbonRaf.current = requestAnimationFrame(animateRibbon);
     };
@@ -238,6 +240,7 @@ export function HomeArtMotion() {
       if (pointerRaf.current != null) cancelAnimationFrame(pointerRaf.current);
       if (ribbonRaf.current != null) cancelAnimationFrame(ribbonRaf.current);
       delete document.documentElement.dataset.homeScene;
+      delete document.documentElement.dataset.proofActive;
     };
   }, []);
 
