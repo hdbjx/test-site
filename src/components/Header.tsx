@@ -23,6 +23,7 @@ export function Header() {
       const parts = new Intl.DateTimeFormat("en-US", {
         timeZone: "America/New_York",
         weekday: "short",
+        month: "2-digit",
         hour: "2-digit",
         minute: "2-digit",
         hourCycle: "h23",
@@ -31,13 +32,15 @@ export function Header() {
       const value = (type: Intl.DateTimeFormatPartTypes) =>
         parts.find((part) => part.type === type)?.value ?? "";
       const weekday = value("weekday");
+      const month = Number(value("month"));
       const hour = Number(value("hour"));
       const minute = Number(value("minute"));
       const minutesAfterMidnight = hour * 60 + minute;
       const isWeekday = ["Mon", "Tue", "Wed", "Thu", "Fri"].includes(weekday);
+      const isSchoolYear = month >= 8 || month <= 5;
 
       setShowAvailabilityBanner(
-        isWeekday && minutesAfterMidnight >= 7 * 60 + 30 && minutesAfterMidnight < 16 * 60,
+        isSchoolYear && isWeekday && minutesAfterMidnight >= 7 * 60 + 30 && minutesAfterMidnight < 16 * 60,
       );
     };
 
@@ -115,6 +118,9 @@ export function Header() {
   const onHome = pathname === "/";
   const headerClass = "fixed inset-x-0 top-0 z-40 text-white site-shared-header";
 
+  // The booking funnel renders its own compact header; keep exits to a minimum there.
+  if (pathname === "/book") return null;
+
   return (
     <header className={headerClass}>
       <a
@@ -147,7 +153,7 @@ export function Header() {
         >
           <span className="home-school-availability-dot" aria-hidden="true" />
           <span className="home-school-availability-copy">
-            <strong>IN SCHOOL</strong>
+            <strong>SCHOOL HOURS</strong>
             <span className="home-school-availability-desktop">AFTER-SCHOOL APPOINTMENTS</span>
             <span className="home-school-availability-mobile">TEXT US</span>
           </span>

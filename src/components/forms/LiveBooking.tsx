@@ -1,43 +1,190 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import { PRICING, serviceList, services, vehicleIdFromSize, vehicles, type ServiceId, type VehicleId } from "@/data/services";
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { PRICING, services, startingPrice, vehicleIdFromSize, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, isAddonIncludedInService, purchasableAddonIds, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
+import { recommenderVehicles } from "@/data/recommenderVehicles";
+import { areas } from "@/data/areas";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { duration, usd } from "@/lib/format";
 import type { AccountInfo, GarageVehicle } from "@/lib/supabase/account";
-import { FormError, Success, TextField } from "./parts";
 import { AutofillSafeNotes } from "./AutofillSafeNotes";
-import { AddressFields } from "./AddressFields";
 import { LeadSourceField } from "./LeadSourceField";
+import { BookingTopBar } from "./BookingTopBar";
+
+/* ------------------------------------------------------------------ */
+/* Time helpers (all scheduling is Eastern)                            */
+/* ------------------------------------------------------------------ */
 
 const TZ = "America/New_York";
 const isValidDate = (d: Date) => Number.isFinite(d.getTime());
 const dayKey = (d: Date) => {
   if (!isValidDate(d)) return "";
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: TZ,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(d);
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(d);
   const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
   return `${get("year")}-${get("month")}-${get("day")}`;
 };
-const fmtTime = (d: Date) => isValidDate(d)
-  ? new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(d)
-  : "";
-const fmtDay = (d: Date, opts: Intl.DateTimeFormatOptions) => isValidDate(d)
-  ? new Intl.DateTimeFormat("en-US", { timeZone: TZ, ...opts }).format(d)
-  : "";
-const dateFromDayKey = (key: string | null) => {
-  if (!key || !/^\d{4}-\d{2}-\d{2}$/.test(key)) return null;
+const fmtTime = (d: Date) => (isValidDate(d) ? new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(d) : "");
+const fmtDay = (d: Date, opts: Intl.DateTimeFormatOptions) => (isValidDate(d) ? new Intl.DateTimeFormat("en-US", { timeZone: TZ, ...opts }).format(d) : "");
+const dateFromDayKey = (key: string) => {
   const date = new Date(`${key}T12:00:00Z`);
   return isValidDate(date) ? date : null;
 };
+const addDaysKey = (key: string, days: number) => {
+  const d = new Date(`${key}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+};
+const utcDayLabel = (key: string, opts: Intl.DateTimeFormatOptions) =>
+  new Intl.DateTimeFormat("en-US", { timeZone: "UTC", ...opts }).format(new Date(`${key}T12:00:00Z`));
+
+function useSchoolHours() {
+  const [inClass, setInClass] = useState(false);
+  useEffect(() => {
+    const check = () => {
+      const parts = new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short", month: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date());
+      const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? "";
+      const minutes = Number(value("hour")) * 60 + Number(value("minute"));
+      const month = Number(value("month"));
+      const isSchoolYear = month >= 8 || month <= 5;
+      setInClass(isSchoolYear && ["Mon", "Tue", "Wed", "Thu", "Fri"].includes(value("weekday")) && minutes >= 7 * 60 + 30 && minutes < 16 * 60);
+    };
+    check();
+    const timer = window.setInterval(check, 30_000);
+    return () => window.clearInterval(timer);
+  }, []);
+  return inClass;
+}
+
+/* ------------------------------------------------------------------ */
+/* Vehicle classification                                              */
+/* ------------------------------------------------------------------ */
+
+const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+const MAKES = Array.from(new Set(recommenderVehicles.map((v) => v.make))).sort((a, b) => a.localeCompare(b));
+const modelsFor = (make: string) => {
+  const m = norm(make);
+  return m ? recommenderVehicles.filter((v) => norm(v.make) === m).map((v) => v.model) : [];
+};
+function classify(make: string, model: string): VehicleId | undefined {
+  const m = norm(make);
+  const mo = norm(model);
+  if (!m || !mo) return undefined;
+  const candidates = recommenderVehicles.filter((v) => norm(v.make) === m);
+  const exact = candidates.find((v) => norm(v.model) === mo);
+  if (exact) return exact.vehicle;
+  // "Model Y Long Range" → "Model Y": longest catalog model that the typed model starts with.
+  const prefix = candidates
+    .filter((v) => mo.startsWith(norm(v.model)))
+    .sort((a, b) => norm(b.model).length - norm(a.model).length)[0];
+  if (prefix) return prefix.vehicle;
+  // "Tah" → "Tahoe" only when every match agrees on size.
+  if (mo.length >= 3) {
+    const partial = candidates.filter((v) => norm(v.model).startsWith(mo));
+    const sizes = new Set(partial.map((v) => v.vehicle));
+    if (sizes.size === 1) return partial[0].vehicle;
+  }
+  return undefined;
+}
+
+const SILHOUETTES: Record<VehicleId, { body: string; wheels: [number, number] }> = {
+  sedan: { body: "M6 35 L8 28 L28 24 L42 14 L78 13 L94 23 L112 26 L114 35 Z", wheels: [28, 92] },
+  smallSUV: { body: "M6 35 L7 23 L20 21 L32 11 L88 11 L100 21 L112 24 L114 35 Z", wheels: [28, 94] },
+  smallTruck: { body: "M5 35 L5 23 L56 23 L58 13 L82 13 L94 23 L112 25 L114 35 Z", wheels: [26, 94] },
+  largeSUV: { body: "M5 35 L5 17 L16 15 L26 7 L104 7 L110 17 L115 21 L115 35 Z", wheels: [26, 96] },
+  minivan: { body: "M5 35 L6 20 L24 8 L104 8 L112 16 L114 26 L114 35 Z", wheels: [26, 96] },
+  largeTruck: { body: "M3 35 L3 19 L54 19 L56 7 L86 7 L98 19 L115 21 L116 35 Z", wheels: [24, 98] },
+};
+
+function Silhouette({ id }: { id: VehicleId }) {
+  const s = SILHOUETTES[id];
+  return (
+    <svg className="bk-sil" viewBox="0 0 120 46" aria-hidden="true" focusable="false">
+      <path d={s.body} />
+      {s.wheels.map((x) => (
+        <g key={x}>
+          <circle cx={x} cy={36} r={8} />
+          <circle className="bk-sil-hub" cx={x} cy={36} r={3} />
+        </g>
+      ))}
+      <line x1="0" y1="44.5" x2="120" y2="44.5" />
+    </svg>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Copy                                                                */
+/* ------------------------------------------------------------------ */
+
+const PACKAGE_ORDER: ServiceId[] = ["factoryReset", "premium", "maintenance"];
+const PACKAGE_COPY: Record<ServiceId, { label: string; points: string[]; badge?: string }> = {
+  factoryReset: {
+    label: "The full restart",
+    points: ["Deep interior reset", "Carpet + upholstery extraction", "Paint decontamination + clay", "Our most complete service"],
+  },
+  premium: {
+    label: "Bring it back",
+    badge: "Most popular",
+    points: ["Interior + exterior deep clean", "Seats, mats, dash + doors", "Sealant paint protection", "Right for most first visits"],
+  },
+  maintenance: {
+    label: "Keep it clean",
+    points: ["Maintenance clean", "Interior + exterior essentials", "For cars already in decent shape"],
+  },
+};
+
+const ADDON_DESC: Record<AddonId, string> = {
+  Sealant: "Protective layer for the paint",
+  "Pet Hair Removal": "For heavier embedded pet hair",
+  "Clay Bar": "Removes bonded grit from the paint",
+  "Plastic Restoration": "Brings faded exterior trim back",
+  "Headlight Restoration": "Restore clarity to hazy lenses",
+  "Engine Bay": "Cleaned and dressed",
+  "Carpet Extraction": "Deep extraction for stained carpet",
+  "Seat Extraction": "Deep extraction for stained cloth seats",
+  "Odor Removal": "Targets lingering odors",
+};
+const FEATURED_ADDONS: AddonId[] = ["Pet Hair Removal", "Headlight Restoration", "Engine Bay"];
+
+/* ------------------------------------------------------------------ */
+/* Address                                                             */
+/* ------------------------------------------------------------------ */
+
+type AddressParts = { street: string; unit: string; city: string; state: string; zip: string };
+function parseAddress(value = ""): AddressParts {
+  const parts = value.split(",").map((p) => p.trim()).filter(Boolean);
+  const last = parts.at(-1) ?? "";
+  const stateZip = last.match(/^([A-Za-z]{2}|Georgia)\s+(\d{5}(?:-\d{4})?)$/i);
+  if (parts.length >= 3 && stateZip) {
+    return { street: parts[0] ?? "", unit: parts.length > 3 ? parts.slice(1, -2).join(", ") : "", city: parts.at(-2) ?? "", state: stateZip[1], zip: stateZip[2] };
+  }
+  return { street: value, unit: "", city: "", state: "GA", zip: "" };
+}
+const fullAddress = (a: AddressParts) =>
+  [a.street.trim(), a.unit.trim(), a.city.trim(), [a.state.trim(), a.zip.trim()].filter(Boolean).join(" ")].filter(Boolean).join(", ");
+function addressProblem(a: AddressParts): string | null {
+  if (!a.street.trim() || !/\d/.test(a.street)) return "Enter the street address, including the house number.";
+  if (!a.city.trim()) return "Enter the city.";
+  if (!/^(ga|georgia)$/i.test(a.state.trim())) return "We only service addresses in Georgia.";
+  if (!/^\d{5}(-\d{4})?$/.test(a.zip.trim())) return "Enter a 5-digit ZIP code.";
+  return null;
+}
+const DIRECT_AREA_NAMES = new Set(areas.filter((area) => area.name.toLowerCase() !== "atlanta").map((area) => area.name.toLowerCase()));
+const coverageMessage = (city: string) => {
+  const normalized = city.trim().toLowerCase();
+  if (DIRECT_AREA_NAMES.has(normalized)) return `Yep. We service ${city.trim()}.`;
+  if (normalized === "atlanta") return "Address saved. We’ll confirm coverage for this Atlanta location with your appointment.";
+  return "Address saved. We’ll confirm this location is within our mobile service area.";
+};
+
+/* ------------------------------------------------------------------ */
+/* Types                                                               */
+/* ------------------------------------------------------------------ */
+
 const vName = (v: GarageVehicle) => [v.year, v.make, v.model].filter(Boolean).join(" ") || "Vehicle";
+const sizeLabel = (id?: VehicleId) => (id ? vehicles.find((v) => v.id === id)?.label ?? "" : "");
 
 type Props = {
   account?: AccountInfo;
@@ -55,131 +202,155 @@ type BookingLine = {
   key: number;
   savedId: string | "size";
   size?: VehicleId;
-  service: ServiceId;
+  sizeManual: boolean;
+  service: ServiceId | null;
   addons: AddonId[];
   paint: PaintUpgradeId[];
+  make: string;
+  model: string;
+  year: string;
 };
 
 type Booked = {
-  service: string;
-  vehicle: string;
   vehicles: Array<{ vehicle: string; service: string; price: number }>;
   start: string;
   price: number;
   minutes: number;
   confirmationEmailSent: boolean;
+  address: string;
+  summary: string;
 };
+
+type StepId = "service" | "car" | "extras" | "schedule" | "info" | "review";
+const STEPS: StepId[] = ["service", "car", "extras", "schedule", "info", "review"];
+const STAGE_OF: Record<StepId, number> = { service: 0, car: 1, extras: 1, schedule: 2, info: 3, review: 3 };
+const STEP_LABEL: Record<StepId, string> = { service: "Detail", car: "Vehicle", extras: "Extras", schedule: "Place + time", info: "Your info", review: "Review" };
+
+const nationalPhone = (value: string) => {
+  let digits = value.replace(/\D/g, "");
+  if (digits.length === 11 && digits.startsWith("1")) digits = digits.slice(1);
+  return digits.slice(0, 10);
+};
+const prettyPhone = (digits: string) =>
+  digits.length === 10 ? `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}` : digits;
+
+/* ------------------------------------------------------------------ */
+/* Component                                                           */
+/* ------------------------------------------------------------------ */
 
 export function LiveBooking({ account, email, garage = [], initialVehicle, initialService, initialAddons = [], initialPaint = [], fromQuote = false, fromHome = false }: Props) {
   const signedIn = !!account;
   const primary = garage.find((g) => g.is_primary) ?? garage[0];
   const nextKey = useRef(2);
-  const initialSavedSize = primary ? vehicleIdFromSize(primary.vehicle_size) : undefined;
-  const [lines, setLines] = useState<BookingLine[]>([
-    {
+  const inClass = useSchoolHours();
+
+  const [lines, setLines] = useState<BookingLine[]>(() => {
+    const service = initialService ?? null;
+    return [{
       key: 1,
-      savedId: primary ? primary.id : "size",
-      size: initialVehicle ?? initialSavedSize,
-      service: initialService ?? "premium",
-      addons: initialAddons.filter((addon) => !isAddonIncludedInService(initialService ?? "premium", addon)),
+      savedId: primary && !initialVehicle ? primary.id : "size",
+      size: initialVehicle ?? undefined,
+      sizeManual: !!initialVehicle,
+      service,
+      addons: service ? initialAddons.filter((addon) => !isAddonIncludedInService(service, addon)) : initialAddons,
       paint: initialPaint,
-    },
-  ]);
+      make: "",
+      model: "",
+      year: "",
+    }];
+  });
+
+  const firstStep: StepId = (() => {
+    const vehicleKnown = !!initialVehicle || !!(primary && vehicleIdFromSize(primary.vehicle_size));
+    if (initialService && vehicleKnown && (fromQuote || fromHome)) return "schedule";
+    if (initialService && initialVehicle) return "extras";
+    if (initialService) return "car";
+    return "service";
+  })();
+  const [active, setActive] = useState<StepId>(firstStep);
+  const lastActive = useRef<StepId>(firstStep);
+  const [reached, setReached] = useState(STEPS.indexOf(firstStep));
+  const [stepError, setStepError] = useState<{ step: StepId; message: string } | null>(null);
+  const [gridOpen, setGridOpen] = useState<Record<number, boolean>>({});
+  const [moreOpen, setMoreOpen] = useState<Record<number, boolean>>({});
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const [address, setAddress] = useState<AddressParts>(() => parseAddress(account?.address ?? ""));
+  const [name, setName] = useState(account?.full_name ?? "");
+  const [phone, setPhone] = useState(nationalPhone(account?.phone ?? ""));
+  const [contactEmail, setContactEmail] = useState("");
+  const [badField, setBadField] = useState<string | null>(null);
+
   const [slots, setSlots] = useState<Date[] | null>(null);
   const [slotsError, setSlotsError] = useState<string | null>(null);
   const [day, setDay] = useState<string | null>(null);
-  const [calendarMonthKey, setCalendarMonthKey] = useState<string | null>(null);
   const [start, setStart] = useState<Date | null>(null);
+
   const [sending, setSending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [badField, setBadField] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [booked, setBooked] = useState<Booked | null>(null);
+
   const [giftCardCode, setGiftCardCode] = useState("");
   const [giftCardBusy, setGiftCardBusy] = useState(false);
   const [giftCardError, setGiftCardError] = useState<string | null>(null);
   const [giftCardPreview, setGiftCardPreview] = useState<{ code: string; codeLast4: string; balanceCents: number; recipientName: string | null } | null>(null);
-  const [infoStep, setInfoStep] = useState<1 | 2 | 3>(1);
+
   const formRef = useRef<HTMLFormElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
   const quoteSessionRef = useRef<string | null>(null);
 
   async function recordQuoteBehavior(stage: string, extra: Record<string, unknown> = {}) {
     const sessionId = quoteSessionRef.current;
     if (!sessionId) return;
-    await fetch("/api/quote-session", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({sessionId,stage,...extra}) }).catch(() => null);
+    await fetch("/api/quote-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sessionId, stage, ...extra }) }).catch(() => null);
   }
 
+  // Quote handoff: carry the contact info captured on the quote page.
   useEffect(() => {
     if (!fromQuote) return;
     quoteSessionRef.current = sessionStorage.getItem("ed_quote_session_id");
-    const raw = sessionStorage.getItem("ed_quote_contact");
-    if (raw && formRef.current) {
-      try { const c=JSON.parse(raw); for (const [k,v] of Object.entries(c)) { const el=formRef.current?.elements.namedItem(k) as HTMLInputElement | null; if (el && !el.value && typeof v === "string") el.value=v; } } catch {}
-    }
-    setInfoStep(3);
+    try {
+      const c = JSON.parse(sessionStorage.getItem("ed_quote_contact") ?? "{}") as Record<string, unknown>;
+      if (typeof c.name === "string") setName((v) => v || c.name as string);
+      if (typeof c.phone === "string") setPhone((v) => v || nationalPhone(c.phone as string));
+      if (typeof c.email === "string") setContactEmail((v) => v || (c.email as string));
+    } catch {}
     void recordQuoteBehavior("availability_viewed");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromQuote]);
 
-  useEffect(() => {
-    if ((!fromQuote && !fromHome) || slots === null) return;
-    const timer = window.setTimeout(() => {
-      document.getElementById("booking-time-picker")?.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-      });
-    }, 140);
-    return () => window.clearTimeout(timer);
-  }, [fromQuote, fromHome, slots]);
-
+  /* ----- derived booking object ----- */
   const resolved = lines.map((line) => {
     const saved = line.savedId === "size" ? undefined : garage.find((g) => g.id === line.savedId);
     const savedSize = saved ? vehicleIdFromSize(saved.vehicle_size) : undefined;
     const vehicle = saved && savedSize ? savedSize : line.size;
-    return { ...line, saved, savedSize, vehicle };
+    const typed = [line.year.trim(), line.make.trim(), line.model.trim()].filter(Boolean).join(" ");
+    const title = saved ? vName(saved) : typed || sizeLabel(vehicle);
+    const base = vehicle && line.service ? PRICING[vehicle][line.service].price : null;
+    const addonTotal = line.addons.reduce((sum, id) => sum + (ADDON_PRICES[id] ?? 0), 0);
+    const paintTotal = vehicle ? line.paint.reduce((sum, id) => sum + PAINT_UPGRADES[id].prices[vehicle], 0) : 0;
+    return { ...line, saved, savedSize, vehicle, typed, title, base, extras: addonTotal + paintTotal };
   });
+  const allServicesChosen = resolved.every((line) => !!line.service);
   const allVehiclesReady = resolved.every((line) => !!line.vehicle);
-  const totalPrice = allVehiclesReady
-    ? resolved.reduce((sum, line) => {
-        const base = PRICING[line.vehicle!][line.service].price;
-        const addons = line.addons.reduce((addonSum, id) => addonSum + (ADDON_PRICES[id] ?? 0), 0);
-        const paint = line.paint.reduce((paintSum, id) => paintSum + PAINT_UPGRADES[id].prices[line.vehicle!], 0);
-        return sum + base + addons + paint;
-      }, 0)
-    : null;
+  const priced = allServicesChosen && allVehiclesReady;
+  const detailTotal = priced ? resolved.reduce((sum, l) => sum + (l.base ?? 0), 0) : null;
+  const extrasTotal = resolved.reduce((sum, l) => sum + l.extras, 0);
+  const total = detailTotal !== null ? detailTotal + extrasTotal : null;
+  const fromTotal = resolved[0].service ? startingPrice(resolved[0].service) : null;
   const hasVariableAddons = resolved.some((line) => line.addons.some((id) => ADDON_PRICES[id] === null));
-  const displayTotal = totalPrice;
-  const appointmentMinutes = allVehiclesReady
-    ? Math.max(...resolved.map((line) => PRICING[line.vehicle!][line.service].minutes))
-    : null;
-  const availabilityKey = resolved.map((line) => `${line.vehicle ?? "?"}:${line.service}`).join("|");
+  const appointmentMinutes = priced ? Math.max(...resolved.map((l) => PRICING[l.vehicle!][l.service!].minutes)) : null;
+  const availabilityKey = resolved.map((l) => `${l.vehicle ?? "?"}:${l.service ?? "?"}`).join("|");
+  const addressIssue = addressProblem(address);
+  const addressDone = !addressIssue;
 
   function updateLine(key: number, patch: Partial<BookingLine>) {
     setLines((current) => current.map((line) => (line.key === key ? { ...line, ...patch } : line)));
   }
 
-  function addVehicle() {
-    if (lines.length >= 2) return;
-    const used = new Set(lines.map((line) => line.savedId).filter((id) => id !== "size"));
-    const nextSaved = garage.find((vehicle) => !used.has(vehicle.id));
-    setLines((current) => [
-      ...current,
-      {
-        key: nextKey.current++,
-        savedId: nextSaved?.id ?? "size",
-        size: nextSaved ? vehicleIdFromSize(nextSaved.vehicle_size) : undefined,
-        service: "premium",
-        addons: [],
-        paint: [],
-      },
-    ]);
-    track("booking_add_vehicle", { count: lines.length + 1 });
-  }
-
-  function removeVehicle(key: number) {
-    setLines((current) => current.filter((line) => line.key !== key));
-  }
-
+  /* ----- availability ----- */
   useEffect(() => {
-    if (!allVehiclesReady) {
+    if (!priced) {
       setSlots(null);
       setStart(null);
       return;
@@ -196,101 +367,155 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       .then(({ ok, j }) => {
         if (cancelled) return;
         if (!ok) throw new Error(j.error);
-        const rawSlots: unknown[] = Array.isArray(j.slots) ? j.slots : [];
-        const list: Date[] = rawSlots
-          .filter((s): s is string => typeof s === "string")
-          .map((s: string) => new Date(s))
-          .filter(isValidDate);
+        const raw: unknown[] = Array.isArray(j.slots) ? j.slots : [];
+        const list = raw.filter((s): s is string => typeof s === "string").map((s) => new Date(s)).filter(isValidDate);
         setSlots(list);
-        setDay((currentDay) => {
-          if (currentDay && list.some((slot) => dayKey(slot) === currentDay)) return currentDay;
-          return list[0] ? dayKey(list[0]) : null;
-        });
+        setDay((current) => (current && list.some((slot) => dayKey(slot) === current) ? current : list[0] ? dayKey(list[0]) : null));
       })
-      .catch(() => !cancelled && setSlotsError("We couldn't load open times. Refresh, or call us to book."));
+      .catch(() => !cancelled && setSlotsError("We couldn't load open times. Refresh, or text us to book."));
     return () => {
       cancelled = true;
     };
-    // availabilityKey intentionally captures every vehicle/service choice.
+    // availabilityKey captures every vehicle/service choice.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [availabilityKey, allVehiclesReady]);
+  }, [availabilityKey, priced]);
 
-  const days = useMemo(() => {
+  const slotsByDay = useMemo(() => {
     const map = new Map<string, Date[]>();
     (slots ?? []).forEach((s) => {
-      if (!isValidDate(s)) return;
       const k = dayKey(s);
-      if (!k) return;
-      map.set(k, [...(map.get(k) ?? []), s]);
+      if (k) map.set(k, [...(map.get(k) ?? []), s]);
     });
-    return [...map.entries()];
+    return map;
   }, [slots]);
-  const daySlots = days.find(([k]) => k === day)?.[1] ?? [];
-  const availableDayMap = useMemo(() => new Map(days), [days]);
   const todayKey = dayKey(new Date());
-  const bookingEndKey = dayKey(new Date(Date.now() + 31 * 86_400_000));
-  const calendarMonths = useMemo(() => {
-    const rangeKeys = [dayKey(new Date()), dayKey(new Date(Date.now() + 31 * 86_400_000))];
-    const monthKeys: string[] = Array.from(new Set(rangeKeys.filter(Boolean).map((key) => key.slice(0, 7))));
-    return monthKeys.map((monthKey) => {
-      const [year, month] = monthKey.split("-").map(Number);
-      const firstWeekday = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
-      const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
-      const label = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
-        .format(new Date(Date.UTC(year, month - 1, 15, 12)));
-      return { monthKey, year, month, firstWeekday, daysInMonth, label };
-    });
-  }, []);
-  const selectedDayDate = day ? (daySlots[0] ?? dateFromDayKey(day)) : null;
-  const activeCalendarIndex = Math.max(0, calendarMonths.findIndex((cal) => cal.monthKey === calendarMonthKey));
-  const activeCalendarMonth = calendarMonths[activeCalendarIndex] ?? calendarMonths[0] ?? null;
+  const railDays = useMemo(() => (todayKey ? Array.from({ length: 32 }, (_, i) => addDaysKey(todayKey, i)) : []), [todayKey]);
+  const daySlots = day ? slotsByDay.get(day) ?? [] : [];
 
   useEffect(() => {
-    if (day) setCalendarMonthKey(day.slice(0, 7));
-    else if (!calendarMonthKey && todayKey) setCalendarMonthKey(todayKey.slice(0, 7));
-  }, [day, calendarMonthKey, todayKey]);
+    if (!day || !railRef.current) return;
+    const rail = railRef.current;
+    const chip = rail.querySelector<HTMLElement>(`[data-day="${day}"]`);
+    // Horizontal only, so the page itself never jumps.
+    if (chip) rail.scrollTo({ left: chip.offsetLeft - rail.clientWidth / 2 + chip.clientWidth / 2, behavior: "smooth" });
+  }, [day, active]);
 
-  function infoValue(name: string) {
-    if (!formRef.current) return "";
-    return String(new FormData(formRef.current).get(name) ?? "").trim();
+  /* ----- step navigation ----- */
+  function scrollToStep(step: StepId) {
+    window.setTimeout(() => {
+      document.getElementById(`bk-step-${step}`)?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
+    }, 60);
   }
 
-  function nationalPhone(value: string) {
-    let digits = value.replace(/\D/g, "");
-    if (digits.length === 11 && digits.startsWith("1")) digits = digits.slice(1);
-    return digits.slice(0, 10);
+  // Deep links (quote, homepage) land mid-funnel: bring that step into view once.
+  useEffect(() => {
+    if (STEPS.indexOf(firstStep) > 0) scrollToStep(firstStep);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (lastActive.current === active) return;
+    lastActive.current = active;
+    scrollToStep(active);
+  }, [active]);
+
+  function goTo(step: StepId) {
+    setStepError(null);
+    setDrawerOpen(false);
+    setActive(step);
+    setReached((r) => Math.max(r, STEPS.indexOf(step)));
   }
 
-  function goToContactInfo() {
-    const name = infoValue("name");
-    if (!name) {
-      setBadField("name");
-      setError("Enter your name to continue.");
+  function leadSourceValue() {
+    return formRef.current ? String(new FormData(formRef.current).get("leadSource") ?? "").trim() : "";
+  }
+
+  function validate(step: StepId): { message: string; field?: string } | null {
+    switch (step) {
+      case "service":
+        return allServicesChosen ? null : { message: "Choose a detail to continue." };
+      case "car":
+        return allVehiclesReady ? null : { message: "Tell us which vehicle so we can price it.", field: "vehicle" };
+      case "extras":
+        return null;
+      case "schedule":
+        if (addressIssue) return { message: addressIssue, field: "address" };
+        if (!start) return { message: "Pick a time to continue." };
+        return null;
+      case "info":
+        if (!name.trim()) return { message: "Enter your name.", field: "name" };
+        if (phone.length !== 10) return { message: "Enter a 10-digit phone number.", field: "phone" };
+        if (!signedIn && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail.trim())) return { message: "Enter a valid email for your confirmation.", field: "email" };
+        if (!leadSourceValue()) return { message: "Tell us how you heard about Every Detail.", field: "leadSource" };
+        return null;
+      case "review":
+        return null;
+    }
+  }
+
+  function advance() {
+    const problem = validate(active);
+    if (problem) {
+      setStepError({ step: active, message: problem.message });
+      setBadField(problem.field ?? null);
+      if (active === "car") {
+        setGridOpen((open) => {
+          const next = { ...open };
+          resolved.forEach((l) => { if (!l.vehicle) next[l.key] = true; });
+          return next;
+        });
+      }
+      setDrawerOpen(false);
+      scrollToStep(active);
       return;
     }
     setBadField(null);
-    setError(null);
-    setInfoStep(2);
-  }
-
-  function goToAddressInfo() {
-    const phone = nationalPhone(infoValue("phone"));
-    const contactEmail = infoValue("email");
-    if (phone.length !== 10) {
-      setBadField("phone");
-      setError("Enter a 10-digit phone number to continue.");
+    if (active === "review") {
+      formRef.current?.requestSubmit();
       return;
     }
-    if (!signedIn && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) {
-      setBadField("email");
-      setError("Enter a valid email so we can send your confirmation.");
-      return;
-    }
-    setBadField(null);
-    setError(null);
-    setInfoStep(3);
+    goTo(STEPS[STEPS.indexOf(active) + 1]);
   }
 
+  /* ----- vehicle edits ----- */
+  function setSize(line: (typeof resolved)[number], index: number, size: VehicleId, manual: boolean) {
+    updateLine(line.key, { size, sizeManual: manual });
+    track("vehicle_select", { vehicle: size, location: "book", vehicleNumber: index + 1 });
+  }
+
+  function typeVehicle(line: (typeof resolved)[number], index: number, patch: Partial<Pick<BookingLine, "make" | "model" | "year">>) {
+    const next = { ...line, ...patch };
+    const guess = classify(next.make, next.model);
+    if (line.sizeManual) {
+      updateLine(line.key, patch);
+    } else if (guess) {
+      updateLine(line.key, { ...patch, size: guess });
+      if (guess !== line.size) track("vehicle_select", { vehicle: guess, location: "book_classifier", vehicleNumber: index + 1 });
+    } else {
+      updateLine(line.key, { ...patch, size: undefined });
+    }
+  }
+
+  function chooseService(line: (typeof resolved)[number], index: number, service: ServiceId) {
+    updateLine(line.key, { service, addons: line.addons.filter((addon) => !isAddonIncludedInService(service, addon)) });
+    track("service_select", { service, vehicle: line.vehicle, location: "book", vehicleNumber: index + 1 });
+  }
+
+  function addVehicle() {
+    if (lines.length >= 2) return;
+    const used = new Set(lines.map((line) => line.savedId).filter((id) => id !== "size"));
+    const nextSaved = garage.find((vehicle) => !used.has(vehicle.id));
+    setLines((current) => [
+      ...current,
+      { key: nextKey.current++, savedId: nextSaved?.id ?? "size", size: undefined, sizeManual: false, service: "premium", addons: [], paint: [], make: "", model: "", year: "" },
+    ]);
+    track("booking_add_vehicle", { count: lines.length + 1 });
+  }
+
+  /* ----- gift card ----- */
   async function validateGiftCard() {
     const code = giftCardCode.trim();
     if (!code) {
@@ -301,19 +526,10 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     setGiftCardBusy(true);
     setGiftCardError(null);
     try {
-      const response = await fetch("/api/gift-cards/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
-      });
+      const response = await fetch("/api/gift-cards/validate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }) });
       const json = await response.json().catch(() => ({}));
       if (!response.ok || !json.ok) throw new Error(json.error || "We couldn't check that gift card.");
-      setGiftCardPreview({
-        code: String(json.code),
-        codeLast4: String(json.codeLast4),
-        balanceCents: Number(json.balanceCents),
-        recipientName: json.recipientName ? String(json.recipientName) : null,
-      });
+      setGiftCardPreview({ code: String(json.code), codeLast4: String(json.codeLast4), balanceCents: Number(json.balanceCents), recipientName: json.recipientName ? String(json.recipientName) : null });
       setGiftCardCode(String(json.code));
     } catch (giftError) {
       setGiftCardPreview(null);
@@ -323,52 +539,45 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     }
   }
 
-  function clearGiftCard() {
-    setGiftCardCode("");
-    setGiftCardPreview(null);
-    setGiftCardError(null);
-  }
-
+  /* ----- submit ----- */
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!allVehiclesReady || !start) {
-      setError(!allVehiclesReady ? "Choose every vehicle." : "Pick a time.");
-      return;
+    for (const step of STEPS) {
+      const problem = validate(step);
+      if (problem) {
+        setBadField(problem.field ?? null);
+        goTo(step);
+        setStepError({ step, message: problem.message });
+        return;
+      }
     }
+    if (!start) return;
     const fd = new FormData(e.currentTarget);
     const get = (k: string) => String(fd.get(k) ?? "").trim();
-    const leadSource = get("leadSource");
-    if (!leadSource) {
-      setBadField("leadSource");
-      setInfoStep(3);
-      setError("Tell us how you heard about Every Detail.");
-      return;
-    }
+
+    // The API takes size + service per vehicle; the make/model the customer typed rides along in the notes.
+    const typedVehicles = resolved
+      .map((line, index) => (!line.saved && line.typed ? `Vehicle ${index + 1}: ${line.typed}` : ""))
+      .filter(Boolean);
+    const notes = [typedVehicles.join("\n"), get("service_notes")].filter(Boolean).join("\n\n");
+
     setSending(true);
-    setError(null);
+    setSubmitError(null);
     setBadField(null);
+    void recordQuoteBehavior("booking_started", { selectedSlot: start.toISOString() });
 
-    const bookingVehicles = resolved.map((line) => ({
-      service: line.service,
-      vehicle: line.vehicle,
-      vehicleId: line.saved?.id ?? null,
-      addons: line.addons,
-      paint: line.paint,
-    }));
-
-    void recordQuoteBehavior("booking_started", {selectedSlot:start.toISOString()});
     const res = await fetch("/api/book", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        vehicles: bookingVehicles,
+        vehicles: resolved.map((line) => ({ service: line.service, vehicle: line.vehicle, vehicleId: line.saved?.id ?? null, addons: line.addons, paint: line.paint })),
         start: start.toISOString(),
-        name: get("name"),
-        phone: nationalPhone(get("phone")),
-        email: get("email"),
-        address: get("address"),
-        notes: get("service_notes"),
-        leadSource,
+        name: name.trim(),
+        phone,
+        email: signedIn ? email ?? "" : contactEmail.trim(),
+        address: fullAddress(address),
+        notes,
+        leadSource: get("leadSource"),
         leadSourceDetail: get("leadSourceDetail"),
         giftCardCode: giftCardPreview?.code ?? null,
       }),
@@ -377,539 +586,717 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     setSending(false);
 
     const confirmed =
-      res?.ok === true &&
-      json.ok === true &&
-      typeof json.jobId === "string" &&
-      json.jobId.length > 0 &&
-      typeof json.start === "string" &&
-      !Number.isNaN(Date.parse(json.start)) &&
-      Number.isFinite(Number(json.price)) &&
-      Number.isFinite(Number(json.minutes)) &&
-      Array.isArray(json.vehicles) &&
-      json.vehicles.length > 0;
+      res?.ok === true && json.ok === true && typeof json.jobId === "string" && json.jobId.length > 0 &&
+      typeof json.start === "string" && !Number.isNaN(Date.parse(json.start)) &&
+      Number.isFinite(Number(json.price)) && Number.isFinite(Number(json.minutes)) &&
+      Array.isArray(json.vehicles) && json.vehicles.length > 0;
 
     if (confirmed) {
-      void recordQuoteBehavior("booking_completed", {selectedSlot:start.toISOString()});
+      void recordQuoteBehavior("booking_completed", { selectedSlot: start.toISOString() });
       track("booking_submit", { vehicleCount: lines.length, services: lines.map((line) => line.service).join(",") });
       setBooked({
-        service: String(json.service ?? ""),
-        vehicle: String(json.vehicle ?? ""),
         vehicles: json.vehicles,
         start: json.start,
         price: Number(json.price),
         minutes: Number(json.minutes),
         confirmationEmailSent: json.confirmationEmailSent === true,
+        address: fullAddress(address),
+        summary: resolved.map((l) => `${l.service ? services[l.service].name : ""} · ${l.title}`).join(" + "),
       });
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     if (res?.ok && json.ok) {
-      setError("We couldn't verify that your booking was created. Nothing has been confirmed. Please try again or call/text us.");
+      setSubmitError("We couldn't verify that your booking was created. Nothing has been confirmed. Please try again or text us.");
       return;
     }
+    const message = json.error ?? "No connection. Try again, or text us.";
     if (json.code === "slot_taken") {
       setSlots((s) => (s ?? []).filter((x) => x.getTime() !== start.getTime()));
       setStart(null);
+      goTo("schedule");
+      setStepError({ step: "schedule", message });
+      return;
     }
-    const field = json.field ?? null;
+    const field: string | null = json.field ?? null;
     setBadField(field);
-    if (field === "name") setInfoStep(1);
-    if (field === "phone" || field === "email") setInfoStep(2);
-    if (field === "address" || field === "leadSource") setInfoStep(3);
-    setError(json.error ?? "No connection. Try again, or call us.");
+    const back: StepId | null =
+      field === "name" || field === "phone" || field === "email" || field === "leadSource" ? "info"
+      : field === "address" ? "schedule"
+      : field === "vehicle" ? "car"
+      : null;
+    if (back) {
+      goTo(back);
+      setStepError({ step: back, message });
+    } else {
+      setSubmitError(message);
+    }
   }
+
+  /* ------------------------------------------------------------------ */
+  /* Confirmation                                                        */
+  /* ------------------------------------------------------------------ */
 
   if (booked) {
     const d = new Date(booked.start);
+    const end = new Date(d.getTime() + booked.minutes * 60_000);
+    const stamp = (x: Date) => x.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+    const esc = (s: string) => s.replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n");
+    const ics = [
+      "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Every Detail//Booking//EN", "BEGIN:VEVENT",
+      `UID:${stamp(d)}-${Math.abs(booked.address.length * 7919)}@everydetail.co`,
+      `DTSTAMP:${stamp(new Date())}`, `DTSTART:${stamp(d)}`, `DTEND:${stamp(end)}`,
+      `SUMMARY:${esc(`Every Detail · ${booked.vehicles.map((v) => v.service).join(" + ")}`)}`,
+      `LOCATION:${esc(booked.address)}`,
+      `DESCRIPTION:${esc(`${booked.summary}\nQuestions? Text ${site.phone.display}`)}`,
+      "END:VEVENT", "END:VCALENDAR",
+    ].join("\r\n");
+
     return (
-      <Success title="You're booked">
-        <p className="font-display text-lg font-semibold text-ink">
-          {fmtDay(d, { weekday: "long", month: "long", day: "numeric" })} at {fmtTime(d)}
-        </p>
-        <div className="space-y-1">
-          {booked.vehicles.map((line, index) => (
-            <p key={`${line.vehicle}-${index}`}>
-              {line.vehicle} · {line.service} · {usd(line.price)}
-            </p>
-          ))}
+      <div className="bk-shell">
+        <BookingTopBar />
+        <div id="booking-main" className="bk-done" role="status">
+          <p className="bk-kicker"><span className="bk-dot" aria-hidden="true" /> Booking confirmed</p>
+          <h1 className="bk-done-title">You&rsquo;re on<br />the books.</h1>
+          <p className="bk-done-when">{fmtDay(d, { weekday: "long", month: "short", day: "numeric" })} · {fmtTime(d)}</p>
+          <div className="bk-done-lines">
+            {booked.vehicles.map((line, index) => (
+              <p key={`${line.vehicle}-${index}`}>{line.service} · {line.vehicle}<span>{usd(line.price)}</span></p>
+            ))}
+            <p className="bk-done-total">Total<span>{usd(booked.price)}</span></p>
+            <small>About {duration(booked.minutes)} on site · {booked.address}</small>
+          </div>
+          <div className="bk-done-actions">
+            <a className="bk-btn bk-btn-ink" href={`data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`} download="every-detail-appointment.ics">Add to calendar</a>
+            <a className="bk-btn bk-btn-line" href={site.phone.sms}>Text us ↗</a>
+          </div>
+          <p className="bk-done-note">
+            {booked.confirmationEmailSent
+              ? `A confirmation email is on its way to ${signedIn ? email || "your inbox" : contactEmail || "your inbox"}.`
+              : "Your appointment is confirmed. We couldn't verify email delivery, so save these details or text us for a copy."}
+          </p>
+
+          <div className="bk-done-prep">
+            <h2>What to do before we arrive</h2>
+            <ul>
+              <li>Remove personal valuables</li>
+              <li>Make sure we can access the vehicle</li>
+              <li>That&rsquo;s basically it</li>
+            </ul>
+            <p className="bk-done-line">We&rsquo;ll handle the dirty part.</p>
+          </div>
+
+          <p className="bk-done-small">
+            Need to change it? {signedIn ? <>Manage it from <Link href="/account">your account</Link>, or text</> : "Text or call"}{" "}
+            <a href={site.phone.sms}>{site.phone.display}</a>.
+            {!signedIn && <> <Link href="/account/sign-in?mode=signup">Create an account</Link> to save your vehicles and book faster next time.</>}
+          </p>
         </div>
-        <p>Total {usd(booked.price)} · about {duration(booked.minutes)}</p>
-        <p>
-          {booked.confirmationEmailSent
-            ? `A confirmation email was sent to ${email || "the email you provided"}.`
-            : "Your appointment is confirmed. We couldn't verify email delivery, so save these details or contact us if you need a copy."}
-        </p>
-        <p>Need to change it? {signedIn ? <>Manage it from <Link className="link" href="/account">your account</Link>, or call</> : "Call or text"} <a className="link" href={site.phone.href}>{site.phone.display}</a>.</p>
-        {!signedIn && (
-          <p><Link href="/account/sign-in?mode=signup" className="link">Create an account</Link> to save your vehicles and book faster next time.</p>
-        )}
-      </Success>
+      </div>
     );
   }
 
-  return (
-    <form ref={formRef} noValidate onSubmit={onSubmit} className="booking-flow relative grid gap-10 lg:grid-cols-12">
-      <div className="booking-stage-rail lg:col-span-12" aria-label="Booking steps">
-        <span className="is-active"><b>1</b> Vehicle</span>
-        <span className={allVehiclesReady ? "is-active" : ""}><b>2</b> Detail</span>
-        <span className={start ? "is-active" : ""}><b>3</b> Time</span>
-        <span className={infoStep > 1 || fromQuote ? "is-active" : ""}><b>4</b> Your info</span>
+  /* ------------------------------------------------------------------ */
+  /* Render helpers (plain functions, not components, so inputs keep focus) */
+  /* ------------------------------------------------------------------ */
+
+  const activeIndex = STEPS.indexOf(active);
+
+  function doneSummary(step: StepId): string {
+    switch (step) {
+      case "service": return resolved.map((l) => (l.service ? services[l.service].name : "Choose a detail")).join(" + ");
+      case "car": return resolved.map((l) => l.title || "Choose a vehicle").join(" + ");
+      case "extras": {
+        const names = resolved.flatMap((l) => [...l.addons.map((id) => ADDON_LABELS[id]), ...l.paint.map((id) => PAINT_UPGRADES[id].name)]);
+        return names.length ? names.join(", ") : "No extras";
+      }
+      case "schedule": return [start ? `${fmtDay(start, { weekday: "short", month: "short", day: "numeric" })} · ${fmtTime(start)}` : "Pick a time", address.street].filter(Boolean).join(" · ");
+      case "info": return [name, prettyPhone(phone)].filter(Boolean).join(" · ") || "Your info";
+      case "review": return "";
+    }
+  }
+
+  function renderStep(step: StepId, number: string, title: ReactNode, content: ReactNode) {
+    const index = STEPS.indexOf(step);
+    if (index > reached) return null;
+    const isActive = step === active;
+    return (
+      <div id={`bk-step-${step}`} className={`bk-step ${isActive ? "is-active" : "is-done"}`}>
+        {!isActive && (
+          <button type="button" className="bk-step-row" onClick={() => goTo(step)}>
+            <b>{number}</b>
+            <span className="bk-step-row-label">{STEP_LABEL[step]}</span>
+            <span className="bk-step-row-value">{doneSummary(step)}</span>
+            <span className="bk-step-row-edit">Change</span>
+          </button>
+        )}
+        <div className="bk-step-body" hidden={!isActive}>
+          <p className="bk-step-num">{number} / {STEP_LABEL[step]}</p>
+          <h2 className="bk-q">{title}</h2>
+          {content}
+          {stepError?.step === step && <p className="bk-error" role="alert">{stepError.message}</p>}
+        </div>
       </div>
-      <div className="min-w-0 space-y-12 lg:col-span-8">
-        {!signedIn && (
-          <p className="booking-returning text-ink/80">
-            Booked with us before? <Link href="/account/sign-in?next=/book" className="link">Sign in</Link> to use your saved vehicles.
-          </p>
+    );
+  }
+
+  function continueLabel(step: StepId) {
+    if (sending) return "Booking…";
+    switch (step) {
+      case "service": return allServicesChosen ? "Continue →" : "Choose a detail";
+      case "extras": return resolved.some((l) => l.addons.length || l.paint.length) ? "Continue →" : "No thanks, continue →";
+      case "info": return "Review booking →";
+      case "review": return "Confirm booking";
+      default: return "Continue →";
+    }
+  }
+
+  function renderSizeGrid(line: (typeof resolved)[number], index: number) {
+    return (
+      <div className="bk-sizes" role="radiogroup" aria-label={`Vehicle ${index + 1} type`}>
+        {vehicles.map((v) => (
+          <button
+            key={v.id}
+            type="button"
+            role="radio"
+            aria-checked={line.size === v.id}
+            className={`bk-size ${line.size === v.id ? "is-on" : ""}`}
+            onClick={() => {
+              setSize(line, index, v.id, true);
+              setGridOpen((o) => ({ ...o, [line.key]: false }));
+            }}
+          >
+            <Silhouette id={v.id} />
+            <strong>{v.label}</strong>
+            <span>{v.hint}</span>
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  function renderVehicleEditor(line: (typeof resolved)[number], index: number) {
+    const usedSaved = new Set(lines.filter((o) => o.key !== line.key).map((o) => o.savedId));
+    const typing = line.savedId === "size" || (line.saved && !line.savedSize);
+    const guess = classify(line.make, line.model);
+    const typedBoth = !!line.make.trim() && !!line.model.trim();
+    const showGrid = !!gridOpen[line.key] || (typing && typedBoth && !guess && !line.size);
+    return (
+      <div key={line.key} className="bk-vehicle">
+        {lines.length > 1 && (
+          <div className="bk-vehicle-head">
+            <p>Vehicle {index + 1}</p>
+            {index > 0 && <button type="button" onClick={() => setLines((c) => c.filter((l) => l.key !== line.key))}>Remove</button>}
+          </div>
         )}
 
-        <section className={`booking-flow-section ${fromQuote ? "hidden" : ""}`} aria-hidden={fromQuote}>
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 className="t-h3">1. Your vehicles</h2>
-              <p className="mt-1 text-sm text-muted">Book one or two vehicles in the same appointment.</p>
-            </div>
-            {lines.length < 2 && (
-              <button type="button" onClick={addVehicle} className="btn btn-secondary">+ Add another vehicle</button>
-            )}
+        {index > 0 && (
+          <div className="bk-chips" role="radiogroup" aria-label={`Vehicle ${index + 1} detail`}>
+            {PACKAGE_ORDER.map((id) => (
+              <button key={id} type="button" role="radio" aria-checked={line.service === id} className={`bk-chip ${line.service === id ? "is-on" : ""}`} onClick={() => chooseService(line, index, id)}>
+                {services[id].name}
+              </button>
+            ))}
           </div>
+        )}
 
-          <div className="mt-5 space-y-8">
-            {resolved.map((line, index) => {
-              const usedSavedIds = new Set(lines.filter((other) => other.key !== line.key).map((other) => other.savedId));
+        {garage.length > 0 && (
+          <div className="bk-saved">
+            {garage.map((g) => {
+              const taken = usedSaved.has(g.id);
+              const size = vehicleIdFromSize(g.vehicle_size);
               return (
-                <fieldset key={line.key} className="panel booking-vehicle-card p-5 sm:p-6">
-                  <div className="flex items-center justify-between gap-4">
-                    <legend className="font-display text-lg font-semibold">Vehicle {index + 1}</legend>
-                    {lines.length > 1 && (
-                      <button type="button" onClick={() => removeVehicle(line.key)} className="text-sm font-semibold text-red underline underline-offset-4">Remove</button>
-                    )}
-                  </div>
-
-                  {garage.length > 0 && (
-                    <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                      {garage.map((g) => {
-                        const unavailable = usedSavedIds.has(g.id);
-                        return (
-                          <label key={g.id} className={`choice ${unavailable ? "cursor-not-allowed opacity-45" : ""}`}>
-                            <input
-                              type="radio"
-                              name={`savedVehicle-${line.key}`}
-                              checked={line.savedId === g.id}
-                              disabled={unavailable}
-                              onChange={() => updateLine(line.key, { savedId: g.id, size: vehicleIdFromSize(g.vehicle_size) })}
-                              className="sr-only"
-                            />
-                            <span className="font-display font-semibold">{vName(g)}</span>
-                            <span className="text-sm text-muted">
-                              {[g.color, vehicleIdFromSize(g.vehicle_size) ? vehicles.find((v) => v.id === vehicleIdFromSize(g.vehicle_size))?.label : "Size not set"].filter(Boolean).join(" · ")}
-                            </span>
-                          </label>
-                        );
-                      })}
-                      <label className="choice">
-                        <input type="radio" name={`savedVehicle-${line.key}`} checked={line.savedId === "size"} onChange={() => updateLine(line.key, { savedId: "size" })} className="sr-only" />
-                        <span className="font-display font-semibold">A different vehicle</span>
-                        <span className="text-sm text-muted">Choose its size below</span>
-                      </label>
-                    </div>
-                  )}
-
-                  {(!line.saved || !line.savedSize) && (
-                    <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                      {vehicles.map((v) => (
-                        <label key={v.id} className="choice">
-                          <input
-                            type="radio"
-                            name={`vehicleSize-${line.key}`}
-                            checked={line.size === v.id}
-                            onChange={() => {
-                              updateLine(line.key, { size: v.id });
-                              track("vehicle_select", { vehicle: v.id, location: "book", vehicleNumber: index + 1 });
-                            }}
-                            className="sr-only"
-                          />
-                          <span className="font-display font-semibold">{v.label}</span>
-                          <span className="text-sm text-muted">{v.hint}</span>
-                        </label>
-                      ))}
-                    </div>
-                  )}
-
-                  <p className="mt-5 field-label">Service for vehicle {index + 1}</p>
-                  <div className="mt-2 grid gap-2">
-                    {serviceList.map((s) => {
-                      const p = line.vehicle ? PRICING[line.vehicle][s.id] : null;
-                      return (
-                        <label key={s.id} className="choice flex-row items-center justify-between gap-4 py-4">
-                          <input
-                            type="radio"
-                            name={`service-${line.key}`}
-                            checked={line.service === s.id}
-                            onChange={() => {
-                              updateLine(line.key, {
-                                service: s.id,
-                                addons: line.addons.filter((addon) => !isAddonIncludedInService(s.id, addon)),
-                              });
-                              track("service_select", { service: s.id, vehicle: line.vehicle, location: "book", vehicleNumber: index + 1 });
-                            }}
-                            className="sr-only"
-                          />
-                          <span>
-                            <span className="flex flex-wrap items-center gap-2 font-display font-semibold">
-                              {s.name}
-                              {s.recommended && <span className="rounded-full bg-oxblood px-2 py-0.5 text-xs text-paper">Recommended first visit</span>}
-                            </span>
-                            <span className="mt-0.5 block text-sm text-muted">{s.whoFor}</span>
-                          </span>
-                          <span className="shrink-0 text-right">
-                            <span className="t-numeral block text-3xl">{p ? usd(p.price) : "-"}</span>
-                            {p && <span className="text-sm text-muted">{duration(p.minutes)}</span>}
-                          </span>
-                        </label>
-                      );
-                    })}
-                  </div>
-
-                  <div className="mt-6 border-t border-line pt-5">
-                    <div className="flex flex-wrap items-end justify-between gap-2">
-                      <div>
-                        <p className="field-label">Add-ons for vehicle {index + 1}</p>
-                        <p className="mt-1 text-sm text-muted">Optional services you can add to this appointment.</p>
-                        {line.service === "premium" && <p className="mt-1 text-xs text-muted">Protective sealant is already included in Premium.</p>}
-                        {line.service === "factoryReset" && <p className="mt-1 text-xs text-muted">Factory Reset already includes extraction, pet hair removal, clay, sealant and plastic restoration. Odor Removal and Engine Bay are the only available add-ons.</p>}
-                      </div>
-                      {line.addons.length > 0 && (
-                        <button type="button" className="text-sm font-semibold text-red underline underline-offset-4" onClick={() => updateLine(line.key, { addons: [] })}>Clear add-ons</button>
-                      )}
-                    </div>
-                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                      {purchasableAddonIds(line.service).map((id) => {
-                        const checked = line.addons.includes(id);
-                        return (
-                          <label key={id} className="choice flex-row items-center justify-between gap-4 py-3">
-                            <span className="flex min-w-0 items-center gap-3">
-                              <input
-                                type="checkbox"
-                                checked={checked}
-                                onChange={() => updateLine(line.key, { addons: checked ? line.addons.filter((item) => item !== id) : [...line.addons, id] })}
-                                className="h-4 w-4 shrink-0 accent-current"
-                              />
-                              <span className="font-display font-semibold">{ADDON_LABELS[id]}</span>
-                            </span>
-                            <span className="shrink-0 text-sm font-semibold">{ADDON_PRICES[id] === null ? "Confirm price" : `+${usd(ADDON_PRICES[id]!)}`}</span>
-                          </label>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </fieldset>
+                <button
+                  key={g.id}
+                  type="button"
+                  disabled={taken}
+                  aria-pressed={line.savedId === g.id}
+                  className={`bk-saved-opt ${line.savedId === g.id ? "is-on" : ""}`}
+                  onClick={() => updateLine(line.key, { savedId: g.id, size, sizeManual: !!size })}
+                >
+                  {size && <Silhouette id={size} />}
+                  <strong>{vName(g)}</strong>
+                  <span>{[g.color, size ? sizeLabel(size) : "Size not set"].filter(Boolean).join(" · ")}</span>
+                </button>
               );
             })}
+            <button type="button" aria-pressed={line.savedId === "size"} className={`bk-saved-opt ${line.savedId === "size" ? "is-on" : ""}`} onClick={() => updateLine(line.key, { savedId: "size", size: undefined, sizeManual: false })}>
+              <strong>A different vehicle</strong>
+              <span>Tell us the make and model</span>
+            </button>
           </div>
-          {badField === "vehicle" && <p className="field-error mt-3">Check each vehicle and service.</p>}
-        </section>
-
-        {fromQuote && (initialAddons.length > 0 || initialPaint.length > 0) && (
-          <section className="panel p-5 sm:p-6">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-red">From your saved quote</p>
-            <h2 className="t-h3 mt-1">Your selections are already loaded</h2>
-            <p className="mt-2 text-sm text-muted">Your quoted add-ons are preselected under Vehicle 1. You can change them before booking.</p>
-            {initialPaint.length > 0 && (
-              <div className="mt-4 border-t border-line pt-4">
-                {initialPaint.map((id) => (
-                  <p key={id} className="flex items-baseline gap-2 text-sm">
-                    <span className="font-display font-semibold">{PAINT_UPGRADES[id].name}</span><span className="leader" aria-hidden="true" />
-                    <span>{resolved[0]?.vehicle ? usd(PAINT_UPGRADES[id].prices[resolved[0].vehicle!]) : "Quoted by vehicle"}</span>
-                  </p>
-                ))}
-                <p className="mt-3 text-sm text-muted">Paint correction and coating work is attached to this booking request. Because paint work can require a separate appointment, our team will confirm the production schedule with you.</p>
-              </div>
-            )}
-          </section>
         )}
 
-        <fieldset id="booking-time-picker" className="booking-flow-section scroll-mt-28">
-          <legend className="t-h3">{fromQuote ? "Pick your time" : "2. Pick a time"}</legend>
-          {!allVehiclesReady ? (
-            <p className="mt-3 text-muted">Choose every vehicle to see open times.</p>
-          ) : slotsError ? (
-            <p className="mt-3 text-red">{slotsError}</p>
-          ) : slots === null ? (
-            <div className="booking-loading" aria-live="polite" aria-label="Checking the schedule">
-              <span />
-              <span />
-              <span />
+        {typing && (
+          <>
+            <div className="bk-mm">
+              <label className="bk-field">
+                <span>Make</span>
+                <input className="bk-input bk-input-xl" list="bk-makes" value={line.make} placeholder="Tesla" autoComplete="off" autoCapitalize="words" onChange={(e) => typeVehicle(line, index, { make: e.target.value })} />
+              </label>
+              <label className="bk-field">
+                <span>Model</span>
+                <input className="bk-input bk-input-xl" list={`bk-models-${line.key}`} value={line.model} placeholder="Model Y" autoComplete="off" autoCapitalize="words" onChange={(e) => typeVehicle(line, index, { model: e.target.value })} />
+                <datalist id={`bk-models-${line.key}`}>{modelsFor(line.make).map((m) => <option key={m} value={m} />)}</datalist>
+              </label>
+              <label className="bk-field bk-field-year">
+                <span>Year <em>optional</em></span>
+                <input className="bk-input bk-input-xl" inputMode="numeric" maxLength={4} value={line.year} placeholder="2024" autoComplete="off" onChange={(e) => typeVehicle(line, index, { year: e.target.value.replace(/\D/g, "").slice(0, 4) })} />
+              </label>
             </div>
-          ) : days.length === 0 ? (
-            <p className="mt-3 text-ink/80">
-              No open times in the next month for this appointment. Call or text <a className="link" href={site.phone.href}>{site.phone.display}</a> and we&rsquo;ll find one.
-            </p>
-          ) : (
-            <>
-              <div className="booking-calendar-wrap mt-4">
-                {activeCalendarMonth && (
-                  <section className="booking-calendar-month" aria-label={activeCalendarMonth.label}>
-                    <div className="booking-calendar-header">
-                      <button
-                        type="button"
-                        aria-label="Previous month"
-                        disabled={activeCalendarIndex <= 0}
-                        onClick={() => setCalendarMonthKey(calendarMonths[activeCalendarIndex - 1]?.monthKey ?? null)}
-                      >
-                        ‹
-                      </button>
-                      <h3>{activeCalendarMonth.label}</h3>
-                      <button
-                        type="button"
-                        aria-label="Next month"
-                        disabled={activeCalendarIndex >= calendarMonths.length - 1}
-                        onClick={() => setCalendarMonthKey(calendarMonths[activeCalendarIndex + 1]?.monthKey ?? null)}
-                      >
-                        ›
-                      </button>
-                    </div>
-                    <div className="booking-calendar-weekdays" aria-hidden="true">
-                      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((weekday) => <span key={weekday}>{weekday}</span>)}
-                    </div>
-                    <div className="booking-calendar-grid" role="radiogroup" aria-label="Available appointment date">
-                      {Array.from({ length: activeCalendarMonth.firstWeekday }).map((_, index) => <span className="booking-calendar-blank" key={`blank-${index}`} aria-hidden="true" />)}
-                      {Array.from({ length: activeCalendarMonth.daysInMonth }, (_, index) => index + 1).map((dateNumber) => {
-                        const key = `${activeCalendarMonth.year}-${String(activeCalendarMonth.month).padStart(2, '0')}-${String(dateNumber).padStart(2, '0')}`;
-                        const available = availableDayMap.get(key);
-                        const selected = day === key;
-                        const isToday = key === todayKey;
-                        const isPast = key < todayKey;
-                        const isOutsideWindow = key > bookingEndKey;
-                        const selectable = !isPast && !isOutsideWindow;
-                        const ariaLabel = available?.[0]
-                          ? `${fmtDay(available[0], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}${isToday ? ', today' : ''}, appointments available`
-                          : `${activeCalendarMonth.label} ${dateNumber}${isToday ? ', today' : ''}${selectable ? ', no availability' : ''}`;
-                        return (
-                          <button
-                            key={key}
-                            type="button"
-                            role="radio"
-                            aria-checked={selected}
-                            aria-label={ariaLabel}
-                            data-available={available ? "true" : "false"}
-                            data-today={isToday ? "true" : "false"}
-                            data-past={isPast ? "true" : "false"}
-                            data-outside={isOutsideWindow ? "true" : "false"}
-                            disabled={!selectable}
-                            onClick={() => { setDay(key); setStart(null); }}
-                            className="booking-calendar-day"
-                          >
-                            <span className="booking-calendar-number">{dateNumber}</span>
-                            {available && <span className="booking-calendar-dot" aria-hidden="true" />}
-                            {isToday && <span className="booking-calendar-today" aria-hidden="true">Today</span>}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </section>
-                )}
 
-                {selectedDayDate && (
-                  <div className="booking-time-panel">
-                    <div className="booking-time-heading">
-                      <h3>{fmtDay(selectedDayDate, { weekday: "long", month: "long", day: "numeric" })}</h3>
-                      <span>{daySlots.length > 0 ? `${daySlots.length} ${daySlots.length === 1 ? "time" : "times"}` : "No availability"}</span>
-                    </div>
-                    {daySlots.length > 0 ? (
-                      <>
-                        <div role="radiogroup" aria-label="Start time" className="booking-time-grid">
-                          {daySlots.map((s) => (
-                            <button key={s.toISOString()} type="button" role="radio" aria-checked={start?.getTime() === s.getTime()} onClick={() => { setStart(s); void recordQuoteBehavior("slot_selected", {selectedSlot:s.toISOString()}); }} className="choice booking-time-choice">
-                              {fmtTime(s)}
-                            </button>
-                          ))}
-                        </div>
-                        <p className="booking-time-zone">Arrival times · Eastern</p>
-                      </>
-                    ) : (
-                      <div className="booking-no-availability">
-                        <p>No appointments are available on this date.</p>
-                        <p>Choose another day, or <a href={site.phone.sms}>text us</a> and we&rsquo;ll let you know if anything opens up.</p>
-                      </div>
-                    )}
-                  </div>
-                )}
+            {line.size && !showGrid ? (
+              <div className="bk-got" aria-live="polite">
+                <Silhouette id={line.size} />
+                <div>
+                  <p>{guess && !line.sizeManual ? "We've got it" : "Vehicle type"}</p>
+                  <strong>{sizeLabel(line.size)}</strong>
+                  <button type="button" onClick={() => setGridOpen((o) => ({ ...o, [line.key]: true }))}>That doesn&rsquo;t look right → Change vehicle type</button>
+                </div>
               </div>
+            ) : typedBoth && !guess && !line.size ? (
+              <p className="bk-note" aria-live="polite">We don&rsquo;t have that one on file. Pick the closest type:</p>
+            ) : !showGrid ? (
+              <button type="button" className="bk-link" onClick={() => setGridOpen((o) => ({ ...o, [line.key]: true }))}>Not sure of the model? Pick a vehicle type instead</button>
+            ) : null}
+          </>
+        )}
 
+        {!typing && line.vehicle && !showGrid && (
+          <div className="bk-got">
+            <Silhouette id={line.vehicle} />
+            <div>
+              <p>Saved vehicle</p>
+              <strong>{sizeLabel(line.vehicle)}</strong>
+            </div>
+          </div>
+        )}
+
+        {showGrid && renderSizeGrid(line, index)}
+      </div>
+    );
+  }
+
+  function renderAddon(line: (typeof resolved)[number], id: AddonId) {
+    const on = line.addons.includes(id);
+    const price = ADDON_PRICES[id];
+    return (
+      <button
+        key={id}
+        type="button"
+        aria-pressed={on}
+        className={`bk-addon ${on ? "is-on" : ""}`}
+        onClick={() => updateLine(line.key, { addons: on ? line.addons.filter((a) => a !== id) : [...line.addons, id] })}
+      >
+        <strong>{ADDON_LABELS[id]}</strong>
+        <span>{ADDON_DESC[id]}</span>
+        <em>{price === null ? "Price confirmed on site" : `+${usd(price)}`}</em>
+        <b>{on ? "✓ Added" : "+ Add"}</b>
+      </button>
+    );
+  }
+
+  function renderExtras(line: (typeof resolved)[number], index: number) {
+    if (!line.service) return null;
+    const available = purchasableAddonIds(line.service);
+    const featured = available.length <= 3 ? available : FEATURED_ADDONS.filter((id) => available.includes(id));
+    const more = available.filter((id) => !featured.includes(id));
+    const paintChoices = index === 0 ? Array.from(new Set([...initialPaint, ...line.paint])) : line.paint;
+    return (
+      <div key={line.key} className="bk-extras">
+        {lines.length > 1 && <p className="bk-extras-for">Vehicle {index + 1} · {services[line.service].name} · {line.title}</p>}
+        {line.service === "premium" && <p className="bk-note">Protective sealant is already included in Premium.</p>}
+        {line.service === "factoryReset" && <p className="bk-note">Factory Reset already includes extraction, pet hair, clay, sealant and trim restoration.</p>}
+        <div className="bk-addons">{featured.map((id) => renderAddon(line, id))}</div>
+        {more.length > 0 && (
+          <>
+            <button type="button" className="bk-link" aria-expanded={!!moreOpen[line.key]} onClick={() => setMoreOpen((o) => ({ ...o, [line.key]: !o[line.key] }))}>
+              {moreOpen[line.key] ? "Fewer options ↑" : `See more options ↓`}
+            </button>
+            {moreOpen[line.key] && <div className="bk-addons bk-reveal">{more.map((id) => renderAddon(line, id))}</div>}
+          </>
+        )}
+        {paintChoices.length > 0 && (
+          <div className="bk-paint">
+            <p className="bk-label">From your quote · scheduled separately</p>
+            <div className="bk-addons">
+              {paintChoices.map((id) => {
+                const on = line.paint.includes(id);
+                return (
+                  <button key={id} type="button" aria-pressed={on} className={`bk-addon ${on ? "is-on" : ""}`} onClick={() => updateLine(line.key, { paint: on ? line.paint.filter((p) => p !== id) : [...line.paint, id] })}>
+                    <strong>{PAINT_UPGRADES[id].name}</strong>
+                    <span>{PAINT_UPGRADES[id].tag}</span>
+                    <em>{line.vehicle ? `+${usd(PAINT_UPGRADES[id].prices[line.vehicle])}` : "Priced by vehicle"}</em>
+                    <b>{on ? "✓ Added" : "+ Add"}</b>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="bk-note">Paint work can need its own appointment. We&rsquo;ll confirm that schedule with you.</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  function renderSummary() {
+    return (
+      <div className="bk-sum">
+        <p className="bk-sum-title">Your detail</p>
+        {resolved.map((l, i) => (
+          <div key={l.key} className="bk-sum-block">
+            {resolved.length > 1 && <p className="bk-label">Vehicle {i + 1}</p>}
+            <strong>{l.service ? services[l.service].name : "Choose a detail"}</strong>
+            <span>{l.title || "Vehicle not set"}</span>
+          </div>
+        ))}
+        {start && (
+          <div className="bk-sum-block">
+            <strong>{fmtDay(start, { weekday: "long", month: "short", day: "numeric" })}</strong>
+            <span>{fmtTime(start)}</span>
+          </div>
+        )}
+        {address.street && address.city && (
+          <div className="bk-sum-block">
+            <strong>{[address.street, address.unit].filter(Boolean).join(", ")}</strong>
+            <span>{address.city}, {address.state.toUpperCase()}</span>
+          </div>
+        )}
+        <div className="bk-sum-money">
+          {total !== null ? (
+            <>
+              <p><span>Detail</span><span>{usd(detailTotal)}</span></p>
+              {extrasTotal > 0 && <p><span>Add-ons</span><span>{usd(extrasTotal)}</span></p>}
+              <p className="bk-sum-total" key={total}><span>Est. total</span><span>{usd(total)}{hasVariableAddons ? "+" : ""}</span></p>
             </>
+          ) : (
+            <p className="bk-sum-total"><span>{fromTotal ? "From" : "Total"}</span><span>{fromTotal ? usd(fromTotal) : "—"}</span></p>
           )}
-        </fieldset>
+          {giftCardPreview && <p className="bk-sum-gift"><span>Gift card •••• {giftCardPreview.codeLast4}</span><span>{usd(giftCardPreview.balanceCents / 100)} avail.</span></p>}
+          {appointmentMinutes && <small>About {duration(appointmentMinutes)} on site · Pay after the detail</small>}
+        </div>
+      </div>
+    );
+  }
 
-        <fieldset className="booking-flow-section space-y-6">
-          <legend className="t-h3">{fromQuote ? "Finish booking" : "3. Your details"}</legend>
+  const primaryLine = resolved[0];
+  const barPrice = total !== null ? `${usd(total)}${hasVariableAddons ? "+" : ""}` : fromTotal ? `From ${usd(fromTotal)}` : "";
+  const barName = primaryLine.service ? services[primaryLine.service].name : "Choose a detail";
+  const servicePicked = !!primaryLine.service;
 
-          <div className="client-info-progress" aria-label="Your information progress">
-            <button type="button" onClick={() => setInfoStep(1)} className={infoStep === 1 ? "is-active" : infoStep > 1 ? "is-done" : ""}>
-              <b>{infoStep > 1 ? "✓" : "01"}</b><span>Name</span>
-            </button>
-            <i />
-            <button type="button" onClick={() => infoStep >= 2 && setInfoStep(2)} className={infoStep === 2 ? "is-active" : infoStep > 2 ? "is-done" : ""}>
-              <b>{infoStep > 2 ? "✓" : "02"}</b><span>Phone & email</span>
-            </button>
-            <i />
-            <button type="button" onClick={() => infoStep >= 3 && setInfoStep(3)} className={infoStep === 3 ? "is-active" : ""}>
-              <b>03</b><span>Address</span>
-            </button>
-          </div>
+  /* ------------------------------------------------------------------ */
+  /* Page                                                                */
+  /* ------------------------------------------------------------------ */
 
-          <div hidden={infoStep !== 1} className="client-info-panel">
-            <TextField label="Full name" name="name" autoComplete="name" defaultValue={account?.full_name ?? ""} error={badField === "name"} />
-            <button type="button" onClick={goToContactInfo} className="btn btn-primary mt-6 w-full sm:w-auto">Continue to contact info</button>
-          </div>
+  return (
+    <div className="bk-shell">
+      <BookingTopBar stage={STAGE_OF[active]} />
 
-          <div hidden={infoStep !== 2} className="client-info-panel">
-            <div className="grid gap-6 sm:grid-cols-2">
-              <TextField
-                label="Phone"
-                name="phone"
-                type="tel"
-                inputMode="numeric"
-                autoComplete="tel-national"
-                maxLength={10}
-                defaultValue={nationalPhone(account?.phone ?? "")}
-                onInput={(event) => { event.currentTarget.value = nationalPhone(event.currentTarget.value); }}
-                error={badField === "phone"}
-                errorText="Enter a 10-digit phone number."
-              />
-              {!signedIn && (
-                <TextField label="Email" name="email" type="email" autoComplete="email" hint="Required for your confirmation." error={badField === "email"} errorText="Enter a valid email for your confirmation." />
-              )}
-              {signedIn && <input type="hidden" name="email" value={email ?? ""} />}
-            </div>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <button type="button" onClick={() => setInfoStep(1)} className="btn btn-secondary">Back</button>
-              <button type="button" onClick={goToAddressInfo} className="btn btn-primary">Continue to address</button>
-            </div>
-          </div>
-
-          <div hidden={infoStep !== 3} className="client-info-panel">
-            <div className="booking-address-block">
-              <p className="field-label">Service address</p>
-              <p className="mb-4 mt-1 text-sm text-muted">Where should our team meet the vehicle?</p>
-              <AddressFields defaultValue={account?.address ?? ""} error={badField === "address"} />
-            </div>
-            <div className="mt-6">
-              <AutofillSafeNotes label="Anything we should know?" name="service_notes" hint="Gate codes, parking, pet hair, stains, or a spot you care about." />
-            </div>
-            <div className="mt-6">
-              <LeadSourceField error={badField === "leadSource"} />
-            </div>
-            <button type="button" onClick={() => setInfoStep(2)} className="btn btn-secondary mt-6">Back</button>
-          </div>
-        </fieldset>
-
-        <div className="booking-final-action" aria-label="Complete booking">
-          <div>
-            <span>Ready to book</span>
-            <strong>{start ? `${fmtDay(start, { weekday: "short", month: "short", day: "numeric" })} at ${fmtTime(start)}` : "Pick a time to continue"}</strong>
-            {displayTotal !== null && allVehiclesReady && <small>{usd(displayTotal)}{hasVariableAddons ? "+" : ""} total</small>}
-          </div>
-          <button type="submit" disabled={sending || !start || !allVehiclesReady || infoStep !== 3} className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50">
-            {sending ? "Booking…" : lines.length > 1 ? `Book ${lines.length} vehicles` : "Book it"}
-          </button>
+      <div className="bk-intro">
+        <div>
+          <h1 className="bk-intro-title">Book your detail.</h1>
+          <p className="bk-intro-sub">We bring the shop to your driveway.</p>
+          <p className="bk-intro-facts">Power + water included <i>•</i> Mobile service <i>•</i> Decatur + Atlanta</p>
+          {!signedIn && (
+            <p className="bk-intro-signin">Booked with us before? <Link href="/account/sign-in?next=/book">Sign in</Link> to use your saved vehicles.</p>
+          )}
+          {fromQuote && <p className="bk-intro-quote"><span className="bk-dot" aria-hidden="true" /> Your quote is loaded. Pick a place and time.</p>}
         </div>
       </div>
 
-      <aside className="booking-summary lg:col-span-4">
-        <div className="panel booking-summary-card p-6 lg:sticky lg:top-24">
-          <h2 className="font-display text-lg font-semibold">Your appointment</h2>
-          {allVehiclesReady && displayTotal !== null ? (
-            <div className="mt-4 space-y-4">
-              {resolved.map((line, index) => {
-                const p = PRICING[line.vehicle!][line.service];
+      <form id="booking-main" ref={formRef} noValidate onSubmit={onSubmit} className="bk-layout">
+        <datalist id="bk-makes">{MAKES.map((m) => <option key={m} value={m} />)}</datalist>
+        <div className="bk-flow">
+          {renderStep("service", "01", "What does your car need?", (
+            <div className="bk-pkgs" role="radiogroup" aria-label="Choose your detail">
+              {PACKAGE_ORDER.map((id, i) => {
+                const copy = PACKAGE_COPY[id];
+                const on = primaryLine.service === id;
+                const price = primaryLine.vehicle ? PRICING[primaryLine.vehicle][id].price : null;
                 return (
-                  <div key={line.key} className={index ? "border-t border-line pt-4" : ""}>
-                    <p className="flex items-baseline gap-2">
-                      <span className="font-display font-semibold">{line.saved && line.savedSize ? vName(line.saved) : vehicles.find((v) => v.id === line.vehicle)?.label}</span>
-                      <span className="leader" aria-hidden="true" />
-                      <span className="t-numeral text-3xl">{usd(p.price)}</span>
-                    </p>
-                    <p className="mt-1 text-sm text-muted">{services[line.service].name}</p>
-                  </div>
+                  <button
+                    key={id}
+                    type="button"
+                    role="radio"
+                    aria-checked={on}
+                    className={`bk-pkg ${on ? "is-on" : ""}`}
+                    onClick={() => {
+                      const firstSelection = !primaryLine.service;
+                      chooseService(primaryLine, 0, id);
+                      if (firstSelection) window.setTimeout(() => goTo("car"), 240);
+                    }}
+                  >
+                    {on && <span className="bk-pkg-tab">Selected</span>}
+                    <span className="bk-pkg-top">
+                      <span className="bk-pkg-no">0{i + 1}</span>
+                      {copy.badge && <span className="bk-pkg-badge">{copy.badge}</span>}
+                    </span>
+                    <span className="bk-label">{copy.label}</span>
+                    <span className="bk-pkg-name">{services[id].name}</span>
+                    <span className="bk-pkg-points">{copy.points.map((p) => <span key={p}>{p}</span>)}</span>
+                    <span className="bk-pkg-price">
+                      {price ? <>{usd(price)} <small>for your {sizeLabel(primaryLine.vehicle).toLowerCase()}</small></> : <>From {usd(startingPrice(id))}</>}
+                    </span>
+                    <span className="bk-pkg-cta">{on ? "✓ Chosen" : `Choose ${services[id].name}`}</span>
+                  </button>
                 );
               })}
-              {resolved.some((line) => line.addons.length > 0 || line.paint.length > 0) && (
-                <div className="border-t border-line pt-4 text-sm text-muted">
-                  {resolved.map((line, index) => (
-                    (line.addons.length > 0 || line.paint.length > 0) ? (
-                      <div key={line.key} className={index ? "mt-3" : ""}>
-                        {resolved.length > 1 && <p className="mb-1 font-semibold text-ink">Vehicle {index + 1}</p>}
-                        {line.addons.map((id) => <p key={id}>+ {ADDON_LABELS[id]} {ADDON_PRICES[id] === null ? "" : `(${usd(ADDON_PRICES[id]!)})`}</p>)}
-                        {line.paint.map((id) => <p key={id}>+ {PAINT_UPGRADES[id].name}</p>)}
-                      </div>
-                    ) : null
-                  ))}
-                </div>
+            </div>
+          ))}
+
+          {renderStep("car", "02", "What are we working with?", (
+            <>
+              {resolved.map((line, index) => renderVehicleEditor(line, index))}
+              {lines.length < 2 && (
+                <button type="button" className="bk-link bk-add" onClick={addVehicle}>Booking two cars in one visit? + Add a second vehicle</button>
               )}
-              <p className="flex items-baseline gap-2 border-t-2 border-ink pt-4">
-                <span className="font-display font-semibold">Total</span>
-                <span className="leader" aria-hidden="true" />
-                <span className="t-numeral text-4xl">{usd(displayTotal)}{hasVariableAddons ? "+" : ""}</span>
-              </p>
+            </>
+          ))}
 
-              <div className="booking-gift-card">
-                <div className="booking-gift-card-head">
-                  <div>
-                    <p className="field-label">Have a gift card?</p>
-                    <p className="booking-gift-card-help">Enter it now so it’s ready at checkout. You’ll choose how much of the balance to use after your detail.</p>
-                  </div>
-                  {giftCardPreview && <button type="button" className="booking-gift-card-remove" onClick={clearGiftCard}>Remove</button>}
-                </div>
+          {renderStep("extras", "03", "Want to go further?", (
+            <>{resolved.map((line, index) => renderExtras(line, index))}</>
+          ))}
 
-                {giftCardPreview ? (
-                  <div className="booking-gift-card-applied">
-                    <div>
-                      <span>GIFT CARD •••• {giftCardPreview.codeLast4}</span>
-                      <strong>{usd(giftCardPreview.balanceCents / 100)} available</strong>
-                      {giftCardPreview.recipientName && <small>{giftCardPreview.recipientName}</small>}
-                    </div>
-                    <b>✓</b>
-                  </div>
-                ) : (
-                  <div className="booking-gift-card-entry">
-                    <input
-                      type="text"
-                      value={giftCardCode}
-                      onChange={(event) => { setGiftCardCode(event.target.value.toUpperCase()); setGiftCardError(null); }}
-                      onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void validateGiftCard(); } }}
-                      placeholder="ED-XXXX-XXXX-XXXX"
-                      autoCapitalize="characters"
-                      autoCorrect="off"
-                      aria-label="Gift card code"
-                    />
-                    <button type="button" onClick={() => void validateGiftCard()} disabled={giftCardBusy || !giftCardCode.trim()}>
-                      {giftCardBusy ? "Checking…" : "Apply"}
-                    </button>
-                  </div>
-                )}
-                {giftCardError && <p className="booking-gift-card-error" role="alert">{giftCardError}</p>}
+          {renderStep("schedule", "04", "Where should we meet you?", (
+            <>
+              <div className="bk-address">
+                <label className="bk-field bk-field-wide">
+                  <span>Street address</span>
+                  <input className={`bk-input bk-input-xl ${badField === "address" && !/\d/.test(address.street) ? "is-bad" : ""}`} name="address_street" autoComplete="address-line1" placeholder="123 Main St" value={address.street} onChange={(e) => setAddress((a) => ({ ...a, street: e.target.value }))} />
+                </label>
+                <label className="bk-field">
+                  <span>Apt / Unit <em>optional</em></span>
+                  <input className="bk-input" name="address_unit" autoComplete="address-line2" value={address.unit} onChange={(e) => setAddress((a) => ({ ...a, unit: e.target.value }))} />
+                </label>
+                <label className="bk-field">
+                  <span>City</span>
+                  <input className="bk-input" name="address_city" autoComplete="address-level2" placeholder="Decatur" value={address.city} onChange={(e) => setAddress((a) => ({ ...a, city: e.target.value }))} />
+                </label>
+                <label className="bk-field bk-field-sm">
+                  <span>State</span>
+                  <input className="bk-input" name="address_state" autoComplete="address-level1" value={address.state} onChange={(e) => setAddress((a) => ({ ...a, state: e.target.value }))} />
+                </label>
+                <label className="bk-field bk-field-sm">
+                  <span>ZIP</span>
+                  <input className="bk-input" name="address_zip" inputMode="numeric" autoComplete="postal-code" placeholder="30030" value={address.zip} onChange={(e) => setAddress((a) => ({ ...a, zip: e.target.value }))} />
+                </label>
+                <input type="hidden" name="address" value={fullAddress(address)} />
               </div>
 
-              {appointmentMinutes && <p className="text-sm text-muted">About {duration(appointmentMinutes)} on site. Multi-vehicle appointments are staffed to work on the vehicles together.</p>}
+              {addressDone ? (
+                <p className="bk-yep bk-reveal" aria-live="polite">
+                  <b>✓</b> {coverageMessage(address.city)}
+                </p>
+              ) : null}
+
+              <div className={`bk-time ${addressDone ? "" : "is-waiting"}`} id="booking-time-picker">
+                <h3 className="bk-q bk-q-sm">Pick your time.</h3>
+                {!addressDone && <p className="bk-note">Add your address and open times appear here.</p>}
+
+                {addressDone && inClass && (
+                  <div className="bk-school">
+                    <span className="bk-dot" aria-hidden="true" />
+                    <div>
+                      <strong>School-day hours.</strong>
+                      <p>Our student team is typically in class during these hours, so weekday appointments start after school. You can still book online anytime.</p>
+                    </div>
+                  </div>
+                )}
+
+                {addressDone && (
+                  !priced ? (
+                    <p className="bk-note">Choose your detail and vehicle to see open times.</p>
+                  ) : slotsError ? (
+                    <p className="bk-error">{slotsError}</p>
+                  ) : slots === null ? (
+                    <div className="bk-loading" aria-live="polite" aria-label="Checking the schedule"><span /><span /><span /><span /></div>
+                  ) : slots.length === 0 ? (
+                    <p className="bk-note">No open times in the next month for this appointment. <a href={site.phone.sms}>Text us</a> and we&rsquo;ll find one.</p>
+                  ) : (
+                    <>
+                      <div className="bk-rail" ref={railRef} role="radiogroup" aria-label="Appointment date">
+                        {railDays.map((key) => {
+                          const count = slotsByDay.get(key)?.length ?? 0;
+                          const on = day === key;
+                          return (
+                            <button
+                              key={key}
+                              type="button"
+                              role="radio"
+                              aria-checked={on}
+                              data-day={key}
+                              disabled={!count}
+                              className={`bk-day ${on ? "is-on" : ""}`}
+                              onClick={() => { setDay(key); setStart(null); }}
+                              aria-label={`${utcDayLabel(key, { weekday: "long", month: "long", day: "numeric" })}, ${count ? `${count} times` : "full"}`}
+                            >
+                              <span>{utcDayLabel(key, { weekday: "short" })}</span>
+                              <strong>{utcDayLabel(key, { day: "numeric" })}</strong>
+                              <em>{count ? `${count} ${count === 1 ? "time" : "times"}` : "Full"}</em>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {day && (
+                        <div className="bk-slots bk-reveal" key={day}>
+                          <p className="bk-slots-day">{dateFromDayKey(day) ? utcDayLabel(day, { weekday: "long", month: "long", day: "numeric" }) : ""}</p>
+                          <div className="bk-pills" role="radiogroup" aria-label="Start time">
+                            {daySlots.map((s) => {
+                              const on = start?.getTime() === s.getTime();
+                              return (
+                                <button key={s.toISOString()} type="button" role="radio" aria-checked={on} className={`bk-pill ${on ? "is-on" : ""}`} onClick={() => { setStart(s); setStepError(null); void recordQuoteBehavior("slot_selected", { selectedSlot: s.toISOString() }); }}>
+                                  {fmtTime(s)}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          <p className="bk-tz">Arrival times · Eastern</p>
+                        </div>
+                      )}
+                    </>
+                  )
+                )}
+              </div>
+            </>
+          ))}
+
+          {renderStep("info", "05", "Almost yours.", (
+            <div className="bk-info">
+              <label className="bk-field bk-field-wide">
+                <span>Name</span>
+                <input className={`bk-input bk-input-xl ${badField === "name" ? "is-bad" : ""}`} name="name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
+              </label>
+              <label className="bk-field">
+                <span>Phone</span>
+                <input className={`bk-input bk-input-xl ${badField === "phone" ? "is-bad" : ""}`} name="phone" type="tel" inputMode="numeric" autoComplete="tel-national" value={phone} onChange={(e) => setPhone(nationalPhone(e.target.value))} />
+              </label>
+              {signedIn ? (
+                <p className="bk-note bk-field">Confirmation goes to <b>{email}</b>.<input type="hidden" name="email" value={email ?? ""} /></p>
+              ) : (
+                <label className="bk-field">
+                  <span>Email</span>
+                  <input className={`bk-input bk-input-xl ${badField === "email" ? "is-bad" : ""}`} name="email" type="email" autoComplete="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />
+                </label>
+              )}
+              <div className="bk-field-wide bk-notes">
+                <AutofillSafeNotes label="Anything we should know?" name="service_notes" placeholder="Gate code, pet hair, stains, parking notes…" />
+              </div>
+              <div className="bk-field-wide bk-source">
+                <LeadSourceField error={badField === "leadSource"} />
+              </div>
             </div>
-          ) : (
-            <p className="mt-3 text-muted">Choose every vehicle to see your total.</p>
-          )}
-          <p className="mt-4 border-t border-line pt-4 font-display font-semibold" aria-live="polite">
-            {start ? `${fmtDay(start, { weekday: "long", month: "short", day: "numeric" })}, ${fmtTime(start)}` : "No time picked yet"}
-          </p>
-          <ul className="mt-4 space-y-1.5 text-sm text-ink/80">
-            <li>We bring our own power and water</li>
-            <li>We accept {site.paymentMethods.join(", ")}</li>
-            <li>Confirmation is emailed immediately after booking</li>
-          </ul>
-          <div className="mt-5"><FormError message={error} /></div>
-          <button type="submit" disabled={sending || !start || !allVehiclesReady || infoStep !== 3} className="btn btn-primary mt-4 w-full disabled:cursor-not-allowed disabled:opacity-50">
-            {sending ? "Booking…" : lines.length > 1 ? `Book ${lines.length} vehicles` : "Book it"}
-          </button>
+          ))}
+
+          {renderStep("review", "06", "Look good?", (
+            <div className="bk-review">
+              <div className="bk-receipt">
+                {resolved.map((l, i) => (
+                  <div key={l.key} className="bk-receipt-block">
+                    <strong>{l.service ? services[l.service].name : ""}</strong>
+                    <p>{l.saved ? vName(l.saved) : l.typed || sizeLabel(l.vehicle)}</p>
+                    {(l.typed || l.saved) && <p>{sizeLabel(l.vehicle)}</p>}
+                    {resolved.length > 1 && <span className="bk-label">Vehicle {i + 1}</span>}
+                  </div>
+                ))}
+                {start && (
+                  <div className="bk-receipt-block">
+                    <strong>{fmtDay(start, { weekday: "long", month: "long", day: "numeric" })}</strong>
+                    <p>{fmtTime(start)}</p>
+                  </div>
+                )}
+                <div className="bk-receipt-block">
+                  <strong>{[address.street, address.unit].filter(Boolean).join(", ")}</strong>
+                  <p>{address.city}, {address.state.toUpperCase()} {address.zip}</p>
+                </div>
+                <div className="bk-receipt-lines">
+                  {resolved.map((l) => (
+                    <div key={l.key}>
+                      <p><span>{l.service ? services[l.service].name : ""}{resolved.length > 1 ? ` · ${l.title}` : ""}</span><span>{usd(l.base)}</span></p>
+                      {l.addons.map((id) => <p key={id} className="is-sub"><span>+ {ADDON_LABELS[id]}</span><span>{ADDON_PRICES[id] === null ? "TBD" : usd(ADDON_PRICES[id])}</span></p>)}
+                      {l.paint.map((id) => <p key={id} className="is-sub"><span>+ {PAINT_UPGRADES[id].name}</span><span>{l.vehicle ? usd(PAINT_UPGRADES[id].prices[l.vehicle]) : "TBD"}</span></p>)}
+                    </div>
+                  ))}
+                  <p className="bk-receipt-total"><span>Est. total</span><span>{usd(total)}{hasVariableAddons ? "+" : ""}</span></p>
+                  <small>Pay after the detail · {site.paymentMethods.join(", ")}</small>
+                </div>
+
+                <div className="bk-gift">
+                  <p className="bk-label">Have a gift card?</p>
+                  {giftCardPreview ? (
+                    <div className="bk-gift-on">
+                      <span>Gift card •••• {giftCardPreview.codeLast4} · {usd(giftCardPreview.balanceCents / 100)} available{giftCardPreview.recipientName ? ` · ${giftCardPreview.recipientName}` : ""}</span>
+                      <button type="button" onClick={() => { setGiftCardCode(""); setGiftCardPreview(null); setGiftCardError(null); }}>Remove</button>
+                    </div>
+                  ) : (
+                    <div className="bk-gift-entry">
+                      <input
+                        className="bk-input"
+                        type="text"
+                        value={giftCardCode}
+                        onChange={(event) => { setGiftCardCode(event.target.value.toUpperCase()); setGiftCardError(null); }}
+                        onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void validateGiftCard(); } }}
+                        placeholder="ED-XXXX-XXXX-XXXX"
+                        autoCapitalize="characters"
+                        autoCorrect="off"
+                        aria-label="Gift card code"
+                      />
+                      <button type="button" onClick={() => void validateGiftCard()} disabled={giftCardBusy || !giftCardCode.trim()}>{giftCardBusy ? "Checking…" : "Apply"}</button>
+                    </div>
+                  )}
+                  {giftCardError && <p className="bk-error" role="alert">{giftCardError}</p>}
+                  <small>You&rsquo;ll choose how much of the balance to use after your detail.</small>
+                </div>
+              </div>
+
+              <div className="bk-next">
+                <h3>What happens next</h3>
+                <ol>
+                  <li><b>01</b> Confirmation sent instantly</li>
+                  <li><b>02</b> Your crew arrives with power + water</li>
+                  <li><b>03</b> Keys in. Dirty car out.</li>
+                </ol>
+              </div>
+
+              {submitError && <p className="bk-error" role="alert">{submitError}</p>}
+              <button type="submit" disabled={sending} className="bk-btn bk-btn-coral bk-confirm">
+                {sending ? "Booking…" : lines.length > 1 ? `Confirm booking · ${lines.length} vehicles` : "Confirm booking"}
+              </button>
+            </div>
+          ))}
         </div>
-      </aside>
-    </form>
+
+        <aside className="bk-aside" aria-label="Booking summary">
+          <div className="bk-aside-inner">
+            {renderSummary()}
+            {active !== "review" && (
+              <button type="button" className="bk-btn bk-btn-ink bk-aside-go" onClick={advance} disabled={sending || (active === "service" && !servicePicked)}>
+                {continueLabel(active)}
+              </button>
+            )}
+          </div>
+        </aside>
+      </form>
+
+      {/* Mobile: price always visible, summary slides up */}
+      <div className={`bk-drawer ${drawerOpen ? "is-open" : ""}`} aria-hidden={!drawerOpen}>
+        <button type="button" className="bk-drawer-scrim" tabIndex={-1} aria-label="Close summary" onClick={() => setDrawerOpen(false)} />
+        <div className="bk-drawer-sheet">{renderSummary()}</div>
+      </div>
+      <div className="bk-bar">
+        <button type="button" className="bk-bar-sum" aria-expanded={drawerOpen} onClick={() => setDrawerOpen((o) => !o)}>
+          <strong key={barPrice}>{barPrice ? `${barPrice} · ` : ""}{barName}</strong>
+          <span>{drawerOpen ? "Hide summary ▾" : "View summary ▴"}</span>
+        </button>
+        <button
+          type="button"
+          className="bk-btn bk-btn-coral bk-bar-go"
+          disabled={sending || (active === "service" && !servicePicked)}
+          onClick={() => (active === "review" ? formRef.current?.requestSubmit() : advance())}
+        >
+          {continueLabel(active)}
+        </button>
+      </div>
+    </div>
   );
 }
