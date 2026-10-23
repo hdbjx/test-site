@@ -31,7 +31,7 @@ export default async function AboutPage() {
             <h1>BUILT BY<br /><span>STUDENTS.</span><br />RUN FOR REAL.</h1>
             <p className="about70-lede">Every Detail started in eighth grade with one driveway job. Today, a student team runs mobile detailing across Decatur and Atlanta.</p>
             <div className="about70-actions">
-              <TrackedLink href="/book" event="booking_start" params={{ location: "about_hero" }} className="about70-primary">BOOK A DETAIL ↗</TrackedLink>
+              <TrackedLink href="/book" event="book_click" params={{ location: "about_hero" }} className="about70-primary">BOOK A DETAIL ↗</TrackedLink>
               <a href="#team" className="about70-link">MEET THE TEAM ↓</a>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default async function AboutPage() {
           <div>
             <p>Book the team for your car, or reach out if you are a student who wants real responsibility and is ready to learn.</p>
             <div className="about70-close-actions">
-              <TrackedLink href="/book" event="booking_start" params={{ location: "about_final" }} className="about70-primary">BOOK A DETAIL ↗</TrackedLink>
+              <TrackedLink href="/book" event="book_click" params={{ location: "about_final" }} className="about70-primary">BOOK A DETAIL ↗</TrackedLink>
               <TrackedLink href={`mailto:${site.email}?subject=Joining%20the%20Every%20Detail%20team`} event="phone_click" params={{ location: "about_hiring" }} className="about70-secondary">JOIN THE TEAM ↗</TrackedLink>
             </div>
           </div>
