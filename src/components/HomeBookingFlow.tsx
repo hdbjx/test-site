@@ -83,7 +83,14 @@ export function HomeBookingFlow() {
     const openingForFirstTime = service === null;
     setService(id);
     setServiceIntent(id);
-    if (!siteVehicle) setVehicle(null);
+
+    // A saved/sitewide vehicle is the source of truth for homepage pricing.
+    // Closing this panel used to clear the local vehicle state, but reopening
+    // would not re-run the site-vehicle hydration effect because the saved
+    // vehicle itself had not changed. That left `quote` null, hiding the
+    // price and booking CTA on subsequent opens. Restore it synchronously.
+    setVehicle(siteVehicle ? siteVehicle.vehicle : null);
+
     track("service_select", { service: id, location: "home_flow" });
     if (openingForFirstTime) window.setTimeout(guideToVehicleStep, 110);
   };
@@ -124,7 +131,7 @@ export function HomeBookingFlow() {
           <div className="v15-stage-inner">
             <div className="v15-stage-topline">
               <span>{serviceMeta[service].number} / {chosenService.name}</span>
-              <button type="button" onClick={() => { setService(null); setVehicle(null); setServiceIntent(null); }}>Close ×</button>
+              <button type="button" onClick={() => { setService(null); setVehicle(siteVehicle ? siteVehicle.vehicle : null); setServiceIntent(null); }}>Close ×</button>
             </div>
 
             <div className={`v15-stage-main ${siteVehicle ? "has-site-vehicle" : ""}`}>

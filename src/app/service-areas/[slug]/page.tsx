@@ -29,15 +29,26 @@ export default async function AreaPage({ params }: Params) {
 
   return (
     <div className="area-v2">
-      <section className="area-v2-hero area86-hero">
-        <div className="area86-hero-photo" aria-hidden="true"><Photo id="branded-rig-driveway" sizes="100vw" fill priority /></div>
-        <div className="area86-hero-shade" aria-hidden="true" />
-        <div className="area-v2-shell area86-hero-inner">
-        <div className="mb-6"><Breadcrumbs items={[{ name: "Service Areas", path: "/service-areas" }, { name: area.name, path: `/service-areas/${slug}` }]} /></div>
-        <p className="area-v2-kicker">MOBILE DETAILING / {area.name.toUpperCase()}</p>
-        <h1>Car detailing in<br/><span>{area.name}.</span></h1>
-        <div className="area-v2-hero-bottom"><p>{page.intro}</p><div><Link href="/book" className="btn btn-primary">Book your detail ↗</Link><Link href="/get-a-quote" className="area-v2-inline">Get a recommendation</Link></div></div>
-      </div></section>
+      <section className="area-v2-hero area90-hero">
+        <div className="area-v2-shell area90-hero-shell">
+          <div className="area90-breadcrumbs"><Breadcrumbs items={[{ name: "Service Areas", path: "/service-areas" }, { name: area.name, path: `/service-areas/${slug}` }]} /></div>
+          <div className="area90-hero-grid">
+            <div className="area90-hero-copy">
+              <p className="area-v2-kicker">MOBILE DETAILING / {area.name.toUpperCase()}</p>
+              <h1><span>Car detailing</span><strong>{area.name}.</strong></h1>
+              <p className="area90-intro">{page.intro}</p>
+              <div className="area90-actions">
+                <Link href="/book" className="btn btn-primary">Book your detail ↗</Link>
+                <Link href="/get-a-quote" className="area-v2-inline">Get a recommendation</Link>
+              </div>
+            </div>
+            <figure className="area90-hero-photo">
+              <Photo id="branded-rig-driveway" sizes="(max-width: 760px) 92vw, 43vw" fill priority />
+              <figcaption><span>WE COME TO YOU</span><strong>POWER + WATER ON BOARD</strong></figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
 
       <section className="area-v2-proof"><div className="area-v2-shell"><span><LiveReviewCount /> FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span><span>POWER + WATER INCLUDED</span><span>TRAINED CREW</span><span>ONLINE PRICING</span></div></section>
 
