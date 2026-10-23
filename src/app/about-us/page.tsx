@@ -71,9 +71,9 @@ export default async function AboutPage() {
         </div>
 
         <div className="about70-shell about70-workstrip">
-          <figure><Photo id="about-ops-01" ratio="4/3" sizes="32vw" /></figure>
-          <figure><Photo id="two-tech-interior-detail" ratio="4/3" sizes="32vw" /></figure>
-          <figure><Photo id="about-ops-05" ratio="4/3" sizes="32vw" /></figure>
+          <figure><Photo id="about-ops-01" ratio="4/3" sizes="(max-width: 560px) 92vw, 32vw" /></figure>
+          <figure><Photo id="two-tech-interior-detail" ratio="4/3" sizes="(max-width: 560px) 92vw, 32vw" /></figure>
+          <figure><Photo id="about-ops-05" ratio="4/3" sizes="(max-width: 560px) 92vw, 32vw" /></figure>
         </div>
       </section>
 

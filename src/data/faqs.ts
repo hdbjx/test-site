@@ -165,7 +165,7 @@ export const detailPlusFaqs: Faq[] = [
   },
   {
     q: "What if my car is extra dirty one visit?",
-    a: "If it's in your plan, it's covered. Spills, stains, crumbs and pet hair are handled on that visit with no add-on charge.",
+    a: "Spills, stains, crumbs and pet hair that are included in your plan are handled on that visit with no add-on charge.",
     confirmed: true,
   },
   {

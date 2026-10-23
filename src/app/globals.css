@@ -15571,3 +15571,269 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
 .work-page-crew p:not(.eyebrow){color:rgba(17,17,17,.90)!important}
 .gift-rewards-bridge-v2 .gift-rewards-grid>div:last-child p{color:rgba(17,17,17,.90)!important}
 .site-cta-inner>div>p:not(.site-cta-kicker){color:rgba(17,17,17,.90)!important}
+
+
+/* ============================================================
+   V87 MOBILE FIT + FINISH
+   Phone-only geometry corrections after V86 visual polish.
+   Keep desktop compositions untouched.
+   ============================================================ */
+
+@media (max-width: 560px) {
+  /* Shared header: long vehicle names get their own row below the logo/menu.
+     This prevents the context pill from colliding with the centered mark. */
+  .site-context-pill.is-set,
+  body:has(.v29-hero) .site-context-pill.is-set {
+    top: max(64px, calc(env(safe-area-inset-top) + 58px)) !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 38px !important;
+    padding: .34rem .58rem .34rem .7rem !important;
+    grid-template-areas: "main icon" !important;
+    grid-template-rows: 1fr !important;
+    row-gap: 0 !important;
+  }
+  .site-context-pill.is-set > span {
+    font-size: .61rem !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+  }
+  .site-context-pill.is-set > small { display: none !important; }
+  .site-context-pill.is-set > i { font-size: .82rem !important; }
+
+  /* Give homepage content enough clearance only when the context row exists. */
+  body:has(.site-context-pill.is-set) .v29-hero-inner { padding-top: 124px !important; }
+
+  /* Hero actions: identical geometry, no offset shadow making one read lower. */
+  .v54-hero-actions {
+    align-items: stretch !important;
+    width: min(100%, 320px) !important;
+    margin-inline: auto !important;
+  }
+  .v54-hero-actions .v29-hero-cta,
+  .v54-hero-quote {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 50px !important;
+    min-height: 50px !important;
+    margin: 0 !important;
+    padding: 0 1rem !important;
+    justify-content: space-between !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,.16) !important;
+  }
+
+  /* Homepage service chooser: protect long service names on 320–390px phones. */
+  .v15-service {
+    grid-template-columns: 1.75rem minmax(0, 1fr) 2rem !important;
+    column-gap: .55rem !important;
+    padding-inline: .65rem !important;
+  }
+  .v15-service:hover,
+  .v15-service.is-active { padding-inline: .65rem !important; }
+  .v15-service-copy strong {
+    max-width: 100% !important;
+    font-size: clamp(1.95rem, 8.7vw, 2.65rem) !important;
+    line-height: .92 !important;
+    letter-spacing: -.018em !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+  }
+  .v15-service:first-child .v15-service-copy strong {
+    font-size: clamp(1.82rem, 8.05vw, 2.42rem) !important;
+    letter-spacing: -.024em !important;
+  }
+  .v15-arrow { width: 2rem !important; min-width: 2rem !important; }
+
+  /* Homepage work gallery: mobile editorial collage instead of a compressed desktop rail. */
+  .v29-work-heading { margin-bottom: 1.45rem !important; }
+  .v29-work-track {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    padding-inline: 12px !important;
+    align-items: start !important;
+  }
+  .v29-shot {
+    min-height: 0 !important;
+    height: auto !important;
+    aspect-ratio: 4 / 5 !important;
+    overflow: hidden !important;
+  }
+  .v29-shot-a {
+    grid-column: 1 / -1 !important;
+    aspect-ratio: 4 / 3 !important;
+  }
+  .v29-shot-b { grid-column: 1 !important; }
+  .v29-shot-c {
+    grid-column: 2 !important;
+    aspect-ratio: 4 / 5 !important;
+  }
+  .v29-shot-d {
+    grid-column: 1 / -1 !important;
+    aspect-ratio: 16 / 9 !important;
+  }
+  .v29-shot > div,
+  .v29-shot img { width: 100% !important; height: 100% !important; }
+  .v29-work-end { padding-top: 1.65rem !important; }
+
+  /* Reviews: reserve space for the small 01/02/03 index before the quote begins. */
+  .v38-proof-count.v41-proof-count { margin-bottom: 3rem !important; }
+  .v38-proof-review.v41-proof-review,
+  .v41-proof-review.v38-proof-review-1,
+  .v41-proof-review.v38-proof-review-2,
+  .v41-proof-review.v38-proof-review-3 {
+    padding: 3.55rem 0 2.1rem 1.25rem !important;
+  }
+  .v41-proof-index { left: 1.25rem !important; top: 1rem !important; }
+
+  /* Booking chrome: make rubber-band/overscroll reveal the same paper, not page content. */
+  html:has(.bk-page),
+  body:has(.bk-page) {
+    background: #f2ecdf !important;
+    overscroll-behavior-y: none;
+  }
+  .bk-page { background: #f2ecdf !important; }
+  .bk-top {
+    isolation: isolate;
+    box-shadow: 0 -56px 0 56px var(--bk-paper), 0 7px 18px rgba(11,10,9,.05) !important;
+  }
+  .bk-bar {
+    box-shadow: 0 54px 0 54px var(--bk-paper), 0 -8px 22px rgba(11,10,9,.08) !important;
+  }
+  .bk-drawer-sheet { overscroll-behavior: contain; }
+
+  /* Booking top bar: long saved vehicle names never push the layout off-screen. */
+  .bk-top-row {
+    grid-template-columns: 38px minmax(0,1fr) minmax(0,8.5rem) !important;
+    gap: .55rem !important;
+  }
+  .bk-top-title {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+  .bk-top-actions { min-width: 0 !important; gap: .35rem !important; }
+  .bk-top-vehicle {
+    width: 100% !important;
+    max-width: 8.5rem !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    text-align: right !important;
+  }
+  .bk-top-help { display: none !important; }
+
+  /* Booking service cards: no word splitting, no selected-card clipping. */
+  .bk-pkgs { gap: 10px !important; }
+  .bk-pkg {
+    min-width: 0 !important;
+    overflow: visible !important;
+    padding: 1.15rem 1rem 1rem !important;
+  }
+  .bk-pkg.is-on {
+    transform: none !important;
+    box-shadow: 4px 4px 0 var(--bk-ink) !important;
+  }
+  .bk-pkg-name {
+    max-width: 100% !important;
+    font-size: clamp(1.55rem, 8.1vw, 2rem) !important;
+    line-height: .95 !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+  }
+  .bk-pkg-price { font-size: 1.3rem !important; }
+  .bk-pkg-price small { display: inline !important; font-size: .72rem !important; }
+  .bk-pkg-cta {
+    white-space: normal !important;
+    line-height: 1.2 !important;
+    min-height: 46px !important;
+    display: grid !important;
+    place-items: center !important;
+  }
+
+  /* About photography: remove mobile transform rasterization and request full mobile widths. */
+  .about70-photo-main,
+  .about70-photo-small { transform: none !important; }
+  .about70-photo-main > div,
+  .about70-photo-small > div,
+  .about70-workstrip figure > div,
+  .about70-team-image > div,
+  .about70-wide-photo > div { transform: none !important; }
+
+  /* Gift-card opener: flow vertically on phones instead of absolute positioning. */
+  .gift-intro { min-height: 100svh !important; }
+  .gift-intro-shell {
+    position: relative !important;
+    inset: auto !important;
+    min-height: 100svh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 1.25rem !important;
+    padding: max(5.9rem, calc(env(safe-area-inset-top) + 5rem)) 14px max(2rem, calc(env(safe-area-inset-bottom) + 1rem)) !important;
+  }
+  .gift-intro-copy {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    transform: none !important;
+    gap: .45rem !important;
+    animation: none !important;
+  }
+  .gift-intro-card-wrap { padding-inline: 0 !important; }
+  .gift-card-preview-intro {
+    width: min(100%, 23rem) !important;
+    min-height: 13.5rem !important;
+    border-radius: 1.15rem !important;
+  }
+  .gift-intro-scroll {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    margin-top: .25rem !important;
+    animation: none !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-context-pill.is-set,
+  body:has(.v29-hero) .site-context-pill.is-set {
+    left: 8px !important;
+    right: 8px !important;
+  }
+  .v15-service-copy strong { font-size: 1.88rem !important; }
+  .v15-service:first-child .v15-service-copy strong { font-size: 1.72rem !important; }
+  .bk-top-row { grid-template-columns: 34px minmax(0,1fr) minmax(0,7.25rem) !important; }
+  .bk-top-logo { width: 34px !important; height: 34px !important; }
+  .bk-top-vehicle { max-width: 7.25rem !important; font-size: .62rem !important; }
+  .bk-pkg-name { font-size: 1.48rem !important; }
+  .gift-intro-shell { gap: 1rem !important; padding-inline: 10px !important; }
+  .gift-card-preview-intro { min-height: 12.6rem !important; }
+}
+
+@media (max-width: 560px) {
+  /* Known vehicle + service summary: compact, useful, no large dead band. */
+  .v15-stage-main.has-site-vehicle { padding: .55rem 0 .15rem !important; }
+  .v76-selected-vehicle {
+    min-height: 0 !important;
+    padding: .6rem 0 .8rem !important;
+    gap: .8rem !important;
+    align-items: center !important;
+  }
+  .v76-selected-vehicle span { margin-bottom: .2rem !important; font-size: .56rem !important; }
+  .v76-selected-vehicle strong { font-size: 1.35rem !important; line-height: 1 !important; }
+  .v76-selected-vehicle small { margin-top: .2rem !important; font-size: .72rem !important; }
+  .v76-selected-vehicle button { min-height: 38px !important; padding-inline: .75rem !important; font-size: .66rem !important; }
+  .v15-stage.is-open:has(.v15-stage-main.has-site-vehicle) { margin-bottom: .85rem !important; }
+  .v15-stage.is-open:has(.v15-stage-main.has-site-vehicle) .v15-stage-inner {
+    padding-top: .9rem !important;
+    padding-bottom: 1rem !important;
+  }
+  .v15-stage-main.has-site-vehicle + .v15-result.is-visible { padding-top: .75rem !important; }
+}

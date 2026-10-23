@@ -45,4 +45,4 @@ export const detailPlusSteps = [
   { title: "Stay on the schedule", body: "Visits recur with a reminder beforehand, so the car gets handled before it falls behind." },
 ];
 
-export const detailPlusGuarantee = "If it's in your plan, it's covered.";
+export const detailPlusGuarantee = "Your visit follows the plan you chose, so included messes do not turn into surprise add-on charges.";
