@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { CtaBand } from "@/components/CtaBand";
+import { JsonLd } from "@/components/JsonLd";
 import { formatDate, getAllPosts } from "@/lib/blog";
-import { pageMetadata } from "@/lib/seo";
+import { collectionSchema, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Shine On: Car Care Tips from Every Detail | Decatur, GA",
   description: "Straightforward car care advice from the Every Detail team: detailing, paint care, maintenance and keeping a vehicle clean in Atlanta.",
   path: "/blog",
+  image: "hq-crew-shirt-detail",
 });
 
 export default function BlogIndex() {
@@ -70,6 +72,7 @@ export default function BlogIndex() {
       </section>
 
       <CtaBand location="blog_index" title="Want us to handle it instead?" body="Choose your vehicle and service to see pricing and available appointments." />
+      <JsonLd data={collectionSchema({ name: "Shine On by Every Detail", description: "Car care advice from the Every Detail crew.", path: "/blog", items: posts.map((post) => ({ name: post.title, path: `/post/${post.slug}` })) })} />
     </div>
   );
 }

@@ -13,8 +13,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ["/detailplus", 0.8],
     ["/gift-cards", 0.8],
     ["/our-work", 0.8],
-    ["/book", 0.8],
-    ["/get-a-quote", 0.7],
     ["/about-us", 0.6],
     ["/service-areas", 0.6],
     ["/blog", 0.5],

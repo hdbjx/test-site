@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { ReviewGrid } from "@/components/ReviewGrid";
 import { ServicePicker } from "@/components/ServicePicker";
 import { areasWithPages } from "@/data/areas";
-import { pageMetadata, serviceSchema } from "@/lib/seo";
+import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
 
 type Params = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
@@ -44,7 +44,7 @@ export default async function AreaPage({ params }: Params) {
       <section className="area-v2-reviews"><div className="area-v2-shell"><p className="area-v2-kicker">WHAT CLIENTS SAY</p><ReviewGrid /></div></section>
       <section className="area-v2-back"><div className="area-v2-shell"><Link href="/service-areas">← See every service area</Link></div></section>
       <CtaBand location={`area_${slug}_final`} />
-      <JsonLd data={serviceSchema({ name: `Mobile Car Detailing in ${area.name}, GA`, description: page.description, path: `/service-areas/${slug}`, areaServed: [`${area.name}, GA`] })} />
+      <JsonLd data={[serviceSchema({ name: `Mobile Car Detailing in ${area.name}, GA`, description: page.description, path: `/service-areas/${slug}`, areaServed: [`${area.name}, GA`] }), breadcrumbSchema([{ name: "Service Areas", path: "/service-areas" }, { name: area.name, path: `/service-areas/${slug}` }])]} />
     </div>
   );
 }

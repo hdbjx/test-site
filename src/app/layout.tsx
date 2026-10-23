@@ -33,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-dvh">
+        <a href="#main" className="site-skip-link">Skip to content</a>
         <GoogleReviewStatsProvider>
         <VehicleProvider>
         <JourneyProvider>

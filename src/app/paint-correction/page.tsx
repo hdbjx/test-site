@@ -1,65 +1,122 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { LiveReviewCount } from "@/components/GoogleReviewStats";
-import { TrackedLink } from "@/components/TrackedLink";
 import { FaqList } from "@/components/FaqList";
+import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
 import { PaintLeadForm } from "@/components/PaintLeadForm";
-import { paintFaqs } from "@/data/faqs";
-import { paintDefects, paintServices } from "@/data/paint";
-import { usd } from "@/lib/format";
-import { pageMetadata, serviceSchema } from "@/lib/seo";
+import { PaintPricingPanel } from "@/components/PaintPricingPanel";
+import { paintCorrectionFaqs } from "@/data/faqs";
+import { PAINT_PRICING, paintDefects, paintServices } from "@/data/paint";
+import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
 
-export const metadata = pageMetadata({ title:"Paint Correction in Decatur & Atlanta, GA | Every Detail", description:"Professional mobile paint correction in Decatur and Atlanta. Enhancement polishing from $395 and full multi-stage correction from $695.", path:"/paint-correction" });
-const quote = "#paint-quote";
+export const metadata = pageMetadata({
+  title: "Paint Correction in Decatur & Atlanta, GA | Every Detail",
+  description: "Mobile paint correction in Decatur and Atlanta. Enhancement polishing and full correction with exact pricing by vehicle and an in-person paint assessment.",
+  path: "/paint-correction",
+  image: "paint-02",
+});
+
+const enhancement = paintServices.find((service) => service.id === "enhancement")!;
+const correction = paintServices.find((service) => service.id === "correction")!;
+const maxEnhancement = Math.max(...Object.values(PAINT_PRICING).map((price) => price.enhancement));
+const maxCorrection = Math.max(...Object.values(PAINT_PRICING).map((price) => price.correction));
 
 export default function PaintCorrectionPage() {
-  const [enhancement, correction] = paintServices;
-  return <div className="paint-v38">
-    <section className="pv38-hero pv38-hero-correction">
-      <div className="container-ed pv38-hero-inner">
-        <Breadcrumbs items={[{name:"Paint Correction",path:"/paint-correction"}]}/>
-        <div className="pv38-hero-copy">
-          <p className="pv38-kicker">Paint correction · Decatur + Atlanta</p>
-          <h1>Make the paint<br/><em>look right again.</em></h1>
-          <p className="pv38-lede">Swirls, haze and light scratches live in the clear coat. Paint correction removes or reduces those defects so the finish looks deep and clear again.</p>
-          <div className="pv38-actions"><TrackedLink href={quote} event="paint_inquiry" params={{location:"correction_hero"}} className="btn btn-primary">Get my paint assessment ↗</TrackedLink><a href="#understand" className="pv38-text-link">See how correction works ↓</a></div>
-          <div className="pv38-proof"><span><b><LiveReviewCount/></b> five-star reviews</span><span>Mobile service</span><span>Correction from {usd(enhancement.startingAt)}</span></div>
+  return (
+    <div className="paint85 paint85-correction service85">
+      <section className="paint85-hero">
+        <Image src="/images/red-paint-detail.webp" alt="Red automotive paint being polished by Every Detail" fill priority sizes="100vw" />
+        <div className="paint85-hero-shade" />
+        <div className="paint85-shell paint85-hero-inner">
+          <Breadcrumbs items={[{ name: "Services", path: "/our-services" }, { name: "Paint Correction", path: "/paint-correction" }]} />
+          <div className="paint85-hero-copy">
+            <p className="paint85-kicker">PAINT CORRECTION / DECATUR + ATLANTA</p>
+            <h1>BRING THE<br />REFLECTION <span>BACK.</span></h1>
+            <p>Reduce swirls, haze and clear-coat defects with a correction level matched to the paint in front of us.</p>
+            <a href="#paint-options" className="paint85-btn paint85-btn-light">SEE THE TWO LEVELS <span>↓</span></a>
+          </div>
+          <div className="paint85-hero-proof" aria-label="Every Detail paint care proof">
+            <span><strong><LiveReviewCount /></strong> FIVE-STAR REVIEWS</span>
+            <span>MOBILE PAINT CARE</span>
+            <span>ASSESSMENT BEFORE WORK</span>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section id="understand" className="pv38-section pv38-paper">
-      <div className="container-ed pv38-split-head"><div><p className="pv38-kicker dark">Start here</p><h2>What are you actually seeing?</h2></div><p>Correction is not a generic shine treatment. The right service depends on what is interrupting the reflection in your paint.</p></div>
-      <div className="container-ed pv38-defects">{paintDefects.map((d,i)=><article key={d.name}><span>0{i+1}</span><div><h3>{d.name}</h3><p>{d.detail}</p></div></article>)}</div>
-    </section>
-
-    <section className="pv38-section pv38-white">
-      <div className="container-ed pv38-process">
-        <div className="pv38-process-title"><p className="pv38-kicker dark">The process</p><h2>Inspect.<br/>Correct.<br/>Finish.</h2><p>Three steps, in that order. We do not choose the package first and force the paint into it.</p></div>
-        <div className="pv38-process-list">
-          <article><span>01</span><div><h3>Inspect the finish</h3><p>We evaluate the paint in direct light and determine how much correction makes sense for the condition and your goals.</p></div></article>
-          <article><span>02</span><div><h3>Correct the defects</h3><p>Machine polishing carefully levels microscopic clear-coat imperfections. Light defects may need one stage. More visible damage can require multiple stages.</p></div></article>
-          <article><span>03</span><div><h3>Refine the result</h3><p>The goal is not simply more shine. It is a cleaner reflection, better clarity and a finish that looks right in real light.</p></div></article>
+      <section id="paint-options" className="paint85-price-section">
+        <div className="paint85-shell">
+          <div className="paint85-section-intro paint85-section-intro-tight">
+            <div><p className="paint85-kicker dark">START WITH THE FINISH</p><h2>TWO LEVELS.<br /><span>ONE HONEST CALL.</span></h2></div>
+            <p>You do not need to diagnose your own paint. We confirm the right level after seeing the finish in person.</p>
+          </div>
+          <PaintPricingPanel services={["enhancement", "correction"]} quoteHref="#paint-quote" quoteLabel="GET MY PAINT ASSESSMENT" />
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section className="pv38-proof-section">
-      <div className="container-ed pv38-proof-layout"><div className="pv38-photo"><Image src="/images/red-audi-finished.jpg" alt="Red Audi with a clear glossy finish after paint correction" fill sizes="(max-width: 800px) 100vw, 46vw"/></div><div className="pv38-proof-copy"><p className="pv38-kicker">The result</p><h2>A cleaner reflection, not a temporary cover-up.</h2><p>Wax can add gloss. Correction changes the surface underneath that gloss. That is why the improvement remains after the first wash.</p></div></div>
-    </section>
+      <section className="paint85-defects">
+        <div className="paint85-shell">
+          <div className="paint85-section-intro">
+            <div><p className="paint85-kicker dark">WHAT WE ARE LOOKING AT</p><h2>DEFECTS THAT<br /><span>BREAK THE REFLECTION.</span></h2></div>
+            <p>Correction works in the clear coat. Deep damage through the clear may improve without disappearing completely.</p>
+          </div>
+          <div className="paint85-defect-grid">
+            {paintDefects.map((defect, index) => (
+              <article key={defect.name}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{defect.name}</h3><p>{defect.detail}</p></div></article>
+            ))}
+          </div>
+        </div>
+      </section>
 
-    <section className="pv38-section pv38-paper" id="correction-options">
-      <div className="container-ed pv38-split-head"><div><p className="pv38-kicker dark">Choose the level</p><h2>Two correction levels.<br/>One simple decision.</h2></div><p>We confirm the right level after seeing the paint. You are not expected to diagnose it yourself.</p></div>
-      <div className="container-ed pv38-options">
-        {[enhancement, correction].map((p,i)=><article key={p.id} className={i===1?"is-featured":""}><div className="pv38-option-top"><span>0{i+1}</span><p>{i===0?"LIGHT SWIRLS + HAZE":"VISIBLE / HEAVIER DEFECTS"}</p></div><h3>{p.name}</h3><p className="pv38-option-summary">{p.summary}</p><div className="pv38-price"><small>starting at</small><strong>{usd(p.startingAt)}</strong></div><p className="pv38-best"><b>Best for:</b> {p.bestFor}</p><ul>{p.includes.map(x=><li key={x}>{x}</li>)}</ul><TrackedLink href={quote} event="paint_inquiry" params={{location:`correction_${p.id}`}} className={i===1?"btn btn-primary":"btn btn-secondary"}>Ask about this level</TrackedLink></article>)}
-      </div>
-      <div className="container-ed pv38-bridge"><div><p className="pv38-kicker dark">After correction</p><h3>Want to protect the finish for longer?</h3><p>Our ceramic coating service includes the paint preparation it needs before coating.</p></div><Link href="/ceramic" className="pv38-arrow-link">Explore Paint Care →</Link></div>
-    </section>
+      <section className="paint85-proof-section">
+        <div className="paint85-shell paint85-proof-grid">
+          <figure className="paint85-proof-photo">
+            <Image src="/images/red-audi-finished.jpg" alt="Red Audi with clear glossy paint after Every Detail paint care" fill sizes="(max-width: 900px) 100vw, 56vw" />
+          </figure>
+          <div className="paint85-proof-copy">
+            <p className="paint85-kicker">THE GOAL</p>
+            <h2>CLARITY YOU CAN<br /><span>SEE IN REAL LIGHT.</span></h2>
+            <p>Wax can make paint look wetter for a while. Correction improves the surface underneath the protection, so the finish looks cleaner after the shine product is gone.</p>
+            <div className="paint85-mini-process">
+              <span><b>01</b> Inspect</span><span><b>02</b> Correct</span><span><b>03</b> Refine</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    <section id="paint-quote" className="pv38-form"><div className="container-ed"><PaintLeadForm kind="paint-correction"/></div></section>
-    <section className="pv38-faq"><div className="container-ed pv38-faq-grid"><div><p className="pv38-kicker dark">Before you book</p><h2>Paint correction questions.</h2></div><FaqList faqs={paintFaqs}/></div></section>
-    <JsonLd data={[enhancement,correction].map(p=>serviceSchema({name:p.name,description:p.summary,path:"/paint-correction",lowPrice:p.startingAt}))}/>
-  </div>;
+      <section className="paint85-compare">
+        <div className="paint85-shell">
+          <div className="paint85-option-grid">
+            {[enhancement, correction].map((service) => (
+              <article key={service.id} className={service.id === "correction" ? "is-featured" : ""}>
+                <div className="paint85-option-head"><span>{service.id === "enhancement" ? "GLOSS + LIGHT DEFECTS" : "VISIBLE / HEAVIER DEFECTS"}</span><strong>{service.name}</strong></div>
+                <p>{service.summary}</p>
+                <ul>{service.includes.map((item) => <li key={item}>{item}</li>)}</ul>
+                <a href="#paint-quote" className="paint85-text-link">START WITH AN ASSESSMENT ↗</a>
+              </article>
+            ))}
+          </div>
+          <div className="paint85-bridge">
+            <div><p className="paint85-kicker dark">PROTECT THE RESULT</p><h3>Correct it once. Then keep it protected.</h3><p>Our 2-year ceramic package includes the prep and correction needed before coating.</p></div>
+            <Link href="/ceramic" className="paint85-btn paint85-btn-dark">EXPLORE CERAMIC <span>↗</span></Link>
+          </div>
+        </div>
+      </section>
+
+      <section id="paint-quote" className="paint85-quote">
+        <div className="paint85-shell">
+          <div className="paint85-section-intro paint85-section-intro-tight"><div><p className="paint85-kicker dark">YOUR PAINT</p><h2>LET'S SEE WHAT<br /><span>IT ACTUALLY NEEDS.</span></h2></div><p>Tell us what you drive and what bothers you most. We will recommend the level that makes sense before work starts.</p></div>
+          <PaintLeadForm kind="paint-correction" />
+        </div>
+      </section>
+
+      <section className="paint85-faq"><div className="paint85-shell paint85-faq-grid"><div><p className="paint85-kicker dark">QUICK ANSWERS</p><h2>BEFORE<br />WE POLISH.</h2></div><FaqList faqs={paintCorrectionFaqs} /></div></section>
+
+      <JsonLd data={[
+        serviceSchema({ name: enhancement.name, description: enhancement.summary, path: "/paint-correction", lowPrice: enhancement.startingAt, highPrice: maxEnhancement }),
+        serviceSchema({ name: correction.name, description: correction.summary, path: "/paint-correction", lowPrice: correction.startingAt, highPrice: maxCorrection }),
+        breadcrumbSchema([{ name: "Services", path: "/our-services" }, { name: "Paint Correction", path: "/paint-correction" }]),
+      ]} />
+    </div>
+  );
 }

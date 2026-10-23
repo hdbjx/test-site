@@ -19,6 +19,13 @@ import { marked } from "marked";
 
 const DIR = path.join(process.cwd(), "content", "blog");
 
+function fallbackImage(category: string, cta?: PostMeta["cta"]) {
+  if (cta === "ceramic" || category.toLowerCase().includes("paint")) return "/images/red-paint-detail.webp";
+  if (cta === "detailplus") return "/images/interior-detail-team.webp";
+  if (category.toLowerCase().includes("services")) return "/images/team-driveway-detail.jpg";
+  return "/images/exterior-hand-detail.jpg";
+}
+
 export type PostMeta = {
   slug: string;
   title: string;
@@ -44,7 +51,7 @@ function read(slug: string): Post | null {
     description: String(data.description ?? ""),
     date: data.date instanceof Date ? data.date.toISOString().slice(0, 10) : String(data.date ?? ""),
     category: String(data.category ?? "Care tips"),
-    image: data.image ? String(data.image) : undefined,
+    image: data.image ? String(data.image) : fallbackImage(String(data.category ?? "Care tips"), data.cta),
     cta: data.cta,
     readingMinutes: Math.max(1, Math.round(words / 220)),
     html: marked.parse(content, { async: false }) as string,

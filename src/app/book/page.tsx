@@ -12,6 +12,7 @@ export const metadata = pageMetadata({
   description:
     "Choose your vehicle and service, see your price, and book an open time. We come to you in Decatur and nearby Atlanta.",
   path: "/book",
+  noindex: true,
 });
 
 export default async function BookPage({

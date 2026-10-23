@@ -11,7 +11,7 @@ export const metadata = pageMetadata({
 
 export default function JoinDetailPlus() {
   return (
-    <>
+    <div className="service85 service85-join">
       <PageHeader
         crumbs={[
           { name: "Detail+", path: "/detailplus" },
@@ -23,6 +23,6 @@ export default function JoinDetailPlus() {
       <section className="container-ed max-w-4xl pb-24">
         <DetailPlusForm />
       </section>
-    </>
+    </div>
   );
 }

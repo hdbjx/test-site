@@ -4,7 +4,7 @@ import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Our Work | Mobile Detailing Results in Atlanta | Every Detail",
+  title: "Our Work | Mobile Detailing Results | Every Detail",
   description: "See real Every Detail jobs around Decatur and Atlanta, including interiors, exterior details, paint care, our mobile rigs, and the crew behind the work.",
   path: "/our-work",
 });

@@ -10,8 +10,9 @@
     "images:pull": "node scripts/pull-wix-images.mjs",
     "blog:pull": "node scripts/pull-wix-blog.mjs",
     "qa:vehicles": "node scripts/qa-vehicle-catalog.mjs",
-    "prebuild": "npm run qa:vehicles && npm run qa:site",
-    "qa:site": "node scripts/qa-site-context.mjs"
+    "prebuild": "npm run qa:vehicles && npm run qa:site && npm run qa:seo",
+    "qa:site": "node scripts/qa-site-context.mjs",
+    "qa:seo": "node scripts/qa-seo.mjs"
   },
   "dependencies": {
     "@fontsource/barlow": "^5.2.5",

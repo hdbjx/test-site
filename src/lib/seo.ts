@@ -10,13 +10,18 @@ type PageMeta = {
   image?: string; // image id
   noindex?: boolean;
   type?: "website" | "article";
+  publishedTime?: string;
+  modifiedTime?: string;
 };
 
-export function pageMetadata({ title, description, path, image = "og-default", noindex, type = "website" }: PageMeta): Metadata {
-  const img = imageById(image);
+export function pageMetadata({ title, description, path, image = "og-default", noindex, type = "website", publishedTime, modifiedTime }: PageMeta): Metadata {
+  const img = image.startsWith("/") ? { file: image, alt: title, w: 1200, h: 630 } : imageById(image);
   return {
     title: { absolute: title },
     description,
+    authors: [{ name: site.name, url: site.url }],
+    creator: site.name,
+    publisher: site.name,
     alternates: { canonical: path },
     robots: noindex ? { index: false, follow: true } : undefined,
     openGraph: {
@@ -25,8 +30,9 @@ export function pageMetadata({ title, description, path, image = "og-default", n
       siteName: site.name,
       title,
       description,
-      images: [{ url: img.file, alt: img.alt }],
+      images: [{ url: img.file, alt: img.alt, width: img.w, height: img.h }],
       locale: "en_US",
+      ...(type === "article" && publishedTime ? { publishedTime, modifiedTime: modifiedTime ?? publishedTime } : {}),
     },
     twitter: { card: "summary_large_image", title, description, images: [img.file] },
   };
@@ -87,17 +93,37 @@ export function breadcrumbSchema(items: { name: string; path: string }[]) {
   };
 }
 
-export function articleSchema(p: { title: string; description: string; path: string; date: string; image?: string }) {
+export function articleSchema(p: { title: string; description: string; path: string; date: string; image?: string; modified?: string }) {
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: p.title,
     description: p.description,
     datePublished: p.date,
+    dateModified: p.modified ?? p.date,
     url: abs(p.path),
     mainEntityOfPage: abs(p.path),
     image: p.image ? abs(p.image) : abs(imageById("og-default").file),
-    author: { "@type": "Organization", name: site.name, url: site.url },
+    author: { "@type": "Organization", name: `${site.name} crew`, url: abs("/about-us") },
     publisher: { "@id": businessId },
+  };
+}
+
+export function collectionSchema(p: { name: string; description: string; path: string; items: { name: string; path: string }[] }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: p.name,
+    description: p.description,
+    url: abs(p.path),
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: p.items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        url: abs(item.path),
+      })),
+    },
   };
 }

@@ -13,9 +13,10 @@ import { usd } from "@/lib/format";
 import { pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Car Detailing Services & Prices in Decatur, GA | Every Detail",
-  description: "Compare Every Detail mobile detailing services, see exact pricing for your vehicle, and choose between Maintenance, Premium, Factory Reset, Paint Care, and Detail+.",
+  title: "Car Detailing Services & Pricing | Every Detail Decatur",
+  description: "Compare Every Detail services, see pricing for your vehicle, and choose Maintenance, Premium, Factory Reset, Paint Care, or Detail+.",
   path: "/our-services",
+  image: "two-tech-interior-detail",
 });
 
 const core = [
@@ -38,7 +39,7 @@ export default function ServicesPage() {
 
   return (
     <>
-      <main className="services-v61 info80-page">
+      <main className="services-v61 info80-page service85">
         <section className="svc61-hero info80-hero">
           <div className="svc61-shell">
             <div className="svc61-crumbs"><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>

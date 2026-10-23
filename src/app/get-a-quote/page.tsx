@@ -7,6 +7,7 @@ export const metadata = pageMetadata({
   description:
     "Tell us what you drive and what condition it is in. Every Detail will recommend the right mobile detailing service, show your personalized price, and make booking easy.",
   path: "/get-a-quote",
+  noindex: true,
 });
 
 export default async function QuotePage({ searchParams }: { searchParams: Promise<{ interest?: string }> }) {

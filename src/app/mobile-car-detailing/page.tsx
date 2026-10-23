@@ -8,13 +8,14 @@ import { pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Mobile Car Detailing in Decatur & Atlanta, GA | Every Detail",
-  description: "Full inside-and-out mobile car detailing in Decatur and nearby Atlanta areas with 100% electric mobile rigs. First-time clients usually start with Premium or Factory Reset.",
+  description: "Inside-and-out mobile car detailing in Decatur and nearby Atlanta areas with electric rigs that bring their own power and water.",
   path: "/mobile-car-detailing",
+  image: "hq-branded-van-side",
 });
 
 export default function MobileCarDetailingPage() {
   return (
-    <div className="services-v161 mobile-detailing-page">
+    <div className="services-v161 mobile-detailing-page service85">
       <section className="edu-hero"><div className="svc-shell">
         <div className="mb-6"><Breadcrumbs items={[{ name: "Mobile Car Detailing", path: "/mobile-car-detailing" }]} /></div>
         <p className="svc-eyebrow">MOBILE CAR DETAILING / DECATUR + ATLANTA</p>

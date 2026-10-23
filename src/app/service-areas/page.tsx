@@ -7,9 +7,10 @@ import { reviewCountLabel, site } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Mobile Car Detailing Service Areas Near Decatur, GA | Every Detail",
-  description: `Every Detail brings mobile car detailing to Decatur and nearby Atlanta neighborhoods. 100% electric mobile rigs with their own power and water, online pricing and ${reviewCountLabel} five-star reviews.`,
+  title: "Mobile Detailing Service Areas Near Decatur | Every Detail",
+  description: `Mobile detailing from Decatur to nearby Atlanta neighborhoods. Our electric rigs bring their own power and water, with pricing available online.`,
   path: "/service-areas",
+  image: "hq-branded-van-side",
 });
 
 export default function ServiceAreas() {

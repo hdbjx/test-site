@@ -11,8 +11,8 @@ import { reviewCountLabel } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Book Mobile Car Detailing in Decatur, GA | Every Detail",
-  description: `Professional mobile detailing at your driveway in Decatur + Atlanta. We bring power and water in 100% electric mobile rigs. ${reviewCountLabel} five-star reviews. See pricing and book online.`,
+  title: "Mobile Car Detailing in Decatur & Atlanta | Every Detail",
+  description: `Mobile detailing in Decatur and nearby Atlanta. We bring our own power and water, show pricing online, and book at your driveway.`,
   path: "/",
   image: "og-default",
 });

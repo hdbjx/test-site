@@ -95,6 +95,58 @@ export const paintFaqs: Faq[] = [
   },
 ];
 
+
+export const paintCorrectionFaqs: Faq[] = [
+  {
+    q: "Enhancement polish or full correction: which one do I need?",
+    a: "Enhancement polish is for lighter swirls, haze and lost gloss. Full correction is for more visible swirls, wash marring, scratches and neglected paint. We confirm the right level after seeing the finish.",
+    confirmed: true,
+  },
+  {
+    q: "Will paint correction remove every scratch?",
+    a: "No. Correction works in the clear coat, so many swirls and lighter scratches can be removed or significantly reduced. Damage that is too deep to correct safely may remain visible.",
+    confirmed: true,
+  },
+  {
+    q: "Does paint correction permanently improve the finish?",
+    a: "Correction changes the surface of the clear coat rather than temporarily filling defects. New swirls can still be introduced later by poor washing, which is why careful maintenance matters after correction.",
+    confirmed: true,
+  },
+  {
+    q: "How do I protect the paint after correction?",
+    a: "You can protect the corrected finish with proper washing and paint protection. Our 2-year ceramic package includes correction before coating for clients who want longer-term protection.",
+    confirmed: true,
+  },
+];
+
+export const ceramicFaqs: Faq[] = [
+  {
+    q: "Why is paint correction included with ceramic coating?",
+    a: "A coating locks in the finish underneath it. Correcting first means the coating bonds over clean, refined paint instead of sealing in swirls and haze.",
+    confirmed: true,
+  },
+  {
+    q: "Is ceramic coating scratch-proof?",
+    a: "No. Ceramic helps with chemical resistance, UV exposure, water behavior and routine maintenance, but improper washing can still mar the paint and the coating does not stop rock chips.",
+    confirmed: true,
+  },
+  {
+    q: "How long does the coating last?",
+    a: "This package uses a professional two-year ceramic coating. Real-world durability depends on how the vehicle is used, washed and maintained.",
+    confirmed: true,
+  },
+  {
+    q: "What is the complimentary follow-up detail?",
+    a: "Every 2-year ceramic coating includes a complimentary follow-up detail after installation. We clean the vehicle correctly for a coated finish and check how the coating is behaving.",
+    confirmed: true,
+  },
+  {
+    q: "How should I wash a coated car?",
+    a: "Use a gentle hand wash, clean wash media and soft drying towels. Avoid automatic brush washes. Regular maintenance helps the coating keep performing and keeps the finish looking its best.",
+    confirmed: true,
+  },
+];
+
 export const detailPlusFaqs: Faq[] = [
   {
     q: "How much does Detail+ cost?",

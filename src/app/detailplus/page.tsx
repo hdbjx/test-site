@@ -11,11 +11,12 @@ export const metadata = pageMetadata({
   title: "Detail+ Recurring Car Detailing Membership | Every Detail",
   description: "Recurring mobile detailing in Decatur and Atlanta. Choose bi-weekly, monthly, every six weeks, or a custom 1 to 13 week rhythm, with no contracts.",
   path: "/detailplus",
+  image: "hq-black-suv-finished",
 });
 
 export default function DetailPlusPage() {
   return (
-    <div className="dp56-page">
+    <div className="dp56-page service85">
       <section className="dp56-hero ed-paper ed-paper--ink ed-paper--crumpled">
         <div className="dp56-shell dp56-hero-grid">
           <div className="dp56-hero-copy">

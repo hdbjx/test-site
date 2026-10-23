@@ -1,130 +1,109 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CeramicOffer } from "@/components/CeramicOffer";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { FaqList } from "@/components/FaqList";
 import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
 import { PaintLeadForm } from "@/components/PaintLeadForm";
-import { paintFaqs } from "@/data/faqs";
-import { ceramicDoes, ceramicDoesNot, paintServices } from "@/data/paint";
-import { pageMetadata, serviceSchema } from "@/lib/seo";
+import { PaintPricingPanel } from "@/components/PaintPricingPanel";
+import { ceramicFaqs } from "@/data/faqs";
+import { PAINT_PRICING, ceramicDoes, ceramicDoesNot, paintServices } from "@/data/paint";
+import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "2-Year Ceramic Coating in Decatur & Atlanta | Every Detail",
-  description: "Professional 2-year ceramic coating with paint correction, decontamination and a complimentary follow-up detail from Every Detail.",
+  description: "Professional 2-year ceramic coating in Decatur and Atlanta with paint correction, decontamination and a complimentary follow-up detail.",
   path: "/ceramic",
+  image: "paint-01",
 });
 
 const ceramic = paintServices.find((service) => service.id === "ceramic2yr")!;
-
-const included = [
-  ["01", "DECONTAMINATE", "Remove bonded contamination so the paint is clean before polishing."],
-  ["02", "CORRECT", "Reduce visible swirls and haze before the finish is protected."],
-  ["03", "COAT", "Apply the two-year ceramic coating panel by panel to prepared paint."],
-  ["04", "FOLLOW UP", "Return for the complimentary follow-up detail included with the package."],
-] as const;
+const maxCeramic = Math.max(...Object.values(PAINT_PRICING).map((price) => price.ceramic2yr));
 
 export default function CeramicPage() {
   return (
-    <div className="cer70">
-      <section className="cer70-hero">
+    <div className="paint85 paint85-ceramic service85">
+      <section className="paint85-hero">
         <Image src="/images/mercedes-paint.webp" alt="Corrected Mercedes paint with deep gloss" fill priority sizes="100vw" />
-        <div className="cer70-hero-shade" />
-        <div className="cer70-reflection" aria-hidden="true" />
-        <div className="cer70-shell cer70-hero-inner">
-          <div className="cer70-hero-copy">
-            <p className="cer70-kicker">2-YEAR CERAMIC COATING</p>
-            <h1>KEEP THE<br />FINISH <span>RIGHT.</span></h1>
+        <div className="paint85-hero-shade" />
+        <div className="paint85-shell paint85-hero-inner">
+          <Breadcrumbs items={[{ name: "Services", path: "/our-services" }, { name: "Ceramic Coating", path: "/ceramic" }]} />
+          <div className="paint85-hero-copy">
+            <p className="paint85-kicker">2-YEAR CERAMIC COATING</p>
+            <h1>PROTECT THE<br />FINISH <span>YOU FIXED.</span></h1>
             <p>Paint correction, professional ceramic protection and a complimentary follow-up detail in one package.</p>
-            <a href="#coating-quote" className="cer70-primary">GET MY COATING PLAN ↗</a>
+            <a href="#ceramic-price" className="paint85-btn paint85-btn-light">SEE MY CERAMIC PRICE <span>↓</span></a>
           </div>
-          <div className="cer70-hero-note">
-            <span>EVERY DETAIL PAINT CARE</span>
-            <strong>2 YEAR</strong>
-            <small>CERAMIC PROTECTION</small>
+          <div className="paint85-hero-proof" aria-label="Every Detail ceramic coating proof">
+            <span><strong><LiveReviewCount /></strong> FIVE-STAR REVIEWS</span>
+            <span>2-YEAR PROTECTION</span>
+            <span>FOLLOW-UP DETAIL INCLUDED</span>
           </div>
         </div>
       </section>
 
-      <section className="cer70-offer-section">
-        <div className="cer70-shell"><CeramicOffer /></div>
+      <section id="ceramic-price" className="paint85-price-section">
+        <div className="paint85-shell">
+          <div className="paint85-section-intro paint85-section-intro-tight">
+            <div><p className="paint85-kicker dark">YOUR PACKAGE</p><h2>CORRECT.<br /><span>COAT. MAINTAIN.</span></h2></div>
+            <p>The coating goes on after the finish is cleaned, decontaminated and corrected so we are protecting paint worth keeping.</p>
+          </div>
+          <PaintPricingPanel services={["ceramic2yr"]} primary="ceramic2yr" quoteHref="#coating-quote" quoteLabel="GET MY COATING PLAN" />
+        </div>
       </section>
 
-      <section className="cer70-surface">
-        <div className="cer70-shell cer70-surface-grid">
-          <div className="cer70-surface-copy">
-            <p className="cer70-kicker">WHY PREP MATTERS</p>
-            <h2>THE COATING<br />PROTECTS <span>WHAT'S THERE.</span></h2>
-            <p className="cer70-lede">That is why our ceramic package includes paint correction first. We improve the finish before we protect it.</p>
-            <Link href="/paint-correction" className="cer70-text-link">ABOUT PAINT CORRECTION ↗</Link>
-          </div>
-          <figure className="cer70-surface-photo">
-            <Image src="/images/red-paint-detail.webp" alt="Every Detail working on corrected automotive paint" fill sizes="(max-width: 900px) 92vw, 48vw" />
-            <div className="cer70-surface-line" aria-hidden="true" />
-            <figcaption><span>PREP</span><span>POLISH</span><span>PROTECT</span></figcaption>
+      <section className="paint85-proof-section paint85-proof-section-light">
+        <div className="paint85-shell paint85-proof-grid reverse">
+          <figure className="paint85-proof-photo">
+            <Image src="/images/red-paint-detail.webp" alt="Every Detail preparing automotive paint before ceramic coating" fill sizes="(max-width: 900px) 100vw, 56vw" />
           </figure>
-        </div>
-      </section>
-
-      <section className="cer70-truth">
-        <div className="cer70-shell cer70-truth-grid">
-          <div>
-            <p className="cer70-kicker">CERAMIC, CLEARLY</p>
-            <h2>LESS STICKS.<br /><span>MORE STAYS.</span></h2>
-          </div>
-          <div className="cer70-does-grid">
-            <div><h3>IT DOES</h3>{ceramicDoes.slice(0, 3).map((item) => <p key={item}>{item}</p>)}</div>
-            <div><h3>IT DOES NOT</h3>{ceramicDoesNot.slice(0, 3).map((item) => <p key={item}>{item}</p>)}</div>
+          <div className="paint85-proof-copy">
+            <p className="paint85-kicker dark">WHY PREP MATTERS</p>
+            <h2>THE COATING<br /><span>PROTECTS WHAT'S THERE.</span></h2>
+            <p>Coating does not hide swirls or haze. That is why correction is included before ceramic. We improve the finish first, then protect it.</p>
+            <Link href="/paint-correction" className="paint85-text-link">ABOUT PAINT CORRECTION ↗</Link>
           </div>
         </div>
       </section>
 
-      <section className="cer70-included">
-        <div className="cer70-shell">
-          <div className="cer70-section-head">
-            <div><p className="cer70-kicker">THE PACKAGE</p><h2>FOUR STEPS.<br /><span>ONE FINISH.</span></h2></div>
-            <p>{ceramic.bestFor}</p>
-          </div>
-          <div className="cer70-included-grid">
-            {included.map(([number, title, body]) => (
-              <article key={title}><span>{number}</span><h3>{title}</h3><p>{body}</p></article>
-            ))}
+      <section className="paint85-truth">
+        <div className="paint85-shell">
+          <div className="paint85-section-intro"><div><p className="paint85-kicker">CERAMIC, CLEARLY</p><h2>EASIER TO KEEP CLEAN.<br /><span>NOT MAGIC ARMOR.</span></h2></div><p>A coating changes how the finish sheds water and contamination. It does not turn paint into an impact-resistant surface.</p></div>
+          <div className="paint85-truth-grid">
+            <div><h3>WHAT IT DOES</h3>{ceramicDoes.slice(0, 3).map((item) => <p key={item}>{item}</p>)}</div>
+            <div><h3>WHAT IT DOES NOT DO</h3>{ceramicDoesNot.slice(0, 3).map((item) => <p key={item}>{item}</p>)}</div>
           </div>
         </div>
       </section>
 
-      <section className="cer70-result">
-        <div className="cer70-shell cer70-result-grid">
-          <figure>
-            <Image src="/images/black-truck-finished.jpg" alt="Black vehicle with a deep finished gloss after Every Detail paint care" fill sizes="(max-width: 900px) 100vw, 60vw" />
-          </figure>
-          <div className="cer70-result-copy">
-            <p className="cer70-kicker">THE RESULT</p>
-            <h2>DEEPER GLOSS.<br /><span>EASIER WASHES.</span></h2>
-            <p>A coated car still needs to be washed. The difference is that water, dirt and contamination release more easily while the corrected finish stays protected.</p>
-            <div className="cer70-review-proof"><strong><LiveReviewCount /></strong><span>FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span></div>
+      <section className="paint85-package">
+        <div className="paint85-shell">
+          <div className="paint85-section-intro paint85-section-intro-tight"><div><p className="paint85-kicker dark">INCLUDED</p><h2>ONE PACKAGE.<br /><span>THREE THINGS THAT MATTER.</span></h2></div><p>{ceramic.bestFor}</p></div>
+          <div className="paint85-package-grid">
+            <article><span>01</span><h3>Paint preparation + correction</h3><p>Wash, decontamination and correction matched to the finish before coating.</p></article>
+            <article><span>02</span><h3>2-year ceramic coating</h3><p>Professional ceramic protection applied panel by panel to prepared paint.</p></article>
+            <article><span>03</span><h3>Complimentary follow-up detail</h3><p>We return after installation to clean the vehicle correctly and check the coating.</p></article>
           </div>
         </div>
       </section>
 
-      <section id="coating-quote" className="cer70-quote">
-        <div className="cer70-shell">
-          <div className="cer70-section-head cer70-section-head-quote">
-            <div><p className="cer70-kicker">YOUR CAR</p><h2>LET'S LOOK AT<br /><span>THE PAINT.</span></h2></div>
-            <p>Tell us what you drive and what shape the paint is in. We will confirm the right preparation before coating.</p>
-          </div>
+      <section className="paint85-result">
+        <div className="paint85-shell paint85-result-grid">
+          <figure><Image src="/images/black-truck-finished.jpg" alt="Black vehicle with a deep gloss after Every Detail paint care" fill sizes="(max-width: 900px) 100vw, 58vw" /></figure>
+          <div><p className="paint85-kicker">THE RESULT</p><h2>DEEPER GLOSS.<br /><span>EASIER WASHES.</span></h2><p>A coated vehicle still needs washing. The difference is that water, dirt and contamination release more easily while the corrected finish stays protected.</p><div className="paint85-review-proof"><strong><LiveReviewCount /></strong><span>FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span></div></div>
+        </div>
+      </section>
+
+      <section id="coating-quote" className="paint85-quote">
+        <div className="paint85-shell">
+          <div className="paint85-section-intro paint85-section-intro-tight"><div><p className="paint85-kicker dark">YOUR CAR</p><h2>LET'S LOOK AT<br /><span>THE PAINT.</span></h2></div><p>Tell us what you drive and how the finish looks today. We will confirm the preparation before anything is booked.</p></div>
           <PaintLeadForm kind="ceramic" />
         </div>
       </section>
 
-      <section className="cer70-faq">
-        <div className="cer70-shell cer70-faq-grid">
-          <div><p className="cer70-kicker">QUICK ANSWERS</p><h2>BEFORE<br />YOU COAT.</h2></div>
-          <FaqList faqs={paintFaqs.slice(1, 5)} />
-        </div>
-      </section>
+      <section className="paint85-faq"><div className="paint85-shell paint85-faq-grid"><div><p className="paint85-kicker dark">QUICK ANSWERS</p><h2>BEFORE<br />YOU COAT.</h2></div><FaqList faqs={ceramicFaqs} /></div></section>
 
-      <JsonLd data={serviceSchema({ name: ceramic.name, description: ceramic.summary, path: "/ceramic", lowPrice: ceramic.startingAt })} />
+      <JsonLd data={[serviceSchema({ name: ceramic.name, description: ceramic.summary, path: "/ceramic", lowPrice: ceramic.startingAt, highPrice: maxCeramic }), breadcrumbSchema([{ name: "Services", path: "/our-services" }, { name: "Ceramic Coating", path: "/ceramic" }])]} />
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { pageMetadata } from "@/lib/seo";
 import { getPublicTeamRoster } from "@/lib/team-roster";
 
 export const metadata = pageMetadata({
-  title: "About Every Detail | Student-Run Mobile Detailing in Decatur, GA",
+  title: "About Every Detail | Student-Run Detailing in Decatur",
   description: "Meet Every Detail, the student-run mobile detailing team built in Decatur, Georgia.",
   path: "/about-us",
 });
