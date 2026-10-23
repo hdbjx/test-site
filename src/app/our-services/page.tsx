@@ -30,6 +30,7 @@ const core = [
     fit: "Best for regularly detailed vehicles and returning clients.",
     href: "/book?service=maintenance",
     image: "tesla-foam-wash",
+    featured: false,
   },
   {
     id: "premium",
@@ -53,6 +54,7 @@ const core = [
     fit: "Best for stains, pets, spills, odor concerns, or years of buildup.",
     href: "/book?service=factoryReset",
     image: "interior-detail-team",
+    featured: false,
   },
 ] as const;
 
