@@ -406,41 +406,35 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
         <div ref={resultRef} className="quote-rec-result quote-rec-conversation q51-result">
           <button type="button" onClick={reset} className="quote-rec-back">← Start over</button>
 
-          <section className="quote-rec-reveal-card q51-reveal" aria-live="polite">
-            <div className="quote-rec-reveal-copy">
-              <p className="eyebrow">YOUR MATCH</p>
-              <h2>{activeService.name}</h2>
-              <p className="quote-rec-reveal-reason">{personalReason}</p>
-              <div className="quote-rec-reveal-includes">{included.slice(0,3).map((item) => <span key={item}>✓ {item}</span>)}</div>
-              <details className="quote-rec-why-details"><summary>Why this fits your {vehicle.model}</summary><p>{result.why}</p></details>
-            </div>
-            <div className="quote-rec-reveal-price">
-              <span>YOUR PRICE</span>
-              <strong>{totalDisplay}</strong>
-              <small>{activeService.name}{extrasSummary.length ? ` + ${extrasSummary.join(", ")}` : ""}</small>
-              <p>{totalNote}</p>
-            </div>
-          </section>
-
-          <section className="quote-rec-intent-stage q51-intent">
-            <div className="quote-rec-intent-context">
-              <p className="eyebrow">NEXT STEP</p>
-              <h2>When do you want it done?</h2>
-
-              <div className="quote-rec-mini-summary">
-                <span>{vehicleName}</span>
-                <span>{conditionLabel} condition</span>
-                {concernNames.slice(0, 2).map((item) => <span key={item}>{item}</span>)}
-                {concernNames.length > 2 && <span>+{concernNames.length - 2} more</span>}
+          <section className="q76-recommendation" aria-live="polite">
+            <div className="q76-recommendation-head">
+              <div>
+                <p>WE’D GO WITH</p>
+                <h2>{activeService.name}</h2>
+              </div>
+              <div className="q76-recommendation-price">
+                <span>YOUR PRICE</span>
+                <strong>{totalDisplay}</strong>
+                <small>{extrasSummary.length ? extrasSummary.join(" + ") : vehicleName}</small>
               </div>
             </div>
-            <div className="quote-rec-intent-options">
-              {timingOptions.map((item) => (
-                <button key={item.value} type="button" className="quote-rec-intent-choice" onClick={() => chooseTiming(item.value)}>
-                  <span><strong>{item.label}</strong><small>{item.sub}</small></span><b>→</b>
-                </button>
-              ))}
-              <p className="quote-rec-intent-note">No payment required.</p>
+
+            <p className="q76-recommendation-reason">{personalReason}</p>
+            <div className="q76-recommendation-includes">{included.slice(0,3).map((item) => <span key={item}>{item}</span>)}</div>
+            <details className="q76-recommendation-why"><summary>Why this fits your {vehicle.model}</summary><p>{result.why}</p></details>
+
+            <div className="q76-timing">
+              <div className="q76-timing-head">
+                <span>NEXT</span>
+                <h3>When would you like it done?</h3>
+              </div>
+              <div className="q76-timing-options">
+                {timingOptions.map((item) => (
+                  <button key={item.value} type="button" onClick={() => chooseTiming(item.value)}>
+                    <span><strong>{item.label}</strong><small>{item.sub}</small></span><b>↗</b>
+                  </button>
+                ))}
+              </div>
             </div>
           </section>
         </div>
@@ -475,7 +469,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
           <div className="quote-rec-answer-vehicle"><span>{vehicleName}</span><span>{conditionLabel}{concernNames.length ? ` · ${concernNames.slice(0,2).join(" · ")}` : ""}</span></div>
         </div>
 
-        <section className="quote-rec-reveal-card" aria-live="polite">
+        <section className="quote-rec-reveal-card q76-followup-summary" aria-live="polite">
           <div className="quote-rec-reveal-copy">
             <p className="eyebrow">Here's what we'd do</p>
             <h2>{activeService.name}</h2>
@@ -632,7 +626,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
                 })}
               </div>
               <button type="button" className="q51-build" onClick={buildResult}>
-                <span>BUILD MY RECOMMENDATION</span><b>↗</b>
+                <span>SHOW MY MATCH</span><b>↗</b>
               </button>
             </div>
           </section>

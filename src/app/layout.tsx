@@ -33,11 +33,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-dvh">
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(location.pathname!=='/')return;var p=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'numeric'}).formatToParts(new Date());var m=Number((p.find(function(x){return x.type==='month'})||{}).value);if(m===10){document.body.classList.add('halloween-site')}}catch(e){}})();`,
-          }}
-        />
         <GoogleReviewStatsProvider>
         <VehicleProvider>
         <JourneyProvider>

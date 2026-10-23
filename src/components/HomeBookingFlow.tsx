@@ -127,30 +127,39 @@ export function HomeBookingFlow() {
               <button type="button" onClick={() => { setService(null); setVehicle(null); setServiceIntent(null); }}>Close ×</button>
             </div>
 
-            <div className="v15-stage-main">
-              <div className="v15-stage-question">
-                <p className="eyebrow">One more thing</p>
-                <h3>{siteVehicle ? "Pricing for your car." : "What do you drive?"}</h3>
-                <p>{siteVehicle ? `We’re using your ${siteVehicleLabel(siteVehicle)} everywhere on the site.` : "Choose the closest match, or search your exact vehicle from the header."}</p>
-                {siteVehicle ? <button type="button" className="v64-inline-change" onClick={openPicker}>Change vehicle</button> : null}
-              </div>
-
-              {!siteVehicle && (
-                <div className="v15-vehicles" role="radiogroup" aria-label="Choose vehicle size">
-                  {vehicles.map((v, index) => (
-                    <button
-                      key={v.id}
-                      type="button"
-                      role="radio"
-                      aria-checked={vehicle === v.id}
-                      className={`v15-vehicle ${vehicle === v.id ? "is-active" : ""}`}
-                      onClick={() => chooseVehicle(v.id)}
-                    >
-                      <span className="v15-vehicle-num">0{index + 1}</span>
-                      <span className="v15-vehicle-name">{v.label}</span>
-                    </button>
-                  ))}
+            <div className={`v15-stage-main ${siteVehicle ? "has-site-vehicle" : ""}`}>
+              {siteVehicle ? (
+                <div className="v76-selected-vehicle">
+                  <div>
+                    <span>YOUR CAR</span>
+                    <strong>{siteVehicleLabel(siteVehicle)}</strong>
+                    <small>{vehicleLabel(siteVehicle.vehicle)}</small>
+                  </div>
+                  <button type="button" onClick={openPicker}>Change</button>
                 </div>
+              ) : (
+                <>
+                  <div className="v15-stage-question">
+                    <p className="eyebrow">YOUR CAR</p>
+                    <h3>What do you drive?</h3>
+                    <p>Choose the closest size, or add your exact vehicle from the header.</p>
+                  </div>
+                  <div className="v15-vehicles" role="radiogroup" aria-label="Choose vehicle size">
+                    {vehicles.map((v, index) => (
+                      <button
+                        key={v.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={vehicle === v.id}
+                        className={`v15-vehicle ${vehicle === v.id ? "is-active" : ""}`}
+                        onClick={() => chooseVehicle(v.id)}
+                      >
+                        <span className="v15-vehicle-num">0{index + 1}</span>
+                        <span className="v15-vehicle-name">{v.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
 
@@ -163,7 +172,7 @@ export function HomeBookingFlow() {
                     <small>About {durationShort(quote.minutes)} in your driveway <span>· Power + water included</span></small>
                   </div>
                   <div className="v15-result-price"><span>Total</span><strong>{usd(quote.price)}</strong></div>
-                  <TrackedLink href={bookingHref(vehicle!, service)} event="book_click" params={{ location: "home_flow", vehicle: vehicle ?? undefined, service: service ?? undefined }} className="btn btn-primary v15-continue" onClick={() => service && setServiceIntent(service)}>Choose a time ↗</TrackedLink>
+                  <TrackedLink href={siteVehicle ? `/book?service=${service}` : bookingHref(vehicle!, service)} event="book_click" params={{ location: "home_flow", vehicle: vehicle ?? undefined, service: service ?? undefined }} className="btn btn-primary v15-continue" onClick={() => service && setServiceIntent(service)}>Choose a time ↗</TrackedLink>
                 </>
               )}
             </div>

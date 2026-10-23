@@ -25,7 +25,10 @@ export function VehicleGlobalUI() {
     const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     document.body.style.overflow = "hidden";
     const panel = panelRef.current;
-    panel?.querySelector<HTMLElement>("button,input,select")?.focus();
+    const searchInput = panel?.querySelector<HTMLInputElement>(".veh-search input");
+    const closeButton = panel?.querySelector<HTMLButtonElement>(".veh-modal-close");
+    if (window.matchMedia("(pointer: fine)").matches) searchInput?.focus();
+    else closeButton?.focus({ preventScroll: true });
     const key = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         if (pickerOpen) closePicker();
@@ -50,11 +53,11 @@ export function VehicleGlobalUI() {
 
   return (
     <div className="veh-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target !== event.currentTarget) return; pickerOpen ? closePicker() : dismissPrompt(); }}>
-      <section ref={panelRef} className="veh-modal veh-modal-clean" role="dialog" aria-modal="true" aria-labelledby="veh-modal-title">
+      <section ref={panelRef} className={`veh-modal veh-modal-clean ${onboarding ? "is-welcome" : "is-change"}`} role="dialog" aria-modal="true" aria-labelledby="veh-modal-title">
         <button className="veh-modal-close" type="button" onClick={pickerOpen ? closePicker : dismissPrompt} aria-label="Close vehicle picker">×</button>
-        <p className="veh-modal-kicker">{vehicle ? "YOUR VEHICLE" : "WELCOME TO EVERY DETAIL"}</p>
-        <h2 id="veh-modal-title">{vehicle ? "Change vehicle." : "What do you drive?"}</h2>
-        {!vehicle && <p className="veh-modal-copy">Pick your car and we’ll show the right pricing for it.</p>}
+        <p className="veh-modal-kicker">{vehicle ? "YOUR VEHICLE" : "HEY, WELCOME IN."}</p>
+        <h2 id="veh-modal-title">{vehicle ? "Change vehicle." : "Let’s start with your car."}</h2>
+        {!vehicle && <p className="veh-modal-copy">What are you driving? We’ll match the pricing to it.</p>}
 
         {vehicle && (
           <div className="veh-current-card">
@@ -73,10 +76,10 @@ export function VehicleGlobalUI() {
 
         <label className="veh-remember">
           <input type="checkbox" checked={vehicle ? remembered : rememberChoice} onChange={(event) => vehicle ? setRemembered(event.target.checked) : setRememberChoice(event.target.checked)} />
-          <span><b>Remember on this device</b></span>
+          <span><b>Keep this car for next time</b></span>
         </label>
 
-        {!vehicle && <button type="button" className="veh-skip" onClick={dismissPrompt}>Browse first</button>}
+        {!vehicle && <button type="button" className="veh-skip" onClick={dismissPrompt}>Just browsing for now</button>}
       </section>
     </div>
   );

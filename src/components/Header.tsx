@@ -146,6 +146,14 @@ export function Header() {
             aria-label="Menu"
             className="site-shared-menu-panel"
           >
+            <button
+              type="button"
+              className="site-shared-menu-panel-close"
+              aria-label="Close menu"
+              onClick={() => { setMenuOpen(false); window.requestAnimationFrame(() => menuButtonRef.current?.focus()); }}
+            >
+              <span>CLOSE</span><i aria-hidden="true">×</i>
+            </button>
             <nav aria-label="Main menu" className="site-shared-menu-shell">
               <div className="site-shared-menu-main">
                 {[
@@ -160,23 +168,31 @@ export function Header() {
                   </Link>
                 ))}
               </div>
-              <button type="button" className="site-shared-menu-vehicle" onClick={() => { setMenuOpen(false); vehicle || serviceIntent ? openDrawer() : openPicker(); }}>
-                <span>{serviceIntent ? "YOUR DETAIL" : "YOUR VEHICLE"}</span>
-                <strong>{vehicle ? siteVehicleLabel(vehicle) : serviceIntent ? catalogService(serviceIntent).name : "Add your vehicle"}</strong>
-                <small>{vehicle && serviceIntent ? catalogService(serviceIntent).name : vehicle ? vehicleLabel(vehicle.vehicle) : ""}</small>
-                <i aria-hidden="true">↗</i>
-              </button>
-              <div className="site-shared-menu-utility">
-                <Link href="/get-a-quote">Find My Detail</Link>
-                <Link href="/paint-correction">Paint Correction</Link>
-                <Link href="/ceramic">Paint Care</Link>
-                <Link href="/service-areas">Service Areas</Link>
-                <Link href="/blog">Shine On Blog</Link>
-                {supabaseConfigured && <a href="/account" data-no-transition="true">Account</a>}
-              </div>
-              <div className="site-shared-menu-actions">
-                <a href={site.phone.sms} onClick={() => track("text_click", { location: "shared_menu" })}>Text us</a>
-                <Link href="/book" onClick={() => track("book_click", { location: "shared_menu" })}>Book a detail <span aria-hidden="true">↗</span></Link>
+
+              <div className="site-shared-menu-side">
+                <button type="button" className="site-shared-menu-vehicle" onClick={() => { setMenuOpen(false); vehicle || serviceIntent ? openDrawer() : openPicker(); }}>
+                  <span>{serviceIntent ? "YOUR DETAIL" : "YOUR VEHICLE"}</span>
+                  <strong>{vehicle ? siteVehicleLabel(vehicle) : serviceIntent ? catalogService(serviceIntent).name : "Add your vehicle"}</strong>
+                  <small>{vehicle && serviceIntent ? catalogService(serviceIntent).name : vehicle ? vehicleLabel(vehicle.vehicle) : "Exact pricing starts here"}</small>
+                  <i aria-hidden="true">↗</i>
+                </button>
+
+                <div className="site-shared-menu-explore">
+                  <p>EXPLORE</p>
+                  <div className="site-shared-menu-utility">
+                    <Link href="/get-a-quote">Find My Detail <span>↗</span></Link>
+                    <Link href="/ceramic">Ceramic Coating <span>↗</span></Link>
+                    <Link href="/paint-correction">Paint Correction <span>↗</span></Link>
+                    <Link href="/service-areas">Service Areas <span>↗</span></Link>
+                    <Link href="/blog">Shine On Blog <span>↗</span></Link>
+                    {supabaseConfigured && <a href="/account" data-no-transition="true">Account <span>↗</span></a>}
+                  </div>
+                </div>
+
+                <div className="site-shared-menu-actions">
+                  <a href={site.phone.sms} onClick={() => track("text_click", { location: "shared_menu" })}>Text us</a>
+                  <Link href="/book" onClick={() => track("book_click", { location: "shared_menu" })}>Book a detail <span aria-hidden="true">↗</span></Link>
+                </div>
               </div>
             </nav>
           </div>

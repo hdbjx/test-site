@@ -4658,1296 +4658,6 @@ main,section,article,div,form,fieldset{min-width:0}
   }
 }
 
-/* Seasonal decorations are anchored to real page elements, never the viewport. */
-.seasonal-host { position: relative; }
-
-/* ============================================================
-   EVERY DETAIL: HALLOWEEN EDITION
-   Visual-only seasonal art direction. Layout and flows unchanged.
-   ============================================================ */
-.halloween-site {
-  --color-paper:#e9dfca;
-  --color-paper2:#d9c9ae;
-  --color-sand:#c38b4e;
-  --color-ink:#171310;
-  --color-muted:#5d5146;
-  --color-red:#d65a1f;
-  --color-red-hover:#b94716;
-  --color-oxblood:#2a0d0b;
-  --color-line:rgb(38 22 13 / .25);
-  background:#120f0d;
-}
-.halloween-site ::selection{background:#d65a1f;color:#fff8e8}
-.halloween-site .hero-full{position:relative;isolation:isolate;filter:saturate(.78) contrast(1.08)}
-.halloween-site .hero-full:before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(7,5,4,.25),rgba(18,6,2,.05) 45%,rgba(12,7,4,.46)),radial-gradient(circle at 78% 25%,rgba(229,105,29,.14),transparent 28%)}
-.halloween-site .hero-full:after{content:"HALLOWEEN EDITION  /  OCTOBER";position:absolute;z-index:3;right:5.5vw;bottom:25px;padding:8px 12px;border:1px solid rgba(255,236,204,.55);color:#fff0d3;background:rgba(15,10,7,.64);backdrop-filter:blur(5px);font-family:var(--font-numeral);font-size:14px;letter-spacing:.13em;transform:rotate(-2deg)}
-.halloween-site .hero-shade{z-index:2;background:linear-gradient(90deg,rgba(5,4,3,.8),rgba(10,6,4,.23) 62%,rgba(5,3,2,.18))}
-.halloween-site .hero-inner{position:relative;z-index:3}.halloween-site .hero-kicker{color:#f0a04a}.halloween-site .hero-title,.halloween-site .hero-lede{color:#fff8ea;text-shadow:0 3px 22px rgba(0,0,0,.45)}
-.halloween-site .proof-row{background:#17120f;color:#f3e6cf;border-color:#4a2b1c}.halloween-site .proof-row span+span{border-color:#4a2b1c}.halloween-site .proof-stars{color:#f0a04a}
-.halloween-site .home-services,.halloween-site .home-how,.halloween-site .home-faq{background:#e9dfca;background-image:radial-gradient(circle at 15% 10%,rgba(120,67,30,.06),transparent 24%),radial-gradient(circle at 82% 70%,rgba(79,39,17,.05),transparent 28%)}
-.halloween-site .eyebrow{color:#a53e17}.halloween-site .home-display span,.halloween-site .next-v158-heading .home-display span{color:#c34b18}
-.halloween-site .home-work{background:#161210;color:#f5ead7}.halloween-site .work-v157-shell{background:#161210}.halloween-site .work-v157-head .eyebrow,.halloween-site .work-v157-head .home-display span{color:#ed8731}.halloween-site .work-v157-grid figure,.halloween-site .work-v157-lead{box-shadow:9px 9px 0 #6d2d16}.halloween-site .work-instagram-cta{border-color:#7c3b1e;background:#211813}
-.halloween-site .how-stack-card{background:#dfd0b7;border-color:#26170f;box-shadow:7px 7px 0 #7c3218}.halloween-site .how-stack-card:nth-child(even){background:#c9b495}.halloween-site .how-stack-card b{color:#b84919}
-.halloween-site .home-next{background:#0f0d0c;color:#f4e9d5}.halloween-site .next-v158-heading>p:last-child{color:#c9baa5}.halloween-site .upgrade-board{border-color:#e7d7bd;box-shadow:9px 9px 0 #873619}.halloween-site .upgrade-board-paint{background:#d8c6a8;color:#17110e}.halloween-site .upgrade-board-plus{background:#25120d;color:#f6e7ce}.halloween-site .upgrade-board-plus .upgrade-chips span,.halloween-site .upgrade-board-plus .plus-steps div{border-color:#9a4a25}.halloween-site .upgrade-stamp{color:#b34619;border-color:#b34619}
-.halloween-site .home-faq{border-top:10px solid #17120f}.halloween-site .faq-list-home details{border-color:#6c503a}.halloween-site .faq-list-home summary:hover{color:#a23b16}
-.halloween-site .final-book{background:#260d0a;color:#fff0d9;position:relative;overflow:hidden}.halloween-site .final-book:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 70%,rgba(232,105,29,.2),transparent 25%),radial-gradient(circle at 85% 25%,rgba(0,0,0,.32),transparent 30%)}.halloween-site .final-book .eyebrow{color:#f09a42}.halloween-site .final-title span{color:#ef7629}
-.halloween-site .btn-primary{background:#d65a1f;border-color:#1b0d08;color:#fff7e9;box-shadow:5px 5px 0 #1b0d08}.halloween-site .btn-primary:hover{background:#f07828}.halloween-site .btn-quote{background:#efe2cb;border-color:#1a120e;color:#18110d;box-shadow:5px 5px 0 #1a120e}
-.halloween-site header{background:rgba(13,10,8,.94)!important;border-color:#4d2c1b!important}.halloween-site header a,.halloween-site header button{color:#f5ead8}.halloween-site footer{background:#0d0a08;color:#e9dbc5}
-.halloween-site .seasonal-host{overflow:visible}
-@media(max-width:700px){.halloween-site .hero-full:after{right:18px;bottom:16px;font-size:11px}.halloween-site .how-stack-card,.halloween-site .upgrade-board{box-shadow:5px 5px 0 #6d2d16}}
-
-
-/* V16.9.1 Halloween refinement: restore readability and keep the gradient header. */
-.halloween-site .home-header,
-.halloween-site .inner-header {
-  background: transparent !important;
-  border-bottom: 0 !important;
-}
-.halloween-site .home-header::before,
-.halloween-site .inner-header::before {
-  background: linear-gradient(
-    to bottom,
-    rgb(0 0 0 / .80) 0%,
-    rgb(0 0 0 / .60) 26%,
-    rgb(0 0 0 / .34) 56%,
-    rgb(0 0 0 / .12) 80%,
-    transparent 100%
-  ) !important;
-}
-.halloween-site .home-nav-shell,
-.halloween-site .inner-nav-shell,
-.halloween-site .home-nav-links,
-.halloween-site .inner-nav-links,
-.halloween-site .home-nav-actions,
-.halloween-site .inner-nav-actions {
-  background: transparent !important;
-  box-shadow: none !important;
-  border-color: transparent !important;
-}
-
-/* Keep the Halloween homepage warm, but make the stacked quote cards readable. */
-.halloween-site .home-how {
-  color: var(--color-ink);
-}
-.halloween-site .home-how .home-display,
-.halloween-site .home-how .home-display span,
-.halloween-site .home-how > .container-ed > p:last-child {
-  color: var(--color-ink);
-}
-.halloween-site .how-stack-card {
-  background: #e6d6bb !important;
-  color: #17110e !important;
-  border-color: #2b1a12 !important;
-  box-shadow: 8px 8px 0 #7c3218 !important;
-}
-.halloween-site .how-stack-card:nth-child(even) {
-  background: #dcc7a7 !important;
-}
-.halloween-site .how-stack-card:nth-child(3) {
-  background: #ead8c0 !important;
-}
-.halloween-site .how-stack-card:nth-child(4) {
-  background: #f0e3cf !important;
-}
-.halloween-site .how-stack-card > b,
-.halloween-site .how-stack-card > div > span {
-  color: #b84919 !important;
-}
-.halloween-site .how-stack-card h3,
-.halloween-site .how-stack-card p {
-  color: #17110e !important;
-}
-.halloween-site .how-stack-card p,
-.halloween-site .how-stack-card:nth-child(4) p {
-  color: rgb(23 17 14 / .78) !important;
-}
-
-/* Inner-page headers: readable on the dark top treatment, while forms stay light below. */
-.halloween-site main > section.container-ed:first-of-type {
-  position: relative;
-  z-index: 1;
-  padding-top: clamp(8rem, 11vw, 10rem);
-  color: #f7ead4;
-}
-.halloween-site main > section.container-ed:first-of-type nav[aria-label="Breadcrumb"],
-.halloween-site main > section.container-ed:first-of-type nav[aria-label="Breadcrumb"] a,
-.halloween-site main > section.container-ed:first-of-type nav[aria-label="Breadcrumb"] span[aria-current="page"] {
-  color: rgb(247 234 212 / .72) !important;
-}
-.halloween-site main > section.container-ed:first-of-type .t-page,
-.halloween-site main > section.container-ed:first-of-type .t-lede,
-.halloween-site main > section.container-ed:first-of-type .t-lede p {
-  color: #f7ead4 !important;
-}
-.halloween-site main > section.container-ed:first-of-type .t-lede,
-.halloween-site main > section.container-ed:first-of-type .t-lede p {
-  opacity: .9;
-}
-
-/* Booking and quote surfaces should stay crisp and highly legible. */
-.halloween-site .panel,
-.halloween-site .client-info-panel,
-.halloween-site .booking-calendar-wrap,
-.halloween-site .quote-rec-next-card,
-.halloween-site .quote-rec-reactive-contact {
-  color: var(--color-ink);
-}
-.halloween-site .text-muted {
-  color: rgb(23 17 14 / .66) !important;
-}
-.halloween-site .field,
-.halloween-site .choice,
-.halloween-site .panel {
-  background: rgb(255 250 242 / .92);
-}
-.halloween-site .booking-calendar-day[data-available="false"] {
-  color: rgb(23 17 14 / .58);
-}
-.halloween-site .booking-no-availability,
-.halloween-site .booking-time-zone {
-  color: rgb(23 17 14 / .74);
-}
-
-@media (max-width: 767px) {
-  .halloween-site main > section.container-ed:first-of-type {
-    padding-top: 7rem;
-  }
-}
-
-
-/* V16.9.2 Halloween stronger: more seasonal elements without losing clarity. */
-.halloween-site .seasonal-host{position:relative;overflow:visible}
-.halloween-site .seasonal-host .decor{opacity:.95}
-.halloween-site .hero-full .ghostScene{right:2.4vw;bottom:2.6rem;transform:scale(1.04)}
-.halloween-site .hero-full .web.tl{left:1.2rem;top:1rem;opacity:.42}
-.halloween-site .hero-full .bats.tr{right:4vw;top:5.8rem;opacity:.9}
-.halloween-site .proof-row{position:relative;overflow:visible}
-.halloween-site .proof-row .leafPile.bl{left:1rem;bottom:-1.35rem;transform:scale(1.04)}
-.halloween-site .proof-row .crows.tr{right:1.3rem;top:-.55rem;opacity:.68}
-.halloween-site .home-services .leafPile.bl{left:1.2rem;bottom:-1rem;transform:scale(1.08)}
-.halloween-site .work-v157-lead .web.tl{left:.6rem;top:.4rem;opacity:.55}
-.halloween-site .work-v157-grid figure .decor{opacity:.88}
-.halloween-site .how-stack-card .decor{opacity:.92}
-.halloween-site .home-next .upgrade-board{position:relative;overflow:visible}
-.halloween-site .home-next .upgrade-board .decor{opacity:.92}
-.halloween-site .home-faq .leafPile.bl{left:1rem;bottom:-1rem;transform:scale(1.02)}
-.halloween-site .final-book .web.tl{left:1rem;top:1rem;opacity:.52}
-.halloween-site .final-book .ghostScene.tr{right:1rem;top:.5rem}
-
-.halloween-site .panel,
-.halloween-site .booking-calendar-wrap,
-.halloween-site .quote-rec-next-card,
-.halloween-site .quote-rec-reactive-contact,
-.halloween-site .quote-rec-intent-context,
-.halloween-site .client-info-panel {
-  position: relative;
-  overflow: hidden;
-}
-.halloween-site .panel::after,
-.halloween-site .booking-calendar-wrap::after,
-.halloween-site .quote-rec-next-card::after,
-.halloween-site .quote-rec-reactive-contact::after,
-.halloween-site .client-info-panel::after {
-  content: "";
-  position: absolute;
-  right: .7rem;
-  top: .6rem;
-  width: 74px;
-  height: 74px;
-  pointer-events: none;
-  opacity: .16;
-  background:
-    repeating-radial-gradient(circle at 100% 0, transparent 0 10px, rgba(116,54,29,.6) 10.8px 11.8px, transparent 12.6px 18px),
-    linear-gradient(135deg, transparent 48%, rgba(116,54,29,.7) 49%, transparent 50%),
-    linear-gradient(90deg, rgba(116,54,29,.7), rgba(116,54,29,.7));
-  background-size: 100% 100%, 100% 100%, 52px 1px;
-  background-repeat: no-repeat;
-  transform: scaleX(-1);
-  transform-origin: right top;
-}
-.halloween-site .booking-calendar-wrap::before,
-.halloween-site .client-info-panel::before {
-  content: "";
-  position: absolute;
-  left: .85rem;
-  bottom: .65rem;
-  width: 74px;
-  height: 32px;
-  pointer-events: none;
-  opacity: .55;
-  background:
-    radial-gradient(ellipse at 15% 65%, #9b451d 0 28%, transparent 29%),
-    radial-gradient(ellipse at 32% 78%, #d97824 0 24%, transparent 25%),
-    radial-gradient(ellipse at 52% 48%, #6d321a 0 28%, transparent 29%),
-    radial-gradient(ellipse at 71% 76%, #c95a1f 0 25%, transparent 26%),
-    radial-gradient(ellipse at 90% 58%, #e0a02d 0 23%, transparent 24%);
-}
-.halloween-site .booking-calendar-wrap::before { bottom: .9rem; left: 1rem; }
-.halloween-site .choice[aria-checked="true"],
-.halloween-site .choice[aria-pressed="true"],
-.halloween-site .choice:has(input:checked) {
-  box-shadow: 3px 3px 0 #8b3e1e;
-}
-.halloween-site .btn-secondary{
-  background:#f3e6cf;
-}
-@media (max-width: 900px) {
-  .halloween-site .hero-full .ghostScene{transform:scale(.84);right:1rem;bottom:1.3rem}
-  .halloween-site .hero-full .bats.tr{top:5rem;right:1rem}
-  .halloween-site .proof-row .leafPile.bl{left:.35rem;bottom:-1.15rem;transform:scale(.84)}
-  .halloween-site .home-services .leafPile.bl,.halloween-site .home-faq .leafPile.bl{transform:scale(.82);left:.2rem}
-  .halloween-site .panel::after,
-  .halloween-site .booking-calendar-wrap::after,
-  .halloween-site .quote-rec-next-card::after,
-  .halloween-site .quote-rec-reactive-contact::after,
-  .halloween-site .client-info-panel::after{width:58px;height:58px;opacity:.13}
-}
-
-
-/* V16.9.3 Luxury Halloween: editorial, darker, restrained. */
-.halloween-site {
-  --color-paper:#e7dcc7;
-  --color-paper2:#d7c5a8;
-  --color-sand:#b88755;
-  --color-ink:#15110f;
-  --color-muted:#685f56;
-  --color-red:#a4482c;
-  --color-red-hover:#8e3b24;
-  --color-oxblood:#451610;
-  --color-line:rgb(21 17 15 / .17);
-}
-
-.halloween-site::before {
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:-1;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 82% 7%, rgb(170 90 39 / .055), transparent 25%),
-    linear-gradient(180deg, rgb(46 23 13 / .02), transparent 34%);
-}
-
-/* Hero feels cinematic, not novelty-Halloween. */
-.halloween-site .hero-full {
-  filter:saturate(.72) contrast(1.11) brightness(.94);
-}
-.halloween-site .hero-full::before {
-  background:
-    radial-gradient(circle at 81% 20%, rgb(177 92 38 / .17) 0%, rgb(177 92 38 / .08) 13%, transparent 30%),
-    linear-gradient(180deg, rgb(7 5 4 / .23), rgb(18 6 2 / .03) 45%, rgb(12 7 4 / .48)) !important;
-}
-.halloween-site .hero-full::after {
-  right:4.5vw;
-  bottom:22px;
-  padding:7px 11px;
-  border-color:rgb(233 214 183 / .42);
-  color:#e8d7bc;
-  background:rgb(18 12 9 / .52);
-  font-size:12px;
-  letter-spacing:.16em;
-  transform:none;
-}
-.halloween-site .hero-full .web.tl { opacity:.28; transform:scale(.9); }
-.halloween-site .hero-full .bats.tr { opacity:.72; transform:scale(.88); right:4.5vw; top:6.2rem; }
-
-/* Warmer, deeper brand accents. */
-.halloween-site .btn-primary {
-  background:#b15427;
-  border-color:#17100c;
-  color:#fff7ea;
-  box-shadow:4px 4px 0 #17100c;
-}
-.halloween-site .btn-primary:hover { background:#c5662f; }
-.halloween-site .btn-quote {
-  background:#eadbc2;
-  border-color:#17100c;
-  color:#17100c;
-  box-shadow:4px 4px 0 #17100c;
-}
-.halloween-site .eyebrow,
-.halloween-site .how-stack-card > b,
-.halloween-site .how-stack-card > div > span { color:#9b4527 !important; }
-.halloween-site .home-display span,
-.halloween-site .next-v158-heading .home-display span,
-.halloween-site .final-title span { color:#b05229 !important; }
-
-/* Clean editorial sections, less orange everywhere. */
-.halloween-site .home-services,
-.halloween-site .home-how,
-.halloween-site .home-faq {
-  background:#e7dcc7;
-  background-image:
-    radial-gradient(circle at 11% 9%, rgb(75 43 25 / .035), transparent 22%),
-    radial-gradient(circle at 89% 76%, rgb(81 47 28 / .03), transparent 26%);
-}
-.halloween-site .home-work { background:#12100f; color:#eee2cf; }
-.halloween-site .work-v157-shell { background:#12100f; }
-.halloween-site .work-v157-grid figure,
-.halloween-site .work-v157-lead { box-shadow:8px 8px 0 #5a2417; }
-.halloween-site .work-instagram-cta { background:#1b1512; border-color:#4f2b1d; }
-
-.halloween-site .how-stack-card {
-  background:#dfcfb5 !important;
-  border-color:#231711 !important;
-  box-shadow:7px 7px 0 #5f2819 !important;
-}
-.halloween-site .how-stack-card:nth-child(even) { background:#d4c0a0 !important; }
-.halloween-site .how-stack-card:nth-child(3) { background:#e3d3bb !important; }
-.halloween-site .how-stack-card:nth-child(4) { background:#eadfcd !important; }
-
-.halloween-site .home-next { background:#0f0d0c; color:#eee1ce; }
-.halloween-site .upgrade-board { border-color:#cbb99f; box-shadow:8px 8px 0 #5d2819; }
-.halloween-site .upgrade-board-paint { background:#d7c4a7; color:#17110f; }
-.halloween-site .upgrade-board-plus { background:#251510; color:#eee1ce; }
-.halloween-site .upgrade-stamp { color:#9d4627; border-color:#9d4627; }
-
-.halloween-site .final-book { background:#220d09; color:#f2e3cb; }
-.halloween-site .final-book::before {
-  background:
-    radial-gradient(circle at 15% 74%, rgb(169 80 34 / .16), transparent 25%),
-    radial-gradient(circle at 85% 24%, rgb(0 0 0 / .28), transparent 30%);
-}
-
-/* Physical decoration moments: fewer, larger, deliberate. */
-.halloween-site .leafPile { filter:drop-shadow(0 6px 4px rgb(0 0 0 / .22)); }
-.halloween-site .proof-row .leafPile.bl { opacity:.88; transform:scale(.92); }
-.halloween-site .home-services .leafPile.bl { transform:scale(.96); opacity:.9; }
-.halloween-site .home-faq .leafPile.bl { transform:scale(.92); opacity:.9; }
-.halloween-site .work-v157-lead .web.tl { opacity:.38; }
-.halloween-site .work-v157-grid figure .bats,
-.halloween-site .work-v157-grid figure .web,
-.halloween-site .work-v157-grid figure .leafPile { opacity:.72; }
-.halloween-site .how-stack-card .web { opacity:.42; }
-.halloween-site .how-stack-card .leafPile { opacity:.82; }
-.halloween-site .home-next .upgrade-board .web { opacity:.40; }
-.halloween-site .final-book .web.tl { opacity:.36; }
-.halloween-site .pumpkinScene { filter:drop-shadow(0 8px 5px rgb(0 0 0 / .28)); }
-
-/* Inner pages: one subtle web and strong readable contrast. */
-.halloween-site main > section.container-ed:first-of-type .web.tr {
-  right:.4rem;
-  top:1rem;
-  opacity:.28;
-  transform:scale(.9);
-}
-.halloween-site main > section.container-ed:first-of-type {
-  color:#f1e2cc;
-}
-.halloween-site main > section.container-ed:first-of-type .t-page,
-.halloween-site main > section.container-ed:first-of-type .t-lede,
-.halloween-site main > section.container-ed:first-of-type .t-lede p {
-  color:#f1e2cc !important;
-}
-
-/* Remove the repeated mini-web treatment from every card. Keep forms calm. */
-.halloween-site .panel::after,
-.halloween-site .booking-calendar-wrap::after,
-.halloween-site .quote-rec-next-card::after,
-.halloween-site .quote-rec-reactive-contact::after,
-.halloween-site .client-info-panel::after {
-  display:none !important;
-}
-.halloween-site .booking-calendar-wrap::before,
-.halloween-site .client-info-panel::before {
-  opacity:.32;
-  transform:scale(.86);
-  transform-origin:left bottom;
-}
-.halloween-site .panel,
-.halloween-site .field,
-.halloween-site .choice {
-  background:rgb(255 249 240 / .94);
-}
-
-/* Header remains gradient-only. */
-.halloween-site .home-header,
-.halloween-site .inner-header { background:transparent !important; }
-.halloween-site .home-header::before,
-.halloween-site .inner-header::before {
-  background:linear-gradient(
-    to bottom,
-    rgb(0 0 0 / .84) 0%,
-    rgb(0 0 0 / .63) 26%,
-    rgb(0 0 0 / .36) 55%,
-    rgb(0 0 0 / .12) 79%,
-    transparent 100%
-  ) !important;
-}
-
-@media(max-width:900px){
-  .halloween-site .hero-full::after{font-size:10px;right:14px;bottom:14px}
-  .halloween-site .hero-full .bats.tr{top:5.2rem;right:1rem;transform:scale(.72)}
-  .halloween-site main > section.container-ed:first-of-type .web.tr{transform:scale(.72)}
-}
-
-
-/* V16.9.4 Detail+ luxury Halloween integration. Preserve all existing Detail+ sticky/loop motion. */
-.halloween-site .plus-brand{
-  --plus-ox:#6f2112;
-  --plus-ox-dark:#1b0f0b;
-  --plus-coral:#c8682e;
-  --plus-cream:#e8dcc6;
-  --plus-black:#12100f;
-  background:#e8dcc6;
-}
-.halloween-site .plus-v177-hero{
-  background:
-    radial-gradient(circle at 82% 18%,rgb(187 93 35 / .20),transparent 26%),
-    linear-gradient(115deg,#37140d 0%,#5c2414 48%,#20100c 100%);
-}
-.halloween-site .plus-v177-hero .plus-brand-hero-copy:before{
-  background:radial-gradient(ellipse at 45% 50%,rgb(10 7 5 / .58),transparent 72%);
-}
-.halloween-site .plus-v177-photo-wash{
-  background:linear-gradient(90deg,rgb(36 14 9 / .72) 0%,rgb(85 35 17 / .15) 45%,transparent 72%),linear-gradient(0deg,rgb(8 6 5 / .28),transparent 45%);
-}
-.halloween-site .plus-v177-hero .plus-brand-hero-stamp{
-  background:rgb(26 15 11 / .80);
-  border-color:#b65f2c;
-  color:#d9894d;
-}
-.halloween-site .plus-v177-cadence-rail{
-  background:#12100f;
-  border-color:#392017;
-}
-.halloween-site .plus-v177-manifesto,
-.halloween-site .plus-v177-build,
-.halloween-site .plus-brand-faq{
-  background:
-    radial-gradient(circle at 12% 18%,rgb(112 62 29 / .055),transparent 24%),
-    radial-gradient(circle at 84% 72%,rgb(82 42 20 / .05),transparent 28%),
-    #e8dcc6;
-}
-.halloween-site .plus-v177-loop{
-  background:
-    radial-gradient(circle at 85% 12%,rgb(182 87 36 / .10),transparent 20%),
-    #1b0f0b;
-}
-.halloween-site .plus-v177-covered{
-  background:#c9a16f;
-}
-.halloween-site .plus-v177-covered-head blockquote{
-  color:#21140f;
-}
-.halloween-site .plus-v177-benefit-grid{
-  background:#eadfca;
-  box-shadow:10px 10px 0 #4c2114;
-}
-.halloween-site .plus-v177-benefit-grid article{
-  background:linear-gradient(145deg,rgb(255 249 237 / .38),transparent);
-}
-.halloween-site .plus-brand-form-wrap{
-  background:#f4ead8;
-  box-shadow:10px 10px 0 #5d2615;
-}
-.halloween-site .plus-brand .plus-brand-form-wrap .panel,
-.halloween-site .plus-brand .plus-brand-form-wrap .choice{
-  background:#efe2cc;
-}
-.halloween-site .plus-brand .plus-brand-form-wrap .choice:has(input:checked){
-  background:#c58c55;
-}
-.halloween-site .plus-brand .plus-brand-form-wrap .btn-primary{
-  background:#9b451f;
-}
-.halloween-site .plus-brand-reviews{
-  background:#12100f;
-}
-.halloween-site .plus-brand-final{
-  position:relative;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 15% 75%,rgb(188 87 32 / .18),transparent 24%),
-    linear-gradient(135deg,#1b0f0b,#2b120c 58%,#110d0b);
-}
-.halloween-site .plus-brand-final:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:radial-gradient(circle at 82% 20%,rgb(209 107 43 / .10),transparent 22%);
-}
-
-/* Detail+ uses the same photographic gradient navigation as the rest of Halloween site. */
-.halloween-site .detailplus-header,
-.halloween-site .detailplus-header.detailplus-header--scrolled{
-  background:transparent !important;
-  box-shadow:none !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
-}
-.halloween-site .detailplus-header::before,
-.halloween-site .detailplus-header.detailplus-header--scrolled::before{
-  display:block !important;
-  opacity:1 !important;
-  content:"";
-  position:absolute;
-  inset:0 0 auto 0;
-  height:11rem;
-  z-index:-1;
-  pointer-events:none;
-  background:linear-gradient(to bottom,rgb(8 6 5 / .86) 0%,rgb(26 12 8 / .64) 34%,rgb(48 20 11 / .30) 66%,transparent 100%) !important;
-}
-@media (min-width:1024px){
-  .halloween-site .detailplus-header::before,
-  .halloween-site .detailplus-header.detailplus-header--scrolled::before{height:14rem}
-  .halloween-site .detailplus-header .home-nav-shell,
-  .halloween-site .detailplus-header.detailplus-header--scrolled .home-nav-shell{
-    margin-top:0 !important;
-    background:transparent !important;
-  }
-}
-
-/* Detail+ decorative placement, attached to real page geometry. */
-.halloween-site .plus-v177-hero>.web.tl{left:.65rem;top:6.2rem;opacity:.38}
-.halloween-site .plus-v177-hero>.bats.tr{right:2vw;top:7rem;opacity:.78}
-.halloween-site .plus-v177-hero-photo .leafPile.br{right:-.7rem;bottom:-.65rem;transform:scale(1.08)}
-.halloween-site .plus-v180-manifesto>.leafPile.bl{left:.8rem;bottom:-1rem;transform:scale(1.04)}
-.halloween-site .plus-v180-manifesto-photo .web.tr{right:.35rem;top:.25rem;opacity:.42}
-.halloween-site .plus-v177-loop>.web.tr{right:.7rem;top:.7rem;opacity:.26}
-.halloween-site .plus-v177-loop-step figure .bats.tr{right:.3rem;top:.25rem;opacity:.64}
-.halloween-site .plus-v177-loop-step figure .leafPile.br{right:-.35rem;bottom:-.35rem;transform:scale(.92)}
-.halloween-site .plus-v177-covered>.bats.tr{right:1rem;top:.8rem;opacity:.56}
-.halloween-site .plus-v180-benefit-photo .leafPile.br{right:-.4rem;bottom:-.35rem;transform:scale(.95)}
-.halloween-site .plus-v177-build>.web.tl{left:.55rem;top:.55rem;opacity:.24}
-.halloween-site .plus-brand-form-wrap .leafPile.br{right:-.45rem;bottom:-.4rem;transform:scale(.88)}
-.halloween-site .plus-v180-reviews>.web.tr{right:.6rem;top:.7rem;opacity:.30}
-.halloween-site .plus-v180-reviews-intro figure .bats.tr{right:.25rem;top:.25rem;opacity:.56}
-.halloween-site .plus-brand-faq>.leafPile.bl{left:.6rem;bottom:-.8rem;transform:scale(.9)}
-.halloween-site .plus-v177-final>.pumpkinScene.br{right:1.2rem;bottom:.3rem;transform:scale(1.1)}
-.halloween-site .plus-v177-final>.web.tl{left:.7rem;top:.5rem;opacity:.36}
-
-@media(max-width:700px){
-  .halloween-site .plus-v177-hero>.web.tl{top:5rem;left:.2rem;opacity:.28}
-  .halloween-site .plus-v177-hero>.bats.tr{top:5.2rem;right:.2rem;opacity:.62}
-  .halloween-site .plus-v177-final>.pumpkinScene.br{right:.2rem;bottom:-.2rem;transform:scale(.82)}
-}
-
-
-/* =========================================================
-   V16.9.5 — mobile QA + booking contrast hardening
-   Keeps all existing stack/scroll motion selectors untouched.
-   ========================================================= */
-
-/* Inner-page content is on warm paper, so it must read dark. The navigation
-   above it keeps the transparent photographic/Halloween gradient. */
-.halloween-site .page-header-shell {
-  color:#18110d !important;
-}
-.halloween-site .page-header-shell .t-page,
-.halloween-site .page-header-shell .t-lede,
-.halloween-site .page-header-shell .t-lede p,
-.halloween-site .page-header-shell nav[aria-label="Breadcrumb"],
-.halloween-site .page-header-shell nav[aria-label="Breadcrumb"] a,
-.halloween-site .page-header-shell nav[aria-label="Breadcrumb"] span[aria-current="page"] {
-  color:#18110d !important;
-  opacity:1 !important;
-  text-shadow:none !important;
-}
-.halloween-site .page-header-shell nav[aria-label="Breadcrumb"] {
-  color:rgb(24 17 13 / .64) !important;
-}
-.halloween-site .page-header-shell nav[aria-label="Breadcrumb"] a {
-  color:rgb(24 17 13 / .68) !important;
-}
-.halloween-site .page-header-shell nav[aria-label="Breadcrumb"] span[aria-current="page"] {
-  color:#18110d !important;
-}
-
-/* Book page: force every interactive surface back to a high-contrast paper
-   system. Halloween stays in the surrounding palette and decoration. */
-.halloween-site .booking-page {
-  color:#18110d;
-  background:var(--color-paper);
-}
-.halloween-site .booking-page section.container-ed:not(.page-header-shell),
-.halloween-site .booking-page form,
-.halloween-site .booking-page fieldset,
-.halloween-site .booking-page legend,
-.halloween-site .booking-page h2,
-.halloween-site .booking-page h3,
-.halloween-site .booking-page p,
-.halloween-site .booking-page li,
-.halloween-site .booking-page label,
-.halloween-site .booking-page .field-label {
-  color:#18110d;
-}
-.halloween-site .booking-page .text-muted,
-.halloween-site .booking-page .field-hint,
-.halloween-site .booking-page .booking-time-zone,
-.halloween-site .booking-page .booking-time-heading > span {
-  color:rgb(24 17 13 / .66) !important;
-}
-.halloween-site .booking-page .text-red,
-.halloween-site .booking-page .field-error {
-  color:#943f25 !important;
-}
-.halloween-site .booking-page .panel,
-.halloween-site .booking-page .choice,
-.halloween-site .booking-page .field,
-.halloween-site .booking-page .client-info-panel,
-.halloween-site .booking-page .booking-calendar-month,
-.halloween-site .booking-page .booking-time-panel,
-.halloween-site .booking-page .booking-no-availability {
-  color:#18110d !important;
-}
-.halloween-site .booking-page .panel,
-.halloween-site .booking-page .field,
-.halloween-site .booking-page .choice {
-  background:#fffaf1 !important;
-}
-.halloween-site .booking-page .choice[aria-checked="true"],
-.halloween-site .booking-page .choice[aria-pressed="true"],
-.halloween-site .booking-page .choice:has(input:checked) {
-  background:#fffdf8 !important;
-  color:#18110d !important;
-}
-.halloween-site .booking-page .booking-calendar-day {
-  color:#18110d !important;
-  background:transparent;
-}
-.halloween-site .booking-page .booking-calendar-day[data-available="false"] {
-  color:rgb(24 17 13 / .48) !important;
-}
-.halloween-site .booking-page .booking-calendar-day[data-past="true"],
-.halloween-site .booking-page .booking-calendar-day[data-outside="true"] {
-  color:rgb(24 17 13 / .26) !important;
-}
-.halloween-site .booking-page .booking-calendar-day[aria-checked="true"] {
-  background:#8f3f25 !important;
-  color:#fff8ea !important;
-}
-.halloween-site .booking-page .booking-calendar-day[aria-checked="true"] * {
-  color:#fff8ea !important;
-}
-.halloween-site .booking-page .booking-time-choice[aria-checked="true"] {
-  background:#8f3f25 !important;
-  border-color:#18110d !important;
-  color:#fff8ea !important;
-}
-.halloween-site .booking-page .client-info-progress button {
-  color:rgb(24 17 13 / .62) !important;
-}
-.halloween-site .booking-page .client-info-progress button.is-active {
-  color:#18110d !important;
-}
-.halloween-site .booking-page .client-info-progress button.is-done {
-  color:#6d2b1b !important;
-}
-.halloween-site .booking-page .leader {
-  border-color:rgb(24 17 13 / .28);
-}
-
-/* Stable hooks for decorations. These work regardless of CSS-module hashing. */
-.halloween-site [data-seasonal] {
-  pointer-events:none !important;
-  user-select:none !important;
-}
-.halloween-site [data-seasonal="web"] { opacity:.40; }
-.halloween-site [data-seasonal="bats"] { opacity:.74; }
-.halloween-site [data-seasonal="crows"] { opacity:.56; }
-.halloween-site [data-seasonal="leaves"] { opacity:.88; }
-.halloween-site [data-seasonal="pumpkin"] { opacity:.96; }
-
-/* Keep seasonal art behind/away from actual controls on all form-heavy pages. */
-.halloween-site .booking-page [data-seasonal],
-.halloween-site .plus-brand-form-wrap [data-seasonal] {
-  z-index:1 !important;
-}
-.halloween-site .booking-page form,
-.halloween-site .booking-page .panel,
-.halloween-site .booking-page fieldset,
-.halloween-site .plus-brand-form-wrap form {
-  position:relative;
-  z-index:2;
-}
-
-/* Mobile hardening: maintain the retro geometry, but reduce the shadow/border
-   footprint so cards don't feel crushed or create horizontal overflow. */
-@media (max-width: 767px) {
-  html, body { overflow-x:clip; }
-
-  .halloween-site .page-header-shell {
-    padding-top:6.6rem !important;
-    padding-bottom:2.5rem !important;
-  }
-  .halloween-site .page-header-shell .t-page {
-    font-size:clamp(2.7rem, 14vw, 4.4rem);
-    line-height:.92;
-  }
-  .halloween-site .page-header-shell .t-lede {
-    margin-top:1rem !important;
-    font-size:1rem;
-    line-height:1.5;
-  }
-
-  /* Decorative art should sit on edges, never over headings, form controls,
-     prices, buttons or captions on small screens. */
-  .halloween-site [data-seasonal="web"] {
-    transform:scale(.55) !important;
-    opacity:.24 !important;
-  }
-  .halloween-site [data-seasonal="bats"],
-  .halloween-site [data-seasonal="crows"] {
-    transform:scale(.58) !important;
-    opacity:.48 !important;
-  }
-  .halloween-site [data-seasonal="leaves"] {
-    transform:scale(.66) !important;
-    opacity:.78 !important;
-  }
-  .halloween-site [data-seasonal="pumpkin"] {
-    transform:scale(.68) !important;
-  }
-  .halloween-site [data-seasonal="ghost"] {
-    display:none !important;
-  }
-  .halloween-site [data-seasonal][data-corner="tl"] { left:-1.25rem !important; top:-1.05rem !important; transform-origin:left top !important; }
-  .halloween-site [data-seasonal][data-corner="tr"] { right:-1.15rem !important; top:-1rem !important; transform-origin:right top !important; }
-  .halloween-site [data-seasonal][data-corner="bl"] { left:-1rem !important; bottom:-1rem !important; transform-origin:left bottom !important; }
-  .halloween-site [data-seasonal][data-corner="br"] { right:-1rem !important; bottom:-1rem !important; transform-origin:right bottom !important; }
-
-  /* Hero decorations get custom safe zones. */
-  .halloween-site .hero-full > [data-seasonal="web"] { top:4.5rem !important; left:-1.8rem !important; }
-  .halloween-site .hero-full > [data-seasonal="bats"] { top:5.25rem !important; right:-1rem !important; }
-  .halloween-site .hero-full > [data-seasonal="ghost"] { display:none !important; }
-
-  /* Never cover gallery captions or the active card copy. */
-  .halloween-site .work-v157-grid figure [data-seasonal],
-  .halloween-site .work-v157-lead [data-seasonal] {
-    z-index:2 !important;
-  }
-  .halloween-site .work-v157-grid figure figcaption,
-  .halloween-site .work-v157-lead figcaption {
-    position:relative;
-    z-index:3;
-  }
-
-  /* Retro borders/shadows stay obvious but scale down proportionally. */
-  .halloween-site .panel {
-    border-width:2px;
-    border-radius:8px;
-    box-shadow:4px 4px 0 #18110d;
-  }
-  .halloween-site .how-stack-card {
-    border-width:2px !important;
-    box-shadow:5px 5px 0 #5f2819 !important;
-  }
-  .halloween-site .upgrade-board {
-    border-width:2px !important;
-    box-shadow:5px 5px 0 #5d2819 !important;
-  }
-  .halloween-site .work-v157-grid figure,
-  .halloween-site .work-v157-lead {
-    box-shadow:5px 5px 0 #5a2417 !important;
-  }
-  .halloween-site .btn {
-    box-shadow:3px 3px 0 #18110d;
-  }
-  .halloween-site .choice[aria-checked="true"],
-  .halloween-site .choice[aria-pressed="true"],
-  .halloween-site .choice:has(input:checked) {
-    box-shadow:3px 3px 0 #6d2b1b;
-  }
-
-  /* Booking controls need full-width breathing room and a reliable stacking
-     context above decorative art. */
-  .halloween-site .booking-page section.container-ed:not(.page-header-shell) {
-    padding-inline:1rem;
-  }
-  .halloween-site .booking-page form {
-    gap:1.25rem;
-  }
-  .halloween-site .booking-page fieldset,
-  .halloween-site .booking-page .panel {
-    min-width:0;
-    max-width:100%;
-  }
-  .halloween-site .booking-page .booking-calendar-wrap {
-    overflow:hidden;
-    border-radius:8px;
-  }
-  .halloween-site .booking-page .booking-calendar-month {
-    min-width:0;
-    padding:.7rem .55rem .75rem;
-  }
-  .halloween-site .booking-page .booking-calendar-weekdays,
-  .halloween-site .booking-page .booking-calendar-grid {
-    gap:.05rem;
-  }
-  .halloween-site .booking-page .booking-calendar-day {
-    min-width:0;
-    min-height:2.65rem;
-    padding:.2rem;
-    font-size:.82rem;
-  }
-  .halloween-site .booking-page .booking-time-grid {
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-  .halloween-site .booking-page .booking-time-choice {
-    min-width:0;
-    min-height:2.75rem;
-  }
-  .halloween-site .booking-page .client-info-progress {
-    width:100%;
-    overflow:hidden;
-  }
-
-  /* Detail+ mobile: decorations stay at the perimeter, while its existing
-     sticky/scroll classes and motion logic remain unchanged. */
-  .halloween-site .plus-v177-hero > [data-seasonal="web"] { top:4.8rem !important; left:-1.8rem !important; }
-  .halloween-site .plus-v177-hero > [data-seasonal="bats"] { top:5.2rem !important; right:-1rem !important; }
-  .halloween-site .plus-v177-hero-photo [data-seasonal="leaves"] { right:-1rem !important; bottom:-1rem !important; }
-  .halloween-site .plus-v180-manifesto > [data-seasonal="leaves"],
-  .halloween-site .plus-brand-faq > [data-seasonal="leaves"] { left:-1rem !important; bottom:-.9rem !important; }
-  .halloween-site .plus-v177-final > [data-seasonal="pumpkin"] { right:-.9rem !important; bottom:-.6rem !important; }
-  .halloween-site .plus-brand-form-wrap > [data-seasonal] { display:none !important; }
-}
-
-@media (max-width: 390px) {
-  .halloween-site [data-seasonal="web"],
-  .halloween-site [data-seasonal="bats"],
-  .halloween-site [data-seasonal="crows"] {
-    opacity:.20 !important;
-  }
-  .halloween-site .booking-page .booking-calendar-day {
-    min-height:2.45rem;
-    font-size:.76rem;
-  }
-  .halloween-site .booking-page .booking-time-grid {
-    gap:.45rem;
-  }
-}
-
-
-/* V16.9.6 Detail+ hero photo crop correction.
-   The source image is portrait, so give each breakpoint an intentional frame
-   and focal point instead of stretching the crop around the house. */
-.halloween-site .plus-v177-hero-photo {
-  height:auto !important;
-  min-height:0 !important;
-  aspect-ratio:6 / 5;
-  align-self:center;
-  overflow:hidden;
-}
-.halloween-site .plus-v177-hero-photo > div:first-child {
-  position:absolute !important;
-  inset:0 !important;
-  width:100% !important;
-  height:100% !important;
-  aspect-ratio:auto !important;
-}
-.halloween-site .plus-v177-hero-photo img {
-  width:100% !important;
-  height:100% !important;
-  object-fit:cover !important;
-  object-position:50% 76% !important;
-  transform:none !important;
-}
-.halloween-site .plus-v177-hero-photo > [data-seasonal="leaves"] {
-  display:none !important;
-}
-
-@media (min-width: 1400px) {
-  .halloween-site .plus-v177-hero-photo {
-    aspect-ratio:1.18 / 1;
-  }
-  .halloween-site .plus-v177-hero-photo img {
-    object-position:50% 78% !important;
-  }
-}
-
-@media (max-width: 1023px) {
-  .halloween-site .plus-v177-hero-photo {
-    width:100%;
-    margin-right:0 !important;
-    aspect-ratio:4 / 3;
-    border:2px solid var(--plus-black);
-    box-shadow:7px 7px 0 var(--plus-copper, #a94d23);
-  }
-  .halloween-site .plus-v177-hero-photo img {
-    object-position:50% 75% !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .halloween-site .plus-v177-hero-photo {
-    aspect-ratio:5 / 4;
-    box-shadow:5px 5px 0 var(--plus-copper, #a94d23);
-  }
-  .halloween-site .plus-v177-hero-photo img {
-    object-position:50% 77% !important;
-  }
-  .halloween-site .plus-brand-hero-stamp {
-    left:.85rem !important;
-    top:.85rem !important;
-    transform:scale(.9);
-    transform-origin:top left;
-  }
-  .halloween-site .plus-v177-hero-photo figcaption {
-    max-width:80%;
-    font-size:.48rem;
-    line-height:1.25;
-  }
-}
-
-/* V16.9.7 mobile menu contrast + Halloween polish */
-@media (max-width: 1023px) {
-  .halloween-site .mobile-menu-panel {
-    background:
-      linear-gradient(180deg, rgba(77,31,20,.22), transparent 26%),
-      #17110e !important;
-    color:#f7ead4 !important;
-    border-top:2px solid #8f3f25 !important;
-    box-shadow:0 -10px 28px rgb(0 0 0 / .28);
-  }
-
-  .halloween-site .mobile-menu-nav {
-    color:#f7ead4 !important;
-  }
-
-  .halloween-site .mobile-menu-label {
-    color:#d87338 !important;
-  }
-
-  .halloween-site .mobile-menu-primary {
-    border-top:2px solid rgb(247 234 212 / .62) !important;
-  }
-
-  .halloween-site .mobile-menu-service {
-    color:#f7ead4 !important;
-    border-bottom:1px solid rgb(247 234 212 / .22) !important;
-    text-shadow:none !important;
-  }
-  .halloween-site .mobile-menu-service span {
-    color:#d87338 !important;
-  }
-  .halloween-site .mobile-menu-service[aria-current="page"] {
-    color:#f1a05f !important;
-    background:rgb(216 115 56 / .09);
-  }
-
-  .halloween-site .mobile-menu-secondary {
-    border:2px solid rgb(247 234 212 / .72) !important;
-    background:#211713 !important;
-    box-shadow:4px 4px 0 #6b2a1b;
-  }
-  .halloween-site .mobile-menu-secondary a {
-    color:#f7ead4 !important;
-    border-bottom:1px solid rgb(247 234 212 / .20) !important;
-    background:transparent !important;
-  }
-  .halloween-site .mobile-menu-secondary a:nth-child(odd) {
-    border-right:1px solid rgb(247 234 212 / .20) !important;
-  }
-  .halloween-site .mobile-menu-secondary a[aria-current="page"] {
-    color:#f1a05f !important;
-    background:rgb(216 115 56 / .10) !important;
-  }
-
-  .halloween-site .mobile-menu-actions {
-    border-top:1px solid rgb(247 234 212 / .18);
-    padding-top:1.25rem;
-  }
-  .halloween-site .mobile-menu-actions .btn-primary {
-    background:#b94f25 !important;
-    color:#fff8ea !important;
-    border-color:#f0ddc5 !important;
-    box-shadow:4px 4px 0 #080605 !important;
-  }
-  .halloween-site .mobile-menu-phone {
-    color:#f7ead4 !important;
-    text-decoration-color:#d87338 !important;
-  }
-
-  /* The hamburger and close icon always sit over the dark gradient. */
-  .halloween-site .home-nav-shell button[aria-controls="mobile-menu"],
-  .halloween-site .inner-nav-shell button[aria-controls="mobile-menu"] {
-    color:#fff8ea !important;
-    background:rgb(15 10 8 / .30) !important;
-    border:1px solid rgb(247 234 212 / .24) !important;
-    border-radius:.65rem;
-    backdrop-filter:blur(8px);
-    -webkit-backdrop-filter:blur(8px);
-  }
-}
-
-@media (max-width: 390px) {
-  .halloween-site .mobile-menu-secondary a:nth-child(odd) {
-    border-right:0 !important;
-  }
-  .halloween-site .mobile-menu-secondary {
-    box-shadow:3px 3px 0 #6b2a1b;
-  }
-  .halloween-site .mobile-menu-actions .btn-primary {
-    box-shadow:3px 3px 0 #080605 !important;
-  }
-}
-
-
-/* =========================================================
-   V16.9.8 — full-site Halloween visual QA
-   Visual-only hardening. Booking/account business logic untouched.
-   ========================================================= */
-
-/* Generic inner-page safety. Page content always reads as paper + ink, while
-   the navigation remains over the dark Halloween gradient. */
-.halloween-site .page-header-shell{
-  isolation:isolate;
-  overflow:hidden;
-  border-bottom:1px solid rgb(24 17 13 / .10);
-}
-.halloween-site .page-header-shell > [data-seasonal="web"]{
-  z-index:-1 !important;
-  right:-1.25rem !important;
-  top:-1.4rem !important;
-  opacity:.16 !important;
-}
-.halloween-site .page-header-shell + section.container-ed,
-.halloween-site .page-header-shell + section.container-ed *{
-  text-shadow:none;
-}
-
-/* Account gets a deliberate dashboard treatment instead of inheriting random
-   global Halloween surface rules. */
-.halloween-site .account-page{
-  min-height:70vh;
-  background:
-    radial-gradient(circle at 90% 3%, rgb(154 68 31 / .075), transparent 20rem),
-    radial-gradient(circle at 6% 65%, rgb(89 13 7 / .045), transparent 24rem),
-    var(--color-paper);
-  color:#18110d;
-}
-.halloween-site .account-page .page-header-shell{
-  background:linear-gradient(180deg,#eadcc2 0%,#e9dfca 100%);
-  border-bottom:2px solid #18110d;
-  box-shadow:0 5px 0 rgb(133 56 29 / .28);
-}
-.halloween-site .account-page .page-header-shell > [data-seasonal]{display:none !important}
-.halloween-site .account-page .page-header-shell .t-page{
-  color:#18110d !important;
-  letter-spacing:-.055em;
-}
-.halloween-site .account-page .page-header-shell .t-lede,
-.halloween-site .account-page .page-header-shell .t-lede p{
-  color:rgb(24 17 13 / .72) !important;
-}
-.halloween-site .account-page .page-header-shell nav,
-.halloween-site .account-page .page-header-shell nav a,
-.halloween-site .account-page .page-header-shell nav span{
-  color:rgb(24 17 13 / .62) !important;
-}
-.halloween-site .account-page > section.container-ed{
-  position:relative;
-  padding-top:3.5rem;
-}
-.halloween-site .account-page .t-h2,
-.halloween-site .account-page .t-h3{
-  color:#18110d;
-}
-.halloween-site .account-page .t-h2{
-  letter-spacing:-.045em;
-}
-.halloween-site .account-page .text-ink\/80{
-  color:rgb(24 17 13 / .76) !important;
-}
-.halloween-site .account-page .text-muted{
-  color:rgb(24 17 13 / .60) !important;
-}
-.halloween-site .account-page .panel{
-  background:#fffaf1 !important;
-  color:#18110d !important;
-  border:2px solid #18110d !important;
-  border-radius:7px !important;
-  box-shadow:7px 7px 0 #7b321e !important;
-}
-.halloween-site .account-page article.panel{
-  position:relative;
-  overflow:hidden;
-}
-.halloween-site .account-page article.panel::before{
-  content:"";
-  position:absolute;
-  right:-34px;
-  top:-38px;
-  width:110px;
-  height:110px;
-  pointer-events:none;
-  opacity:.10;
-  background:repeating-radial-gradient(circle at 100% 0,transparent 0 17px,#7b321e 18px 19px,transparent 20px 28px);
-}
-.halloween-site .account-page .field,
-.halloween-site .account-page .choice,
-.halloween-site .account-page select,
-.halloween-site .account-page textarea{
-  background:#fffdf8 !important;
-  color:#18110d !important;
-  border-color:rgb(24 17 13 / .28) !important;
-}
-.halloween-site .account-page .choice[aria-checked="true"],
-.halloween-site .account-page .choice[aria-pressed="true"],
-.halloween-site .account-page .choice:has(input:checked){
-  background:#f2dfc7 !important;
-  border-color:#18110d !important;
-  box-shadow:3px 3px 0 #7b321e !important;
-}
-.halloween-site .account-page .field-label,
-.halloween-site .account-page label,
-.halloween-site .account-page p,
-.halloween-site .account-page li,
-.halloween-site .account-page span{
-  color:inherit;
-}
-.halloween-site .account-page .field-hint,
-.halloween-site .account-page .text-sm.text-muted,
-.halloween-site .account-page .text-xs.text-muted{
-  color:rgb(24 17 13 / .58) !important;
-}
-.halloween-site .account-page .link{
-  color:#6e2b1b;
-  text-decoration-color:#b9572a;
-}
-.halloween-site .account-page .btn-secondary{
-  background:#f4e6d0 !important;
-  color:#18110d !important;
-  border-color:#18110d !important;
-}
-.halloween-site .account-page .btn-primary{
-  background:#ad4b27 !important;
-  color:#fff8ea !important;
-}
-.halloween-site .account-page .border-ink\/15{
-  border-color:rgb(24 17 13 / .16) !important;
-}
-.halloween-site .account-page .border-ink{
-  border-color:#18110d !important;
-}
-.halloween-site .account-page .bg-paper2{
-  background:#eadbc2 !important;
-}
-.halloween-site .account-page .bg-sand{
-  background:#d4a46b !important;
-}
-
-/* Sign-in/update-password are intentionally compact cards. */
-.halloween-site .account-page > .page-header-shell + section.max-w-xl,
-.halloween-site .account-page > .page-header-shell + section.max-w-2xl{
-  margin-top:2.25rem;
-  padding:clamp(1.4rem,3vw,2.25rem);
-  background:#fffaf1;
-  border:2px solid #18110d;
-  box-shadow:7px 7px 0 #7b321e;
-}
-
-/* Generic form-heavy pages. Keep Halloween around the page, not inside the
-   controls, so contrast and usability stay identical to the clean build. */
-.halloween-site main .field,
-.halloween-site main .choice,
-.halloween-site main textarea,
-.halloween-site main select{
-  color:#18110d;
-}
-.halloween-site main .field::placeholder,
-.halloween-site main textarea::placeholder{
-  color:rgb(24 17 13 / .48);
-}
-.halloween-site main .panel{
-  color:#18110d;
-}
-
-/* Legal/blog/about/service-area editorial pages retain their existing layout
-   and retro geometry. These route roots get explicit readable base colors so
-   Halloween token changes can never invert copy accidentally. */
-.halloween-site .about-v2,
-.halloween-site .blog-v2,
-.halloween-site .areas-v2,
-.halloween-site .legal-v1,
-.halloween-site .post-v2,
-.halloween-site .services-v161,
-.halloween-site .mobile-detailing-page{
-  color:#18110d;
-}
-.halloween-site .about-v2 .text-muted,
-.halloween-site .blog-v2 .text-muted,
-.halloween-site .areas-v2 .text-muted,
-.halloween-site .legal-v1 .text-muted,
-.halloween-site .post-v2 .text-muted,
-.halloween-site .services-v161 .text-muted{
-  color:rgb(24 17 13 / .62) !important;
-}
-
-/* Paint pages intentionally own dark heroes, but all light sections below keep
-   their original ink contrast. */
-.halloween-site .paint-v38 .pv38-paper,
-.halloween-site .paint-v38 .paint-choice-section,
-.halloween-site .paint-v38 .paint-proof-strip,
-.halloween-site .paint-v38 .paint-sequence{
-  color:#18110d;
-}
-
-/* Retro geometry consistency across all pages. */
-.halloween-site .panel,
-.halloween-site .svc-level,
-.halloween-site .svc-live-prices,
-.halloween-site .about-v2 article,
-.halloween-site .areas-v2 article{
-  box-sizing:border-box;
-}
-
-@media (max-width:767px){
-  /* Account mobile: turn the desktop two-column dashboard into a clean single
-     column without allowing shadows/borders to create horizontal overflow. */
-  .halloween-site .account-page > section.container-ed{
-    padding-top:2rem;
-    padding-inline:1rem;
-  }
-  .halloween-site .account-page .page-header-shell{
-    padding-inline:1rem !important;
-    padding-top:6.6rem !important;
-  }
-  .halloween-site .account-page .panel{
-    padding:1.15rem !important;
-    box-shadow:4px 4px 0 #7b321e !important;
-  }
-  .halloween-site .account-page .space-y-16 > * + *{
-    margin-top:2.75rem !important;
-  }
-  .halloween-site .account-page .t-h2{
-    font-size:clamp(2.5rem,13vw,4rem);
-  }
-  .halloween-site .account-page .t-h3{
-    font-size:1.35rem;
-  }
-  .halloween-site .account-page .btn{
-    min-height:3rem;
-  }
-  .halloween-site .account-page > .page-header-shell + section.max-w-xl,
-  .halloween-site .account-page > .page-header-shell + section.max-w-2xl{
-    width:calc(100% - 2rem);
-    margin:1.5rem auto 4rem;
-    padding:1.15rem;
-    box-shadow:4px 4px 0 #7b321e;
-  }
-  .halloween-site .account-page .grid.grid-cols-\[5\.5rem_1fr\]{
-    grid-template-columns:minmax(4.75rem,.7fr) minmax(0,1.3fr);
-  }
-
-  /* Keep every retro shadow inside the viewport on editorial pages. */
-  .halloween-site .svc-level,
-  .halloween-site .svc-live-prices,
-  .halloween-site .about-v2 article,
-  .halloween-site .areas-v2 article{
-    max-width:calc(100vw - 2rem);
-  }
-}
-
-
-/* V16.9.9: Halloween is active only when the runtime date gate adds .halloween-site. */
-body:not(.halloween-site) [data-seasonal] {
-  display: none !important;
-}
-
 /* V17.0 homepage hero handoff
    Keep the proof points inside the photographic first screen, make their
    contrast explicit, then dissolve the dark hero into the warm services page. */
@@ -5995,10 +4705,7 @@ body:not(.halloween-site) [data-seasonal] {
   padding-bottom:max(clamp(8.8rem, 15vh, 11.5rem), 9rem);
 }
 
-/* Match the final color stop of the hero handoff exactly. */
-.halloween-site .home-services.home-services-v14 {
-  background-color:#e7dcc7;
-}
+
 
 @media (max-width:1023px) {
   .hero-full > .proof-row {
@@ -6269,29 +4976,12 @@ body:not(.halloween-site) [data-seasonal] {
   min-height: 3.35rem;
 }
 
-/* Halloween palette should not reduce booking readability. */
-.halloween-site .booking-page .booking-header-proof span {
-  background: #fffaf1 !important;
-  color: #18110d !important;
-  border-color: rgb(24 17 13 / .16) !important;
-}
-.halloween-site .booking-page .booking-flow-section {
-  background: rgb(255 250 241 / .58) !important;
-  border-color: rgb(24 17 13 / .14) !important;
-}
-.halloween-site .booking-page .booking-calendar-day {
-  color: #18110d !important;
-}
-.halloween-site .booking-page .booking-calendar-day[data-past="true"],
-.halloween-site .booking-page .booking-calendar-day[data-outside="true"] {
-  color: rgb(24 17 13 / .26) !important;
-}
-.halloween-site .booking-page .booking-calendar-day[data-available="true"] {
-  color: #8f3f25 !important;
-}
-.halloween-site .booking-page .booking-calendar-day[aria-checked="true"] {
-  color: #fff8ea !important;
-}
+
+
+
+
+
+
 
 @media (max-width: 1023px) {
   .booking-page .page-header-shell {
@@ -6306,25 +4996,12 @@ body:not(.halloween-site) [data-seasonal] {
 }
 
 @media (max-width: 640px) {
-  .booking-page .page-header-shell,
-  .halloween-site .booking-page .page-header-shell {
-    padding-top: 5.35rem !important;
-    padding-bottom: 1.35rem !important;
-  }
+  
   .booking-page .page-header-shell .mt-8 {
     margin-top: 1.15rem !important;
   }
-  .booking-page .page-header-shell .t-page,
-  .halloween-site .booking-page .page-header-shell .t-page {
-    font-size: clamp(2.65rem, 13vw, 3.8rem);
-    line-height: .92;
-  }
-  .booking-page .page-header-shell .t-lede,
-  .halloween-site .booking-page .page-header-shell .t-lede {
-    margin-top: .8rem !important;
-    font-size: .94rem;
-    line-height: 1.45;
-  }
+  
+  
   .booking-header-proof {
     gap: .35rem;
     margin-top: .8rem;
@@ -6466,11 +5143,7 @@ body:not(.halloween-site) [data-seasonal] {
 .booking-final-action .btn {
   min-width:10rem;
 }
-.halloween-site .booking-page .booking-final-action {
-  background:#fffaf1;
-  border-color:rgb(24 17 13 / .18);
-  border-top-color:var(--color-red);
-}
+
 
 /* Give the expanded homepage quote enough scroll target area that the price
    and Choose a time CTA can both be brought into view after vehicle selection. */
@@ -15028,4 +13701,597 @@ body:has(.v29-hero) .site-context-pill>small{display:block!important}
   .site-shared-menu-link strong{font-size:clamp(1.9rem,9vw,2.7rem)!important}
   .site-shared-menu-utility{font-size:.74rem!important}
   .site-shared-menu-actions{grid-template-columns:1fr!important}
+}
+
+/* ============================================================
+   V76 — WARMER ENTRY + CLEAN CONFIG + MENU / QUOTE RESET
+   Personal, useful, and intentionally quiet. No seasonal layer.
+   ============================================================ */
+
+/* Vehicle welcome: a friendly arrival, not a setup form. */
+.veh-modal-backdrop{
+  animation:v76BackdropIn .24s ease-out both!important;
+}
+.veh-modal.veh-modal-clean{
+  width:min(620px,calc(100vw - 34px))!important;
+  padding:clamp(28px,4.4vw,48px)!important;
+  border-radius:30px!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.28)!important;
+  animation:v76WelcomeIn .46s cubic-bezier(.16,1,.3,1) both!important;
+  transform-origin:50% 70%;
+}
+.veh-modal.is-welcome .veh-modal-kicker,
+.veh-modal.is-welcome #veh-modal-title,
+.veh-modal.is-welcome .veh-modal-copy,
+.veh-modal.is-welcome .veh-search,
+.veh-modal.is-welcome .veh-remember,
+.veh-modal.is-welcome .veh-skip{
+  animation:v76WelcomeContent .46s cubic-bezier(.16,1,.3,1) both;
+}
+.veh-modal.is-welcome #veh-modal-title{animation-delay:.035s}
+.veh-modal.is-welcome .veh-modal-copy{animation-delay:.07s}
+.veh-modal.is-welcome .veh-search{animation-delay:.105s}
+.veh-modal.is-welcome .veh-remember{animation-delay:.14s}
+.veh-modal.is-welcome .veh-skip{animation-delay:.175s}
+.veh-modal-kicker{
+  margin-bottom:.8rem!important;
+  color:#b54e4e!important;
+  font-size:.68rem!important;
+  letter-spacing:.15em!important;
+}
+.veh-modal.veh-modal-clean h2{
+  max-width:11ch!important;
+  margin:0!important;
+  font-size:clamp(3rem,5.5vw,5.2rem)!important;
+  line-height:.88!important;
+  letter-spacing:-.06em!important;
+}
+.veh-modal-copy{
+  max-width:30rem!important;
+  margin:1rem 0 1.4rem!important;
+  color:#625e58!important;
+  font-size:1rem!important;
+  line-height:1.5!important;
+}
+.veh-search input{
+  min-height:62px!important;
+  padding:0 18px!important;
+  border:1.5px solid rgba(17,17,17,.35)!important;
+  border-radius:16px!important;
+  background:#fffdfa!important;
+  box-shadow:none!important;
+  font-size:1rem!important;
+}
+.veh-search input:focus{
+  border-color:#111!important;
+  outline:3px solid rgba(213,104,101,.18)!important;
+  outline-offset:2px!important;
+}
+.veh-remember{
+  margin-top:1rem!important;
+  padding-top:1rem!important;
+  border-top:1px solid rgba(17,17,17,.12)!important;
+  color:#292725!important;
+}
+.veh-skip{
+  margin-top:.7rem!important;
+  color:#625e58!important;
+  font-weight:700!important;
+  text-underline-offset:4px!important;
+}
+.veh-modal-close{
+  top:18px!important;
+  right:18px!important;
+  width:44px!important;
+  height:44px!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.62)!important;
+}
+@keyframes v76BackdropIn{from{opacity:0}to{opacity:1}}
+@keyframes v76WelcomeIn{from{opacity:0;transform:translateY(18px) scale(.975)}to{opacity:1;transform:none}}
+@keyframes v76WelcomeContent{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+
+/* Selected service + known vehicle: stop asking/ explaining and show the useful summary. */
+.v15-stage-main.has-site-vehicle{
+  display:block!important;
+  padding:1.35rem 0 .45rem!important;
+}
+.v76-selected-vehicle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1.25rem;
+  min-height:72px;
+  padding:.9rem 0 1.2rem;
+}
+.v76-selected-vehicle>div{min-width:0}
+.v76-selected-vehicle span{
+  display:block;
+  margin-bottom:.35rem;
+  color:rgba(243,241,236,.48);
+  font-family:var(--font-display);
+  font-size:.62rem;
+  font-weight:900;
+  letter-spacing:.14em;
+}
+.v76-selected-vehicle strong{
+  display:block;
+  color:#f3f1ec;
+  font-family:var(--font-display);
+  font-size:clamp(1.65rem,2.5vw,2.6rem);
+  line-height:.95;
+  letter-spacing:-.04em;
+}
+.v76-selected-vehicle small{display:block;margin-top:.35rem;color:rgba(243,241,236,.52)}
+.v76-selected-vehicle button{
+  flex:0 0 auto;
+  min-height:42px;
+  padding:0 .9rem;
+  border:1px solid rgba(243,241,236,.32);
+  border-radius:999px;
+  background:transparent;
+  color:#f3f1ec;
+  font:800 .72rem/1 var(--font-display);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.v15-stage-main.has-site-vehicle + .v15-result.is-visible{
+  padding-top:1.15rem!important;
+}
+.v15-stage.is-open:has(.v15-stage-main.has-site-vehicle){
+  margin-bottom:1.5rem!important;
+}
+.v15-stage.is-open:has(.v15-stage-main.has-site-vehicle) .v15-stage-inner{
+  padding-top:1.25rem!important;
+  padding-bottom:1.45rem!important;
+}
+.v15-stage.is-open:has(.v15-stage-main.has-site-vehicle) .v15-result.is-visible{
+  max-height:none!important;
+}
+
+/* Menu reset: editorial primary nav + useful right column. */
+.site-shared-menu-panel{
+  height:min(690px,86svh)!important;
+  max-height:690px!important;
+  border-radius:0 0 24px 24px!important;
+  background:#090909!important;
+}
+.site-shared-menu-shell{
+  height:100%!important;
+  padding:112px clamp(30px,4.6vw,70px) 34px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1.55fr) minmax(300px,.72fr)!important;
+  grid-template-rows:1fr!important;
+  gap:clamp(40px,6vw,92px)!important;
+}
+.site-shared-menu-main{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  gap:0!important;
+  min-width:0;
+}
+.site-shared-menu-link{
+  min-height:76px!important;
+  grid-template-columns:34px minmax(0,1fr) 24px!important;
+  padding:0!important;
+  border-bottom:1px solid rgba(243,237,223,.15)!important;
+}
+.site-shared-menu-link:first-child{border-top:1px solid rgba(243,237,223,.15)!important}
+.site-shared-menu-link:hover,.site-shared-menu-link[aria-current="page"]{padding-left:10px!important}
+.site-shared-menu-link strong{
+  font-size:clamp(2.75rem,4.2vw,4.75rem)!important;
+  line-height:.82!important;
+}
+.site-shared-menu-side{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  height:100%;
+}
+.site-shared-menu-vehicle{
+  margin:0!important;
+  padding:1.1rem 0 1.2rem!important;
+  border-top:1px solid rgba(243,237,223,.18)!important;
+  border-bottom:1px solid rgba(243,237,223,.18)!important;
+  color:#f3eddf!important;
+}
+.site-shared-menu-vehicle>span{color:#d56865!important;font-size:.68rem!important}
+.site-shared-menu-vehicle strong{font-size:clamp(1.35rem,1.7vw,1.8rem)!important;line-height:1.05!important}
+.site-shared-menu-vehicle small{font-size:.82rem!important;color:rgba(243,237,223,.58)!important}
+.site-shared-menu-explore{margin-top:1.45rem}
+.site-shared-menu-explore>p{
+  margin:0 0 .65rem;
+  color:rgba(243,237,223,.45);
+  font:900 .64rem/1 var(--font-display);
+  letter-spacing:.15em;
+}
+.site-shared-menu-utility{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  gap:0 18px!important;
+  color:#f3eddf!important;
+  font-size:.9rem!important;
+  letter-spacing:.035em!important;
+  text-transform:none!important;
+}
+.site-shared-menu-utility a{
+  min-height:48px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:.65rem!important;
+  padding:0!important;
+  border-right:0!important;
+  border-bottom:1px solid rgba(243,237,223,.12)!important;
+  opacity:.82!important;
+}
+.site-shared-menu-utility a span{font-size:.85rem;opacity:.52}
+.site-shared-menu-utility a:hover{opacity:1!important;color:#d56865!important}
+.site-shared-menu-actions{
+  margin-top:auto!important;
+  padding-top:18px!important;
+  border-top:1px solid rgba(243,237,223,.18)!important;
+  display:grid!important;
+  grid-template-columns:.8fr 1.2fr!important;
+  gap:9px!important;
+}
+.site-shared-menu-actions a{
+  width:100%!important;
+  min-width:0!important;
+  min-height:50px!important;
+}
+
+/* Quote action: stop inheriting the old black slab. */
+.q53-page .q51-build{
+  width:auto!important;
+  min-width:250px!important;
+  min-height:54px!important;
+  margin-top:1.05rem!important;
+  padding:0 1.1rem 0 1.25rem!important;
+  border:1.5px solid #111!important;
+  border-radius:999px!important;
+  background:#d56865!important;
+  color:#111!important;
+  box-shadow:none!important;
+  font-size:.72rem!important;
+  letter-spacing:.12em!important;
+}
+.q53-page .q51-build span{display:block!important;color:#111!important;opacity:1!important;visibility:visible!important}
+.q53-page .q51-build b{display:block!important;color:#111!important;font-size:1.05rem!important}
+.q53-page .q51-build:hover{
+  transform:translateY(-2px)!important;
+  background:#111!important;
+  border-color:#111!important;
+  color:#f5efe4!important;
+  box-shadow:none!important;
+}
+.q53-page .q51-build:hover span,.q53-page .q51-build:hover b{color:#f5efe4!important}
+
+/* Quote result: one recommendation, one price, one decision. */
+.q53-page .q51-result:not(.quote-rec-flow){display:block!important;max-width:1180px!important;margin:0 auto!important}
+.q53-page .q51-result:not(.quote-rec-flow)>.quote-rec-back{display:inline-flex!important;margin:0 0 1rem!important}
+.q76-recommendation{
+  border-top:1.5px solid #111;
+  border-bottom:1.5px solid #111;
+  background:transparent;
+}
+.q76-recommendation-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:2rem;
+  align-items:end;
+  padding:clamp(1.5rem,3vw,2.6rem) 0 1.4rem;
+}
+.q76-recommendation-head>div:first-child>p{
+  margin:0 0 .6rem;
+  color:#b54e4e;
+  font:900 .68rem/1 var(--font-display);
+  letter-spacing:.16em;
+}
+.q76-recommendation h2{
+  margin:0;
+  font-family:var(--font-display);
+  font-size:clamp(4.1rem,7.5vw,7.8rem);
+  font-weight:900;
+  line-height:.78;
+  letter-spacing:-.06em;
+  text-transform:uppercase;
+}
+.q76-recommendation-price{text-align:right}
+.q76-recommendation-price span{
+  display:block;
+  color:#77716a;
+  font:900 .6rem/1 var(--font-display);
+  letter-spacing:.14em;
+}
+.q76-recommendation-price strong{
+  display:block;
+  margin-top:.3rem;
+  font-family:var(--font-display);
+  font-size:clamp(3.2rem,5vw,5.7rem);
+  line-height:.85;
+  letter-spacing:-.055em;
+}
+.q76-recommendation-price small{display:block;margin-top:.4rem;color:#716b64;font-size:.78rem}
+.q76-recommendation-reason{
+  max-width:760px;
+  margin:0;
+  padding:1.35rem 0;
+  border-top:1px solid rgba(17,17,17,.16);
+  color:#504c47;
+  font-size:1rem;
+  line-height:1.6;
+}
+.q76-recommendation-includes{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:0 0 1.35rem;
+}
+.q76-recommendation-includes span{
+  padding:.55rem .75rem;
+  border:1px solid rgba(17,17,17,.22);
+  border-radius:999px;
+  background:rgba(255,255,255,.38);
+  font-size:.72rem;
+  font-weight:750;
+}
+.q76-recommendation-why{max-width:760px;padding:0 0 1.45rem;color:#514c46}
+.q76-recommendation-why summary{cursor:pointer;font-weight:800;text-underline-offset:3px}
+.q76-recommendation-why p{margin:.7rem 0 0;line-height:1.55}
+.q76-timing{
+  display:grid;
+  grid-template-columns:minmax(220px,.42fr) minmax(0,1fr);
+  gap:clamp(28px,5vw,68px);
+  padding:1.65rem 0 2rem;
+  border-top:1.5px solid #111;
+}
+.q76-timing-head span{color:#b54e4e;font:900 .62rem/1 var(--font-display);letter-spacing:.15em}
+.q76-timing-head h3{
+  max-width:9ch;
+  margin:.55rem 0 0;
+  font-family:var(--font-display);
+  font-size:clamp(2.2rem,3.4vw,3.7rem);
+  line-height:.86;
+  letter-spacing:-.045em;
+  text-transform:uppercase;
+}
+.q76-timing-options{border-top:1px solid rgba(17,17,17,.24)}
+.q76-timing-options button{
+  width:100%;
+  min-height:66px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.8rem 0;
+  border:0;
+  border-bottom:1px solid rgba(17,17,17,.24);
+  background:transparent;
+  color:#111;
+  text-align:left;
+}
+.q76-timing-options button strong{display:block;font-size:1rem}
+.q76-timing-options button small{display:block;margin-top:.2rem;color:#77716a;font-size:.76rem}
+.q76-timing-options button b{font-size:1.05rem;transition:transform .18s ease}
+.q76-timing-options button:hover b{transform:translate(3px,-3px)}
+.q76-timing-options button:hover strong{color:#b54e4e}
+
+/* Follow-up quote summary: flatten the old card/slab treatment. */
+.q53-page .q76-followup-summary{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:2rem!important;
+  align-items:end!important;
+  border:0!important;
+  border-top:1.5px solid #111!important;
+  border-bottom:1.5px solid #111!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.q53-page .q76-followup-summary .quote-rec-reveal-copy{padding:1.5rem 0!important}
+.q53-page .q76-followup-summary .quote-rec-reveal-copy h2{font-size:clamp(3.4rem,5.4vw,5.8rem)!important}
+.q53-page .q76-followup-summary .quote-rec-reveal-price{
+  min-width:220px!important;
+  min-height:0!important;
+  padding:1.5rem 0!important;
+  background:transparent!important;
+  color:#111!important;
+  text-align:right!important;
+}
+.q53-page .q76-followup-summary .quote-rec-reveal-price>strong{font-size:clamp(3rem,4.8vw,5rem)!important}
+.q53-page .q76-followup-summary .quote-rec-reveal-price small,
+.q53-page .q76-followup-summary .quote-rec-reveal-price p,
+.q53-page .q76-followup-summary .quote-rec-reveal-price span{color:#5e5953!important}
+
+@media(max-width:900px){
+  .site-shared-menu-panel{height:100svh!important;max-height:none!important;border-radius:0!important;overflow:auto!important}
+  .site-shared-menu-shell{
+    padding:84px 16px 24px!important;
+    display:block!important;
+  }
+  .site-shared-menu-link{min-height:58px!important;grid-template-columns:28px 1fr 18px!important}
+  .site-shared-menu-link strong{font-size:clamp(2.2rem,9.5vw,3.6rem)!important}
+  .site-shared-menu-side{height:auto!important;margin-top:18px!important}
+  .site-shared-menu-explore{margin-top:1.1rem!important}
+  .site-shared-menu-utility{grid-template-columns:1fr 1fr!important;font-size:.88rem!important}
+  .site-shared-menu-utility a{min-height:46px!important}
+  .site-shared-menu-actions{margin-top:18px!important;grid-template-columns:1fr 1fr!important}
+  .q76-recommendation-head{grid-template-columns:1fr!important;gap:1rem!important;align-items:start!important}
+  .q76-recommendation-price{text-align:left!important}
+  .q76-recommendation h2{font-size:clamp(3.6rem,14vw,5.6rem)!important}
+  .q76-timing{grid-template-columns:1fr!important;gap:1rem!important}
+  .q76-timing-head h3{max-width:14ch!important}
+  .q53-page .q76-followup-summary{grid-template-columns:1fr!important;gap:0!important}
+  .q53-page .q76-followup-summary .quote-rec-reveal-price{text-align:left!important;padding-top:0!important}
+}
+@media(max-width:560px){
+  .veh-modal.veh-modal-clean{
+    width:100%!important;
+    max-height:min(90svh,760px)!important;
+    padding:30px 18px calc(24px + env(safe-area-inset-bottom))!important;
+    border-radius:26px 26px 0 0!important;
+  }
+  .veh-modal.veh-modal-clean h2{font-size:clamp(2.8rem,14vw,4rem)!important}
+  .veh-modal-copy{font-size:.94rem!important}
+  .veh-search input{min-height:56px!important;font-size:16px!important}
+  .v76-selected-vehicle{align-items:flex-end!important}
+  .v76-selected-vehicle strong{font-size:1.65rem!important}
+  .site-shared-menu-shell{padding-inline:12px!important}
+  .site-shared-menu-link{min-height:54px!important}
+  .site-shared-menu-link strong{font-size:clamp(2rem,9vw,3rem)!important}
+  .site-shared-menu-utility{grid-template-columns:1fr!important}
+  .site-shared-menu-utility a{font-size:.94rem!important}
+  .site-shared-menu-actions{grid-template-columns:1fr!important}
+  .q53-page .q51-build{width:100%!important;min-width:0!important;justify-content:space-between!important}
+  .q76-recommendation h2{font-size:clamp(3.2rem,15vw,4.6rem)!important}
+  .q76-recommendation-price strong{font-size:3.4rem!important}
+  .q76-timing-options button{min-height:62px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .veh-modal-backdrop,.veh-modal.veh-modal-clean,.veh-modal.is-welcome>*{animation:none!important}
+}
+
+/* ============================================================
+   V77 — MOBILE ACTION SAFETY
+   Every overlay has a reachable close; every action remains tappable.
+   ============================================================ */
+
+/* Menu owns its own close control. Do not depend on the page header. */
+.site-shared-menu-panel{position:fixed!important;overflow:auto!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.site-shared-menu-panel-close{
+  position:sticky;
+  top:max(10px,env(safe-area-inset-top));
+  z-index:8;
+  margin:0 18px 0 auto;
+  min-width:104px;
+  min-height:46px;
+  padding:0 .85rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.65rem;
+  border:1px solid rgba(243,237,223,.5);
+  background:rgba(9,9,9,.9);
+  color:#f3eddf;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  font:900 .68rem/1 var(--font-display);
+  letter-spacing:.12em;
+  cursor:pointer;
+}
+.site-shared-menu-panel-close i{font-size:1rem;font-style:normal;line-height:1}
+.site-shared-menu-shell{margin-top:-46px!important}
+
+/* Vehicle sheet: close remains visible while results/content scroll. */
+.veh-modal.veh-modal-clean{
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  scroll-padding-top:68px;
+  scroll-padding-bottom:calc(28px + env(safe-area-inset-bottom));
+}
+.veh-modal.veh-modal-clean .veh-modal-close{
+  position:sticky!important;
+  top:0!important;
+  z-index:10!important;
+  margin:-8px 0 -36px auto!important;
+  display:grid!important;
+  place-items:center!important;
+  flex:0 0 auto!important;
+}
+
+/* Journey sheet: sticky header means Close is never scrolled away. */
+.journey-drawer{
+  max-height:calc(100svh - max(16px,env(safe-area-inset-top)) - max(16px,env(safe-area-inset-bottom)))!important;
+  overflow:auto!important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:calc(1.25rem + env(safe-area-inset-bottom))!important;
+}
+.journey-drawer-head{
+  position:sticky!important;
+  top:0!important;
+  z-index:6!important;
+  margin:-.2rem -.2rem 0!important;
+  padding:.2rem .2rem .9rem!important;
+  background:#f3f1ec!important;
+}
+.journey-drawer-head button{min-width:44px!important;min-height:44px!important;cursor:pointer}
+
+/* No primary mobile action should be wider than its container. */
+@media(max-width:640px){
+  .site-shared-menu-panel{height:100dvh!important;min-height:100svh!important;max-height:none!important;padding-bottom:env(safe-area-inset-bottom)!important}
+  .site-shared-menu-panel-close{
+    top:max(8px,env(safe-area-inset-top));
+    margin-right:12px;
+    min-width:96px;
+    min-height:44px;
+  }
+  .site-shared-menu-shell{
+    margin-top:-44px!important;
+    padding-top:76px!important;
+    padding-bottom:calc(28px + env(safe-area-inset-bottom))!important;
+  }
+  .site-shared-menu-actions{padding-bottom:max(8px,env(safe-area-inset-bottom))!important}
+  .site-shared-menu-actions a{min-height:52px!important}
+
+  .veh-modal-backdrop{height:100dvh!important;min-height:100svh!important}
+  .veh-modal.veh-modal-clean{
+    max-height:min(92dvh,92svh)!important;
+    padding-bottom:calc(26px + env(safe-area-inset-bottom))!important;
+  }
+  .veh-modal.veh-modal-clean .veh-modal-close{
+    top:2px!important;
+    margin:-4px 0 -38px auto!important;
+    width:46px!important;
+    height:46px!important;
+  }
+  .veh-search-results{max-height:min(34dvh,280px)!important}
+  .veh-skip{min-height:44px!important;display:inline-flex!important;align-items:center!important}
+
+  .journey-backdrop{align-items:flex-end!important;padding:0!important}
+  .journey-drawer{
+    width:100%!important;
+    max-width:none!important;
+    max-height:min(92dvh,92svh)!important;
+    border-radius:24px 24px 0 0!important;
+  }
+  .journey-primary,.journey-clear{min-height:50px!important;width:100%!important}
+
+  /* Reusable conversion controls: prevent clipping/overflow at narrow widths. */
+  :is(.btn,.site-cta-primary,.site-cta-secondary,.cer70-primary,.cer70-offer-cta,.about70-primary,.about70-secondary,.pl57-primary-btn){
+    max-width:100%!important;
+    min-height:48px;
+    white-space:normal!important;
+    text-align:center;
+  }
+  :is(.v54-hero-actions,.about70-actions,.about70-close-actions,.quote-rec-book-actions,.quote-rec-customize-footer){
+    max-width:100%!important;
+  }
+
+  /* Quote controls must remain visible even with browser chrome/keyboard changes. */
+  .q53-page .q53-tool,.q53-page .q53-active-step,.q53-page .q51-result.quote-rec-result{
+    overflow:visible!important;
+    max-height:none!important;
+  }
+  .q53-page .q51-build{min-height:54px!important;margin-bottom:1rem!important}
+  .q76-timing-options button{min-height:64px!important;padding:.9rem 0!important}
+  .quote-rec-conversion-button,.quote-inline-confirm{width:100%!important;min-height:52px!important}
+
+  /* Booking actions stay in normal flow and above iOS safe area. */
+  .bk-actions,.bk-nav,.bk-bottom-actions,.bk-review-actions{padding-bottom:max(8px,env(safe-area-inset-bottom))!important}
+  .bk-actions :is(button,a),.bk-nav :is(button,a),.bk-bottom-actions :is(button,a),.bk-review-actions :is(button,a){min-height:48px!important;max-width:100%!important}
+}
+
+@media(max-width:380px){
+  .site-shared-menu-link strong{font-size:clamp(1.8rem,8.7vw,2.55rem)!important}
+  .site-shared-menu-utility a{font-size:.88rem!important}
+  .v54-hero-actions{width:calc(100% - 28px)!important;margin-inline:auto!important}
+  .v54-hero-actions a{width:100%!important}
 }
