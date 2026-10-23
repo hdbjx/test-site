@@ -34,9 +34,16 @@ security definer
 set search_path = public
 as $$
 declare
-  v_timezone text := coalesce((select timezone from public.booking_settings where id = true), 'America/New_York');
+  v_timezone text;
   v_local_now timestamp;
 begin
+  select coalesce(bs.timezone, 'America/New_York')
+  into v_timezone
+  from public.booking_settings as bs
+  where bs.id = true
+  limit 1;
+
+  v_timezone := coalesce(v_timezone, 'America/New_York');
   v_local_now := now() at time zone v_timezone;
 
   if v_local_now::time < time '06:30' then

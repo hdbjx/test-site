@@ -33,6 +33,7 @@ type LeadEmail = {
 
 const BRAND = {
   red: "#590d07",
+  oxblood: "#590d07",
   coral: "#b8363d",
   cream: "#f3f1ec",
   beige: "#dbc7b3",
@@ -81,37 +82,52 @@ function shell(content: string, preheader = "") {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Every Detail</title>
+    <style>
+      @media only screen and (max-width: 620px) {
+        .ed-wrap { padding-left: 18px !important; padding-right: 18px !important; }
+        .ed-hero { font-size: 36px !important; }
+        .ed-meta-label { width: 94px !important; }
+        .ed-two-col { display:block !important; width:100% !important; padding-left:0 !important; padding-right:0 !important; }
+        .ed-two-col + .ed-two-col { padding-top:10px !important; }
+      }
+    </style>
   </head>
   <body style="margin:0;padding:0;background:${BRAND.cream};font-family:Arial,Helvetica,sans-serif;color:${BRAND.black};">
-    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
-      ${escapeHtml(preheader)}
+    <div style="display:none!important;visibility:hidden;mso-hide:all;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;color:transparent;">
+      ${escapeHtml(preheader)}&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
     </div>
 
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${BRAND.cream};">
       <tr>
-        <td align="center" style="padding:32px 16px;">
-          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:620px;background:#ffffff;border:2px solid ${BRAND.black};">
+        <td align="center" style="padding:24px 12px 34px;">
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:680px;">
             <tr>
-              <td style="background:${BRAND.red};padding:24px 28px;">
-                <div style="font-size:12px;line-height:1.2;letter-spacing:2px;text-transform:uppercase;color:${BRAND.beige};font-weight:700;">
-                  Every Detail
-                </div>
-                <div style="margin-top:6px;font-size:13px;color:#ffffff;">
-                  Premium mobile detailing · Decatur, GA
-                </div>
+              <td class="ed-wrap" style="padding:14px 4px 18px;border-bottom:1px solid rgba(17,17,17,.16);">
+                <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                  <tr>
+                    <td style="font-size:12px;line-height:1.2;letter-spacing:2.1px;font-weight:900;color:${BRAND.oxblood};">EVERY DETAIL</td>
+                    <td align="right" style="font-size:10px;line-height:1.2;letter-spacing:1.3px;font-weight:700;color:${BRAND.gray};">DECATUR + ATLANTA</td>
+                  </tr>
+                </table>
               </td>
             </tr>
 
             <tr>
-              <td style="padding:34px 28px;">
+              <td class="ed-wrap" style="padding:36px 4px 28px;">
                 ${content}
               </td>
             </tr>
 
             <tr>
-              <td style="padding:22px 28px;background:${BRAND.beige};border-top:2px solid ${BRAND.black};font-size:12px;line-height:1.6;color:${BRAND.black};">
-                Every Detail · Mobile detailing brought to your driveway<br>
-                Questions? Reply to this email and we'll help.
+              <td style="padding:0 4px;">
+                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${BRAND.oxblood};">
+                  <tr>
+                    <td class="ed-wrap" style="padding:24px 26px;color:${BRAND.cream};">
+                      <div style="font-size:11px;line-height:1.3;letter-spacing:1.6px;font-weight:900;">EVERY DETAIL</div>
+                      <div style="margin-top:7px;font-size:12px;line-height:1.65;color:#efe7df;">Mobile detailing, brought to your driveway. Questions or changes? Reply directly to this email.</div>
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
           </table>
@@ -123,16 +139,48 @@ function shell(content: string, preheader = "") {
 `;
 }
 
+function eyebrow(value: string) {
+  return `<div style="font-size:10px;line-height:1.2;letter-spacing:1.9px;text-transform:uppercase;color:${BRAND.oxblood};font-weight:900;">${escapeHtml(value)}</div>`;
+}
+
+function headline(value: string) {
+  return `<h1 class="ed-hero" style="margin:10px 0 14px;font-size:44px;line-height:.98;letter-spacing:-1.8px;color:${BRAND.black};font-weight:800;">${value}</h1>`;
+}
+
+function lede(value: string) {
+  return `<p style="margin:0 0 26px;font-size:17px;line-height:1.65;color:#4f4c49;">${value}</p>`;
+}
+
 function detailRow(label: string, value: string) {
   return `
     <tr>
-      <td style="padding:11px 0;border-bottom:1px solid #dedbd5;font-size:13px;color:${BRAND.gray};vertical-align:top;width:120px;">
+      <td class="ed-meta-label" style="padding:12px 0;border-bottom:1px solid rgba(17,17,17,.12);font-size:11px;line-height:1.35;letter-spacing:1px;text-transform:uppercase;color:${BRAND.gray};vertical-align:top;width:132px;font-weight:700;">
         ${escapeHtml(label)}
       </td>
-      <td style="padding:11px 0;border-bottom:1px solid #dedbd5;font-size:14px;color:${BRAND.black};font-weight:700;vertical-align:top;">
+      <td style="padding:12px 0;border-bottom:1px solid rgba(17,17,17,.12);font-size:14px;line-height:1.45;color:${BRAND.black};font-weight:800;vertical-align:top;">
         ${escapeHtml(value)}
       </td>
     </tr>
+  `;
+}
+
+function detailPanel(rows: string, label = "The details") {
+  return `
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 22px;background:#ebe6dd;border:1px solid rgba(17,17,17,.12);">
+      <tr><td style="padding:18px 20px 6px;font-size:10px;line-height:1.2;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.oxblood};font-weight:900;">${escapeHtml(label)}</td></tr>
+      <tr><td style="padding:0 20px 16px;"><table width="100%" cellpadding="0" cellspacing="0" role="presentation">${rows}</table></td></tr>
+    </table>
+  `;
+}
+
+function noteBlock(title: string, body: string) {
+  return `
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0;background:#ffffff;border:1px solid rgba(17,17,17,.14);">
+      <tr><td style="padding:18px 20px;">
+        <div style="font-size:11px;line-height:1.3;color:${BRAND.black};font-weight:900;">${escapeHtml(title)}</div>
+        <div style="margin-top:6px;font-size:14px;line-height:1.65;color:${BRAND.gray};">${body}</div>
+      </td></tr>
+    </table>
   `;
 }
 
@@ -152,7 +200,7 @@ export function buildGiftCardRequestEmail(input: {
   const methodLabel = input.paymentMethod === "venmo" ? "Venmo" : "Zelle";
   const target = input.paymentTarget ? escapeHtml(input.paymentTarget) : "Every Detail payment details";
   const paymentCta = input.paymentMethod === "venmo" && input.paymentUrl
-    ? `<tr><td style="padding:0 0 22px;"><a href="${escapeHtml(input.paymentUrl)}" style="display:inline-block;padding:13px 18px;border-radius:999px;background:${BRAND.coral};color:#ffffff;text-decoration:none;font-weight:700;">Open Venmo ↗</a></td></tr>`
+    ? `<tr><td style="padding:0 0 22px;"><a href="${escapeHtml(input.paymentUrl)}" style="display:inline-block;padding:12px 17px;background:${BRAND.coral};border:1px solid ${BRAND.black};box-shadow:3px 3px 0 ${BRAND.black};color:#ffffff;text-decoration:none;font-weight:900;">Open Venmo ↗</a></td></tr>`
     : "";
   const deliveryCopy = input.deliveryMode === "recipient"
     ? "As soon as payment is confirmed, we’ll email the active gift card to the recipient."
@@ -166,7 +214,7 @@ export function buildGiftCardRequestEmail(input: {
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 26px;">
       <tr>
         <td style="padding:0;">
-          <div style="padding:24px;border-radius:22px;background:linear-gradient(135deg,#5c0b08,#8f191c 56%,#aa272c);color:#ffffff;">
+          <div style="padding:24px;border-radius:22px;background:${BRAND.oxblood};color:#ffffff;">
             <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
               <tr>
                 <td style="font-size:11px;letter-spacing:2px;font-weight:800;">EVERY DETAIL</td>
@@ -235,7 +283,7 @@ export function buildGiftCardActivatedEmail(input: {
 
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 24px;">
       <tr><td>
-        <div style="padding:26px;border-radius:22px;background:#8f191c;color:#ffffff;">
+        <div style="padding:26px;border-radius:22px;background:${BRAND.oxblood};color:#ffffff;">
           <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
             <tr>
               <td style="font-size:11px;letter-spacing:2px;font-weight:800;">EVERY DETAIL</td>
@@ -265,8 +313,8 @@ export function buildGiftCardActivatedEmail(input: {
     </table>
 
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 18px;"><tr>
-      <td style="padding-right:6px;"><a href="https://www.everydetail.co/book" style="display:block;padding:14px 16px;border-radius:999px;background:${BRAND.coral};color:#ffffff;text-decoration:none;text-align:center;font-weight:800;">Book your detail ↗</a></td>
-      <td style="padding-left:6px;"><a href="https://www.everydetail.co/account" style="display:block;padding:13px 16px;border-radius:999px;border:1px solid ${BRAND.black};color:${BRAND.black};text-decoration:none;text-align:center;font-weight:800;">View account ↗</a></td>
+      <td style="padding-right:6px;"><a href="https://www.everydetail.co/book" style="display:block;padding:13px 16px;background:${BRAND.coral};border:1px solid ${BRAND.black};box-shadow:3px 3px 0 ${BRAND.black};color:#ffffff;text-decoration:none;text-align:center;font-weight:900;">Book your detail ↗</a></td>
+      <td style="padding-left:6px;"><a href="https://www.everydetail.co/account" style="display:block;padding:12px 16px;background:${BRAND.cream};border:1px solid ${BRAND.black};box-shadow:3px 3px 0 ${BRAND.black};color:${BRAND.black};text-decoration:none;text-align:center;font-weight:900;">View account ↗</a></td>
     </tr></table>
 
     <p style="margin:0;font-size:13px;line-height:1.7;color:${BRAND.gray};">If you use only part of the card, the remaining balance stays available for a future visit.</p>
@@ -388,22 +436,24 @@ function afterJobShell(content: string, preheader = "") {
 <!doctype html>
 <html>
   <head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Every Detail</title></head>
-  <body style="margin:0;padding:0;background:#f3f1ec;font-family:Arial,Helvetica,sans-serif;color:#111111;">
-    <div style="display:none!important;visibility:hidden;mso-hide:all;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;color:transparent;">${escapeHtml(preheader)}&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;</div>
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#f3f1ec;">
-      <tr><td align="center" style="padding:22px 12px;">
+  <body style="margin:0;padding:0;background:${BRAND.cream};font-family:Arial,Helvetica,sans-serif;color:${BRAND.black};">
+    <div style="display:none!important;visibility:hidden;mso-hide:all;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;color:transparent;">${escapeHtml(preheader)}&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;</div>
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${BRAND.cream};">
+      <tr><td align="center" style="padding:24px 12px 34px;">
         <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:680px;">
-          <tr><td style="padding:18px 4px 22px;">
+          <tr><td style="padding:14px 4px 18px;border-bottom:1px solid rgba(17,17,17,.16);">
             <table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr>
-              <td style="font-size:12px;letter-spacing:2px;font-weight:800;color:#590d07;">EVERY DETAIL</td>
-              <td align="right" style="font-size:11px;color:#666666;">DECATUR + ATLANTA</td>
+              <td style="font-size:12px;letter-spacing:2.1px;font-weight:900;color:${BRAND.oxblood};">EVERY DETAIL</td>
+              <td align="right" style="font-size:10px;letter-spacing:1.3px;font-weight:700;color:${BRAND.gray};">DECATUR + ATLANTA</td>
             </tr></table>
           </td></tr>
+          <tr><td style="height:28px;font-size:1px;line-height:1px;">&nbsp;</td></tr>
           ${content}
-          <tr><td style="padding:28px 4px 8px;font-size:11px;line-height:1.7;color:#666666;">
-            <strong style="color:#111111;letter-spacing:1px;">EVERY DETAIL</strong><br>
-            Premium mobile detailing · Decatur + Atlanta<br>
-            Questions? Reply directly to this email.
+          <tr><td style="padding:14px 4px 0;">
+            <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${BRAND.oxblood};"><tr><td style="padding:24px 26px;color:${BRAND.cream};">
+              <div style="font-size:11px;letter-spacing:1.6px;font-weight:900;">EVERY DETAIL</div>
+              <div style="margin-top:7px;font-size:12px;line-height:1.65;color:#efe7df;">Mobile detailing, brought to your driveway. Questions? Reply directly to this email.</div>
+            </td></tr></table>
           </td></tr>
         </table>
       </td></tr>
@@ -426,7 +476,7 @@ export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: st
           <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:#b8363d;font-weight:800;">03 / HOW DID WE DO?</div>
           <div style="margin:8px 0 7px;font-size:23px;line-height:1.15;font-weight:700;letter-spacing:-.5px;">Love how it turned out?</div>
           <div style="font-size:14px;line-height:1.6;color:#666666;">A Google review is one of the best ways to support our small team.</div>
-          <div style="margin-top:18px;"><a href="${escapeHtml(reviewUrl)}" style="display:inline-block;background:#b8363d;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:7px;font-size:13px;font-weight:700;">Leave a review ↗</a></div>
+          <div style="margin-top:18px;"><a href="${escapeHtml(reviewUrl)}" style="display:inline-block;background:#b8363d;color:#ffffff;text-decoration:none;padding:12px 18px;border:1px solid #111111;box-shadow:3px 3px 0 #111111;font-size:13px;font-weight:900;">Leave a review ↗</a></div>
         </td></tr>
       </table>
     </td></tr>` : "";
@@ -463,7 +513,7 @@ export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: st
     <tr><td style="padding:30px 4px 14px;">${afterJobPhotoSplit(input.beforeUrl, input.afterUrl)}
       <div style="margin-top:22px;font-size:20px;font-weight:700;letter-spacing:-.3px;">${escapeHtml(input.vehicle)}</div>
       <div style="margin-top:4px;font-size:13px;color:#666666;">${escapeHtml(input.service)} · completed ${escapeHtml(completed)}</div>
-      <p style="margin:14px 0 0;font-size:15px;line-height:1.65;color:#4f4c49;">Thanks for trusting us with it. Everything is finished and ready to go.</p>
+      <p style="margin:14px 0 0;font-size:15px;line-height:1.65;color:#4f4c49;">Thanks for trusting us with it. The detail is finished, the vehicle is ready, and we’ve attached the receipt if one was requested.</p>
     </td></tr>
 
     <tr><td style="padding:0 4px 14px;">
@@ -493,6 +543,7 @@ export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: st
 export async function sendBookingEmails(booking: BookingEmail) {
   const appointment = formatAppointment(booking.start);
   const money = formatMoney(booking.price);
+  const firstName = firstNameOnly(booking.name);
   const lines = booking.lines?.length
     ? booking.lines
     : [{ vehicle: booking.vehicle, service: booking.service, price: booking.price }];
@@ -507,43 +558,30 @@ export async function sendBookingEmails(booking: BookingEmail) {
 
   const customerHtml = shell(
     `
-      <div style="font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:700;">
-        You're booked
-      </div>
+      ${eyebrow("You’re booked")}
+      ${headline(`${firstName ? `${escapeHtml(firstName)}, you’re` : "You’re"} on the schedule.`)}
+      ${lede(`Your Every Detail appointment is confirmed. We’ll bring the equipment, products, power, and water. You just give us access to ${lines.length > 1 ? "the vehicles" : "the vehicle"}.`)}
 
-      <h1 style="margin:10px 0 14px;font-size:34px;line-height:1.05;color:${BRAND.black};">
-        We'll see you in the driveway.
-      </h1>
-
-      <p style="margin:0 0 26px;font-size:16px;line-height:1.65;color:${BRAND.gray};">
-        Hi ${escapeHtml(booking.name)}, your Every Detail appointment is confirmed. We'll bring the power, water, equipment, and everything needed for the detail.
-      </p>
-
-      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-        ${vehicleRows}
+      ${detailPanel(`
         ${detailRow("When", appointment)}
+        ${vehicleRows}
         ${detailRow("Where", booking.address)}
         ${detailRow("Total", money)}
-      </table>
+      `, "Your appointment")}
 
-      <div style="margin-top:26px;padding:18px;background:${BRAND.cream};border-left:5px solid ${BRAND.coral};font-size:14px;line-height:1.6;">
-        Please make sure we can access ${lines.length > 1 ? "all vehicles" : "the vehicle"} at the scheduled time. You do not need to provide power or water.
-      </div>
+      ${noteBlock(
+        "Nothing else to do right now.",
+        `We’ll send you a reminder before the appointment and a same-day confirmation once your team is assigned. If anything changes, just reply to this email.`,
+      )}
     `,
     `${booking.service} confirmed for ${appointment}`,
   );
 
   const internalHtml = shell(
     `
-      <div style="font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:700;">
-        New website booking
-      </div>
-
-      <h1 style="margin:10px 0 22px;font-size:32px;line-height:1.08;">
-        ${escapeHtml(booking.service)}
-      </h1>
-
-      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      ${eyebrow("New website booking")}
+      ${headline(escapeHtml(booking.service))}
+      ${detailPanel(`
         ${detailRow("Customer", booking.name)}
         ${detailRow("Phone", booking.phone)}
         ${detailRow("Email", booking.email)}
@@ -553,7 +591,7 @@ export async function sendBookingEmails(booking: BookingEmail) {
         ${detailRow("Total", money)}
         ${booking.leadSource ? detailRow("Heard about us", `${booking.leadSource}${booking.leadSourceDetail ? ` · ${booking.leadSourceDetail}` : ""}`) : ""}
         ${booking.notes ? detailRow("Notes", booking.notes) : ""}
-      </table>
+      `, "Booking details")}
     `,
     `New booking: ${booking.service}`,
   );
@@ -561,7 +599,7 @@ export async function sendBookingEmails(booking: BookingEmail) {
   const [customer, internal] = await Promise.allSettled([
     sendEmail({
       to: booking.email,
-      subject: `You're booked with Every Detail`,
+      subject: `You’re booked with Every Detail`,
       html: customerHtml,
       replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
     }),
@@ -623,6 +661,7 @@ function fieldLabel(key: string) {
 export async function sendLeadEmails({ type, fields }: LeadEmail) {
   const title = leadTitle(type);
   const customerEmail = fields.email || "";
+  const firstName = firstNameOnly(fields.name || "");
 
   const rows = Object.entries(fields)
     .filter(([, value]) => Boolean(value))
@@ -631,17 +670,9 @@ export async function sendLeadEmails({ type, fields }: LeadEmail) {
 
   const internalHtml = shell(
     `
-      <div style="font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:700;">
-        New website request
-      </div>
-
-      <h1 style="margin:10px 0 22px;font-size:32px;line-height:1.08;">
-        ${escapeHtml(title)}
-      </h1>
-
-      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-        ${rows}
-      </table>
+      ${eyebrow("New website request")}
+      ${headline(escapeHtml(title))}
+      ${detailPanel(rows, "Request details")}
     `,
     `${title} from ${fields.name || "a website visitor"}`,
   );
@@ -656,23 +687,26 @@ export async function sendLeadEmails({ type, fields }: LeadEmail) {
   ];
 
   if (customerEmail) {
+    const isDetailPlus = type === "detailplus";
+    const isQuote = type === "quote";
+    const eyebrowCopy = isDetailPlus ? "Detail+" : isQuote ? "Request received" : "We got it";
+    const headlineCopy = isDetailPlus
+      ? `${firstName ? `${escapeHtml(firstName)}, we’ve` : "We’ve"} got your Detail+ request.`
+      : isQuote
+        ? `${firstName ? `${escapeHtml(firstName)}, we’ve` : "We’ve"} got your request.`
+        : `${firstName ? `${escapeHtml(firstName)}, we’ve` : "We’ve"} got it.`;
+    const bodyCopy = isDetailPlus
+      ? "We’ll look over your vehicle and coverage preferences, then follow up with the best maintenance setup for you."
+      : isQuote
+        ? "We’ll review what you sent and follow up with the best next step for your vehicle."
+        : "Your request made it to the Every Detail team. We’ll review the details and follow up directly.";
+
     const customerHtml = shell(
       `
-        <div style="font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:700;">
-          We got it
-        </div>
-
-        <h1 style="margin:10px 0 14px;font-size:34px;line-height:1.05;">
-          Thanks${fields.name ? `, ${escapeHtml(fields.name.split(" ")[0])}` : ""}.
-        </h1>
-
-        <p style="margin:0;font-size:16px;line-height:1.65;color:${BRAND.gray};">
-          Your ${type === "detailplus" ? "Detail+ request" : type === "quote" ? "quote request" : "request"} made it to the Every Detail team. We'll review the details and follow up with you directly.
-        </p>
-
-        <div style="margin-top:26px;padding:18px;background:${BRAND.cream};border-left:5px solid ${BRAND.coral};font-size:14px;line-height:1.6;">
-          Need to add something? Just reply to this email.
-        </div>
+        ${eyebrow(eyebrowCopy)}
+        ${headline(headlineCopy)}
+        ${lede(bodyCopy)}
+        ${noteBlock("Need to add something?", "Reply to this email and it’ll land with the same team reviewing your request.")}
       `,
       "Your request made it to Every Detail",
     );
@@ -680,7 +714,7 @@ export async function sendLeadEmails({ type, fields }: LeadEmail) {
     jobs.push(
       sendEmail({
         to: customerEmail,
-        subject: "We got your request · Every Detail",
+        subject: isDetailPlus ? "We got your Detail+ request" : "We got your request · Every Detail",
         html: customerHtml,
         replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
       }),
@@ -742,15 +776,15 @@ function teamMemberCard(member: DayOfTeamMember) {
 
   return `
     <tr>
-      <td style="padding:0 0 10px;">
-        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border:1px solid #dedbd5;border-radius:16px;background:#faf8f4;">
+      <td style="padding:0 0 9px;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;border:1px solid rgba(17,17,17,.14);">
           <tr>
-            <td width="62" style="padding:14px 0 14px 14px;vertical-align:middle;">
-              <div style="width:44px;height:44px;border-radius:999px;background:${BRAND.red};border:1px solid ${BRAND.black};color:#ffffff;text-align:center;line-height:44px;font-size:13px;font-weight:800;letter-spacing:.5px;">${escapeHtml(initials(member.name))}</div>
+            <td width="66" style="padding:13px 0 13px 14px;vertical-align:middle;">
+              <div style="width:46px;height:46px;border-radius:999px;background:${BRAND.oxblood};color:${BRAND.cream};text-align:center;line-height:46px;font-size:13px;font-weight:900;letter-spacing:.8px;">${escapeHtml(initials(member.name))}</div>
             </td>
-            <td style="padding:14px 16px;vertical-align:middle;">
-              <div style="font-size:16px;line-height:1.2;color:${BRAND.black};font-weight:800;">${escapeHtml(name)}</div>
-              <div style="margin-top:3px;font-size:12px;line-height:1.3;color:${BRAND.gray};">${role}</div>
+            <td style="padding:13px 16px;vertical-align:middle;">
+              <div style="font-size:16px;line-height:1.2;color:${BRAND.black};font-weight:900;">${escapeHtml(name)}</div>
+              <div style="margin-top:3px;font-size:11px;line-height:1.3;letter-spacing:.7px;text-transform:uppercase;color:${BRAND.gray};font-weight:700;">${role}</div>
             </td>
           </tr>
         </table>
@@ -770,42 +804,33 @@ export async function sendDayOfJobConfirmationEmail(booking: DayOfJobConfirmatio
 
   const html = shell(
     `
-      <div style="font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:700;">
-        Today with Every Detail
-      </div>
-
-      <h1 style="margin:10px 0 14px;font-size:34px;line-height:1.05;color:${BRAND.black};">
-        We're all set for today${firstName ? `, ${escapeHtml(firstName)}` : ""}.
-      </h1>
-
-      <p style="margin:0 0 24px;font-size:16px;line-height:1.65;color:${BRAND.gray};">
-        Your appointment is confirmed on our end, and the team below is scheduled for your detail. We'll see you around <strong style="color:${BRAND.black};">${escapeHtml(appointmentTime)}</strong>.
-      </p>
+      ${eyebrow("Today with Every Detail")}
+      ${headline(`We’ll see you today${firstName ? `, ${escapeHtml(firstName)}` : ""}.`)}
+      ${lede(`Your car’s on our board and your team is ready. We’ll be there around <strong style="color:${BRAND.black};">${escapeHtml(appointmentTime)}</strong>.`)}
 
       ${teamRows ? `
-        <div style="margin:0 0 10px;font-size:11px;line-height:1.2;letter-spacing:1.6px;text-transform:uppercase;color:${BRAND.black};font-weight:800;">${teamLabel}</div>
-        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 20px;">
-          ${teamRows}
-        </table>
+        <div style="margin:0 0 10px;font-size:10px;line-height:1.2;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.oxblood};font-weight:900;">${teamLabel}</div>
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 20px;">${teamRows}</table>
       ` : ""}
 
-      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-        ${detailRow("When", appointment)}
-        ${detailRow("Vehicle", booking.vehicle)}
+      ${detailPanel(`
+        ${detailRow("Time", appointmentTime)}
         ${detailRow("Service", booking.service)}
-        ${detailRow("Where", booking.address)}
-      </table>
+        ${detailRow("Vehicle", booking.vehicle)}
+        ${detailRow("Location", booking.address)}
+      `, "Today’s appointment")}
 
-      <div style="margin-top:26px;padding:18px;background:${BRAND.cream};border-left:5px solid ${BRAND.coral};font-size:14px;line-height:1.6;">
-        <strong>No need to confirm anything.</strong> Just make sure we can access the vehicle at the scheduled time. We bring our own power and water. If anything changes, reply to this email and we'll take care of it.
-      </div>
+      ${noteBlock(
+        "No need to confirm anything.",
+        "We’ve got it from here. Just make sure we can access the vehicle at the scheduled time. We bring our own power and water. If anything changes, reply to this email.",
+      )}
     `,
-    `We're all set for your ${appointmentTime} Every Detail appointment today.`,
+    `We’re all set for your ${appointmentTime} Every Detail appointment today.`,
   );
 
   return sendEmail({
     to: booking.email,
-    subject: `We're all set for today${firstName ? `, ${firstName}` : ""}`,
+    subject: `We’ll see you today${firstName ? `, ${firstName}` : ""}`,
     html,
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
   });
@@ -814,39 +839,32 @@ export async function sendDayOfJobConfirmationEmail(booking: DayOfJobConfirmatio
 /** Send the single customer reminder used roughly 24 hours before a job. */
 export async function sendJobReminderEmail(booking: JobReminderEmail) {
   const appointment = formatAppointment(booking.start);
-  const firstName = booking.name.trim().split(/\s+/)[0] || booking.name;
+  const firstName = firstNameOnly(booking.name);
 
   const html = shell(
     `
-      <div style="font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:700;">
-        Appointment reminder
-      </div>
+      ${eyebrow("Tomorrow with Every Detail")}
+      ${headline(`Tomorrow’s the day${firstName ? `, ${escapeHtml(firstName)}` : ""}.`)}
+      ${lede("Your appointment is on the schedule. Here’s everything you need to know before we arrive.")}
 
-      <h1 style="margin:10px 0 14px;font-size:34px;line-height:1.05;color:${BRAND.black};">
-        We'll see you tomorrow${firstName ? `, ${escapeHtml(firstName)}` : ""}.
-      </h1>
-
-      <p style="margin:0 0 26px;font-size:16px;line-height:1.65;color:${BRAND.gray};">
-        Just a reminder that your Every Detail appointment is coming up. We'll bring the power, water, equipment, and products needed for the detail.
-      </p>
-
-      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      ${detailPanel(`
         ${detailRow("When", appointment)}
-        ${detailRow("Vehicle", booking.vehicle)}
         ${detailRow("Service", booking.service)}
+        ${detailRow("Vehicle", booking.vehicle)}
         ${detailRow("Where", booking.address)}
-      </table>
+      `, "Your appointment")}
 
-      <div style="margin-top:26px;padding:18px;background:${BRAND.cream};border-left:5px solid ${BRAND.coral};font-size:14px;line-height:1.6;">
-        Please make sure we can access the vehicle at the scheduled time. You do not need to provide power or water. If anything has changed, reply to this email and we'll help.
-      </div>
+      ${noteBlock(
+        "We bring the setup.",
+        "Power, water, equipment, and products are on us. Just make sure we can access the vehicle at the scheduled time. If anything has changed, reply to this email and we’ll help.",
+      )}
     `,
-    `Reminder: your Every Detail appointment is ${appointment}`,
+    `Your Every Detail appointment is ${appointment}`,
   );
 
   return sendEmail({
     to: booking.email,
-    subject: `Reminder: your Every Detail appointment is tomorrow`,
+    subject: `We’ll see you tomorrow${firstName ? `, ${firstName}` : ""}`,
     html,
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
   });

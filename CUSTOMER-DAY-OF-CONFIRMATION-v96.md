@@ -43,4 +43,8 @@ With `CRON_SECRET` authorization, use:
 
 `GET /api/cron/job-reminders?testEmail=you@example.com&type=dayOf`
 
-The test email uses Wiley and Davis as sample assigned crew and does not modify a job.
+That default test still uses sample appointment data. To test with the real job scheduled for today while overriding only the recipient, use:
+
+`GET /api/cron/job-reminders?testEmail=you@example.com&type=dayOf&useToday=1`
+
+If there are multiple jobs today, the route prefers the next upcoming appointment. If all have already started, it uses the most recent one. You can force a specific same-day job with `&jobId=<uuid>`. The live-job test reads the job and assigned team but does not claim the reminder, modify the job, or mark the real customer email as sent.

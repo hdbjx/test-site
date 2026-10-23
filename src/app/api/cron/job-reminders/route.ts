@@ -73,6 +73,54 @@ async function loadAssignedTeam(admin: ReturnType<typeof supabaseAdmin>, jobId: 
     });
 }
 
+
+function localDateKey(value: Date, timeZone: string) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(value);
+
+  const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${byType.year}-${byType.month}-${byType.day}`;
+}
+
+async function loadTodayTestJob(
+  admin: ReturnType<typeof supabaseAdmin>,
+  requestedJobId?: string | null,
+): Promise<ReminderJob | null> {
+  const timeZone = process.env.BOOKING_TIMEZONE || "America/New_York";
+  const now = new Date();
+  const todayKey = localDateKey(now, timeZone);
+
+  let query = admin
+    .from("jobs")
+    .select("id,customer_name,email,address,service_name,vehicle,scheduled_start,status")
+    .not("scheduled_start", "is", null)
+    .neq("status", "cancelled")
+    .gte("scheduled_start", new Date(now.getTime() - 30 * 60 * 60 * 1000).toISOString())
+    .lte("scheduled_start", new Date(now.getTime() + 30 * 60 * 60 * 1000).toISOString())
+    .order("scheduled_start", { ascending: true });
+
+  if (requestedJobId) query = query.eq("id", requestedJobId);
+
+  const { data, error } = await query.limit(50);
+  if (error) throw error;
+
+  const jobs = ((data ?? []) as Array<ReminderJob & { status?: string | null }>).filter((job) =>
+    Boolean(job.scheduled_start) && localDateKey(new Date(job.scheduled_start), timeZone) === todayKey,
+  );
+
+  if (!jobs.length) return null;
+  if (requestedJobId) return jobs[0] ?? null;
+
+  // Prefer the next appointment today. If all of today's jobs have started,
+  // use the most recent one so the test still reflects a real same-day job.
+  const upcoming = jobs.find((job) => new Date(job.scheduled_start).getTime() >= now.getTime());
+  return upcoming ?? jobs[jobs.length - 1] ?? null;
+}
+
 async function processDayOfConfirmations(admin: ReturnType<typeof supabaseAdmin>): Promise<WorkerResult> {
   const { data, error } = await admin.rpc("claim_customer_day_of_email_confirmations", {
     p_limit: MAX_PER_RUN,
@@ -259,7 +307,11 @@ export async function GET(request: NextRequest) {
 
   if (testEmail) {
     if (testType === "dayof") {
-      const result = await sendDayOfJobConfirmationEmail({
+      const admin = supabaseAdmin();
+      const useTodayJob = request.nextUrl.searchParams.get("useToday") === "1";
+      const requestedJobId = request.nextUrl.searchParams.get("jobId")?.trim() || null;
+
+      let input = {
         name: "Wiley",
         email: testEmail,
         address: "123 Example Drive, Decatur, GA",
@@ -269,15 +321,61 @@ export async function GET(request: NextRequest) {
         team: [
           { name: "Wiley", isLead: true },
           { name: "Davis", isLead: false },
-        ],
-      });
+        ] as DayOfTeamMember[],
+      };
+      let sourceJob: ReminderJob | null = null;
+
+      if (useTodayJob || requestedJobId) {
+        sourceJob = await loadTodayTestJob(admin, requestedJobId);
+        if (!sourceJob) {
+          return NextResponse.json(
+            { ok: false, test: true, type: "dayOf", error: requestedJobId ? "That job is not scheduled for today" : "No job scheduled for today was found" },
+            { status: 404 },
+          );
+        }
+
+        const team = await loadAssignedTeam(admin, sourceJob.id);
+        if (!team.length) {
+          return NextResponse.json(
+            { ok: false, test: true, type: "dayOf", jobId: sourceJob.id, error: "Today's job has no assigned team yet" },
+            { status: 409 },
+          );
+        }
+
+        input = {
+          name: sourceJob.customer_name || "there",
+          email: testEmail,
+          address: sourceJob.address || "Your scheduled service address",
+          service: sourceJob.service_name || "Detail",
+          vehicle: sourceJob.vehicle || "Your vehicle",
+          start: sourceJob.scheduled_start,
+          team,
+        };
+      }
+
+      const result = await sendDayOfJobConfirmationEmail(input);
 
       if (!result.ok) {
         console.error("[job-reminders] day-of test email failed", result);
         return NextResponse.json({ ok: false, test: true, type: "dayOf", error: "Email provider did not confirm delivery request" }, { status: 502 });
       }
 
-      return NextResponse.json({ ok: true, test: true, type: "dayOf", sent: 1 });
+      return NextResponse.json({
+        ok: true,
+        test: true,
+        type: "dayOf",
+        sent: 1,
+        recipient: testEmail,
+        usedLiveJob: Boolean(sourceJob),
+        ...(sourceJob ? {
+          jobId: sourceJob.id,
+          customerName: sourceJob.customer_name,
+          scheduledStart: sourceJob.scheduled_start,
+          service: sourceJob.service_name,
+          vehicle: sourceJob.vehicle,
+          team: input.team.map((member) => member.name),
+        } : {}),
+      });
     }
 
     const result = await sendJobReminderEmail({
