@@ -15984,3 +15984,171 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
   .area-v2-hero.area90-hero h1{font-size:clamp(2.72rem,12.8vw,3.55rem)!important}
   .area90-hero-photo{min-height:300px}
 }
+
+/* V91 booking add-on recommendations + confirmation offer */
+.bk-recommend-head{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin:.85rem 0 .55rem}
+.bk-recommend-head .bk-label{margin:0;color:var(--bk-coral)}
+.bk-recommend-head>p:last-child:not(.bk-label){margin:0;font-size:.88rem;color:rgba(11,10,9,.68)}
+.bk-addons-featured{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.bk-addon{position:relative}
+.bk-addon.is-recommended{background:#fffdf8;border-color:rgba(11,10,9,.34);box-shadow:0 8px 24px rgba(11,10,9,.045)}
+.bk-addon-rec{justify-self:start;margin:0 0 .12rem;padding:.24rem .42rem;border-radius:999px;background:rgba(213,104,101,.14);color:#8f292f;font-family:var(--font-display);font-size:.6rem;font-weight:900;letter-spacing:.1em;line-height:1;text-transform:uppercase}
+.bk-see-all{margin-top:.8rem}
+.bk-done-addon{margin-top:2.2rem;padding:1.35rem;border:1.5px solid var(--bk-ink);border-radius:8px;background:#fffdf8;box-shadow:5px 5px 0 rgba(11,10,9,.08)}
+.bk-done-addon.is-added{border-color:#6f7864;background:#f3f4ed}
+.bk-done-addon-kicker{margin:0 0 .45rem;color:var(--bk-coral);font-family:var(--font-display);font-size:.68rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+.bk-done-addon h2{margin:0;font-family:var(--font-display);font-size:clamp(1.7rem,4vw,2.5rem);font-weight:900;letter-spacing:-.025em;line-height:.98;text-transform:uppercase}
+.bk-done-addon>p:not(.bk-done-addon-kicker){margin:.7rem 0 0;color:rgba(11,10,9,.72);line-height:1.5}
+.bk-done-addon-intro{max-width:560px}
+.bk-done-addon-offer{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:1rem;margin-top:1.05rem;padding-top:1rem;border-top:1px dashed rgba(11,10,9,.3)}
+.bk-done-addon-offer>div{display:grid;gap:.2rem}
+.bk-done-addon-offer strong{font-family:var(--font-display);font-size:1.08rem;font-weight:900;text-transform:uppercase}
+.bk-done-addon-offer span{font-size:.9rem;color:rgba(11,10,9,.68)}
+.bk-done-addon-offer em{font-style:normal;font-family:var(--font-display);font-size:1.25rem;font-weight:900;white-space:nowrap}
+.bk-done-addon-offer button{min-height:44px;padding:.7rem .95rem;border:1.5px solid var(--bk-ink);border-radius:4px;background:var(--bk-ink);color:#fff;font-family:var(--font-display);font-size:.68rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.bk-done-addon-offer button:disabled{opacity:.55;cursor:wait}
+
+@media(max-width:700px){
+  .bk-recommend-head{display:block;margin-top:.7rem}
+  .bk-recommend-head>p:last-child:not(.bk-label){margin-top:.28rem;font-size:.9rem}
+  .bk-addons-featured{grid-template-columns:1fr}
+  .bk-addon.is-recommended{padding:1rem}
+  .bk-done-addon{margin-top:1.6rem;padding:1.05rem}
+  .bk-done-addon-offer{grid-template-columns:1fr auto;gap:.7rem}
+  .bk-done-addon-offer button{grid-column:1/-1;width:100%}
+}
+
+/* ============================================================
+   V92 — FIRST-VISIT WELCOME SEQUENCE
+   A short arrival moment before the vehicle question. Account
+   entry stays secondary, and later vehicle changes remain unchanged.
+   ============================================================ */
+.veh-modal.is-welcome .veh-welcome-intro{
+  min-height:clamp(118px,15vw,166px);
+  display:flex;
+  align-items:flex-end;
+  overflow:hidden;
+}
+.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
+  max-width:13ch!important;
+  padding-right:54px;
+  display:flex;
+  flex-direction:column;
+  gap:.02em;
+  margin:0!important;
+  color:#111;
+  font-size:clamp(2.2rem,3.1vw,2.85rem)!important;
+  line-height:.9!important;
+  letter-spacing:-.055em!important;
+  transform-origin:left bottom;
+  animation:v92WelcomeSettle .68s cubic-bezier(.16,1,.3,1) both!important;
+}
+.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title span{display:block}
+.veh-modal.is-welcome .veh-welcome-question{
+  margin-top:1.1rem;
+  opacity:0;
+  transform:translateY(24px);
+  animation:v92QuestionIn .48s .43s cubic-bezier(.16,1,.3,1) both;
+}
+.veh-modal.is-welcome .veh-welcome-question .veh-modal-kicker{
+  margin:0 0 .55rem!important;
+}
+.veh-modal.is-welcome .veh-welcome-question h3{
+  max-width:11ch;
+  margin:0;
+  font-family:var(--font-display);
+  font-size:clamp(2.85rem,5vw,4.45rem);
+  font-weight:700;
+  line-height:.9;
+  letter-spacing:-.055em;
+  color:#111;
+}
+.veh-modal.is-welcome .veh-welcome-question .veh-modal-copy{
+  margin:.7rem 0 0!important;
+}
+.veh-modal.is-welcome .veh-search{
+  opacity:0;
+  transform:translateY(18px);
+  animation:v92QuestionIn .42s .54s cubic-bezier(.16,1,.3,1) both!important;
+}
+.veh-modal.is-welcome .veh-remember{
+  opacity:0;
+  transform:translateY(12px);
+  animation:v92QuestionIn .4s .61s cubic-bezier(.16,1,.3,1) both!important;
+}
+.veh-account-entry{
+  margin-top:.75rem;
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:.45rem .7rem;
+  color:rgba(17,17,17,.62);
+  font:650 .82rem/1.25 var(--font-body);
+}
+.veh-modal.is-welcome .veh-account-entry{
+  opacity:0;
+  transform:translateY(10px);
+  animation:v92QuestionIn .4s .67s cubic-bezier(.16,1,.3,1) both;
+}
+.veh-account-entry>span{color:rgba(17,17,17,.58)}
+.veh-account-entry>i{
+  width:3px;
+  height:3px;
+  border-radius:999px;
+  background:rgba(17,17,17,.28);
+}
+.veh-account-link{
+  color:#111;
+  font-weight:800;
+  text-decoration:underline;
+  text-decoration-thickness:1px;
+  text-underline-offset:4px;
+}
+.veh-account-primary{
+  display:inline-flex;
+  min-height:40px;
+  align-items:center;
+}
+.veh-modal.is-welcome .veh-skip{
+  opacity:0;
+  transform:translateY(8px);
+  animation:v92QuestionIn .38s .72s cubic-bezier(.16,1,.3,1) both!important;
+}
+@keyframes v92WelcomeSettle{
+  0%{opacity:0;transform:translateY(28px) scale(1.42);filter:blur(3px)}
+  24%{opacity:1;filter:blur(0)}
+  100%{opacity:1;transform:none;filter:none}
+}
+@keyframes v92QuestionIn{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:none}
+}
+@media(max-width:640px){
+  .veh-modal.is-welcome .veh-welcome-intro{min-height:108px}
+  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
+    max-width:12ch!important;
+    padding-right:48px;
+    font-size:clamp(1.92rem,8.3vw,2.45rem)!important;
+  }
+  .veh-modal.is-welcome .veh-welcome-question{margin-top:.8rem}
+  .veh-modal.is-welcome .veh-welcome-question h3{
+    max-width:10ch;
+    font-size:clamp(2.55rem,12.5vw,3.45rem);
+  }
+  .veh-modal.is-welcome .veh-welcome-question .veh-modal-copy{font-size:.9rem!important}
+  .veh-account-entry{gap:.4rem .6rem;font-size:.8rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title,
+  .veh-modal.is-welcome .veh-welcome-question,
+  .veh-modal.is-welcome .veh-search,
+  .veh-modal.is-welcome .veh-remember,
+  .veh-modal.is-welcome .veh-account-entry,
+  .veh-modal.is-welcome .veh-skip{
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+    filter:none!important;
+  }
+}

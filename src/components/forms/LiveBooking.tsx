@@ -107,17 +107,30 @@ const PACKAGE_COPY: Record<ServiceId, { label: string; points: string[]; badge?:
 };
 
 const ADDON_DESC: Record<AddonId, string> = {
-  Sealant: "Protective layer for the paint",
-  "Pet Hair Removal": "For heavier embedded pet hair",
-  "Clay Bar": "Removes bonded grit from the paint",
-  "Plastic Restoration": "Brings faded exterior trim back",
-  "Headlight Restoration": "Restore clarity to hazy lenses",
-  "Engine Bay": "Cleaned and dressed",
-  "Carpet Extraction": "Deep extraction for stained carpet",
-  "Seat Extraction": "Deep extraction for stained cloth seats",
-  "Odor Removal": "Targets lingering odors",
+  Sealant: "Adds exterior protection and makes future washes easier.",
+  "Pet Hair Removal": "Removes heavier embedded hair from seats, carpet, and fabric.",
+  "Clay Bar": "Removes bonded grit and contamination from the paint.",
+  "Plastic Restoration": "Restores faded exterior trim to a darker, cleaner finish.",
+  "Headlight Restoration": "Restores clarity to hazy or yellowed lenses.",
+  "Engine Bay": "Cleans and dresses the engine bay while we are already there.",
+  "Carpet Extraction": "Deep extraction for stained floor carpet.",
+  "Seat Extraction": "Deep extraction for stained cloth seats.",
+  "Odor Removal": "Targets lingering smells that normal cleaning can leave behind.",
 };
-const FEATURED_ADDONS: AddonId[] = ["Pet Hair Removal", "Headlight Restoration", "Engine Bay"];
+const RECOMMENDED_ADDONS: Partial<Record<ServiceId, AddonId[]>> = {
+  maintenance: ["Sealant"],
+  premium: ["Pet Hair Removal", "Plastic Restoration", "Odor Removal"],
+};
+
+const CONFIRMATION_ADDON_PRIORITY: Record<ServiceId, AddonId[]> = {
+  maintenance: ["Sealant"],
+  premium: ["Pet Hair Removal", "Plastic Restoration", "Odor Removal"],
+  factoryReset: ["Odor Removal"],
+};
+
+function confirmationAddonFor(service: ServiceId, selected: AddonId[]) {
+  return CONFIRMATION_ADDON_PRIORITY[service].find((id) => !selected.includes(id) && purchasableAddonIds(service).includes(id)) ?? null;
+}
 
 /* ------------------------------------------------------------------ */
 /* Address                                                             */
@@ -185,7 +198,9 @@ type BookingLine = {
 };
 
 type Booked = {
+  jobId: string;
   vehicles: Array<{ vehicle: string; service: string; price: number }>;
+  lines: Array<{ service: ServiceId; vehicle: VehicleId; title: string; addons: AddonId[] }>;
   start: string;
   price: number;
   minutes: number;
@@ -282,6 +297,9 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const [sending, setSending] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [booked, setBooked] = useState<Booked | null>(null);
+  const [postBookingAddonBusy, setPostBookingAddonBusy] = useState(false);
+  const [postBookingAddonError, setPostBookingAddonError] = useState<string | null>(null);
+  const [postBookingAddonAdded, setPostBookingAddonAdded] = useState<AddonId | null>(null);
 
   const [giftCardCode, setGiftCardCode] = useState("");
   const [giftCardBusy, setGiftCardBusy] = useState(false);
@@ -705,7 +723,9 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       setBookingResumeHref(null);
       try { sessionStorage.removeItem(BOOKING_DRAFT_KEY); } catch {}
       setBooked({
+        jobId: json.jobId,
         vehicles: json.vehicles,
+        lines: resolved.map((line) => ({ service: line.service!, vehicle: line.vehicle!, title: line.title, addons: [...line.addons] })),
         start: json.start,
         price: Number(json.price),
         minutes: Number(json.minutes),
@@ -745,6 +765,38 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     }
   }
 
+  async function addPostBookingAddon(addon: AddonId) {
+    if (!booked || booked.lines.length !== 1 || postBookingAddonBusy || postBookingAddonAdded) return;
+    setPostBookingAddonBusy(true);
+    setPostBookingAddonError(null);
+    try {
+      const response = await fetch("/api/book/addon", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jobId: booked.jobId,
+          addon,
+          email: signedIn ? email ?? "" : contactEmail.trim(),
+          phone,
+        }),
+      });
+      const json = await response.json().catch(() => ({}));
+      if (!response.ok || !json.ok) throw new Error(json.error || "We couldn't add that extra. Please text us and we'll take care of it.");
+      setBooked((current) => {
+        if (!current) return current;
+        const updatedLines = current.lines.map((line, index) => index === 0 ? { ...line, addons: [...line.addons, addon] } : line);
+        const updatedVehicles = current.vehicles.map((line, index) => index === 0 ? { ...line, price: Number(json.vehiclePrice ?? line.price) } : line);
+        return { ...current, lines: updatedLines, vehicles: updatedVehicles, price: Number(json.jobPrice ?? current.price) };
+      });
+      setPostBookingAddonAdded(addon);
+      track("post_booking_addon", { addon, service: booked.lines[0].service, price: ADDON_PRICES[addon] ?? undefined });
+    } catch (error) {
+      setPostBookingAddonError(error instanceof Error ? error.message : "We couldn't add that extra. Please text us and we'll take care of it.");
+    } finally {
+      setPostBookingAddonBusy(false);
+    }
+  }
+
   /* ------------------------------------------------------------------ */
   /* Confirmation                                                        */
   /* ------------------------------------------------------------------ */
@@ -752,6 +804,8 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   if (booked) {
     const d = new Date(booked.start);
     const end = new Date(d.getTime() + booked.minutes * 60_000);
+    const confirmationLine = booked.lines.length === 1 ? booked.lines[0] : null;
+    const confirmationAddon = confirmationLine ? confirmationAddonFor(confirmationLine.service, confirmationLine.addons) : null;
     const stamp = (x: Date) => x.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
     const esc = (s: string) => s.replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n");
     const ics = [
@@ -787,6 +841,34 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
               ? `A confirmation email is on its way to ${signedIn ? email || "your inbox" : contactEmail || "your inbox"}.`
               : "Your appointment is confirmed. We couldn't verify email delivery, so save these details or text us for a copy."}
           </p>
+
+          {(confirmationAddon || postBookingAddonAdded) && (
+            <section className={`bk-done-addon ${postBookingAddonAdded ? "is-added" : ""}`} aria-live="polite">
+              <p className="bk-done-addon-kicker">While we&rsquo;re there</p>
+              {postBookingAddonAdded ? (
+                <>
+                  <h2>Added to your appointment.</h2>
+                  <p><strong>{ADDON_LABELS[postBookingAddonAdded]}</strong> is on the job. Your updated total is <strong>{usd(booked.price)}</strong>.</p>
+                </>
+              ) : confirmationAddon ? (
+                <>
+                  <h2>Anything else you want us to handle?</h2>
+                  <p className="bk-done-addon-intro">Since the crew will already be at your driveway, this is easy to add to the same appointment.</p>
+                  <div className="bk-done-addon-offer">
+                    <div>
+                      <strong>{ADDON_LABELS[confirmationAddon]}</strong>
+                      <span>{ADDON_DESC[confirmationAddon]}</span>
+                    </div>
+                    <em>+{usd(ADDON_PRICES[confirmationAddon] ?? 0)}</em>
+                    <button type="button" disabled={postBookingAddonBusy} onClick={() => void addPostBookingAddon(confirmationAddon)}>
+                      {postBookingAddonBusy ? "Adding…" : "Add to my appointment"}
+                    </button>
+                  </div>
+                  {postBookingAddonError && <p className="bk-error" role="alert">{postBookingAddonError}</p>}
+                </>
+              ) : null}
+            </section>
+          )}
 
           <div className="bk-done-prep">
             <h2>What to do before we arrive</h2>
@@ -1046,7 +1128,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     );
   }
 
-  function renderAddon(line: (typeof resolved)[number], id: AddonId) {
+  function renderAddon(line: (typeof resolved)[number], id: AddonId, recommended = false) {
     const on = line.addons.includes(id);
     const price = ADDON_PRICES[id];
     return (
@@ -1054,9 +1136,13 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         key={id}
         type="button"
         aria-pressed={on}
-        className={`bk-addon ${on ? "is-on" : ""}`}
-        onClick={() => updateLine(line.key, { addons: on ? line.addons.filter((a) => a !== id) : [...line.addons, id] })}
+        className={`bk-addon ${recommended ? "is-recommended" : ""} ${on ? "is-on" : ""}`}
+        onClick={() => {
+          updateLine(line.key, { addons: on ? line.addons.filter((a) => a !== id) : [...line.addons, id] });
+          track("addon_select", { addon: id, action: on ? "remove" : "add", service: line.service ?? undefined, location: "booking" });
+        }}
       >
+        {recommended && <small className="bk-addon-rec">Recommended</small>}
         <strong>{ADDON_LABELS[id]}</strong>
         <span>{ADDON_DESC[id]}</span>
         <em>{price === null ? "Price confirmed on site" : `+${usd(price)}`}</em>
@@ -1068,19 +1154,29 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   function renderExtras(line: (typeof resolved)[number], index: number) {
     if (!line.service) return null;
     const available = purchasableAddonIds(line.service);
-    const featured = available.length <= 3 ? available : FEATURED_ADDONS.filter((id) => available.includes(id));
-    const more = available.filter((id) => !featured.includes(id));
+    const recommended = (RECOMMENDED_ADDONS[line.service] ?? []).filter((id) => available.includes(id));
+    const featured = Array.from(new Set([...recommended, ...line.addons.filter((id) => available.includes(id))]));
+    const optionalFeatured = recommended.length === 0 && available.length <= 3 ? available : featured;
+    const more = available.filter((id) => !optionalFeatured.includes(id));
     const paintChoices = index === 0 ? Array.from(new Set([...initialPaint, ...line.paint])) : line.paint;
     return (
       <div key={line.key} className="bk-extras">
         {lines.length > 1 && <p className="bk-extras-for">Vehicle {index + 1} · {services[line.service].name} · {line.title}</p>}
         {line.service === "premium" && <p className="bk-note">Protective sealant is already included in Premium.</p>}
         {line.service === "factoryReset" && <p className="bk-note">Factory Reset already includes extraction, pet hair, clay, sealant and trim restoration.</p>}
-        <div className="bk-addons">{featured.map((id) => renderAddon(line, id))}</div>
+        {recommended.length > 0 ? (
+          <div className="bk-recommend-head">
+            <p className="bk-label">Worth adding</p>
+            <p>{line.service === "maintenance" ? "Our go-to add-on with Maintenance." : "Recommended with Premium."}</p>
+          </div>
+        ) : (
+          <div className="bk-recommend-head"><p className="bk-label">Optional extras</p></div>
+        )}
+        {optionalFeatured.length > 0 && <div className="bk-addons bk-addons-featured">{optionalFeatured.map((id) => renderAddon(line, id, recommended.includes(id)))}</div>}
         {more.length > 0 && (
           <>
-            <button type="button" className="bk-link" aria-expanded={!!moreOpen[line.key]} onClick={() => setMoreOpen((o) => ({ ...o, [line.key]: !o[line.key] }))}>
-              {moreOpen[line.key] ? "Fewer options ↑" : `See more options ↓`}
+            <button type="button" className="bk-link bk-see-all" aria-expanded={!!moreOpen[line.key]} onClick={() => setMoreOpen((o) => ({ ...o, [line.key]: !o[line.key] }))}>
+              {moreOpen[line.key] ? "Hide other extras ↑" : `See all extras ↓`}
             </button>
             {moreOpen[line.key] && <div className="bk-addons bk-reveal">{more.map((id) => renderAddon(line, id))}</div>}
           </>
@@ -1221,7 +1317,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
             </>
           ))}
 
-          {renderStep("extras", "03", "Want to go further?", (
+          {renderStep("extras", "03", "Worth adding?", (
             <>{resolved.map((line, index) => renderExtras(line, index))}</>
           ))}
 

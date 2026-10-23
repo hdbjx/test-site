@@ -10,6 +10,8 @@ export type EventName =
   | "service_select" // { service, vehicle?, location }
   | "booking_submit" // booking request sent: { vehicle, service }
   | "booking_add_vehicle" // second vehicle added to a booking: { count }
+  | "addon_select" // add-on toggled during booking: { addon, action, service, location }
+  | "post_booking_addon" // add-on attached from booking confirmation: { addon, service, price }
   | "quote_start" // first interaction with the quote form
   | "quote_submit" // quote sent: { interest }
   | "quote_price_reveal" // personalized quote price revealed after lead capture
