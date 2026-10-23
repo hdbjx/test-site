@@ -155,6 +155,7 @@ const coverageMessage = (city: string) => {
 /* ------------------------------------------------------------------ */
 
 const vName = (v: GarageVehicle) => [v.year, v.make, v.model].filter(Boolean).join(" ") || "Vehicle";
+const normalizeVehicleText = (value: string | null | undefined) => (value ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const sizeLabel = (id?: VehicleId) => (id ? vehicles.find((v) => v.id === id)?.label ?? "" : "");
 
 type Props = {
@@ -321,14 +322,51 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     await fetch("/api/quote-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sessionId, stage, ...extra }) }).catch(() => null);
   }
 
-  // Carry the sitewide browsing vehicle into the first booking line without
-  // changing it when a second booking vehicle is added.
+  // Carry the sitewide vehicle into Booking. If it already belongs to the
+  // signed-in customer's garage, select that exact saved vehicle rather than
+  // representing it as a separate custom vehicle.
   useEffect(() => {
     if (!siteVehicleHydrated || !siteVehicle || initialVehicle) return;
-    setLines((current) => current.map((line, index) => index === 0 && !line.size && !line.make && !line.model
-      ? { ...line, savedId: "size", size: siteVehicle.vehicle, sizeManual: false, make: siteVehicle.make, model: siteVehicle.model, year: siteVehicle.year ?? "" }
-      : line));
-  }, [siteVehicleHydrated, siteVehicle, initialVehicle, primary]);
+
+    const savedMatch = garage.find((saved) => {
+      const sameMake = normalizeVehicleText(saved.make) === normalizeVehicleText(siteVehicle.make);
+      const sameModel = normalizeVehicleText(saved.model) === normalizeVehicleText(siteVehicle.model);
+      const sameYear = !siteVehicle.year || !saved.year || String(saved.year) === String(siteVehicle.year);
+      return sameMake && sameModel && sameYear;
+    });
+
+    setLines((current) => current.map((line, index) => {
+      if (index !== 0) return line;
+
+      const untouchedInitial =
+        (!line.make && !line.model && !line.size) ||
+        (primary && line.savedId === primary.id && !line.make && !line.model);
+      if (!untouchedInitial) return line;
+
+      if (savedMatch) {
+        const savedSize = vehicleIdFromSize(savedMatch.vehicle_size) ?? siteVehicle.vehicle;
+        return {
+          ...line,
+          savedId: savedMatch.id,
+          size: savedSize,
+          sizeManual: !!savedSize,
+          make: "",
+          model: "",
+          year: "",
+        };
+      }
+
+      return {
+        ...line,
+        savedId: "size",
+        size: siteVehicle.vehicle,
+        sizeManual: false,
+        make: siteVehicle.make,
+        model: siteVehicle.model,
+        year: siteVehicle.year ?? "",
+      };
+    }));
+  }, [siteVehicleHydrated, siteVehicle, initialVehicle, garage, primary]);
 
   // Contextual handoffs already know the service and shared vehicle, so do not ask twice.
   useEffect(() => {

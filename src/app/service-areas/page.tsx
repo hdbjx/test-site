@@ -20,7 +20,7 @@ export default function ServiceAreas() {
           <div>
             <p className="areas-v2-kicker">SERVICE AREA / DECATUR + ATLANTA</p>
             <h1>The detail shop<br/><span>comes to you.</span></h1>
-            <p className="areas-v2-lede">Every Detail is based in Decatur and serves nearby Atlanta neighborhoods with fully equipped mobile rigs. We bring the power, water, products and crew. You provide the car and a place to work.</p>
+            <p className="areas-v2-lede">Based in Decatur, we bring the crew, power, water and equipment to homes across nearby Atlanta neighborhoods.</p>
             <div className="areas-v2-actions"><Link href="/book" className="btn btn-primary">Check availability ↗</Link><Link href="/get-a-quote" className="areas-v2-text-link">Not sure if we reach you? Get a quote</Link></div>
           </div>
           <figure className="areas-v2-hero-photo"><Photo id="rig-03" priority ratio="3/2" sizes="(min-width: 900px) 48vw, 94vw"/><figcaption>MOBILE RIG / POWER + WATER ON BOARD</figcaption></figure>
@@ -31,7 +31,7 @@ export default function ServiceAreas() {
 
       <section className="areas-v2-list">
         <div className="areas-v2-shell">
-          <div className="areas-v2-head"><div><p className="areas-v2-kicker">WHERE WE GO</p><h2>Our regular<br/><span>service area.</span></h2></div><p>Tap your area for local booking information and pricing. If you are close to the edge of the map, send us your address anyway. We may still be able to make it work.</p></div>
+          <div className="areas-v2-head"><div><p className="areas-v2-kicker">WHERE WE GO</p><h2>Our regular<br/><span>service area.</span></h2></div><p>Choose your area for local details. Nearby but not listed? Send us the address and we will let you know if we can make it work.</p></div>
           <div className="areas-v2-grid">
             {areas.map((area, i) => (
               <Link key={area.slug} href={`/service-areas/${area.slug}`} className="areas-v2-card">
@@ -55,7 +55,7 @@ export default function ServiceAreas() {
         </div>
       </section>
 
-      <section className="areas-v2-edge"><div className="areas-v2-shell"><div><p className="areas-v2-kicker">OUTSIDE THE LIST?</p><h2>Ask us anyway.</h2></div><p>We occasionally work outside our regular service area when the schedule allows. Send the address and vehicle through the quote form, or call <a className="link" href={site.phone.href}>{site.phone.display}</a>.</p><Link href="/get-a-quote" className="btn btn-secondary">Check your address ↗</Link></div></section>
+      <section className="areas-v2-edge"><div className="areas-v2-shell"><div><p className="areas-v2-kicker">OUTSIDE THE LIST?</p><h2>Ask us anyway.</h2></div><p>We sometimes travel beyond our regular area when the schedule allows. Send us the address through the quote form, or call <a className="link" href={site.phone.href}>{site.phone.display}</a>.</p><Link href="/get-a-quote" className="btn btn-secondary">Check your address ↗</Link></div></section>
       <CtaBand location="areas_final" />
     </div>
   );
