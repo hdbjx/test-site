@@ -63,8 +63,8 @@ export function VehicleGlobalUI() {
       return;
     }
     let cancelled = false;
-    void supabaseBrowser().auth.getUser().then(({ data }) => {
-      if (!cancelled) setSignedIn(!!data.user);
+    void supabaseBrowser().auth.getUser().then((result: { data: { user: unknown | null } }) => {
+      if (!cancelled) setSignedIn(!!result.data.user);
     }).catch(() => {
       if (!cancelled) setSignedIn(false);
     });
