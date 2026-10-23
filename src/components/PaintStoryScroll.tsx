@@ -132,7 +132,7 @@ export function PaintStoryScroll() {
               <p className="eyebrow">The difference</p>
               <h2>Correction changes the paint.<br /><span>Ceramic protects the result.</span></h2>
               <p>Choose correction when the finish needs to look better. Add ceramic when you want that corrected finish protected for the long run.</p>
-              <Link href="#packages" className="btn btn-primary">Compare the options ↓</Link>
+              <Link href="/ceramic#ceramic-price" className="btn btn-primary">Compare the options ↓</Link>
             </div>
           </div>
         </div>

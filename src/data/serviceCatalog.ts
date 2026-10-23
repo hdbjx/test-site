@@ -83,7 +83,7 @@ export const catalogServices: CatalogService[] = [
     categoryLabel: "PAINT CARE / ENHANCE",
     short: "Restore gloss and reduce light defects.",
     bestFor: paint.enhancement.bestFor,
-    href: "/ceramic#packages",
+    href: "/paint-correction#paint-options",
     compare: {
       goal: "Restore gloss + reduce light haze/swirl marks",
       interior: "Not included",
@@ -100,7 +100,7 @@ export const catalogServices: CatalogService[] = [
     categoryLabel: "PAINT CARE / CORRECT",
     short: "Correct visible swirls, haze and defects.",
     bestFor: paint.correction.bestFor,
-    href: "/ceramic#packages",
+    href: "/paint-correction#paint-options",
     compare: {
       goal: "Significant paint defect removal",
       interior: "Not included",
@@ -117,7 +117,7 @@ export const catalogServices: CatalogService[] = [
     categoryLabel: "PAINT CARE / PROTECT",
     short: "Correct the finish, then protect it.",
     bestFor: paint.ceramic2yr.bestFor,
-    href: "/ceramic#packages",
+    href: "/ceramic#ceramic-price",
     compare: {
       goal: "Correction + long-term paint protection",
       interior: "Not included",

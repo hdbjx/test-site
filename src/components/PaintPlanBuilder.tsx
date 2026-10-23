@@ -101,7 +101,7 @@ export function PaintPlanBuilder() {
         </div>
         <p className="pl57-plan-fine">Likely starting point only. We confirm the finish before correction begins.</p>
         <div className="pl57-plan-actions">
-          <a href="#paint-quote" className="pl57-primary-btn" onClick={() => setServiceIntent(service.id)}>ASK ABOUT MY PAINT ↗</a>
+          <a href={service.id === "ceramic2yr" ? "/ceramic#coating-quote" : "/paint-correction#paint-quote"} className="pl57-primary-btn" onClick={() => setServiceIntent(service.id)}>ASK ABOUT MY PAINT ↗</a>
           {service.id !== "ceramic2yr" ? <Link href="/paint-correction">See correction details →</Link> : null}
         </div>
       </aside>

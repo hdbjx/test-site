@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { site } from "@/data/site";
 import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
 
@@ -17,9 +16,9 @@ export function BookingTopBar({ stage = -1 }: { stage?: number }) {
     <div className="bk-top">
       <a href="#booking-main" className="bk-skip">Skip to booking</a>
       <div className="bk-top-row">
-        <Link href="/" className="bk-top-logo" aria-label="Every Detail home">
+        <a href="/" className="bk-top-logo" aria-label="Every Detail home" data-no-transition="true">
           <Image src="/brand/every-detail-logo.png" alt="" width={120} height={120} priority />
-        </Link>
+        </a>
         <p className="bk-top-title">Book your detail</p>
         <div className="bk-top-actions">
           <button type="button" className="bk-top-vehicle" onClick={openPicker}>{vehicle ? siteVehicleLabel(vehicle) : "+ Vehicle"}</button>

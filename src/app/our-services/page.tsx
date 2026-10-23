@@ -20,9 +20,9 @@ export const metadata = pageMetadata({
 });
 
 const core = [
-  { id: "maintenance", number: "01", condition: "ALREADY PRETTY CLEAN", name: "Maintenance Detail", body: "Routine inside-and-out care for a car that is already in good shape.", fit: "Best for regularly detailed vehicles and returning clients.", href: "/book?service=maintenance", image: "tesla-foam-wash", featured: false },
-  { id: "premium", number: "02", condition: "NORMAL DAILY BUILDUP", name: "Premium Detail", body: "Our most booked inside-and-out detail for normal wear, buildup, and first-time clients.", fit: "Best for most daily drivers that have fallen behind.", href: "/book?service=premium", image: "two-tech-interior-detail", featured: true },
-  { id: "factoryReset", number: "03", condition: "HEAVY BUILDUP OR NEGLECT", name: "Factory Reset", body: "Our deepest clean for stains, pet hair, spills, odor concerns, and long-term buildup.", fit: "Best when the car needs restoration-level cleaning.", href: "/book?service=factoryReset", image: "interior-detail-team", featured: false },
+  { id: "maintenance", anchor: "maintenance-detail", number: "01", condition: "ALREADY PRETTY CLEAN", name: "Maintenance Detail", body: "Routine inside-and-out care for a car that is already in good shape.", fit: "Best for regularly detailed vehicles and returning clients.", href: "/book?service=maintenance", image: "tesla-foam-wash", featured: false },
+  { id: "premium", anchor: "premium-detail", number: "02", condition: "NORMAL DAILY BUILDUP", name: "Premium Detail", body: "Our most booked inside-and-out detail for normal wear, buildup, and first-time clients.", fit: "Best for most daily drivers that have fallen behind.", href: "/book?service=premium", image: "two-tech-interior-detail", featured: true },
+  { id: "factoryReset", anchor: "factory-reset", number: "03", condition: "HEAVY BUILDUP OR NEGLECT", name: "Factory Reset", body: "Our deepest clean for stains, pet hair, spills, odor concerns, and long-term buildup.", fit: "Best when the car needs restoration-level cleaning.", href: "/book?service=factoryReset", image: "interior-detail-team", featured: false },
 ] as const;
 
 export default function ServicesPage() {
@@ -74,7 +74,7 @@ export default function ServicesPage() {
             </div>
             <div className="svc61-core-grid info80-service-cards">
               {core.map((service) => (
-                <article key={service.id} id={service.id === "factoryReset" ? "factory-reset" : `${service.id}-detail`} className={`svc61-core-card ${service.featured ? "is-featured" : ""}`}>
+                <article key={service.id} id={service.anchor} className={`svc61-core-card ${service.featured ? "is-featured" : ""}`}>
                   <div className="svc61-core-image"><Photo id={service.image} sizes="(max-width: 760px) 100vw, 33vw" fill /></div>
                   <div className="svc61-core-body">
                     <div className="svc61-card-top"><span>{service.number}</span>{service.featured ? <b>MOST BOOKED</b> : null}</div>

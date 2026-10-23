@@ -44,7 +44,8 @@ export function JourneyGlobalUI() {
       return `/book?${q.toString()}`;
     }
     if (serviceIntent === "detailplus") return "/detailplus#club-builder";
-    return "/ceramic#paint-quote";
+    if (serviceIntent === "ceramic2yr") return "/ceramic#coating-quote";
+    return "/paint-correction#paint-quote";
   }, [serviceIntent, vehicle]);
 
   const selectedSlotIsCurrent = useMemo(() => {

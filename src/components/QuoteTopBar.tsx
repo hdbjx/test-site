@@ -12,9 +12,9 @@ export function QuoteTopBar() {
         Skip to quote tool
       </a>
       <div className="q51-top-row">
-        <Link href="/" className="q51-top-logo" aria-label="Every Detail home">
+        <a href="/" className="q51-top-logo" aria-label="Every Detail home" data-no-transition="true">
           <Image src="/brand/every-detail-logo.png" alt="" width={120} height={120} priority />
-        </Link>
+        </a>
         <p>Find your detail</p>
         <div className="q51-top-actions">
           <button type="button" className="q51-top-vehicle" onClick={openPicker}>{vehicle ? siteVehicleLabel(vehicle) : "+ Vehicle"}</button>

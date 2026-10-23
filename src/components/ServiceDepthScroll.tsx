@@ -272,7 +272,7 @@ export function ServiceDepthScroll() {
               <p className="svc-eyebrow">THE RIGHT SERVICE IS THE RIGHT AMOUNT OF WORK</p>
               <h2>Now choose what<br/><span>your car needs.</span></h2>
               <p>You do not need the biggest package. You need the service that matches the vehicle in front of us.</p>
-              <Link href="#pricing" className="svc-tactile-btn">Compare pricing for your vehicle <span>↓</span></Link>
+              <Link href="/our-services#all-services" className="svc-tactile-btn">Compare pricing for your vehicle <span>↓</span></Link>
             </div>
           </div>
         </div>

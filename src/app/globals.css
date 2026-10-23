@@ -16338,3 +16338,20 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
     transform:none!important;
   }
 }
+
+
+/* V95 link interaction hardening */
+.bk-top-logo,
+.q51-top-logo {
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.site-shared-logo-control {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.bk-top-logo img,
+.q51-top-logo img,
+.site-shared-logo-control > * { pointer-events: none; }
