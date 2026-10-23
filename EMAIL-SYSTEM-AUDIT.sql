@@ -3,7 +3,7 @@
 -- Read only. Safe to run in Supabase SQL Editor.
 --
 -- This audits database infrastructure and the recommended customer lifecycle.
--- The "website_code_status" column reflects the V97 code audit. SQL cannot
+-- The "website_code_status" column reflects the V98 code audit. SQL cannot
 -- determine whether a specific website build has already been deployed.
 -- ============================================================
 
@@ -16,7 +16,7 @@ with lifecycle(
   trigger,
   priority,
   website_code_status,
-  v97_design_status,
+  v98_design_status,
   recommendation
 ) as (
   values
@@ -42,7 +42,7 @@ with lifecycle(
      'high',
      'HAVE',
      'REDESIGNED',
-     'Keep. V97 now gives Detail+ its own customer copy.'),
+     'Keep. V98 reflects the actual cadence, coverage and vehicle in the email.'),
 
     ('appointment_24h_reminder',
      'Roughly 24 hours before the appointment',
@@ -96,33 +96,33 @@ with lifecycle(
      'Whenever an appointment time/date is changed',
      'Job schedule change',
      'critical',
-     'MISSING',
-     'NOT BUILT',
-     'Build next. Customer should get the new date/time immediately after a confirmed reschedule.'),
+     'HAVE IN V98',
+     'REDESIGNED',
+     'Run the V98 customer_job_change_emails migration, then the existing job-reminders cron sends it.'),
 
     ('cancellation_confirmation',
      'Whenever a customer appointment is cancelled',
      'Job status changes to cancelled',
      'critical',
-     'MISSING',
-     'NOT BUILT',
-     'Build next. Prevent uncertainty after a cancellation.'),
+     'HAVE IN V98',
+     'REDESIGNED',
+     'Run the V98 customer_job_change_emails migration, then the existing job-reminders cron sends it.'),
 
     ('account_email_confirmation',
      'Customer creates an account',
      'Supabase Auth',
      'medium',
      'EXTERNAL',
-     'REDO IN SUPABASE',
-     'Restyle the Supabase Auth confirmation template to match the new email system.'),
+     'DESIGNED IN V98',
+     'Paste supabase/email-templates/confirmation.html into the hosted Supabase Auth template.'),
 
     ('account_password_reset',
      'Customer requests a password reset',
      'Supabase Auth',
      'medium',
      'EXTERNAL',
-     'REDO IN SUPABASE',
-     'Restyle the Supabase Auth recovery template.'),
+     'DESIGNED IN V98',
+     'Paste supabase/email-templates/recovery.html into the hosted Supabase Auth template.'),
 
     ('detailplus_welcome',
      'When a Detail+ membership is actually activated',
@@ -197,6 +197,25 @@ select
       and not t.tgisinternal
       and pg_get_triggerdef(t.oid) ilike '%ed_create_after_job_followup%'
   ) as after_job_completion_trigger_installed,
+
+  to_regclass('public.customer_job_change_emails') is not null as job_change_email_queue_installed,
+
+  exists(
+    select 1 from pg_proc p
+    join pg_namespace n on n.oid=p.pronamespace
+    where n.nspname='public' and p.proname='claim_customer_job_change_emails'
+  ) as job_change_claim_function_installed,
+
+  exists(
+    select 1
+    from pg_trigger t
+    join pg_class c on c.oid=t.tgrelid
+    join pg_namespace n on n.oid=c.relnamespace
+    where n.nspname='public'
+      and c.relname='jobs'
+      and not t.tgisinternal
+      and t.tgname='trg_ed_customer_job_change_email'
+  ) as job_change_trigger_installed,
 
   to_regclass('public.gift_card_orders') is not null as gift_card_orders_installed,
   to_regclass('public.gift_cards') is not null as gift_cards_installed;
@@ -340,4 +359,26 @@ where content::text ilike '%reminder%'
    or content::text ilike '%sent%'
    or content::text ilike '%follow%'
 order by created desc
+limit 30;
+
+
+-- ------------------------------------------------------------
+-- 9. RECENT RESCHEDULE / CANCELLATION EMAIL EVENTS (V98)
+-- ------------------------------------------------------------
+select
+  q.id as event_id,
+  q.job_id,
+  q.event_kind,
+  q.customer_name,
+  q.email,
+  q.previous_scheduled_start at time zone 'America/New_York' as previous_time_eastern,
+  q.scheduled_start at time zone 'America/New_York' as scheduled_time_eastern,
+  q.created_at,
+  q.sent_at,
+  q.discarded_at,
+  q.attempt_count,
+  q.last_error,
+  q.provider_message_id
+from public.customer_job_change_emails q
+order by q.created_at desc
 limit 30;

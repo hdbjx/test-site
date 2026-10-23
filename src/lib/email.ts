@@ -184,6 +184,41 @@ function noteBlock(title: string, body: string) {
   `;
 }
 
+function appointmentTicket(input: { kicker: string; date: string; service: string; vehicle: string; address: string; total?: string }) {
+  return `
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 24px;border-top:2px solid ${BRAND.black};border-bottom:1px solid rgba(17,17,17,.22);">
+      <tr><td style="padding:16px 0 8px;font-size:10px;line-height:1.2;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.oxblood};font-weight:900;">${escapeHtml(input.kicker)}</td></tr>
+      <tr><td style="padding:0 0 18px;font-size:27px;line-height:1.08;letter-spacing:-.7px;font-weight:900;color:${BRAND.black};">${escapeHtml(input.date)}</td></tr>
+      <tr><td style="padding:0 0 15px;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+          ${detailRow("Service", input.service)}
+          ${detailRow("Vehicle", input.vehicle)}
+          ${detailRow("Location", input.address)}
+          ${input.total ? detailRow("Total", input.total) : ""}
+        </table>
+      </td></tr>
+    </table>
+  `;
+}
+
+function checklistRow(number: string, title: string, body: string) {
+  return `
+    <tr>
+      <td width="42" valign="top" style="padding:16px 0;border-top:1px solid rgba(17,17,17,.16);font-size:11px;line-height:1.4;color:${BRAND.oxblood};font-weight:900;">${escapeHtml(number)}</td>
+      <td valign="top" style="padding:16px 0;border-top:1px solid rgba(17,17,17,.16);">
+        <div style="font-size:14px;line-height:1.35;color:${BRAND.black};font-weight:900;">${escapeHtml(title)}</div>
+        <div style="margin-top:4px;font-size:13px;line-height:1.55;color:${BRAND.gray};">${body}</div>
+      </td>
+    </tr>
+  `;
+}
+
+function actionButton(label: string, href: string, secondary = false) {
+  const background = secondary ? BRAND.cream : BRAND.coral;
+  const color = secondary ? BRAND.black : "#ffffff";
+  return `<a href="${escapeHtml(href)}" style="display:block;padding:13px 16px;background:${background};border:1px solid ${BRAND.black};box-shadow:3px 3px 0 ${BRAND.black};color:${color};text-decoration:none;text-align:center;font-weight:900;">${escapeHtml(label)} ↗</a>`;
+}
+
 export function buildGiftCardRequestEmail(input: {
   purchaserName: string;
   recipientName: string;
@@ -199,61 +234,38 @@ export function buildGiftCardRequestEmail(input: {
   const amount = formatMoney(input.amount);
   const methodLabel = input.paymentMethod === "venmo" ? "Venmo" : "Zelle";
   const target = input.paymentTarget ? escapeHtml(input.paymentTarget) : "Every Detail payment details";
-  const paymentCta = input.paymentMethod === "venmo" && input.paymentUrl
-    ? `<tr><td style="padding:0 0 22px;"><a href="${escapeHtml(input.paymentUrl)}" style="display:inline-block;padding:12px 17px;background:${BRAND.coral};border:1px solid ${BRAND.black};box-shadow:3px 3px 0 ${BRAND.black};color:#ffffff;text-decoration:none;font-weight:900;">Open Venmo ↗</a></td></tr>`
-    : "";
   const deliveryCopy = input.deliveryMode === "recipient"
-    ? "As soon as payment is confirmed, we’ll email the active gift card to the recipient."
-    : "As soon as payment is confirmed, we’ll email the active gift card to you so you can send it yourself.";
+    ? "Once payment is confirmed, we’ll send the active card straight to the recipient."
+    : "Once payment is confirmed, we’ll send the active card back to you so you can give it yourself.";
 
   return shell(`
-    <div style="font-size:11px;line-height:1.2;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:800;">Gift card request received</div>
-    <h1 style="margin:10px 0 12px;font-size:34px;line-height:0.98;letter-spacing:-1.2px;color:${BRAND.black};">Your gift card is almost ready.</h1>
-    <p style="margin:0 0 20px;font-size:16px;line-height:1.7;color:${BRAND.gray};">Hey ${purchaserFirst}, we reserved ${amount} for ${recipient}. Send payment using the details below and include your reference number so we can activate it quickly.</p>
+    ${eyebrow("Gift card / almost ready")}
+    ${headline(`${purchaserFirst}, one last step.`)}
+    ${lede(`We’ve reserved <strong style="color:${BRAND.black};">${amount}</strong> for ${recipient}. Send the payment with the reference below and we’ll activate the card.`)}
 
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 26px;">
-      <tr>
-        <td style="padding:0;">
-          <div style="padding:24px;border-radius:22px;background:${BRAND.oxblood};color:#ffffff;">
-            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-              <tr>
-                <td style="font-size:11px;letter-spacing:2px;font-weight:800;">EVERY DETAIL</td>
-                <td align="right" style="font-size:12px;font-weight:800;">GIFT CARD</td>
-              </tr>
-              <tr><td colspan="2" style="padding:24px 0 32px;font-size:42px;line-height:0.9;font-weight:900;letter-spacing:-2px;">A better kind<br>of clean.</td></tr>
-              <tr>
-                <td style="font-size:11px;letter-spacing:1.6px;">MOBILE DETAILING · DECATUR + ATLANTA</td>
-                <td align="right"><span style="display:inline-block;width:34px;height:34px;line-height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.7);text-align:center;font-size:14px;font-weight:800;">ED</span></td>
-              </tr>
-            </table>
-          </div>
-        </td>
-      </tr>
-    </table>
-
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 22px;border:1px solid #dedbd5;border-radius:18px;overflow:hidden;background:#faf8f4;">
-      <tr><td style="padding:18px 20px 10px;font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:${BRAND.black};font-weight:800;">Payment details</td></tr>
-      <tr><td style="padding:0 20px 18px;">
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:2px 0 28px;background:${BRAND.oxblood};color:#ffffff;">
+      <tr><td style="padding:25px 25px 30px;">
         <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-          ${detailRow('Amount', amount)}
-          ${detailRow('Reference', input.reference)}
-          ${detailRow('Method', methodLabel)}
-          ${detailRow('Send to', target)}
+          <tr><td style="font-size:10px;letter-spacing:2px;font-weight:900;">EVERY DETAIL</td><td align="right" style="font-size:10px;letter-spacing:1.5px;font-weight:800;">GIFT CARD</td></tr>
+          <tr><td colspan="2" style="padding:25px 0 28px;font-size:41px;line-height:.92;font-weight:900;letter-spacing:-1.8px;">${amount}<br><span style="color:${BRAND.beige};font-size:18px;letter-spacing:-.4px;">for ${recipient}</span></td></tr>
+          <tr><td colspan="2" style="font-size:10px;line-height:1.5;letter-spacing:1.5px;color:#efe7df;">MOBILE DETAILING · DECATUR + ATLANTA</td></tr>
         </table>
       </td></tr>
     </table>
 
-    ${paymentCta}
+    <div style="margin:0 0 8px;font-size:10px;line-height:1.2;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.oxblood};font-weight:900;">Payment details</div>
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 22px;border-top:2px solid ${BRAND.black};border-bottom:1px solid rgba(17,17,17,.2);">
+      ${detailRow("Amount", amount)}
+      ${detailRow("Reference", input.reference)}
+      ${detailRow("Method", methodLabel)}
+      ${detailRow("Send to", target)}
+    </table>
 
-    <div style="padding:18px 20px;border-radius:18px;background:${BRAND.cream};border:1px solid #dedbd5;margin-bottom:20px;">
-      <div style="font-weight:800;font-size:13px;color:${BRAND.black};margin-bottom:8px;">What happens next</div>
-      <div style="font-size:14px;line-height:1.7;color:${BRAND.gray};">${deliveryCopy} Purchased gift-card value does not expire and has no inactivity fee.</div>
-    </div>
+    ${input.paymentMethod === "venmo" && input.paymentUrl ? `<div style="margin:0 0 25px;">${actionButton("Open Venmo", input.paymentUrl)}</div>` : ""}
 
-    <p style="margin:0;font-size:13px;line-height:1.7;color:${BRAND.gray};">Questions? Reply to this email and our team will help.</p>
-  `, `${amount} gift card request for ${input.recipientName}. Send payment by ${methodLabel} and include ${input.reference}.`);
+    ${noteBlock("Then you’re done.", `${deliveryCopy} Purchased gift-card value does not expire and has no inactivity fee.`)}
+  `, `${amount} gift card for ${input.recipientName}. Use reference ${input.reference} when you send payment.`);
 }
-
 
 export function buildGiftCardActivatedEmail(input: {
   recipientName: string;
@@ -267,57 +279,33 @@ export function buildGiftCardActivatedEmail(input: {
   const purchaser = escapeHtml(input.purchaserName);
   const amount = formatMoney(input.amount);
   const code = escapeHtml(input.code);
+  const intro = input.deliveredToPurchaser
+    ? `Your ${amount} Every Detail gift card is active and ready to give.`
+    : `${purchaser} sent you ${amount} toward an Every Detail service.`;
+  const title = input.deliveredToPurchaser ? `${recipientFirst}, it’s ready to give.` : `${recipientFirst}, this one’s for you.`;
   const note = input.message?.trim()
-    ? `<div style="margin:0 0 22px;padding:18px 20px;border-left:4px solid ${BRAND.coral};background:#faf8f4;font-size:15px;line-height:1.65;color:${BRAND.black};"><div style="margin-bottom:6px;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:${BRAND.gray};font-weight:800;">A note from ${purchaser}</div>${escapeHtml(input.message.trim())}</div>`
+    ? `<div style="margin:0 0 24px;padding:16px 0 16px 18px;border-left:3px solid ${BRAND.coral};font-size:15px;line-height:1.65;color:${BRAND.black};"><div style="margin-bottom:6px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:${BRAND.gray};font-weight:900;">A note from ${purchaser}</div>${escapeHtml(input.message.trim())}</div>`
     : "";
 
-  const intro = input.deliveredToPurchaser
-    ? `Your ${amount} Every Detail gift card is active and ready to give. Keep the code below, or forward this email when you are ready.`
-    : `${purchaser} sent you ${amount} toward an Every Detail service. No account is required. Just keep the code below and use it when you book or at checkout.`;
-  const headline = input.deliveredToPurchaser ? `${recipientFirst}, your gift card is ready.` : `${recipientFirst}, this one’s for you.`;
-
   return shell(`
-    <div style="font-size:11px;line-height:1.2;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:800;">Your Every Detail gift card</div>
-    <h1 style="margin:10px 0 12px;font-size:36px;line-height:0.98;letter-spacing:-1.4px;color:${BRAND.black};">${headline}</h1>
-    <p style="margin:0 0 22px;font-size:16px;line-height:1.7;color:${BRAND.gray};">${intro}</p>
+    ${eyebrow("Every Detail gift card")}
+    ${headline(title)}
+    ${lede(`${intro} No account is required. Keep the code below and use it when you book.`)}
 
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 24px;">
-      <tr><td>
-        <div style="padding:26px;border-radius:22px;background:${BRAND.oxblood};color:#ffffff;">
-          <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-            <tr>
-              <td style="font-size:11px;letter-spacing:2px;font-weight:800;">EVERY DETAIL</td>
-              <td align="right" style="font-size:12px;font-weight:800;">GIFT CARD</td>
-            </tr>
-            <tr><td colspan="2" style="padding:24px 0 30px;font-size:42px;line-height:.9;font-weight:900;letter-spacing:-2px;">A better kind<br>of clean.</td></tr>
-            <tr>
-              <td style="font-size:11px;letter-spacing:1.6px;">MOBILE DETAILING · DECATUR + ATLANTA</td>
-              <td align="right"><span style="display:inline-block;width:34px;height:34px;line-height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.7);text-align:center;font-size:14px;font-weight:800;">ED</span></td>
-            </tr>
-          </table>
-        </div>
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:2px 0 26px;background:${BRAND.oxblood};color:#ffffff;">
+      <tr><td style="padding:27px 25px 30px;">
+        <div style="font-size:10px;letter-spacing:2px;font-weight:900;">EVERY DETAIL / GIFT CARD</div>
+        <div style="padding:26px 0 10px;font-size:44px;line-height:.92;font-weight:900;letter-spacing:-2px;">${amount}</div>
+        <div style="font-size:11px;letter-spacing:1.4px;color:${BRAND.beige};">CODE&nbsp;&nbsp;${code}</div>
       </td></tr>
     </table>
 
     ${note}
 
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 22px;border:1px solid #dedbd5;border-radius:18px;overflow:hidden;background:#faf8f4;">
-      <tr><td style="padding:18px 20px 10px;font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:${BRAND.black};font-weight:800;">Your card</td></tr>
-      <tr><td style="padding:0 20px 18px;">
-        <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-          ${detailRow('Value', amount)}
-          ${detailRow('Gift card code', code)}
-          ${detailRow('Expiration', 'None')}
-        </table>
-      </td></tr>
-    </table>
+    <div style="margin:0 0 12px;">${actionButton("Book your detail", "https://www.everydetail.co/book")}</div>
+    <div style="margin:0 0 22px;">${actionButton("View account", "https://www.everydetail.co/account", true)}</div>
 
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 18px;"><tr>
-      <td style="padding-right:6px;"><a href="https://www.everydetail.co/book" style="display:block;padding:13px 16px;background:${BRAND.coral};border:1px solid ${BRAND.black};box-shadow:3px 3px 0 ${BRAND.black};color:#ffffff;text-decoration:none;text-align:center;font-weight:900;">Book your detail ↗</a></td>
-      <td style="padding-left:6px;"><a href="https://www.everydetail.co/account" style="display:block;padding:12px 16px;background:${BRAND.cream};border:1px solid ${BRAND.black};box-shadow:3px 3px 0 ${BRAND.black};color:${BRAND.black};text-decoration:none;text-align:center;font-weight:900;">View account ↗</a></td>
-    </tr></table>
-
-    <p style="margin:0;font-size:13px;line-height:1.7;color:${BRAND.gray};">If you use only part of the card, the remaining balance stays available for a future visit.</p>
+    <p style="margin:0;font-size:13px;line-height:1.7;color:${BRAND.gray};">Use part or all of the balance. Anything left stays available for a future visit. No expiration and no inactivity fee.</p>
   `, `${purchaser} sent you a ${amount} Every Detail gift card. Your code is ${input.code}.`);
 }
 
@@ -333,14 +321,19 @@ export function buildGiftCardSentConfirmationEmail(input: {
   const recipientEmail = escapeHtml(input.recipientEmail);
   const amount = formatMoney(input.amount);
   const code = escapeHtml(input.code);
+
   return shell(`
-    <div style="font-size:11px;line-height:1.2;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:800;">Gift sent</div>
-    <h1 style="margin:10px 0 12px;font-size:34px;line-height:.98;letter-spacing:-1.2px;">It’s on the way.</h1>
-    <p style="margin:0 0 22px;font-size:16px;line-height:1.7;color:${BRAND.gray};">${first}, your ${amount} Every Detail gift card was activated and sent to ${recipient} at <strong style="color:${BRAND.black};">${recipientEmail}</strong>.</p>
-    <div style="padding:18px 20px;border-radius:18px;background:#faf8f4;border:1px solid #dedbd5;">
-      <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:${BRAND.gray};font-weight:800;">Gift card code</div>
-      <div style="margin-top:5px;font-size:22px;font-weight:900;letter-spacing:1px;color:${BRAND.black};">${code}</div>
-    </div>
+    ${eyebrow("Gift delivered")}
+    ${headline(`${first}, it’s on the way.`)}
+    ${lede(`Your <strong style="color:${BRAND.black};">${amount}</strong> Every Detail gift card was activated and sent to ${recipient}.`)}
+
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 23px;border-top:2px solid ${BRAND.black};border-bottom:1px solid rgba(17,17,17,.2);">
+      ${detailRow("Recipient", recipient)}
+      ${detailRow("Delivered to", recipientEmail)}
+      ${detailRow("Gift card code", code)}
+    </table>
+
+    ${noteBlock("You’re all set.", "We sent the active card directly to them. Keep this email for your records, and reply here if anything looks off.")}
   `, `Your ${amount} gift card for ${input.recipientName} has been sent.`);
 }
 
@@ -486,8 +479,8 @@ export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: st
       <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#590d07;border-radius:12px;">
         <tr><td style="padding:26px;">
           <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:#dbc7b3;font-weight:800;">DETAIL+</div>
-          <div style="margin:8px 0 8px;font-size:25px;line-height:1.1;font-weight:700;letter-spacing:-.6px;color:#ffffff;">Keep it at its best.</div>
-          <div style="font-size:14px;line-height:1.6;color:#f3f1ec;">Recurring maintenance that keeps your vehicle from getting back to square one.</div>
+          <div style="margin:8px 0 8px;font-size:25px;line-height:1.1;font-weight:700;letter-spacing:-.6px;color:#ffffff;">Want us to keep up with it?</div>
+          <div style="font-size:14px;line-height:1.6;color:#f3f1ec;">Detail+ is the simple option for cleaner cars that just need regular upkeep, not another reset.</div>
           <div style="margin-top:16px;"><a href="${escapeHtml(detailPlusUrl)}" style="color:#ffffff;font-size:13px;font-weight:700;text-decoration:underline;text-decoration-color:#b8363d;text-underline-offset:4px;">Explore Detail+ ↗</a></div>
         </td></tr>
       </table>
@@ -519,9 +512,9 @@ export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: st
     <tr><td style="padding:0 4px 14px;">
       <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#ebe6dd;border-radius:12px;">
         <tr><td style="padding:25px 26px;">
-          <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:#590d07;font-weight:800;">02 / KEEP IT LOOKING THIS GOOD</div>
-          <div style="margin:8px 0 7px;font-size:23px;line-height:1.15;font-weight:700;letter-spacing:-.5px;">Maintenance beats starting over.</div>
-          <div style="font-size:14px;line-height:1.6;color:#55514d;">When it’s time for the next detail, we’ll bring everything back to your driveway.</div>
+          <div style="font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:#590d07;font-weight:800;">02 / KEEP THE CLEAN GOING</div>
+          <div style="margin:8px 0 7px;font-size:23px;line-height:1.15;font-weight:700;letter-spacing:-.5px;">Life’s good in a clean car.</div>
+          <div style="font-size:14px;line-height:1.6;color:#55514d;">When it starts feeling lived-in again, we’ll bring the clean back to your driveway.</div>
           <div style="margin-top:17px;"><a href="${escapeHtml(bookUrl)}" style="display:inline-block;color:#590d07;font-size:13px;font-weight:700;text-decoration:underline;text-decoration-color:#b8363d;text-underline-offset:4px;">Book your next detail ↗</a></div>
         </td></tr>
       </table>
@@ -547,32 +540,31 @@ export async function sendBookingEmails(booking: BookingEmail) {
   const lines = booking.lines?.length
     ? booking.lines
     : [{ vehicle: booking.vehicle, service: booking.service, price: booking.price }];
-  const vehicleRows = lines
-    .map((line, index) =>
-      detailRow(
-        lines.length > 1 ? `Vehicle ${index + 1}` : "Vehicle",
-        `${line.vehicle} · ${line.service} · ${formatMoney(line.price)}`,
-      ),
-    )
-    .join("");
+  const vehicleSummary = lines.map((line) => `${line.vehicle} · ${line.service}`).join(" / ");
+  const lineRows = lines.map((line, index) => detailRow(lines.length > 1 ? `Vehicle ${index + 1}` : "Vehicle", `${line.vehicle} · ${line.service} · ${formatMoney(line.price)}`)).join("");
 
   const customerHtml = shell(
     `
-      ${eyebrow("You’re booked")}
+      ${eyebrow("Confirmed / Every Detail")}
       ${headline(`${firstName ? `${escapeHtml(firstName)}, you’re` : "You’re"} on the schedule.`)}
-      ${lede(`Your Every Detail appointment is confirmed. We’ll bring the equipment, products, power, and water. You just give us access to ${lines.length > 1 ? "the vehicles" : "the vehicle"}.`)}
+      ${lede("Your appointment is locked in. We’ll bring the setup and take it from there.")}
 
-      ${detailPanel(`
-        ${detailRow("When", appointment)}
-        ${vehicleRows}
-        ${detailRow("Where", booking.address)}
-        ${detailRow("Total", money)}
-      `, "Your appointment")}
+      ${appointmentTicket({
+        kicker: "Your appointment",
+        date: appointment,
+        service: lines.length > 1 ? `${lines.length} vehicles` : booking.service,
+        vehicle: vehicleSummary,
+        address: booking.address,
+        total: money,
+      })}
 
-      ${noteBlock(
-        "Nothing else to do right now.",
-        `We’ll send you a reminder before the appointment and a same-day confirmation once your team is assigned. If anything changes, just reply to this email.`,
-      )}
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 22px;">
+        ${checklistRow("01", "You’re booked", "No deposit confirmation or extra form is needed right now.")}
+        ${checklistRow("02", "We’ll remind you", "You’ll get a practical reminder before the appointment.")}
+        ${checklistRow("03", "Meet your team", "On the day of the detail, we’ll send your assigned crew once they’re set.")}
+      </table>
+
+      ${noteBlock("Plans change?", "Reply to this email and we’ll help. If your appointment is formally rescheduled or cancelled, we’ll send an updated confirmation automatically.")}
     `,
     `${booking.service} confirmed for ${appointment}`,
   );
@@ -585,7 +577,7 @@ export async function sendBookingEmails(booking: BookingEmail) {
         ${detailRow("Customer", booking.name)}
         ${detailRow("Phone", booking.phone)}
         ${detailRow("Email", booking.email)}
-        ${vehicleRows}
+        ${lineRows}
         ${detailRow("When", appointment)}
         ${detailRow("Address", booking.address)}
         ${detailRow("Total", money)}
@@ -689,32 +681,76 @@ export async function sendLeadEmails({ type, fields }: LeadEmail) {
   if (customerEmail) {
     const isDetailPlus = type === "detailplus";
     const isQuote = type === "quote";
-    const eyebrowCopy = isDetailPlus ? "Detail+" : isQuote ? "Request received" : "We got it";
-    const headlineCopy = isDetailPlus
-      ? `${firstName ? `${escapeHtml(firstName)}, we’ve` : "We’ve"} got your Detail+ request.`
-      : isQuote
-        ? `${firstName ? `${escapeHtml(firstName)}, we’ve` : "We’ve"} got your request.`
-        : `${firstName ? `${escapeHtml(firstName)}, we’ve` : "We’ve"} got it.`;
-    const bodyCopy = isDetailPlus
-      ? "We’ll look over your vehicle and coverage preferences, then follow up with the best maintenance setup for you."
-      : isQuote
-        ? "We’ll review what you sent and follow up with the best next step for your vehicle."
-        : "Your request made it to the Every Detail team. We’ll review the details and follow up directly.";
+    const vehicle = fields.vehicle || [fields.vehicleYear, fields.vehicleMake, fields.vehicleModel].filter(Boolean).join(" ") || "Your vehicle";
+    const requestedService = fields.service || fields.interest || "We’ll help choose the right service";
 
-    const customerHtml = shell(
-      `
-        ${eyebrow(eyebrowCopy)}
-        ${headline(headlineCopy)}
-        ${lede(bodyCopy)}
-        ${noteBlock("Need to add something?", "Reply to this email and it’ll land with the same team reviewing your request.")}
-      `,
-      "Your request made it to Every Detail",
-    );
+    let customerHtml: string;
+    let customerSubject: string;
+
+    if (isQuote) {
+      const quoteRows = [
+        detailRow("Vehicle", vehicle),
+        detailRow("Looking for", requestedService),
+        fields.addons ? detailRow("Selected extras", fields.addons) : "",
+        fields.quoteDisplay ? detailRow("Submitted estimate", fields.quoteDisplay) : "",
+        fields.desiredTiming ? detailRow("Timing", fields.desiredTiming.replaceAll("_", " ")) : "",
+      ].join("");
+
+      customerHtml = shell(
+        `
+          ${eyebrow("Your build / received")}
+          ${headline(`${firstName ? `${escapeHtml(firstName)}, we saved` : "We saved"} your build.`)}
+          ${lede("We’ve got the vehicle and service choices you sent. We’ll review the build and reach out personally if anything needs adjusting before you book.")}
+
+          ${detailPanel(quoteRows, "What you sent us")}
+
+          ${fields.message ? `<div style="margin:0 0 22px;padding:0 0 0 17px;border-left:3px solid ${BRAND.coral};font-size:13px;line-height:1.65;color:${BRAND.gray};"><strong style="display:block;color:${BRAND.black};margin-bottom:4px;">Vehicle notes</strong>${escapeHtml(fields.message)}</div>` : ""}
+
+          ${noteBlock("What happens next", "A real person on the Every Detail team will look it over. If the build already makes sense, we’ll help you move straight into scheduling. Reply here if you forgot anything.")}
+        `,
+        `Your Every Detail build is saved for ${vehicle}`,
+      );
+      customerSubject = `We saved your Every Detail build`;
+    } else if (isDetailPlus) {
+      const planRows = [
+        detailRow("Vehicle", vehicle),
+        detailRow("Rhythm", fields.frequency || "Your selected schedule"),
+        detailRow("Coverage", fields.coverage || "Your selected coverage"),
+      ].join("");
+
+      customerHtml = shell(
+        `
+          ${eyebrow("Detail+ / plan received")}
+          ${headline(`${firstName ? `${escapeHtml(firstName)}, your` : "Your"} routine is with us.`)}
+          ${lede("You picked the rhythm. We’ll price the exact plan for your vehicle and make sure the coverage makes sense before the first visit.")}
+
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 24px;background:${BRAND.oxblood};color:#ffffff;">
+            <tr><td style="padding:24px 24px 12px;font-size:10px;line-height:1.2;letter-spacing:1.8px;color:${BRAND.beige};font-weight:900;">DETAIL+ / PLAN PREVIEW</td></tr>
+            <tr><td style="padding:0 24px 22px;"><table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="color:#ffffff;">${planRows.replaceAll(`color:${BRAND.black}`, "color:#ffffff").replaceAll(`color:${BRAND.gray}`, `color:${BRAND.beige}`).replaceAll("rgba(17,17,17,.12)", "rgba(255,255,255,.18)")}</table></td></tr>
+          </table>
+
+          ${noteBlock("Next up", "We’ll send your flat per-visit rate and help set the first visit. There’s no contract. If you need to change the vehicle, coverage, or rhythm, reply here.")}
+        `,
+        `Your Detail+ plan: ${fields.frequency || "maintenance"} · ${vehicle}`,
+      );
+      customerSubject = `We got your Detail+ plan`;
+    } else {
+      customerHtml = shell(
+        `
+          ${eyebrow("We got it")}
+          ${headline(`${firstName ? `${escapeHtml(firstName)}, we’ve` : "We’ve"} got your request.`)}
+          ${lede("Your request made it to the Every Detail team. We’ll review the details and follow up directly.")}
+          ${noteBlock("Need to add something?", "Reply to this email and it’ll land with the same team reviewing your request.")}
+        `,
+        "Your request made it to Every Detail",
+      );
+      customerSubject = `We got your request · Every Detail`;
+    }
 
     jobs.push(
       sendEmail({
         to: customerEmail,
-        subject: isDetailPlus ? "We got your Detail+ request" : "We got your request · Every Detail",
+        subject: customerSubject,
         html: customerHtml,
         replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
       }),
@@ -843,21 +879,26 @@ export async function sendJobReminderEmail(booking: JobReminderEmail) {
 
   const html = shell(
     `
-      ${eyebrow("Tomorrow with Every Detail")}
-      ${headline(`Tomorrow’s the day${firstName ? `, ${escapeHtml(firstName)}` : ""}.`)}
-      ${lede("Your appointment is on the schedule. Here’s everything you need to know before we arrive.")}
+      ${eyebrow("Tomorrow / quick prep")}
+      ${headline(`We’re coming tomorrow${firstName ? `, ${escapeHtml(firstName)}` : ""}.`)}
+      ${lede("Your appointment is set. There’s very little you need to do before we arrive.")}
 
-      ${detailPanel(`
-        ${detailRow("When", appointment)}
-        ${detailRow("Service", booking.service)}
-        ${detailRow("Vehicle", booking.vehicle)}
-        ${detailRow("Where", booking.address)}
-      `, "Your appointment")}
+      ${appointmentTicket({
+        kicker: "Tomorrow’s appointment",
+        date: appointment,
+        service: booking.service,
+        vehicle: booking.vehicle,
+        address: booking.address,
+      })}
 
-      ${noteBlock(
-        "We bring the setup.",
-        "Power, water, equipment, and products are on us. Just make sure we can access the vehicle at the scheduled time. If anything has changed, reply to this email and we’ll help.",
-      )}
+      <div style="margin:0 0 6px;font-size:10px;line-height:1.2;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.oxblood};font-weight:900;">Before we get there</div>
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 22px;">
+        ${checklistRow("01", "Make the vehicle accessible", "Have it unlocked or the key available when the team arrives.")}
+        ${checklistRow("02", "Give us room to work", "If possible, have the vehicle parked where we can comfortably work around it.")}
+        ${checklistRow("03", "That’s basically it", "We bring our own power, water, equipment, and products.")}
+      </table>
+
+      ${noteBlock("Something changed?", "Reply to this email. If we formally move the appointment, you’ll receive a fresh confirmation with the new time.")}
     `,
     `Your Every Detail appointment is ${appointment}`,
   );
@@ -869,3 +910,71 @@ export async function sendJobReminderEmail(booking: JobReminderEmail) {
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
   });
 }
+
+export type JobChangeEmail = JobReminderEmail & {
+  previousStart?: string | null;
+};
+
+export async function sendJobRescheduledEmail(booking: JobChangeEmail) {
+  const firstName = firstNameOnly(booking.name);
+  const newAppointment = formatAppointment(booking.start);
+  const oldAppointment = booking.previousStart ? formatAppointment(booking.previousStart) : "Your previous appointment time";
+
+  const html = shell(
+    `
+      ${eyebrow("Appointment updated")}
+      ${headline(`${firstName ? `${escapeHtml(firstName)}, your` : "Your"} new time is set.`)}
+      ${lede("Your Every Detail appointment has been moved. This email is your confirmation of the updated schedule.")}
+
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 24px;border-top:2px solid ${BRAND.black};border-bottom:1px solid rgba(17,17,17,.2);">
+        ${detailRow("Was", oldAppointment)}
+        ${detailRow("Now", newAppointment)}
+        ${detailRow("Service", booking.service)}
+        ${detailRow("Vehicle", booking.vehicle)}
+        ${detailRow("Location", booking.address)}
+      </table>
+
+      ${noteBlock("You’re confirmed for the new time.", "You don’t need to do anything else. We’ll use the updated appointment for future reminders and your day-of team confirmation.")}
+    `,
+    `Your Every Detail appointment moved to ${newAppointment}`,
+  );
+
+  return sendEmail({
+    to: booking.email,
+    subject: `Your Every Detail appointment has been moved`,
+    html,
+    replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
+  });
+}
+
+export async function sendJobCancellationEmail(booking: JobChangeEmail) {
+  const firstName = firstNameOnly(booking.name);
+  const appointment = formatAppointment(booking.start);
+
+  const html = shell(
+    `
+      ${eyebrow("Appointment cancelled")}
+      ${headline(`${firstName ? `${escapeHtml(firstName)}, your` : "Your"} appointment is cancelled.`)}
+      ${lede("This is just a confirmation so there’s no uncertainty. The appointment below is no longer on the schedule.")}
+
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 24px;border-top:2px solid ${BRAND.black};border-bottom:1px solid rgba(17,17,17,.2);">
+        ${detailRow("Appointment", appointment)}
+        ${detailRow("Service", booking.service)}
+        ${detailRow("Vehicle", booking.vehicle)}
+        ${detailRow("Location", booking.address)}
+      </table>
+
+      <div style="margin:0 0 12px;">${actionButton("Book a new time", "https://www.everydetail.co/book")}</div>
+      ${noteBlock("Need help?", "Reply to this email and we’ll help you find another time. If you meant to keep the appointment, contact us as soon as you can.")}
+    `,
+    `Your ${appointment} Every Detail appointment has been cancelled`,
+  );
+
+  return sendEmail({
+    to: booking.email,
+    subject: `Your Every Detail appointment is cancelled`,
+    html,
+    replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
+  });
+}
+

@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendDayOfJobConfirmationEmail, sendJobReminderEmail, type DayOfTeamMember } from "@/lib/email";
+import {
+  sendDayOfJobConfirmationEmail,
+  sendJobCancellationEmail,
+  sendJobReminderEmail,
+  sendJobRescheduledEmail,
+  type DayOfTeamMember,
+} from "@/lib/email";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
@@ -15,6 +21,19 @@ type ReminderJob = {
   service_name: string | null;
   vehicle: string | null;
   scheduled_start: string;
+};
+
+type JobChangeEvent = {
+  id: string;
+  job_id: string;
+  event_kind: "rescheduled" | "cancelled";
+  customer_name: string | null;
+  email: string;
+  address: string | null;
+  service_name: string | null;
+  vehicle: string | null;
+  previous_scheduled_start: string | null;
+  scheduled_start: string | null;
 };
 
 type WorkerResult = {
@@ -119,6 +138,92 @@ async function loadTodayTestJob(
   // use the most recent one so the test still reflects a real same-day job.
   const upcoming = jobs.find((job) => new Date(job.scheduled_start).getTime() >= now.getTime());
   return upcoming ?? jobs[jobs.length - 1] ?? null;
+}
+
+async function processJobChangeEmails(admin: ReturnType<typeof supabaseAdmin>): Promise<WorkerResult> {
+  const { data, error } = await admin.rpc("claim_customer_job_change_emails", {
+    p_limit: MAX_PER_RUN,
+  });
+
+  if (error) {
+    if (String(error.code || "") === "PGRST202" || /claim_customer_job_change_emails/i.test(String(error.message || ""))) {
+      console.warn("[job-reminders] customer job change email migration is not installed yet");
+      return { claimed: 0, sent: 0, failed: 0, skipped: 0 };
+    }
+    throw error;
+  }
+
+  const events = (data ?? []) as JobChangeEvent[];
+  let sent = 0;
+  let failed = 0;
+  let skipped = 0;
+
+  for (const event of events) {
+    try {
+      if (!event.email || !event.scheduled_start) throw new Error("Customer job change event is missing email or appointment time");
+
+      // Re-read the job so a rapid second reschedule/cancellation cannot send an
+      // outdated lifecycle email that was already claimed by this worker.
+      const { data: currentJob, error: validationError } = await admin
+        .from("jobs")
+        .select("id,status,email,scheduled_start")
+        .eq("id", event.job_id)
+        .maybeSingle();
+      if (validationError) throw validationError;
+
+      const emailStillMatches = String(currentJob?.email || "").trim().toLowerCase() === event.email.trim().toLowerCase();
+      const stillCurrent = event.event_kind === "cancelled"
+        ? Boolean(currentJob && String(currentJob.status) === "cancelled" && emailStillMatches)
+        : Boolean(currentJob && String(currentJob.status) !== "cancelled" && currentJob.scheduled_start === event.scheduled_start && emailStillMatches);
+
+      if (!stillCurrent) {
+        skipped += 1;
+        const discard = await admin.rpc("discard_customer_job_change_email", {
+          p_event_id: event.id,
+          p_reason: "Skipped stale customer lifecycle email event",
+        });
+        if (discard.error) console.error("[job-reminders] lifecycle discard", discard.error);
+        continue;
+      }
+
+      const input = {
+        name: event.customer_name || "there",
+        email: event.email,
+        address: event.address || "Your scheduled service address",
+        service: event.service_name || "Detail",
+        vehicle: event.vehicle || "Your vehicle",
+        start: event.scheduled_start,
+        previousStart: event.previous_scheduled_start,
+      };
+
+      const result = event.event_kind === "cancelled"
+        ? await sendJobCancellationEmail(input)
+        : await sendJobRescheduledEmail(input);
+
+      if (!result.ok) throw new Error("Email provider did not confirm customer job change delivery request");
+
+      const complete = await admin.rpc("finish_customer_job_change_email", {
+        p_event_id: event.id,
+        p_sent: true,
+        p_provider_message_id: "id" in result ? result.id || null : null,
+        p_error: null,
+      });
+      if (complete.error) throw complete.error;
+      sent += 1;
+    } catch (sendError) {
+      failed += 1;
+      console.error(`[job-reminders] lifecycle ${event.id}`, sendError);
+      const release = await admin.rpc("finish_customer_job_change_email", {
+        p_event_id: event.id,
+        p_sent: false,
+        p_provider_message_id: null,
+        p_error: sendError instanceof Error ? sendError.message : String(sendError),
+      });
+      if (release.error) console.error("[job-reminders] lifecycle release", release.error);
+    }
+  }
+
+  return { claimed: events.length, sent, failed, skipped };
 }
 
 async function processDayOfConfirmations(admin: ReturnType<typeof supabaseAdmin>): Promise<WorkerResult> {
@@ -398,19 +503,21 @@ export async function GET(request: NextRequest) {
   const admin = supabaseAdmin();
 
   try {
-    // Same-day confirmations are processed first because they are the more
-    // time-sensitive message. The 24-hour reminder then runs exactly as before.
+    // Lifecycle changes go first so a cancellation or reschedule confirmation
+    // gets out before routine reminder work. Day-of stays ahead of tomorrow.
+    const lifecycle = await processJobChangeEmails(admin);
     const dayOf = await processDayOfConfirmations(admin);
     const tomorrow = await processTomorrowReminders(admin);
 
     return NextResponse.json({
       ok: true,
+      lifecycle,
       dayOf,
       tomorrow,
-      claimed: dayOf.claimed + tomorrow.claimed,
-      sent: dayOf.sent + tomorrow.sent,
-      failed: dayOf.failed + tomorrow.failed,
-      skipped: dayOf.skipped + tomorrow.skipped,
+      claimed: lifecycle.claimed + dayOf.claimed + tomorrow.claimed,
+      sent: lifecycle.sent + dayOf.sent + tomorrow.sent,
+      failed: lifecycle.failed + dayOf.failed + tomorrow.failed,
+      skipped: lifecycle.skipped + dayOf.skipped + tomorrow.skipped,
     });
   } catch (error) {
     console.error("[job-reminders] worker", error);
