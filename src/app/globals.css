@@ -14905,3 +14905,127 @@ body:has(.v29-hero) .site-context-pill>small{display:block!important}
   .bk-sizes,.bk-size-fallback-grid{grid-template-columns:1fr 1fr!important}
   .bk-confirm{min-height:60px!important}
 }
+
+/* ============================================================
+   V75 — VIEWPORT RHYTHM + MENU + SIGNED-IN VEHICLE HANDOFF
+   Fix the actual desktop screenshots: hero too low, quote clipped,
+   menu hierarchy weak. Keep phone behavior calm and readable.
+   ============================================================ */
+
+/* Homepage hero: center the composition optically, not at the floor. */
+@media(min-width:901px){
+  .v29-hero-inner{
+    min-height:100svh!important;
+    padding:138px 0 112px!important;
+    justify-content:center!important;
+    transform:translateY(-10px)!important;
+  }
+  .v29-hero-title.v43-hero-title{width:min(1040px,82vw)!important}
+  .v29-hero-title.v43-hero-title span:nth-child(1){font-size:clamp(5.25rem,7.7vw,8.15rem)!important}
+  .v29-hero-title.v43-hero-title span:nth-child(2){font-size:clamp(3.95rem,5.9vw,6.05rem)!important}
+  .v54-hero-actions{margin-top:1.55rem!important}
+  .v36-tape.v41-tape{height:74px!important;margin:-24px 0 -5px -26px!important}
+}
+
+/* Quote is a compact tool, but it must still scroll when a real viewport is
+   shorter than the designed canvas. Never clip the last answer row. */
+@media(min-width:901px){
+  .q53-page{height:auto!important;min-height:100svh!important;overflow:visible!important}
+  .q53-tool{
+    height:auto!important;
+    min-height:calc(100svh - 67px)!important;
+    grid-template-rows:auto auto!important;
+    overflow:visible!important;
+    padding-bottom:42px!important;
+  }
+  .q53-rec.quote-rec-shell{height:auto!important;min-height:0!important;align-items:start!important}
+  .q53-rec-main{overflow:visible!important}
+  .q53-page .q53-active-step{padding-bottom:2rem!important}
+  .q53-snapshot.q51-snapshot{position:sticky!important;top:18px!important}
+}
+
+/* Shared menu: deliberate hierarchy, not oversized primaries plus footer text. */
+.site-shared-menu-panel{
+  height:min(620px,76svh)!important;
+  max-height:620px!important;
+}
+.site-shared-menu-shell{
+  padding:112px clamp(30px,4.2vw,64px) 28px!important;
+  grid-template-rows:auto auto auto auto!important;
+  gap:0!important;
+}
+.site-shared-menu-main{gap:0 34px!important}
+.site-shared-menu-link{min-height:66px!important}
+.site-shared-menu-link strong{font-size:clamp(2.4rem,3.8vw,4rem)!important}
+.site-shared-menu-vehicle{
+  margin-top:14px!important;
+  padding:.9rem 0!important;
+  border-color:rgba(243,237,223,.18)!important;
+  color:#f3eddf!important;
+}
+.site-shared-menu-vehicle>span{color:#d56865!important;font-size:.65rem!important}
+.site-shared-menu-vehicle strong{font-size:1.02rem!important}
+.site-shared-menu-vehicle small{color:rgba(243,237,223,.58)!important}
+.site-shared-menu-utility{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:0!important;
+  margin-top:14px!important;
+  padding:0!important;
+  border-top:1px solid rgba(243,237,223,.18)!important;
+  border-bottom:1px solid rgba(243,237,223,.18)!important;
+  color:#f3eddf!important;
+  font-size:.86rem!important;
+  letter-spacing:.065em!important;
+}
+.site-shared-menu-utility a{
+  min-height:46px!important;
+  display:flex!important;
+  align-items:center!important;
+  padding:.15rem .85rem .15rem 0!important;
+  border-right:1px solid rgba(243,237,223,.12)!important;
+  opacity:.86;
+}
+.site-shared-menu-utility a:nth-child(3n){border-right:0!important}
+.site-shared-menu-utility a:hover{opacity:1;color:#d56865!important}
+.site-shared-menu-actions{padding-top:14px!important}
+
+@media(max-width:900px){
+  /* Hero moves up on mobile too, with enough room for the two CTAs. */
+  .v29-hero-inner{
+    padding:92px 0 96px!important;
+    justify-content:center!important;
+    transform:translateY(-6px)!important;
+  }
+  .v54-hero-actions{margin-top:1.25rem!important}
+  .site-shared-menu-panel{height:100svh!important;max-height:none!important}
+  .site-shared-menu-shell{padding:82px 16px 22px!important;display:block!important}
+  .site-shared-menu-main{display:block!important}
+  .site-shared-menu-link{min-height:56px!important;grid-template-columns:28px 1fr 18px!important}
+  .site-shared-menu-link strong{font-size:clamp(2rem,9.5vw,3.2rem)!important}
+  .site-shared-menu-vehicle{margin-top:12px!important}
+  .site-shared-menu-utility{
+    grid-template-columns:1fr 1fr!important;
+    margin-top:12px!important;
+    font-size:.78rem!important;
+  }
+  .site-shared-menu-utility a{min-height:44px!important;padding-right:.45rem!important}
+  .site-shared-menu-utility a:nth-child(3n){border-right:1px solid rgba(243,237,223,.12)!important}
+  .site-shared-menu-utility a:nth-child(even){border-right:0!important}
+  .site-shared-menu-actions{display:grid!important;grid-template-columns:1fr 1fr!important;margin-top:12px!important}
+  .site-shared-menu-actions a{min-width:0!important;width:100%!important}
+
+  .q53-page{height:auto!important;min-height:100svh!important;overflow:visible!important}
+  .q53-tool{height:auto!important;min-height:calc(100svh - 60px)!important;overflow:visible!important;padding-bottom:4rem!important}
+}
+
+@media(max-width:560px){
+  .v29-hero-inner{padding:84px 0 92px!important;transform:translateY(18px)!important}
+  .v29-hero-title.v43-hero-title span:nth-child(1){font-size:clamp(3.15rem,15vw,4.1rem)!important}
+  .v29-hero-title.v43-hero-title span:nth-child(2){font-size:clamp(2.2rem,10.2vw,2.85rem)!important}
+  .site-shared-menu-shell{padding-inline:12px!important}
+  .site-shared-menu-link{min-height:52px!important}
+  .site-shared-menu-link strong{font-size:clamp(1.9rem,9vw,2.7rem)!important}
+  .site-shared-menu-utility{font-size:.74rem!important}
+  .site-shared-menu-actions{grid-template-columns:1fr!important}
+}

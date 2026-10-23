@@ -1,7 +1,9 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import type { VehicleId } from "@/data/services";
+import { vehicleIdFromSize, type VehicleId } from "@/data/services";
+import { supabaseConfigured } from "@/lib/supabase/config";
+import { supabaseBrowser } from "@/lib/supabase/browser";
 
 export type SiteVehicle = {
   make: string;
@@ -51,16 +53,57 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
   const [promptDismissed, setPromptDismissed] = useState(false);
 
   useEffect(() => {
-    const sessionVehicle = readVehicle(sessionStorage.getItem(SESSION_KEY));
-    const savedVehicle = readVehicle(localStorage.getItem(SAVED_KEY));
-    const next = sessionVehicle ?? savedVehicle;
-    if (next) {
-      setVehicle(next);
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(next));
+    let cancelled = false;
+
+    async function hydrateVehicle() {
+      const sessionVehicle = readVehicle(sessionStorage.getItem(SESSION_KEY));
+      const savedVehicle = readVehicle(localStorage.getItem(SAVED_KEY));
+      let next = sessionVehicle;
+
+      // A deliberate choice made in this browser session wins. Otherwise, a
+      // signed-in customer's primary garage vehicle is the source of truth.
+      // Device memory is only the fallback for signed-out visitors.
+      if (!next && supabaseConfigured) {
+        try {
+          const supabase = supabaseBrowser();
+          const { data: auth } = await supabase.auth.getUser();
+          if (auth.user) {
+            const { data: garage, error } = await supabase.rpc("get_my_garage");
+            if (!error && Array.isArray(garage) && garage.length > 0) {
+              const primary = garage.find((item: any) => item?.is_primary) ?? garage[0];
+              const vehicleClass = vehicleIdFromSize(primary?.vehicle_size);
+              if (vehicleClass && primary?.make && primary?.model) {
+                next = {
+                  make: String(primary.make),
+                  model: String(primary.model),
+                  year: primary.year ? String(primary.year) : undefined,
+                  vehicle: vehicleClass,
+                };
+              }
+            }
+          } else {
+            next = savedVehicle;
+          }
+        } catch {
+          next = savedVehicle;
+        }
+      } else if (!next) {
+        next = savedVehicle;
+      }
+
+      if (cancelled) return;
+      if (next) {
+        setVehicle(next);
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(next));
+        sessionStorage.setItem(DISMISSED_KEY, "1");
+      }
+      setRememberedState(!!savedVehicle && !!next && JSON.stringify(savedVehicle) === JSON.stringify(next));
+      setPromptDismissed(!!next || sessionStorage.getItem(DISMISSED_KEY) === "1");
+      setHydrated(true);
     }
-    setRememberedState(!!savedVehicle && JSON.stringify(savedVehicle) === JSON.stringify(next));
-    setPromptDismissed(sessionStorage.getItem(DISMISSED_KEY) === "1");
-    setHydrated(true);
+
+    void hydrateVehicle();
+    return () => { cancelled = true; };
   }, []);
 
   const selectVehicle = useCallback((next: SiteVehicle, remember = false) => {
