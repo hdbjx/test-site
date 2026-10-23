@@ -52,9 +52,9 @@ export function VehicleGlobalUI() {
     <div className="veh-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target !== event.currentTarget) return; pickerOpen ? closePicker() : dismissPrompt(); }}>
       <section ref={panelRef} className="veh-modal veh-modal-clean" role="dialog" aria-modal="true" aria-labelledby="veh-modal-title">
         <button className="veh-modal-close" type="button" onClick={pickerOpen ? closePicker : dismissPrompt} aria-label="Close vehicle picker">×</button>
-        <p className="veh-modal-kicker">YOUR VEHICLE</p>
+        <p className="veh-modal-kicker">{vehicle ? "YOUR VEHICLE" : "WELCOME TO EVERY DETAIL"}</p>
         <h2 id="veh-modal-title">{vehicle ? "Change vehicle." : "What do you drive?"}</h2>
-        {!vehicle && <p className="veh-modal-copy">Choose your car for exact pricing.</p>}
+        {!vehicle && <p className="veh-modal-copy">Pick your car and we’ll show the right pricing for it.</p>}
 
         {vehicle && (
           <div className="veh-current-card">
@@ -76,7 +76,7 @@ export function VehicleGlobalUI() {
           <span><b>Remember on this device</b></span>
         </label>
 
-        {!vehicle && <button type="button" className="veh-skip" onClick={dismissPrompt}>Skip for now</button>}
+        {!vehicle && <button type="button" className="veh-skip" onClick={dismissPrompt}>Browse first</button>}
       </section>
     </div>
   );
