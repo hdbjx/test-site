@@ -33,7 +33,7 @@ export function VehicleGlobalUI() {
     const closeButton = panel?.querySelector<HTMLButtonElement>(".veh-modal-close");
     let focusTimer: number | undefined;
     if (window.matchMedia("(pointer: fine)").matches) {
-      if (onboarding) focusTimer = window.setTimeout(() => searchInput?.focus(), 720);
+      if (onboarding) focusTimer = window.setTimeout(() => searchInput?.focus(), 2300);
       else searchInput?.focus();
     } else closeButton?.focus({ preventScroll: true });
     const key = (event: KeyboardEvent) => {
