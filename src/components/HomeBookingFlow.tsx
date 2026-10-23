@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
 import { useJourney } from "@/components/journey/JourneyContext";
 import { bookingHref } from "@/data/booking";
-import { PRICING, serviceList, services, vehicles, type ServiceId, type VehicleId } from "@/data/services";
+import { PRICING, serviceList, services, vehicleLabel, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { track } from "@/lib/analytics";
 import { durationShort, usd } from "@/lib/format";
 import { TrackedLink } from "./TrackedLink";
