@@ -49,9 +49,9 @@ export default async function AboutPage() {
       </section>
 
       <section className="about70-facts" aria-label="Every Detail facts">
-        <div className="about70-shell about70-facts-grid">
+        <div className={`about70-shell about70-facts-grid ${team.length ? "" : "is-three"}`}>
           <div><strong><LiveReviewCount /></strong><span>FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span></div>
-          <div><strong>{team.length || "—"}</strong><span>ACTIVE TEAM MEMBERS</span></div>
+          {team.length ? <div><strong>{team.length}</strong><span>ACTIVE TEAM MEMBERS</span></div> : null}
           <div><strong>2</strong><span>MOBILE RIGS</span></div>
           <div><strong>2025</strong><span>BEST OF DECATURISH</span></div>
         </div>
@@ -99,6 +99,7 @@ export default async function AboutPage() {
                   <div><strong>{member.name}</strong><small>{member.title}</small></div>
                 </article>
               )) : <p className="about70-empty">Team roster is temporarily unavailable.</p>}
+              {team.length < 4 ? <figure className="about86-roster-photo"><Photo id="about-team" ratio="3/2" sizes="(min-width: 900px) 42vw, 92vw" /></figure> : null}
             </div>
           </div>
         </div>
@@ -115,8 +116,9 @@ export default async function AboutPage() {
               <article key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{body}</p></article>
             ))}
           </div>
-          <figure className="about70-wide-photo">
+          <figure className="about70-wide-photo about86-wide-photo">
             <Photo id="hq-branded-van-side" ratio="16/7" sizes="94vw" />
+            <figcaption>MOBILE SETUP / POWER + WATER ON BOARD / DECATUR, GA</figcaption>
           </figure>
         </div>
       </section>

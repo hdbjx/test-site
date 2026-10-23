@@ -6,17 +6,17 @@ export function Breadcrumbs({ items }: { items: { name: string; path: string }[]
   const all = [{ name: "Home", path: "/" }, ...items];
   return (
     <>
-      <nav aria-label="Breadcrumb" className="text-sm text-muted">
+      <nav aria-label="Breadcrumb" className="breadcrumbs text-sm">
         <ol className="flex flex-wrap items-center gap-1.5">
           {all.map((it, i) => (
             <li key={it.path} className="flex items-center gap-1.5">
               {i > 0 && <span aria-hidden="true">/</span>}
               {i === all.length - 1 ? (
-                <span aria-current="page" className="text-ink">
+                <span aria-current="page">
                   {it.name}
                 </span>
               ) : (
-                <Link href={it.path} className="hover:text-ink hover:underline">
+                <Link href={it.path}>
                   {it.name}
                 </Link>
               )}

@@ -15227,3 +15227,347 @@ body:has(.v29-hero) .site-context-pill>small{display:block!important}
 .site-skip-link{position:fixed;left:1rem;top:1rem;z-index:1000;transform:translateY(-180%);padding:.7rem .9rem;background:#111;color:#fff;font-family:var(--font-display);font-size:.78rem;font-weight:800;letter-spacing:.05em;text-decoration:none}.site-skip-link:focus{transform:none}
 .service85-join{background:#f4f0e7;min-height:100svh}.service85-join .container-ed{width:min(92vw,900px)}
 @media(max-width:700px){.service85-join .container-ed{width:92vw}.service85-join form :is(button,input,select,textarea){max-width:100%}.service85-join form button{min-height:48px}}
+
+
+/* =========================================================
+   V86 READABILITY FIXES
+   Scoped corrections only. Do not refactor the existing cascade.
+   ========================================================= */
+
+/* Breadcrumbs inherit the hero/page foreground instead of forcing dark text. */
+.breadcrumbs{color:inherit}
+.breadcrumbs a{color:currentColor;opacity:.62;text-decoration:none}
+.breadcrumbs a:hover{opacity:1;text-decoration:underline;text-underline-offset:3px}
+.breadcrumbs [aria-current="page"]{color:currentColor;opacity:.88}
+
+/* Services light hero: restore contrast and clear the fixed header. */
+.services-v61.info80-page .svc61-hero{padding-top:7.4rem!important}
+.services-v61.info80-page .svc61-crumbs{padding-top:0!important;opacity:.72}
+.services-v61.info80-page .svc61-lede{color:rgba(17,17,17,.74)!important}
+.services-v61.info80-page .info80-facts{color:rgba(17,17,17,.68)!important}
+.services-v61.info80-page .info80-facts strong{color:#111!important}
+.services-v61.info80-page .info80-facts span{color:rgba(17,17,17,.68)!important}
+
+/* Light-page header chrome should read as intentional, not translucent gray. */
+body:has(.services-v61) .site-context-pill,
+body:has(.info-form86) .site-context-pill,
+body:has(.services-v61) .site-context-pill.is-set,
+body:has(.info-form86) .site-context-pill.is-set{
+  background:rgba(243,241,236,.94)!important;
+  color:#111!important;
+  border-color:rgba(17,17,17,.68)!important;
+  box-shadow:0 10px 28px rgba(17,17,17,.10)!important;
+}
+body:has(.services-v61) .site-shared-menu-button,
+body:has(.info-form86) .site-shared-menu-button{
+  background:rgba(243,241,236,.94)!important;
+  color:#111!important;
+  border-color:rgba(17,17,17,.68)!important;
+  box-shadow:0 10px 28px rgba(17,17,17,.10)!important;
+}
+body:has(.services-v61) .site-shared-menu-button:hover,
+body:has(.services-v61) .site-shared-menu-button[aria-expanded="true"],
+body:has(.info-form86) .site-shared-menu-button:hover,
+body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
+  background:#111!important;color:#f3eddf!important;border-color:#111!important
+}
+
+/* Mobile detailing: dark hero copy stays light; anatomy copy stays dark. */
+.mobile-detailing-page .edu-hero-copy p{color:rgba(242,236,223,.82)!important}
+.mobile-detailing-page .edu-anatomy p{color:#3f3b36!important}
+
+/* City hero intro was dark-on-dark after the V83 pass. */
+.area-v2-hero-bottom>p{color:rgba(242,236,223,.82)!important}
+.area-v2-proof .google-maps-attribution{color:rgba(255,255,255,.88)!important}
+
+/* Detail+ loop cards are light cards, so descriptions must be dark. */
+.dp56-page.service85 .dp56-how-card p{color:#514b44!important}
+
+/* Our Work contrast repairs. */
+.work-case-copy>p:not(.eyebrow){color:rgba(242,236,223,.76)!important}
+.work-case-copy>.eyebrow{color:#d56865!important}
+.work-page-crew{background:#d56865!important;color:#111!important}
+.work-page-crew .eyebrow{color:#111!important}
+.work-page-crew h2{color:#111!important}
+.work-page-crew p:not(.eyebrow){color:rgba(17,17,17,.80)!important}
+.work-page-final{background:#590d07!important;color:#f3eddf!important}
+.work-page-final .eyebrow{color:#f3eddf!important}
+.work-page-final h2{color:#f3eddf!important}
+.work-page-final p{color:rgba(243,237,223,.82)!important}
+
+/* Gift cards: text on light cards and coral bridge. */
+.gift-how-v2 .gift-how-grid h3{color:#111!important}
+.gift-how-v2 .gift-how-grid p{color:#514b44!important}
+.gift-rewards-bridge-v2 .eyebrow{color:#111!important}
+.gift-rewards-bridge-v2 .gift-rewards-grid h2{color:#111!important}
+.gift-rewards-bridge-v2 .gift-rewards-grid h2 span{color:#590d07!important}
+.gift-rewards-bridge-v2 .gift-rewards-grid>div:last-child p{color:rgba(17,17,17,.82)!important}
+.gift-form small{font-size:.7rem!important;opacity:1!important;color:#5c554d!important}
+
+/* Blog post byline on black hero. */
+.post-v2-hero .post85-byline{color:rgba(242,236,223,.66)!important}
+.post-v2-hero .post85-byline strong{color:#f3eddf!important}
+
+/* Shared CTA band: small text must pass on coral. */
+.site-cta-kicker{color:#111!important}
+.site-cta-inner>div>p:not(.site-cta-kicker){color:rgba(17,17,17,.82)!important}
+.site-cta-secondary{color:#111!important;border-color:rgba(17,17,17,.72)!important}
+.site-cta-secondary:hover{background:rgba(17,17,17,.10)!important}
+
+/* Quote tool: readable upcoming/empty states. */
+.q51-progress span{color:rgba(11,10,9,.62)!important}
+.q51-progress span.is-current{color:var(--q51-coral)!important}
+.q51-progress span.is-done{color:var(--q51-ink)!important}
+.q51-snapshot>div>span{color:rgba(11,10,9,.64)!important}
+.q51-snapshot>div>strong{color:rgba(11,10,9,.64)!important}
+.q51-snapshot>div.is-filled>strong{color:var(--q51-ink)!important}
+
+/* Small red/coral labels on light surfaces use the deeper red. */
+.v41-care-heading>span,
+.areas84-areas .areas84-eyebrow,
+.areas84-setup .areas84-eyebrow,
+.about70-origin .about70-kicker,
+.about70-team .about70-kicker,
+.about70-close .about70-kicker,
+.gift-showcase .eyebrow,
+.gift-how-v2 .eyebrow{
+  color:#b8363d!important;
+}
+
+/* Service area facts: slightly stronger supporting text. */
+.areas84-proof span,.areas84-proof small{color:#514b44!important}
+
+/* Info form clears the shared header and has a real page heading. */
+.info-form86-shell{padding-top:9rem;padding-bottom:5rem}
+.info-form86 h1{
+  margin-top:.7rem;
+  max-width:11ch;
+  font-family:var(--font-display);
+  font-size:clamp(3.2rem,6vw,6rem);
+  font-weight:750;
+  line-height:.9;
+  letter-spacing:-.055em;
+  text-transform:uppercase;
+  color:#111;
+}
+.info-form86>div>p:not(.eyebrow){color:rgba(17,17,17,.74)!important}
+
+@media(max-width:700px){
+  .services-v61.info80-page .svc61-hero{padding-top:6.5rem!important}
+  .info-form86-shell{padding-top:7.2rem;padding-bottom:3.5rem}
+  .info-form86 h1{font-size:clamp(2.9rem,13vw,4.25rem)}
+}
+
+
+/* V86 — Mobile Car Detailing visual polish */
+.mobile86-hero{isolation:isolate;min-height:680px}
+.mobile86-hero-photo{position:absolute;inset:0;z-index:-3}
+.mobile86-hero-photo>div{height:100%;aspect-ratio:auto!important}
+.mobile86-hero-photo img{object-position:center 56%}
+.mobile86-hero-shade{position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(5,5,5,.94) 0%,rgba(5,5,5,.82) 48%,rgba(5,5,5,.40) 100%),linear-gradient(0deg,rgba(0,0,0,.68),transparent 64%)}
+.mobile86-hero-inner{position:relative;z-index:1}
+.mobile-detailing-page .mobile86-hero .edu-hero-grid{position:relative}
+.mobile-detailing-page .mobile86-hero .edu-hero-copy{max-width:42rem}
+.mobile86-anatomy-photo{margin:2.2rem 0 0;overflow:hidden}
+.mobile86-anatomy-photo>div{max-height:520px}
+.mobile86-photo-break{position:relative;overflow:hidden;background:#111;color:#f3eddf}
+.mobile86-photo-break>div:first-child{width:100%;max-height:620px;aspect-ratio:16/6!important}
+.mobile86-photo-break>div:last-child{position:absolute;left:max(4vw,28px);bottom:clamp(1.3rem,3vw,2.6rem);display:grid;gap:.15rem;text-transform:uppercase;text-shadow:0 2px 24px rgba(0,0,0,.6)}
+.mobile86-photo-break span{font-family:var(--font-display);font-size:.72rem;font-weight:850;letter-spacing:.14em}
+.mobile86-photo-break strong{font-family:var(--font-display);font-size:clamp(2.6rem,6vw,6.2rem);line-height:.86;letter-spacing:-.05em}
+@media(max-width:700px){
+  .mobile86-hero{min-height:620px}
+  .mobile86-hero-photo img{object-position:62% center}
+  .mobile86-hero-shade{background:linear-gradient(0deg,rgba(5,5,5,.90) 0%,rgba(5,5,5,.72) 72%,rgba(5,5,5,.52) 100%)}
+  .mobile86-anatomy-photo>div{aspect-ratio:4/3!important}
+  .mobile86-photo-break>div:first-child{aspect-ratio:4/3!important}
+  .mobile86-photo-break strong{font-size:clamp(2.4rem,12vw,4rem)}
+}
+
+
+/* V86 — City service-area template polish */
+.area86-hero{position:relative;isolation:isolate;min-height:620px}
+.area86-hero-photo{position:absolute;inset:0;z-index:-3}
+.area86-hero-photo>div{height:100%;aspect-ratio:auto!important}
+.area86-hero-photo img{object-position:center 56%}
+.area86-hero-shade{position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(5,5,5,.93) 0%,rgba(5,5,5,.80) 48%,rgba(5,5,5,.42) 100%),linear-gradient(0deg,rgba(0,0,0,.72),transparent 64%)}
+.area86-hero-inner{position:relative;z-index:1}
+.area86-local-intro{display:grid;align-content:start}
+.area86-local-photo{margin:2rem 0 0;overflow:hidden}
+.area86-local-photo>div{box-shadow:0 24px 56px rgba(17,17,17,.14)}
+@media(max-width:700px){
+  .area86-hero{min-height:560px}
+  .area86-hero-photo img{object-position:60% center}
+  .area86-hero-shade{background:linear-gradient(0deg,rgba(5,5,5,.92),rgba(5,5,5,.58))}
+  .area86-local-photo{margin-top:1.4rem}
+}
+
+
+/* V86 — Services photo rhythm */
+.svc86-catalog-break{position:relative;margin:clamp(3rem,6vw,5.5rem) 0;overflow:hidden;background:#111;color:#f3eddf}
+.svc86-catalog-break>div{max-height:560px}
+.svc86-catalog-break figcaption{position:absolute;left:clamp(1rem,3vw,2.4rem);right:clamp(1rem,3vw,2.4rem);bottom:clamp(1rem,3vw,2.2rem);display:grid;gap:.25rem;text-shadow:0 3px 24px rgba(0,0,0,.65)}
+.svc86-catalog-break figcaption span{font-family:var(--font-display);font-size:.72rem;font-weight:850;letter-spacing:.14em}
+.svc86-catalog-break figcaption strong{max-width:16ch;font-family:var(--font-display);font-size:clamp(2.6rem,5vw,5.4rem);line-height:.88;letter-spacing:-.045em}
+.svc86-mobile-section{padding:clamp(4.5rem,7vw,7rem) 0;background:#111;color:#f3eddf}
+.svc86-mobile-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.8fr);gap:clamp(2rem,6vw,6rem);align-items:center}
+.svc86-mobile-grid figure{margin:0;overflow:hidden}
+.svc86-mobile-grid h2{margin:.55rem 0 1rem;font-family:var(--font-display);font-size:clamp(3rem,5vw,5.4rem);line-height:.9;letter-spacing:-.05em}
+.svc86-mobile-grid p:not(.svc61-kicker){max-width:34rem;color:rgba(243,237,223,.78);font-size:1rem;line-height:1.65}
+.svc86-mobile-grid .svc61-btn{display:inline-flex;margin-top:1.3rem}
+@media(max-width:800px){
+  .svc86-mobile-grid{grid-template-columns:1fr}
+  .svc86-catalog-break>div{aspect-ratio:4/3!important}
+  .svc86-mobile-grid h2{font-size:clamp(2.7rem,12vw,4rem)}
+}
+
+
+/* V86 — Paint Care refinement */
+.paint85-pricing-panel{
+  padding:clamp(1rem,2vw,1.5rem);
+  border:1px solid rgba(17,17,17,.18)!important;
+  border-radius:1.25rem;
+  background:#fffdf8;
+  box-shadow:0 26px 70px rgba(17,17,17,.08);
+}
+.paint85-pricing-context{padding:.2rem 0 1rem!important}
+.paint85-price-options{border-top:1px solid rgba(17,17,17,.16)}
+.paint85-price-option{padding:1.5rem 0 1.35rem!important}
+.paint86-price-includes{display:grid;gap:.35rem;margin:.8rem 0 0;padding:0;list-style:none;color:#3f3b36;font-size:.84rem;line-height:1.4}
+.paint86-price-includes li::before{content:"✓";margin-right:.45rem;color:#b8363d;font-weight:850}
+.paint85-pricing-action{border-top:1px solid rgba(17,17,17,.16);padding:1rem 0 0!important}
+.paint86-defect-visuals{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:1.6rem}
+.paint86-defect-visuals figure{position:relative;min-height:300px;margin:0;overflow:hidden;background:#111}
+.paint86-defect-visuals img{object-fit:cover}
+.paint86-package-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:1.2rem;align-items:stretch}
+.paint86-package-layout .paint85-package-grid{grid-template-columns:1fr;border:1px solid rgba(17,17,17,.22)}
+.paint86-package-layout .paint85-package-grid article+article{border-left:0;border-top:1px solid rgba(17,17,17,.20)}
+.paint86-package-photo,.paint86-quote-photo{position:relative;min-height:100%;margin:0;overflow:hidden;background:#111}
+.paint86-package-photo img,.paint86-quote-photo img{object-fit:cover}
+.paint86-quote-body{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.7fr);gap:1.2rem;align-items:stretch}
+.paint-lead-shell-no-intro{display:block!important}
+.paint-lead-shell-no-intro .paint-lead-form{max-width:none!important}
+.paint86-quote-photo{min-height:540px}
+@media(max-width:900px){
+  .paint86-package-layout,.paint86-quote-body{grid-template-columns:1fr}
+  .paint86-package-photo,.paint86-quote-photo{min-height:380px}
+}
+@media(max-width:700px){
+  .paint85-pricing-panel{border-radius:.9rem;padding:.9rem}
+  .paint86-defect-visuals{grid-template-columns:1fr}
+  .paint86-defect-visuals figure{min-height:260px}
+  .paint86-package-photo,.paint86-quote-photo{min-height:300px}
+}
+
+
+/* V86 — Shine On photography */
+.shine86-lead-card{display:grid!important;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:0!important;overflow:hidden}
+.shine86-lead-image{position:relative;min-height:440px;background:#111}
+.shine86-lead-image img{object-fit:cover}
+.shine86-lead-content{display:grid;align-content:end;padding:clamp(1.5rem,3vw,2.6rem)}
+.shine86-row{grid-template-columns:3rem 110px minmax(0,1fr) auto!important}
+.shine86-thumb{position:relative;width:110px;height:78px;overflow:hidden;background:#ded6c8}
+.shine86-thumb img{object-fit:cover}
+@media(max-width:800px){
+  .shine86-lead-card{grid-template-columns:1fr}
+  .shine86-lead-image{min-height:300px}
+  .shine86-row{grid-template-columns:2.2rem 84px minmax(0,1fr) auto!important}
+  .shine86-thumb{width:84px;height:66px}
+}
+@media(max-width:520px){
+  .shine86-row{grid-template-columns:2rem 72px minmax(0,1fr) auto!important;gap:.65rem!important}
+  .shine86-thumb{width:72px;height:58px}
+  .shine84-row-copy p{display:none}
+}
+
+
+/* V86 — Detail+ density and photography */
+.dp56-benefit-grid article{min-height:205px!important}
+.dp56-benefit-grid article h3{margin:2rem 0 .5rem!important}
+.dp86-benefit-photo-wide{grid-column:span 2!important;transform:rotate(-.6deg)!important}
+.dp86-benefit-photo-wide>div{aspect-ratio:16/7!important}
+.detailplus-join86 .site-page-header{padding-bottom:2.5rem}
+.detailplus-join86 .site-page-header h1{max-width:12ch}
+.detailplus-join86 form{margin-top:0}
+@media(max-width:900px){
+  .dp86-benefit-photo-wide{grid-column:1/-1!important}
+}
+@media(max-width:700px){
+  .dp56-benefit-grid article{min-height:0!important;padding:1rem!important}
+  .dp56-benefit-grid article h3{margin:1.2rem 0 .4rem!important}
+  .dp86-benefit-photo-wide{grid-column:auto!important}
+  .dp86-benefit-photo-wide>div{aspect-ratio:4/3!important}
+}
+
+
+/* V86 — About resilience */
+.about70-facts-grid.is-three{grid-template-columns:repeat(3,1fr)}
+.about86-roster-photo{margin:1.2rem 0 0;overflow:hidden}
+.about86-wide-photo{position:relative;overflow:hidden}
+.about86-wide-photo figcaption{
+  position:absolute;left:1rem;bottom:1rem;margin:0!important;
+  padding:.55rem .7rem;background:rgba(17,16,14,.78);color:#f3eddf;
+  font-family:var(--font-display);font-size:.64rem;letter-spacing:.09em
+}
+@media(max-width:700px){
+  .about70-facts-grid.is-three{grid-template-columns:1fr 1fr}
+  .about70-facts-grid.is-three>div:last-child{grid-column:1/-1}
+}
+
+
+/* V86 — Our Work case-study variation */
+@media(min-width:901px){
+  .work86-featured-case{
+    position:relative!important;
+    display:block!important;
+    min-height:680px;
+    margin-block:clamp(4rem,7vw,7rem)!important;
+    overflow:hidden;
+    background:#111;
+    color:#f3eddf;
+  }
+  .work86-featured-case .work-case-media{position:absolute;inset:0!important}
+  .work86-featured-case .work-case-media>div:first-child{height:100%;aspect-ratio:auto!important}
+  .work86-featured-case .work-case-media::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,6,6,.88) 0%,rgba(6,6,6,.63) 46%,rgba(6,6,6,.16) 78%)}
+  .work86-featured-case .work-case-inset{display:none}
+  .work86-featured-case .work-case-copy{
+    position:relative;z-index:2;display:flex;min-height:680px;max-width:620px;
+    flex-direction:column;justify-content:flex-end;padding:clamp(2rem,5vw,4rem)
+  }
+  .work86-featured-case .work-case-copy h2{color:#f3eddf}
+  .work86-featured-case .work-case-copy>p:not(.eyebrow){color:rgba(243,237,223,.80)!important}
+  .work86-featured-case .work-case-meta span{color:#f3eddf;border-color:rgba(243,237,223,.4)}
+}
+
+
+/* V86 — Gift Card real-work photo */
+.gift86-photo{position:relative;margin:2rem 0 1.5rem;overflow:hidden}
+.gift86-photo>div{max-height:520px}
+.gift86-photo figcaption{
+  position:absolute;left:1rem;bottom:1rem;padding:.55rem .7rem;
+  background:rgba(17,17,17,.78);color:#f3eddf;
+  font-family:var(--font-display);font-size:.67rem;font-weight:850;letter-spacing:.10em
+}
+@media(max-width:700px){
+  .gift86-photo>div{aspect-ratio:4/3!important}
+}
+
+
+/* V86 — Client info utility polish */
+.info-form86-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.48fr);gap:1rem;align-items:stretch;margin-top:2rem}
+.info-form86-photo{position:relative;margin:0;overflow:hidden;background:#111}
+.info-form86-photo>div{height:100%;aspect-ratio:auto!important}
+.info-form86-photo figcaption{
+  position:absolute;left:.8rem;bottom:.8rem;padding:.5rem .6rem;
+  background:rgba(17,17,17,.78);color:#f3eddf;
+  font-family:var(--font-display);font-size:.62rem;font-weight:850;letter-spacing:.09em
+}
+@media(max-width:800px){
+  .info-form86-grid{grid-template-columns:1fr}
+  .info-form86-photo{display:none}
+}
+
+/* V86 final contrast verification */
+.work-page-crew p:not(.eyebrow){color:rgba(17,17,17,.90)!important}
+.gift-rewards-bridge-v2 .gift-rewards-grid>div:last-child p{color:rgba(17,17,17,.90)!important}
+.site-cta-inner>div>p:not(.site-cta-kicker){color:rgba(17,17,17,.90)!important}

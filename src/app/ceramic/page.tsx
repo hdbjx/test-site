@@ -79,10 +79,13 @@ export default function CeramicPage() {
       <section className="paint85-package">
         <div className="paint85-shell">
           <div className="paint85-section-intro paint85-section-intro-tight"><div><p className="paint85-kicker dark">INCLUDED</p><h2>ONE PACKAGE.<br /><span>THREE THINGS THAT MATTER.</span></h2></div><p>{ceramic.bestFor}</p></div>
-          <div className="paint85-package-grid">
-            <article><span>01</span><h3>Paint preparation + correction</h3><p>Wash, decontamination and correction matched to the finish before coating.</p></article>
-            <article><span>02</span><h3>2-year ceramic coating</h3><p>Professional ceramic protection applied panel by panel to prepared paint.</p></article>
-            <article><span>03</span><h3>Complimentary follow-up detail</h3><p>We return after installation to clean the vehicle correctly and check the coating.</p></article>
+          <div className="paint86-package-layout">
+            <div className="paint85-package-grid">
+              <article><span>01</span><h3>Paint preparation + correction</h3><p>Wash, decontamination and correction matched to the finish before coating.</p></article>
+              <article><span>02</span><h3>2-year ceramic coating</h3><p>Professional ceramic protection applied panel by panel to prepared paint.</p></article>
+              <article><span>03</span><h3>Complimentary follow-up detail</h3><p>We return after installation to clean the vehicle correctly and check the coating.</p></article>
+            </div>
+            <figure className="paint86-package-photo"><Image src="/images/red-audi-finished.jpg" alt="Finished red Audi with deep gloss after Every Detail paint care" fill sizes="(max-width: 900px) 92vw, 42vw" /></figure>
           </div>
         </div>
       </section>
@@ -97,7 +100,10 @@ export default function CeramicPage() {
       <section id="coating-quote" className="paint85-quote">
         <div className="paint85-shell">
           <div className="paint85-section-intro paint85-section-intro-tight"><div><p className="paint85-kicker dark">YOUR CAR</p><h2>LET'S LOOK AT<br /><span>THE PAINT.</span></h2></div><p>Tell us what you drive and how the finish looks today. We will confirm the preparation before anything is booked.</p></div>
-          <PaintLeadForm kind="ceramic" />
+          <div className="paint86-quote-body">
+            <PaintLeadForm kind="ceramic" hideIntro />
+            <figure className="paint86-quote-photo"><Image src="/images/hq-black-suv-finished.jpg" alt="Finished black SUV after Every Detail paint care" fill sizes="(max-width: 900px) 92vw, 38vw" /></figure>
+          </div>
         </div>
       </section>
 

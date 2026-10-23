@@ -100,11 +100,15 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="info80-mobile-strip">
-          <div className="svc61-shell info80-mobile-strip-inner">
-            <strong>WE COME TO YOU.</strong>
-            <span>Power, water, products, and equipment arrive with the crew.</span>
-            <TrackedLink href="/book" event="book_click" params={{ location: "services_mobile_strip" }}>Choose a time ↗</TrackedLink>
+        <section className="svc86-mobile-section">
+          <div className="svc61-shell svc86-mobile-grid">
+            <figure><Photo id="mobile-rig-open-driveway" ratio="4/3" sizes="(min-width: 900px) 46vw, 92vw" /></figure>
+            <div>
+              <p className="svc61-kicker">MOBILE BY DESIGN</p>
+              <h2>WE COME TO YOU.</h2>
+              <p>Power, water, products, and equipment arrive with the crew. You provide the vehicle and a safe place for us to work around it.</p>
+              <TrackedLink href="/book" event="book_click" params={{ location: "services_mobile_strip" }} className="svc61-btn svc61-btn-primary">Choose a time <span>↗</span></TrackedLink>
+            </div>
           </div>
         </section>
 

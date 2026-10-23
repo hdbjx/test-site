@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { GiftCardPurchaseForm } from "@/components/gift-cards/GiftCardPurchaseForm";
 import { GiftCardIntro } from "@/components/gift-cards/GiftCardIntro";
+import { Photo } from "@/components/Photo";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -78,6 +79,8 @@ export default function GiftCardsPage() {
               Detail account with the same email, the balance appears there automatically.
             </p>
           </div>
+
+          <figure className="gift86-photo"><Photo id="work-05" ratio="16/6" sizes="92vw" /><figcaption>A CLEAN CAR, READY TO GIVE.</figcaption></figure>
 
           <div className="gift-how-grid">
             <article>

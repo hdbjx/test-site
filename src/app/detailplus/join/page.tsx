@@ -11,7 +11,7 @@ export const metadata = pageMetadata({
 
 export default function JoinDetailPlus() {
   return (
-    <div className="service85 service85-join">
+    <div className="service85 service85-join detailplus-join86">
       <PageHeader
         crumbs={[
           { name: "Detail+", path: "/detailplus" },

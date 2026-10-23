@@ -1,0 +1,19 @@
+Local branch: main
+Baseline: V85
+
+Commits are intentionally split so individual page passes can be reverted independently.
+
+3efdcc5 fix: sitewide readability and contrast regressions
+fd80a85 design: polish mobile car detailing page
+3d58fd6 design: polish city service-area pages
+d44f1c9 design: add photo rhythm to services page
+516afc6 design: refine paint correction and ceramic pages
+11b9909 design: add photography to Shine On index
+7c9bacf design: refine Detail+ content rhythm
+dbd533e design: differentiate Detail+ join flow
+b1b9590 design: harden About roster and team proof
+9e895d4 design: vary Our Work case studies
+292dffb design: add real-work photography to Gift Cards
+97387a5 design: polish client info page
+6af860d fix: finalize contrast verification
+42d8416 fix: correct Gift Card photo reference

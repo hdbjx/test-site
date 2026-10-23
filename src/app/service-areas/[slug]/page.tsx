@@ -4,6 +4,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
+import { Photo } from "@/components/Photo";
 import { ReviewGrid } from "@/components/ReviewGrid";
 import { ServicePicker } from "@/components/ServicePicker";
 import { areasWithPages } from "@/data/areas";
@@ -28,7 +29,10 @@ export default async function AreaPage({ params }: Params) {
 
   return (
     <div className="area-v2">
-      <section className="area-v2-hero"><div className="area-v2-shell">
+      <section className="area-v2-hero area86-hero">
+        <div className="area86-hero-photo" aria-hidden="true"><Photo id="branded-rig-driveway" sizes="100vw" fill priority /></div>
+        <div className="area86-hero-shade" aria-hidden="true" />
+        <div className="area-v2-shell area86-hero-inner">
         <div className="mb-6"><Breadcrumbs items={[{ name: "Service Areas", path: "/service-areas" }, { name: area.name, path: `/service-areas/${slug}` }]} /></div>
         <p className="area-v2-kicker">MOBILE DETAILING / {area.name.toUpperCase()}</p>
         <h1>Car detailing in<br/><span>{area.name}.</span></h1>
@@ -37,7 +41,7 @@ export default async function AreaPage({ params }: Params) {
 
       <section className="area-v2-proof"><div className="area-v2-shell"><span><LiveReviewCount /> FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span><span>POWER + WATER INCLUDED</span><span>TRAINED CREW</span><span>ONLINE PRICING</span></div></section>
 
-      <section className="area-v2-local"><div className="area-v2-shell area-v2-local-grid"><div><p className="area-v2-kicker">LOCAL SERVICE</p><h2>Your parking spot.<br/><span>Our setup.</span></h2></div><div className="area-v2-notes">{page.localNotes.map((n,i)=><article key={n}><b>{String(i+1).padStart(2,"0")}</b><p>{n}</p></article>)}</div></div></section>
+      <section className="area-v2-local"><div className="area-v2-shell area-v2-local-grid"><div className="area86-local-intro"><p className="area-v2-kicker">LOCAL SERVICE</p><h2>Your parking spot.<br/><span>Our setup.</span></h2><figure className="area86-local-photo"><Photo id="hq-mobile-rig-fleet" ratio="4/3" sizes="(min-width: 900px) 32vw, 92vw" /></figure></div><div className="area-v2-notes">{page.localNotes.map((n,i)=><article key={n}><b>{String(i+1).padStart(2,"0")}</b><p>{n}</p></article>)}</div></div></section>
 
       <section className="area-v2-pricing"><div className="area-v2-shell"><div className="area-v2-pricing-head"><div><p className="area-v2-kicker">PRICING</p><h2>Pick your vehicle.<br/><span>See the real price.</span></h2></div><p>Choose your vehicle to see exact pricing for Maintenance, Premium and Factory Reset.</p></div><ServicePicker location={`area_${slug}`} headingId="area-pricing" /></div></section>
 

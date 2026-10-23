@@ -7,7 +7,7 @@ import { useJourney } from "@/components/journey/JourneyContext";
 
 type Kind = "paint-correction" | "ceramic" | "paint-care";
 
-type Props = { kind: Kind };
+type Props = { kind: Kind; hideIntro?: boolean };
 
 const COPY = {
   "paint-correction": {
@@ -33,7 +33,7 @@ const COPY = {
   },
 } as const;
 
-export function PaintLeadForm({ kind }: Props) {
+export function PaintLeadForm({ kind, hideIntro = false }: Props) {
   const { vehicle, openPicker } = useVehicle();
   const { setServiceIntent } = useJourney();
   const copy = COPY[kind];
@@ -155,13 +155,15 @@ export function PaintLeadForm({ kind }: Props) {
   }
 
   return (
-    <div className="paint-lead-shell">
-      <div className="paint-lead-intro">
-        <p className="eyebrow">{copy.eyebrow}</p>
-        <h2>{copy.title}</h2>
-        <p>{copy.body}</p>
-        <div className="paint-lead-meta"><span>Paint correction included</span><span>2-year ceramic protection</span></div>
-      </div>
+    <div className={`paint-lead-shell ${hideIntro ? "paint-lead-shell-no-intro" : ""}`}>
+      {!hideIntro && (
+        <div className="paint-lead-intro">
+          <p className="eyebrow">{copy.eyebrow}</p>
+          <h2>{copy.title}</h2>
+          <p>{copy.body}</p>
+          <div className="paint-lead-meta"><span>Paint correction included</span><span>2-year ceramic protection</span></div>
+        </div>
+      )}
 
       <form className="paint-lead-form" onSubmit={onSubmit}>
         <input className="paint-hp" type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" />

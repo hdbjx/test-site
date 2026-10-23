@@ -60,6 +60,11 @@ export default function PaintCorrectionPage() {
             <div><p className="paint85-kicker dark">WHAT WE ARE LOOKING AT</p><h2>DEFECTS THAT<br /><span>BREAK THE REFLECTION.</span></h2></div>
             <p>Correction works in the clear coat. Deep damage through the clear may improve without disappearing completely.</p>
           </div>
+          <div className="paint86-defect-visuals" aria-label="Real paint finish examples">
+            <figure><Image src="/images/red-paint-detail.webp" alt="Close view of red automotive paint during Every Detail paint care" fill sizes="(max-width: 700px) 92vw, 30vw" /></figure>
+            <figure><Image src="/images/mercedes-paint.webp" alt="Glossy Mercedes paint showing a clean reflection" fill sizes="(max-width: 700px) 92vw, 30vw" /></figure>
+            <figure><Image src="/images/classic-red-car.jpg" alt="Glossy classic red car finish after detailing" fill sizes="(max-width: 700px) 92vw, 30vw" /></figure>
+          </div>
           <div className="paint85-defect-grid">
             {paintDefects.map((defect, index) => (
               <article key={defect.name}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{defect.name}</h3><p>{defect.detail}</p></div></article>
@@ -106,7 +111,7 @@ export default function PaintCorrectionPage() {
       <section id="paint-quote" className="paint85-quote">
         <div className="paint85-shell">
           <div className="paint85-section-intro paint85-section-intro-tight"><div><p className="paint85-kicker dark">YOUR PAINT</p><h2>LET'S SEE WHAT<br /><span>IT ACTUALLY NEEDS.</span></h2></div><p>Tell us what you drive and what bothers you most. We will recommend the level that makes sense before work starts.</p></div>
-          <PaintLeadForm kind="paint-correction" />
+          <PaintLeadForm kind="paint-correction" hideIntro />
         </div>
       </section>
 

@@ -58,7 +58,7 @@ export default function ServiceAreas() {
 
       <section className="areas84-proof">
         <div className="areas84-shell areas84-proof-grid">
-          <div><strong><LiveReviewCount />+</strong><span>five-star reviews</span><small><GoogleMapsAttribution /></small></div>
+          <div><strong><LiveReviewCount /></strong><span>five-star reviews</span><small><GoogleMapsAttribution /></small></div>
           <div><strong>Power + water</strong><span>included with the detail</span></div>
           <div><strong>100% electric</strong><span>mobile rigs</span></div>
           <div><strong>Decatur based</strong><span>student-run crew</span></div>

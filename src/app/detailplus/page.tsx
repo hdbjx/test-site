@@ -82,7 +82,7 @@ export default function DetailPlusPage() {
         <div className="dp56-shell">
           <div className="dp56-section-head">
             <div><p className="dp56-kicker dark">THE DETAIL+ RULE</p><h2>If it&rsquo;s in the plan,<br/><span>it&rsquo;s covered.</span></h2></div>
-            <blockquote>&ldquo;{detailPlusGuarantee}&rdquo;</blockquote>
+            <p>{detailPlusGuarantee}</p>
           </div>
           <div className="dp56-benefit-grid">
             {detailPlusBenefits.map((benefit, index) => (
@@ -95,6 +95,10 @@ export default function DetailPlusPage() {
             <figure className="dp56-benefit-photo">
               <Photo id="hq-interior-team-front-seats" sizes="(min-width: 900px) 31vw, 92vw" />
               <figcaption>REAL CARE / BEFORE IT PILES UP</figcaption>
+            </figure>
+            <figure className="dp56-benefit-photo dp86-benefit-photo-wide">
+              <Photo id="finished-white-car" sizes="(min-width: 900px) 62vw, 92vw" />
+              <figcaption>CLEAN STAYS THE BASELINE</figcaption>
             </figure>
           </div>
         </div>

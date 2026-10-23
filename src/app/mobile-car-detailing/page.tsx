@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { JsonLd } from "@/components/JsonLd";
+import { Photo } from "@/components/Photo";
 import { ServicePicker } from "@/components/ServicePicker";
 import { areas } from "@/data/areas";
 import { pageMetadata, serviceSchema } from "@/lib/seo";
@@ -16,7 +17,10 @@ export const metadata = pageMetadata({
 export default function MobileCarDetailingPage() {
   return (
     <div className="services-v161 mobile-detailing-page service85">
-      <section className="edu-hero"><div className="svc-shell">
+      <section className="edu-hero mobile86-hero">
+        <div className="mobile86-hero-photo" aria-hidden="true"><Photo id="hq-mobile-rig-fleet" sizes="100vw" fill priority /></div>
+        <div className="mobile86-hero-shade" aria-hidden="true" />
+        <div className="svc-shell mobile86-hero-inner">
         <div className="mb-6"><Breadcrumbs items={[{ name: "Mobile Car Detailing", path: "/mobile-car-detailing" }]} /></div>
         <p className="svc-eyebrow">MOBILE CAR DETAILING / DECATUR + ATLANTA</p>
         <div className="edu-hero-grid">
@@ -31,6 +35,7 @@ export default function MobileCarDetailingPage() {
 
       <section className="edu-anatomy"><div className="svc-shell">
         <div className="edu-section-intro"><p className="svc-eyebrow">WHAT MOBILE DETAILING MEANS HERE</p><h2>One appointment.<br/><span>The whole vehicle.</span></h2><p>Our standard first-visit approach is comprehensive. We work through the interior and exterior so the car leaves with a consistent baseline instead of one half being cleaned while the other is left behind.</p></div>
+        <figure className="mobile86-anatomy-photo"><Photo id="two-tech-interior-detail" ratio="16/7" sizes="92vw" /></figure>
         <div className="grid gap-6 md:grid-cols-3 mt-10">
           <article><b>01</b><h3 className="mt-3 text-xl font-semibold">Interior</h3><p className="mt-2">Vacuuming, seats, mats, dash, console, cupholders, doors, panels, glass and cargo areas, with deeper work when the selected service calls for it.</p></article>
           <article><b>02</b><h3 className="mt-3 text-xl font-semibold">Exterior</h3><p className="mt-2">Hand washing, wheels and tires, exterior glass, door jambs and finishing work, with paint protection or decontamination depending on the service.</p></article>
@@ -43,6 +48,11 @@ export default function MobileCarDetailingPage() {
         <ServicePicker location="mobile_detailing_seo" headingId="mobile-detailing-pricing" />
         <p className="mt-6"><Link href="/our-services" className="link">Compare exactly what each service includes ↗</Link></p>
       </div></section>
+
+      <section className="mobile86-photo-break" aria-label="Every Detail mobile setup">
+        <Photo id="mobile-rig-open-driveway" ratio="16/6" sizes="100vw" />
+        <div><span>YOUR DRIVEWAY</span><strong>OUR DETAIL SHOP.</strong></div>
+      </section>
 
       <section className="areas-v2-list"><div className="areas-v2-shell">
         <div className="areas-v2-head"><div><p className="areas-v2-kicker">SERVICE AREA</p><h2>Based in Decatur.<br/><span>Mobile across nearby Atlanta.</span></h2></div><p>We serve Decatur and nearby communities with appointment availability based on where our crews can actually travel and work.</p></div>

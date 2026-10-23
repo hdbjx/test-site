@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { CtaBand } from "@/components/CtaBand";
 import { JsonLd } from "@/components/JsonLd";
@@ -32,7 +33,9 @@ export default function BlogIndex() {
       {lead && (
         <section className="shine84-lead">
           <div className="shine84-shell">
-            <Link href={`/post/${lead.slug}`} className="shine84-lead-card">
+            <Link href={`/post/${lead.slug}`} className="shine84-lead-card shine86-lead-card">
+              {lead.image && <div className="shine86-lead-image"><Image src={lead.image} alt={`Every Detail: ${lead.title}`} fill priority sizes="(max-width: 800px) 92vw, 48vw" /></div>}
+              <div className="shine86-lead-content">
               <div className="shine84-lead-meta">
                 <span>LATEST</span>
                 <span>{lead.category}</span>
@@ -44,6 +47,7 @@ export default function BlogIndex() {
                 <p>{lead.description}</p>
               </div>
               <div className="shine84-lead-action">READ STORY <span>↗</span></div>
+              </div>
             </Link>
           </div>
         </section>
@@ -57,8 +61,9 @@ export default function BlogIndex() {
           </div>
           <div className="shine84-list">
             {rest.map((post, index) => (
-              <Link href={`/post/${post.slug}`} key={post.slug} className="shine84-row">
+              <Link href={`/post/${post.slug}`} key={post.slug} className="shine84-row shine86-row">
                 <span className="shine84-number">{String(index + 2).padStart(2, "0")}</span>
+                {post.image && <div className="shine86-thumb"><Image src={post.image} alt="" fill sizes="110px" /></div>}
                 <div className="shine84-row-copy">
                   <div className="shine84-row-meta"><span>{post.category}</span><span>{formatDate(post.date)}</span><span>{post.readingMinutes} MIN</span></div>
                   <h3>{post.title}</h3>

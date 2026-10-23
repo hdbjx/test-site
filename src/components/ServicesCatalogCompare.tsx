@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
 import { useJourney } from "@/components/journey/JourneyContext";
 import { TrackedLink } from "./TrackedLink";
+import { Photo } from "./Photo";
 import { catalogPrice, catalogService, catalogServices, type CatalogService, type CatalogServiceId } from "@/data/serviceCatalog";
 import { vehicles, type VehicleId } from "@/data/services";
 import { usd } from "@/lib/format";
@@ -136,6 +137,11 @@ export function ServicesCatalogCompare() {
           </section>
         ))}
       </div>
+
+      <figure className="svc86-catalog-break">
+        <Photo id="hq-black-suv-grille" ratio="16/6" sizes="92vw" />
+        <figcaption><span>REAL WORK / REAL CARS</span><strong>COMPARE THE DETAIL. NOT THE HYPE.</strong></figcaption>
+      </figure>
 
       <div className="svc62-compare" id="compare-services">
         <div className="svc62-compare-intro">

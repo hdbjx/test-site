@@ -43,6 +43,9 @@ export function PaintPricingPanel({ services, primary, quoteHref, quoteLabel }: 
               <div>
                 <span>{service.name}</span>
                 <p>{service.bestFor}</p>
+                <ul className="paint86-price-includes">
+                  {service.includes.slice(0, 3).map((item) => <li key={item}>{item}</li>)}
+                </ul>
               </div>
               <strong>{usd(price)}</strong>
             </div>
