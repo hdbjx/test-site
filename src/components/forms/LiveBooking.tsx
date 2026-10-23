@@ -5,6 +5,10 @@ import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } 
 import { PRICING, services, startingPrice, vehicleIdFromSize, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, isAddonIncludedInService, purchasableAddonIds, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { recommenderVehicles } from "@/data/recommenderVehicles";
+import { useVehicle } from "@/components/vehicle/VehicleContext";
+import { useJourney } from "@/components/journey/JourneyContext";
+import { isServiceId } from "@/data/services";
+import { vehicleClassForYear, vehicleMatches, yearFromVehicleQuery } from "@/lib/vehicle-search";
 import { areas } from "@/data/areas";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
@@ -80,21 +84,6 @@ function useSchoolHours() {
 /* Vehicle classification                                              */
 /* ------------------------------------------------------------------ */
 
-function vehicleMatches(query: string) {
-  const cleaned = query.trim().toLowerCase().replace(/\b(?:19|20)\d{2}\b/g, "").replace(/\s+/g, " ").trim();
-  if (cleaned.length < 2) return [];
-  return recommenderVehicles
-    .filter((item) =>
-      `${item.make} ${item.model}`.toLowerCase().includes(cleaned) ||
-      item.make.toLowerCase().startsWith(cleaned) ||
-      item.model.toLowerCase().startsWith(cleaned),
-    )
-    .slice(0, 10);
-}
-
-function yearFromQuery(query: string) {
-  return query.match(/\b((?:19|20)\d{2})\b/)?.[1] ?? "";
-}
 
 /* ------------------------------------------------------------------ */
 /* Copy                                                                */
@@ -157,8 +146,8 @@ const DIRECT_AREA_NAMES = new Set(areas.filter((area) => area.name.toLowerCase()
 const coverageMessage = (city: string) => {
   const normalized = city.trim().toLowerCase();
   if (DIRECT_AREA_NAMES.has(normalized)) return `Yep. We service ${city.trim()}.`;
-  if (normalized === "atlanta") return "Address saved. We’ll confirm coverage for this Atlanta location with your appointment.";
-  return "Address saved. We’ll confirm this location is within our mobile service area.";
+  if (normalized === "atlanta") return "We’ll confirm coverage for this Atlanta location with your appointment.";
+  return "We’ll confirm this location is within our mobile service area.";
 };
 
 /* ------------------------------------------------------------------ */
@@ -178,6 +167,7 @@ type Props = {
   initialPaint?: PaintUpgradeId[];
   fromQuote?: boolean;
   fromHome?: boolean;
+  fromResume?: boolean;
 };
 
 type BookingLine = {
@@ -207,6 +197,7 @@ type StepId = "service" | "car" | "extras" | "schedule" | "info" | "review";
 const STEPS: StepId[] = ["service", "car", "extras", "schedule", "info", "review"];
 const STAGE_OF: Record<StepId, number> = { service: 0, car: 1, extras: 1, schedule: 2, info: 3, review: 3 };
 const STEP_LABEL: Record<StepId, string> = { service: "Detail", car: "Vehicle", extras: "Extras", schedule: "Place + time", info: "Your info", review: "Review" };
+const BOOKING_DRAFT_KEY = "ed_booking_draft_v2";
 
 const nationalPhone = (value: string) => {
   let digits = value.replace(/\D/g, "");
@@ -220,7 +211,9 @@ const prettyPhone = (digits: string) =>
 /* Component                                                           */
 /* ------------------------------------------------------------------ */
 
-export function LiveBooking({ account, email, garage = [], initialVehicle, initialService, initialAddons = [], initialPaint = [], fromQuote = false, fromHome = false }: Props) {
+export function LiveBooking({ account, email, garage = [], initialVehicle, initialService, initialAddons = [], initialPaint = [], fromQuote = false, fromHome = false, fromResume = false }: Props) {
+  const { vehicle: siteVehicle, hydrated: siteVehicleHydrated, openPicker: openSiteVehiclePicker } = useVehicle();
+  const { serviceIntent, location: journeyLocation, selectedSlot: journeySelectedSlot, setServiceIntent, setLocation: setJourneyLocation, setSelectedSlot: setJourneySelectedSlot, setBookingResumeHref } = useJourney();
   const signedIn = !!account;
   const primary = garage.find((g) => g.is_primary) ?? garage[0];
   const nextKey = useRef(2);
@@ -259,6 +252,21 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const [address, setAddress] = useState<AddressParts>(() => parseAddress(account?.address ?? ""));
+  useEffect(() => {
+    if (!fromResume || account?.address) return;
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(BOOKING_DRAFT_KEY) || "null") as { address?: AddressParts } | null;
+      if (saved?.address && !addressProblem(saved.address)) setAddress(saved.address);
+    } catch {}
+  }, [fromResume, account?.address]);
+
+  useEffect(() => {
+    if (!address.street && !address.city && !address.zip) return;
+    try {
+      const current = JSON.parse(sessionStorage.getItem(BOOKING_DRAFT_KEY) || "{}") as Record<string, unknown>;
+      sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify({ ...current, address }));
+    } catch {}
+  }, [address]);
   const [name, setName] = useState(account?.full_name ?? "");
   const [phone, setPhone] = useState(nationalPhone(account?.phone ?? ""));
   const [contactEmail, setContactEmail] = useState("");
@@ -282,11 +290,58 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const formRef = useRef<HTMLFormElement>(null);
   const quoteSessionRef = useRef<string | null>(null);
 
+  useEffect(() => {
+    if (!fromResume) return;
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(BOOKING_DRAFT_KEY) || "null") as { lines?: BookingLine[] } | null;
+      if (saved?.lines?.length) {
+        const restored = saved.lines.map((line, index) => ({ ...line, key: index + 1 }));
+        setLines(restored);
+        nextKey.current = restored.length + 1;
+        const readyForSchedule = restored.every((line) => !!line.service && !!line.size);
+        if (readyForSchedule) {
+          setActive("schedule");
+          setReached((current) => Math.max(current, STEPS.indexOf("schedule")));
+        }
+      }
+    } catch {}
+  }, [fromResume]);
+
+  useEffect(() => {
+    if (!lines.some((line) => line.service || line.size || line.make || line.model)) return;
+    try {
+      const current = JSON.parse(sessionStorage.getItem(BOOKING_DRAFT_KEY) || "{}") as Record<string, unknown>;
+      sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify({ ...current, lines }));
+    } catch {}
+  }, [lines]);
+
   async function recordQuoteBehavior(stage: string, extra: Record<string, unknown> = {}) {
     const sessionId = quoteSessionRef.current;
     if (!sessionId) return;
     await fetch("/api/quote-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sessionId, stage, ...extra }) }).catch(() => null);
   }
+
+  // Carry the sitewide browsing vehicle into the first booking line without
+  // changing it when a second booking vehicle is added.
+  useEffect(() => {
+    if (!siteVehicleHydrated || !siteVehicle || initialVehicle) return;
+    setLines((current) => current.map((line, index) => index === 0 && !line.size && !line.make && !line.model
+      ? { ...line, savedId: "size", size: siteVehicle.vehicle, sizeManual: false, make: siteVehicle.make, model: siteVehicle.model, year: siteVehicle.year ?? "" }
+      : line));
+  }, [siteVehicleHydrated, siteVehicle, initialVehicle, primary]);
+
+  // Contextual handoffs already know the service and shared vehicle, so do not ask twice.
+  useEffect(() => {
+    if (!(fromQuote || fromHome) || !initialService || initialVehicle || !siteVehicleHydrated || !siteVehicle) return;
+    setActive("schedule");
+    setReached((current) => Math.max(current, STEPS.indexOf("schedule")));
+  }, [fromQuote, fromHome, initialService, initialVehicle, siteVehicleHydrated, siteVehicle]);
+
+  // Reuse explicit session choices, but never override a service/vehicle supplied in the booking URL.
+  useEffect(() => {
+    if (initialService || !serviceIntent || !isServiceId(serviceIntent)) return;
+    setLines((current) => current.map((line, index) => index === 0 && !line.service ? { ...line, service: serviceIntent } : line));
+  }, [initialService, serviceIntent]);
 
   // Quote handoff: carry the contact info captured on the quote page.
   useEffect(() => {
@@ -297,6 +352,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       if (typeof c.name === "string") setName((v) => v || c.name as string);
       if (typeof c.phone === "string") setPhone((v) => v || nationalPhone(c.phone as string));
       if (typeof c.email === "string") setContactEmail((v) => v || (c.email as string));
+      sessionStorage.removeItem("ed_quote_contact");
     } catch {}
     void recordQuoteBehavior("availability_viewed");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -326,6 +382,25 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const availabilityKey = resolved.map((l) => `${l.vehicle ?? "?"}:${l.service ?? "?"}`).join("|");
   const addressIssue = addressProblem(address);
   const addressDone = !addressIssue;
+  const resumeHasLocation = fromResume && !addressProblem(address);
+
+
+  useEffect(() => {
+    if (!addressDone) return;
+    setJourneyLocation({ city: address.city.trim(), state: address.state.trim().toUpperCase(), zip: address.zip.trim() });
+  }, [address.street, address.unit, address.city, address.state, address.zip, addressDone, setJourneyLocation]);
+
+  useEffect(() => {
+    const first = resolved[0];
+    if (!first?.service || !first.vehicle) {
+      setBookingResumeHref(null);
+      try { sessionStorage.removeItem(BOOKING_DRAFT_KEY); } catch {}
+      setJourneySelectedSlot(null);
+      return;
+    }
+    setServiceIntent(first.service);
+    setBookingResumeHref("/book?from=resume");
+  }, [availabilityKey, resolved[0]?.addons.join(","), resolved[0]?.paint.join(","), setBookingResumeHref]);
 
   function updateLine(key: number, patch: Partial<BookingLine>) {
     setLines((current) => current.map((line) => (line.key === key ? { ...line, ...patch } : line)));
@@ -368,11 +443,25 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           .filter(isValidDate)
           .sort((a, b) => a.getTime() - b.getTime());
         setSlots(list);
-        setDay((current) => {
-          const nextDay = current && list.some((slot) => dayKey(slot) === current) ? current : list[0] ? dayKey(list[0]) : null;
-          if (nextDay) setCalendarMonth(monthStartKey(nextDay));
-          return nextDay;
-        });
+        const rememberedStart = journeySelectedSlot ? list.find((slot) => slot.toISOString() === journeySelectedSlot) ?? null : null;
+        if (rememberedStart) {
+          setStart(rememberedStart);
+          const rememberedDay = dayKey(rememberedStart);
+          setDay(rememberedDay);
+          setCalendarMonth(monthStartKey(rememberedDay));
+          if (fromResume) {
+            const resumeStep: StepId = resumeHasLocation ? "info" : "schedule";
+            setActive(resumeStep);
+            setReached((current) => Math.max(current, STEPS.indexOf(resumeStep)));
+          }
+        } else {
+          if (journeySelectedSlot) setJourneySelectedSlot(null);
+          setDay((current) => {
+            const nextDay = current && list.some((slot) => dayKey(slot) === current) ? current : list[0] ? dayKey(list[0]) : null;
+            if (nextDay) setCalendarMonth(monthStartKey(nextDay));
+            return nextDay;
+          });
+        }
       })
       .catch(() => !cancelled && setSlotsError("We couldn't load open times. Refresh, or text us to book."));
     return () => {
@@ -380,7 +469,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     };
     // availabilityKey captures every vehicle/service choice.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [availabilityKey, priced]);
+  }, [availabilityKey, priced, fromResume, journeySelectedSlot, resumeHasLocation, setJourneySelectedSlot]);
 
   const slotsByDay = useMemo(() => {
     const map = new Map<string, Date[]>();
@@ -481,6 +570,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
 
   function chooseService(line: (typeof resolved)[number], index: number, service: ServiceId) {
     updateLine(line.key, { service, addons: line.addons.filter((addon) => !isAddonIncludedInService(service, addon)) });
+    if (index === 0) setServiceIntent(service);
     track("service_select", { service, vehicle: line.vehicle, location: "book", vehicleNumber: index + 1 });
   }
 
@@ -574,6 +664,8 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     if (confirmed) {
       void recordQuoteBehavior("booking_completed", { selectedSlot: start.toISOString() });
       track("booking_submit", { vehicleCount: lines.length, services: lines.map((line) => line.service).join(",") });
+      setBookingResumeHref(null);
+      try { sessionStorage.removeItem(BOOKING_DRAFT_KEY); } catch {}
       setBooked({
         vehicles: json.vehicles,
         start: json.start,
@@ -595,6 +687,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     if (json.code === "slot_taken") {
       setSlots((s) => (s ?? []).filter((x) => x.getTime() !== start.getTime()));
       setStart(null);
+      setJourneySelectedSlot(null);
       goTo("schedule");
       setStepError({ step: "schedule", message });
       return;
@@ -826,7 +919,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
               <strong>{line.make} {line.model}</strong>
               <span>{sizeLabel(line.size)}</span>
             </div>
-            <button type="button" onClick={clearVehicle}>Change</button>
+            <button type="button" onClick={() => index === 0 ? openSiteVehiclePicker() : clearVehicle()}>Change</button>
             <label className="bk-year-inline">
               <span>Year <em>optional</em></span>
               <input
@@ -844,7 +937,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           <div className="quote-rec-selected bk-vehicle-selected">
             <div>
               <strong>{sizeLabel(line.size)}</strong>
-              <span>Vehicle type carried into booking</span>
+              <span>Pricing class</span>
             </div>
             <button type="button" onClick={clearVehicle}>Search exact vehicle</button>
           </div>
@@ -870,12 +963,13 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                       key={`${item.make}-${item.model}-${resultIndex}`}
                       type="button"
                       onClick={() => {
+                        const selectedYear = yearFromVehicleQuery(query) || line.year;
                         updateLine(line.key, {
                           savedId: "size",
                           make: item.make,
                           model: item.model,
-                          year: yearFromQuery(query) || line.year,
-                          size: item.vehicle,
+                          year: selectedYear,
+                          size: vehicleClassForYear(item, selectedYear),
                           sizeManual: false,
                         });
                         setVehicleSearch((current) => ({ ...current, [line.key]: `${item.make} ${item.model}` }));
@@ -1007,7 +1101,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
               <p className="bk-sum-total" key={total}><span>Est. total</span><span>{usd(total)}{hasVariableAddons ? "+" : ""}</span></p>
             </>
           ) : (
-            <p className="bk-sum-total"><span>{fromTotal ? "From" : "Total"}</span><span>{fromTotal ? usd(fromTotal) : "—"}</span></p>
+            <p className="bk-sum-total"><span>{fromTotal ? "From" : "Total"}</span><span>{fromTotal ? usd(fromTotal) : "Not set"}</span></p>
           )}
           {giftCardPreview && <p className="bk-sum-gift"><span>Gift card •••• {giftCardPreview.codeLast4}</span><span>{usd(giftCardPreview.balanceCents / 100)} avail.</span></p>}
           {appointmentMinutes && <small>About {duration(appointmentMinutes)} on site · Pay after the detail</small>}
@@ -1193,7 +1287,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                             {daySlots.map((s) => {
                               const on = start?.getTime() === s.getTime();
                               return (
-                                <button key={s.toISOString()} type="button" role="radio" aria-checked={on} className={`bk-pill ${on ? "is-on" : ""}`} onClick={() => { setStart(s); setStepError(null); void recordQuoteBehavior("slot_selected", { selectedSlot: s.toISOString() }); }}>
+                                <button key={s.toISOString()} type="button" role="radio" aria-checked={on} className={`bk-pill ${on ? "is-on" : ""}`} onClick={() => { setStart(s); setJourneySelectedSlot(s.toISOString()); setStepError(null); void recordQuoteBehavior("slot_selected", { selectedSlot: s.toISOString() }); }}>
                                   {fmtTime(s)}
                                 </button>
                               );

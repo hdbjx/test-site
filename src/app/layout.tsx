@@ -5,9 +5,10 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { GoogleReviewStatsProvider } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
-import { MobileBookBar } from "@/components/MobileBookBar";
-import { RouteTransition } from "@/components/RouteTransition";
-import { SitewideMotion } from "@/components/SitewideMotion";
+import { VehicleProvider } from "@/components/vehicle/VehicleContext";
+import { VehicleGlobalUI } from "@/components/vehicle/VehicleGlobalUI";
+import { JourneyProvider } from "@/components/journey/JourneyContext";
+import { JourneyGlobalUI } from "@/components/journey/JourneyGlobalUI";
 import { site } from "@/data/site";
 import { localBusinessSchema } from "@/lib/seo";
 
@@ -34,20 +35,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-dvh">
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var p=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'numeric'}).formatToParts(new Date());var m=Number((p.find(function(x){return x.type==='month'})||{}).value);if(m===10){document.body.classList.add('halloween-site')}}catch(e){}})();`,
+            __html: `(function(){try{if(location.pathname!=='/')return;var p=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'numeric'}).formatToParts(new Date());var m=Number((p.find(function(x){return x.type==='month'})||{}).value);if(m===10){document.body.classList.add('halloween-site')}}catch(e){}})();`,
           }}
         />
         <GoogleReviewStatsProvider>
-        <RouteTransition />
-        <SitewideMotion />
+        <VehicleProvider>
+        <JourneyProvider>
+        <VehicleGlobalUI />
+        <JourneyGlobalUI />
         <Header />
         <main id="main" tabIndex={-1} className="outline-none">
           {children}
         </main>
         <Footer />
-        <MobileBookBar />
         <JsonLd data={localBusinessSchema()} />
         <Analytics />
+        </JourneyProvider>
+        </VehicleProvider>
         </GoogleReviewStatsProvider>
       </body>
     </html>

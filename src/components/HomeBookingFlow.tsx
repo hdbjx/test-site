@@ -1,6 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
+import { useJourney } from "@/components/journey/JourneyContext";
 import { bookingHref } from "@/data/booking";
 import { PRICING, serviceList, services, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { track } from "@/lib/analytics";
@@ -18,27 +20,39 @@ const serviceMeta: Record<ServiceId, { number: string; cue: string; subline: str
   premium: {
     number: "02",
     cue: "Bring it back",
-    subline: "Top-to-bottom clean, inside and out — every corner, every detail.",
+    subline: "Top-to-bottom clean, inside and out. Every corner, every detail.",
     includes: "Deep interior clean · Hand wash · Wheels + tires · Paint protection",
     detail: "Full interior + exterior · Most booked",
   },
   factoryReset: {
     number: "03",
     cue: "Start over",
-    subline: "Like it just rolled off the lot — maybe better.",
+    subline: "Like it just rolled off the lot. Maybe better.",
     includes: "Deep interior clean · Extraction · Decontamination · Detailed cracks + crevices",
     detail: "Deepest clean · Heavy reset",
   },
 };
 
 export function HomeBookingFlow() {
-  const [service, setService] = useState<ServiceId | null>(null);
+  const { vehicle: siteVehicle, hydrated: siteVehicleHydrated, openPicker } = useVehicle();
+  const { serviceIntent, setServiceIntent } = useJourney();
+  const [service, setService] = useState<ServiceId | null>(serviceIntent === "maintenance" || serviceIntent === "premium" || serviceIntent === "factoryReset" ? serviceIntent : null);
   const [vehicle, setVehicle] = useState<VehicleId | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const chosenService = service ? services[service] : null;
   const chosenVehicle = vehicle ? vehicles.find((v) => v.id === vehicle)! : null;
   const quote = service && vehicle ? PRICING[vehicle][service] : null;
+
+
+  useEffect(() => {
+    if (siteVehicleHydrated && siteVehicle) setVehicle(siteVehicle.vehicle);
+  }, [siteVehicleHydrated, siteVehicle]);
+
+  useEffect(() => {
+    if (service) return;
+    if (serviceIntent === "maintenance" || serviceIntent === "premium" || serviceIntent === "factoryReset") setService(serviceIntent);
+  }, [serviceIntent, service]);
 
   const easeInOutCubic = (t: number) =>
     t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -68,7 +82,8 @@ export function HomeBookingFlow() {
   const chooseService = (id: ServiceId) => {
     const openingForFirstTime = service === null;
     setService(id);
-    setVehicle(null);
+    setServiceIntent(id);
+    if (!siteVehicle) setVehicle(null);
     track("service_select", { service: id, location: "home_flow" });
     if (openingForFirstTime) window.setTimeout(guideToVehicleStep, 110);
   };
@@ -109,31 +124,34 @@ export function HomeBookingFlow() {
           <div className="v15-stage-inner">
             <div className="v15-stage-topline">
               <span>{serviceMeta[service].number} / {chosenService.name}</span>
-              <button type="button" onClick={() => { setService(null); setVehicle(null); }}>Close ×</button>
+              <button type="button" onClick={() => { setService(null); setVehicle(null); setServiceIntent(null); }}>Close ×</button>
             </div>
 
             <div className="v15-stage-main">
               <div className="v15-stage-question">
                 <p className="eyebrow">One more thing</p>
-                <h3>What do you drive?</h3>
-                <p>Choose the closest match. You can give us the exact year, make, and model next.</p>
+                <h3>{siteVehicle ? "Pricing for your car." : "What do you drive?"}</h3>
+                <p>{siteVehicle ? `We’re using your ${siteVehicleLabel(siteVehicle)} everywhere on the site.` : "Choose the closest match, or search your exact vehicle from the header."}</p>
+                {siteVehicle ? <button type="button" className="v64-inline-change" onClick={openPicker}>Change vehicle</button> : null}
               </div>
 
-              <div className="v15-vehicles" role="radiogroup" aria-label="Choose vehicle size">
-                {vehicles.map((v, index) => (
-                  <button
-                    key={v.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={vehicle === v.id}
-                    className={`v15-vehicle ${vehicle === v.id ? "is-active" : ""}`}
-                    onClick={() => chooseVehicle(v.id)}
-                  >
-                    <span className="v15-vehicle-num">0{index + 1}</span>
-                    <span className="v15-vehicle-name">{v.label}</span>
-                  </button>
-                ))}
-              </div>
+              {!siteVehicle && (
+                <div className="v15-vehicles" role="radiogroup" aria-label="Choose vehicle size">
+                  {vehicles.map((v, index) => (
+                    <button
+                      key={v.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={vehicle === v.id}
+                      className={`v15-vehicle ${vehicle === v.id ? "is-active" : ""}`}
+                      onClick={() => chooseVehicle(v.id)}
+                    >
+                      <span className="v15-vehicle-num">0{index + 1}</span>
+                      <span className="v15-vehicle-name">{v.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div ref={resultRef} className={`v15-result ${quote && chosenVehicle ? "is-visible" : ""}`}>
@@ -141,11 +159,11 @@ export function HomeBookingFlow() {
                 <>
                   <div className="v15-result-summary">
                     <span>Your detail</span>
-                    <strong>{chosenService.name} · {chosenVehicle.label}</strong>
+                    <strong>{chosenService.name} · {siteVehicle ? siteVehicleLabel(siteVehicle) : chosenVehicle.label}</strong>
                     <small>About {durationShort(quote.minutes)} in your driveway <span>· Power + water included</span></small>
                   </div>
                   <div className="v15-result-price"><span>Total</span><strong>{usd(quote.price)}</strong></div>
-                  <TrackedLink href={bookingHref(vehicle!, service)} event="book_click" params={{ location: "home_flow", vehicle: vehicle ?? undefined, service: service ?? undefined }} className="btn btn-primary v15-continue">Choose a time ↗</TrackedLink>
+                  <TrackedLink href={bookingHref(vehicle!, service)} event="book_click" params={{ location: "home_flow", vehicle: vehicle ?? undefined, service: service ?? undefined }} className="btn btn-primary v15-continue" onClick={() => service && setServiceIntent(service)}>Choose a time ↗</TrackedLink>
                 </>
               )}
             </div>

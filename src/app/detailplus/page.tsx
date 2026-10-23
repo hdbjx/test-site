@@ -71,19 +71,9 @@ export default function DetailPlusPage() {
         <div className="dp56-shell">
           <div className="dp56-section-head">
             <div><p className="dp56-kicker dark">PICK YOUR RHYTHM</p><h2>Your car.<br/><span>Your clean cycle.</span></h2></div>
-            <p>Bi-weekly, monthly, every six weeks, or completely custom. Slide Custom anywhere from weekly to quarterly in one-week steps.</p>
+            <p>Bi-weekly, monthly, six weeks, or any 1 to 13 week interval.</p>
           </div>
           <DetailPlusForm />
-        </div>
-      </section>
-
-      <section className="dp56-club-rules">
-        <div className="dp56-shell">
-          <div className="dp56-rules-band">
-            <div><span>01</span><strong>REAL CREW.</strong><p>Your visits are handled by Every Detail technicians, not random contractors.</p></div>
-            <div className="dp56-rule-accent"><span>02</span><strong>ONE FLAT RATE.</strong><p>Your plan gets one per-visit price so maintenance stays predictable.</p></div>
-            <div><span>03</span><strong>NO CONTRACT.</strong><p>Change the cadence, pause it, or stop when life changes.</p></div>
-          </div>
         </div>
       </section>
 
@@ -114,7 +104,7 @@ export default function DetailPlusPage() {
           <div className="dp56-how-copy">
             <p className="dp56-kicker">THE LOOP</p>
             <h2>Set it once.<br/><span>Keep it moving.</span></h2>
-            <p>Detail+ is supposed to remove decisions from car care, not add more of them.</p>
+            <p>Choose the plan once. We keep the car on schedule.</p>
           </div>
           <div className="dp56-how-steps">
             {detailPlusSteps.map((step, index) => (

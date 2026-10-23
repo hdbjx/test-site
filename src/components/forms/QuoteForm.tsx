@@ -7,7 +7,7 @@ import { submitLead } from "@/lib/submit";
 import { FormError, formToObject, Honeypot, SelectField, Success, TextArea, TextField } from "./parts";
 
 export const quoteInterests = [
-  { value: "not-sure", label: "Not sure yet — help me choose" },
+  { value: "not-sure", label: "Not sure yet. Help me choose" },
   { value: "maintenance", label: "Maintenance Detail" },
   { value: "premium", label: "Premium Detail" },
   { value: "factoryReset", label: "Factory Reset" },

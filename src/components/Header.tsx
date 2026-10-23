@@ -7,52 +7,24 @@ import { useEffect, useRef, useState } from "react";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { supabaseConfigured } from "@/lib/supabase/config";
+import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
+import { vehicleLabel } from "@/data/services";
+import { catalogPrice, catalogService } from "@/data/serviceCatalog";
+import { usd } from "@/lib/format";
+import { useJourney } from "@/components/journey/JourneyContext";
 
 export function Header() {
   const pathname = usePathname();
+  const onHome = pathname === "/";
+  const { vehicle, hydrated: vehicleHydrated, openPicker } = useVehicle();
+  const { serviceIntent, openDrawer } = useJourney();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [availabilityOpen, setAvailabilityOpen] = useState(false);
-  const [showAvailabilityBanner, setShowAvailabilityBanner] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-
-  // The school-hours scheduling ticker is only relevant while the team is in school.
-  // Evaluate in Every Detail’s local timezone so visitors elsewhere see the same schedule.
-  useEffect(() => {
-    const updateAvailabilityBanner = () => {
-      const parts = new Intl.DateTimeFormat("en-US", {
-        timeZone: "America/New_York",
-        weekday: "short",
-        month: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        hourCycle: "h23",
-      }).formatToParts(new Date());
-
-      const value = (type: Intl.DateTimeFormatPartTypes) =>
-        parts.find((part) => part.type === type)?.value ?? "";
-      const weekday = value("weekday");
-      const month = Number(value("month"));
-      const hour = Number(value("hour"));
-      const minute = Number(value("minute"));
-      const minutesAfterMidnight = hour * 60 + minute;
-      const isWeekday = ["Mon", "Tue", "Wed", "Thu", "Fri"].includes(weekday);
-      const isSchoolYear = month >= 8 || month <= 5;
-
-      setShowAvailabilityBanner(
-        isSchoolYear && isWeekday && minutesAfterMidnight >= 7 * 60 + 30 && minutesAfterMidnight < 16 * 60,
-      );
-    };
-
-    updateAvailabilityBanner();
-    const timer = window.setInterval(updateAvailabilityBanner, 30_000);
-    return () => window.clearInterval(timer);
-  }, []);
 
   // Close menus on navigation
   useEffect(() => {
     setMenuOpen(false);
-    setAvailabilityOpen(false);
   }, [pathname]);
 
   // Mobile panel: lock scroll, Escape closes, keep focus inside
@@ -100,22 +72,9 @@ export function Header() {
   }, [menuOpen]);
 
 
-  useEffect(() => {
-    if (!availabilityOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setAvailabilityOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [availabilityOpen]);
+
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
-  const onHome = pathname === "/";
   const headerClass = "fixed inset-x-0 top-0 z-40 text-white site-shared-header";
 
   // The booking funnel renders its own compact header; keep exits to a minimum there.
@@ -130,36 +89,6 @@ export function Header() {
         Skip to content
       </a>
 
-      {showAvailabilityBanner && !onHome && (
-        <button
-          type="button"
-          className="availability-banner"
-          onClick={() => setAvailabilityOpen(true)}
-          aria-haspopup="dialog"
-        >
-          <span className="availability-banner-track" aria-hidden="true">
-            <span>STUDENT-RUN TEAM&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY&nbsp;&nbsp;•&nbsp;&nbsp;FULLY MOBILE&nbsp;&nbsp;•&nbsp;&nbsp;POWER + WATER INCLUDED&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-            <span>STUDENT-RUN TEAM&nbsp;&nbsp;•&nbsp;&nbsp;WEEKDAY APPOINTMENTS AFTER SCHOOL&nbsp;&nbsp;•&nbsp;&nbsp;WEEKEND AVAILABILITY&nbsp;&nbsp;•&nbsp;&nbsp;FULLY MOBILE&nbsp;&nbsp;•&nbsp;&nbsp;POWER + WATER INCLUDED&nbsp;&nbsp;•&nbsp;&nbsp;VIEW SCHEDULING DETAILS&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-          </span>
-          <span className="sr-only">View scheduling information for our student-run team</span>
-        </button>
-      )}
-      {showAvailabilityBanner && onHome && (
-        <button
-          type="button"
-          className="home-school-availability"
-          onClick={() => setAvailabilityOpen(true)}
-          aria-haspopup="dialog"
-        >
-          <span className="home-school-availability-dot" aria-hidden="true" />
-          <span className="home-school-availability-copy">
-            <strong>SCHOOL HOURS</strong>
-            <span className="home-school-availability-desktop">AFTER-SCHOOL APPOINTMENTS</span>
-            <span className="home-school-availability-mobile">TEXT US</span>
-          </span>
-          <i aria-hidden="true">↗</i>
-        </button>
-      )}
       <div className="site-shared-nav-shell">
         <Link href="/" className={`site-shared-logo-control ${onHome ? "home-logo-control" : ""}`} aria-label="Every Detail home">
           {onHome ? (
@@ -172,6 +101,20 @@ export function Header() {
           )}
         </Link>
 
+        <div className="site-shared-nav-actions">
+          {vehicleHydrated && (
+            <button
+              type="button"
+              className={`site-context-pill ${vehicle || serviceIntent ? "is-set" : ""}`}
+              onClick={() => (vehicle || serviceIntent ? openDrawer() : openPicker())}
+              aria-label={vehicle || serviceIntent ? "Open your vehicle and service" : "Add your vehicle"}
+            >
+              <span>{vehicle ? siteVehicleLabel(vehicle) : serviceIntent ? catalogService(serviceIntent).name : "+ ADD YOUR VEHICLE"}</span>
+              {vehicle && serviceIntent ? <small>{catalogService(serviceIntent).name}{catalogPrice(serviceIntent, vehicle.vehicle) != null ? ` · ${usd(catalogPrice(serviceIntent, vehicle.vehicle)!)}` : ""}</small> : vehicle ? <small>{vehicleLabel(vehicle.vehicle)}</small> : null}
+              <i aria-hidden="true">⌄</i>
+            </button>
+          )}
+
         <button
           ref={menuButtonRef}
           type="button"
@@ -183,6 +126,7 @@ export function Header() {
         >
           <span className="site-shared-menu-label">{menuOpen ? "CLOSE" : "MENU"}<i aria-hidden="true">{menuOpen ? "×" : "↘"}</i></span>
         </button>
+        </div>
       </div>
 
       {/* Shared menu panel */}
@@ -216,6 +160,12 @@ export function Header() {
                   </Link>
                 ))}
               </div>
+              <button type="button" className="site-shared-menu-vehicle" onClick={() => { setMenuOpen(false); vehicle || serviceIntent ? openDrawer() : openPicker(); }}>
+                <span>{serviceIntent ? "YOUR DETAIL" : "YOUR VEHICLE"}</span>
+                <strong>{vehicle ? siteVehicleLabel(vehicle) : serviceIntent ? catalogService(serviceIntent).name : "Add your vehicle"}</strong>
+                <small>{vehicle && serviceIntent ? catalogService(serviceIntent).name : vehicle ? vehicleLabel(vehicle.vehicle) : ""}</small>
+                <i aria-hidden="true">↗</i>
+              </button>
               <div className="site-shared-menu-utility">
                 <Link href="/get-a-quote">Find My Detail</Link>
                 <Link href="/paint-correction">Paint Correction</Link>
@@ -233,22 +183,7 @@ export function Header() {
         </>
       )}
 
-      {availabilityOpen && (
-        <div className="availability-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAvailabilityOpen(false); }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="availability-title" className="availability-modal">
-            <button type="button" className="availability-modal-close" aria-label="Close scheduling information" onClick={() => setAvailabilityOpen(false)}>×</button>
-            <p className="availability-modal-kicker">OUR AVAILABILITY</p>
-            <h2 id="availability-title">Student-run, professionally scheduled.</h2>
-            <p>Every Detail is operated by a student team. During the school year, weekday appointments are generally available in the afternoon and early evening, with broader availability on weekends.</p>
-            <p>Because our team is in class during the school day, we cannot answer phone calls during school hours. Texting is the best way to reach us during the day, and we&rsquo;ll respond as soon as we&rsquo;re available.</p>
-            <p>Our booking calendar shows the appointment times we can currently support. If you need a time that is not listed, text us and we&rsquo;ll let you know what we can accommodate.</p>
-            <div className="availability-modal-actions">
-              <Link href="/book" className="btn btn-primary" onClick={() => setAvailabilityOpen(false)}>View open appointments</Link>
-              <a href={site.phone.sms} onClick={() => { track("text_click", { location: "availability_notice" }); setAvailabilityOpen(false); }}>Text us about a time</a>
-            </div>
-          </section>
-        </div>
-      )}
+
     </header>
   );
 }

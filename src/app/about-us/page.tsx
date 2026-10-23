@@ -1,131 +1,138 @@
-import { CtaBand } from "@/components/CtaBand";
 import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
 import { site } from "@/data/site";
-import { team } from "@/data/team";
 import { pageMetadata } from "@/lib/seo";
+import { getPublicTeamRoster } from "@/lib/team-roster";
 
 export const metadata = pageMetadata({
   title: "About Every Detail | Student-Run Mobile Detailing in Decatur, GA",
-  description:
-    "The story behind Every Detail, a student-run mobile detailing company built in Decatur, Georgia.",
+  description: "Meet Every Detail, the student-run mobile detailing team built in Decatur, Georgia.",
   path: "/about-us",
 });
 
 const standards = [
-  ["01", "Train before touching client cars", "Technicians work through a tiered training system. More responsibility comes with demonstrated skill, consistency and attention to detail."],
-  ["02", "Follow the same process", "Our job checklists, quality checks and operating procedures keep the standard consistent, no matter which technicians are on the driveway."],
-  ["03", "Bring the shop with us", "Our mobile rigs arrive with power, water, professional equipment and products. The client should not have to supply the setup."],
-  ["04", "Finish with accountability", "Every job is checked before we leave. Reviews, client feedback and repeat business are part of how we measure whether the system is actually working."],
-];
+  ["TRAIN", "Technicians earn responsibility through hands-on training and consistent work."],
+  ["ARRIVE READY", "Our mobile rigs bring the water, power, tools and products needed for the job."],
+  ["CHECK THE WORK", "Every car gets a final quality check before the team leaves the driveway."],
+] as const;
 
-const milestones = [
-  ["8TH GRADE", "The beginning", "Every Detail started at the end of 8th grade with a small set of supplies and a simple idea: take the details more seriously."],
-  ["THE TEAM", "One person became a crew", `The company grew into a student team of ${team.length}, with training tiers, managers and systems built around doing the work consistently.`],
-  ["2025", site.award.short, "Decatur readers recognized Every Detail for car cleaning, a milestone that meant a lot for a company built in the community."],
-  ["TODAY", "__LIVE_REVIEWS__", "Two mobile rigs, recurring clients and a growing operation, while keeping the student-run model at the center of the company."],
-];
+export const dynamic = "force-dynamic";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const team = await getPublicTeamRoster();
+
   return (
-    <div className="about-v2">
-      <section className="about-v2-hero">
-        <div className="about-v2-shell about-v2-hero-grid">
-          <div className="about-v2-hero-copy">
-            <p className="about-v2-kicker">ABOUT EVERY DETAIL / DECATUR, GA</p>
-            <h1>Started in 8th grade.<br/><span>Built into something real.</span></h1>
-            <p className="about-v2-lede">Every Detail is a student-run mobile detailing company from Decatur. What started as one student cleaning cars has grown into a trained team, two mobile rigs and a company built around doing the small things right.</p>
+    <div className="about70">
+      <section className="about70-hero">
+        <div className="about70-shell about70-hero-grid">
+          <div className="about70-hero-copy">
+            <p className="about70-kicker">EVERY DETAIL / DECATUR, GEORGIA</p>
+            <h1>BUILT BY<br /><span>STUDENTS.</span><br />RUN FOR REAL.</h1>
+            <p className="about70-lede">Every Detail started in eighth grade with one driveway job. Today, a student team runs mobile detailing across Decatur and Atlanta.</p>
+            <div className="about70-actions">
+              <TrackedLink href="/book" event="booking_start" params={{ location: "about_hero" }} className="about70-primary">BOOK A DETAIL ↗</TrackedLink>
+              <a href="#team" className="about70-link">MEET THE TEAM ↓</a>
+            </div>
           </div>
-          <div className="about-v2-hero-photo">
-            <Photo id="about-team" priority ratio="3/2" sizes="(min-width: 900px) 48vw, 92vw" />
-            <div className="about-v2-photo-tag">THE CREW / DECATUR, GA</div>
+
+          <div className="about70-hero-collage" aria-label="Every Detail team at work">
+            <figure className="about70-photo about70-photo-main">
+              <Photo id="about-team" priority ratio="4/3" sizes="(min-width: 900px) 48vw, 94vw" />
+            </figure>
+            <figure className="about70-photo about70-photo-small">
+              <Photo id="hq-crew-shirt-detail" ratio="4/5" sizes="(min-width: 900px) 18vw, 42vw" />
+            </figure>
+            <div className="about70-stamp"><strong>EST.</strong><span>8TH GRADE</span></div>
           </div>
         </div>
       </section>
 
-      <section className="about-v2-origin">
-        <div className="about-v2-shell about-v2-origin-grid">
-          <div>
-            <p className="about-v2-kicker">HOW IT STARTED</p>
-            <h2>It was never supposed to feel like <span>just a car wash.</span></h2>
-          </div>
-          <div className="about-v2-story-copy">
-            <p className="about-v2-story-lead">Every Detail began with a simple obsession: notice what other people miss.</p>
-            <p>At first, that meant the crumbs buried in seams, the dirt around switches, the door jambs and the little areas that change how clean a car actually feels. The name came from that approach.</p>
-            <p>As more people trusted us with their cars, the challenge changed. It was no longer just about learning how to detail well. We had to figure out how to teach other students, schedule jobs, build mobile rigs, communicate with clients and make the quality repeatable.</p>
-            <p>That is what Every Detail is now: still student-run, but supported by real training, systems and standards.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="about-v2-proof">
-        <div className="about-v2-shell about-v2-proof-grid">
+      <section className="about70-facts" aria-label="Every Detail facts">
+        <div className="about70-shell about70-facts-grid">
           <div><strong><LiveReviewCount /></strong><span>FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span></div>
-          <div><strong>2</strong><span>100% ELECTRIC MOBILE RIGS</span></div>
-          <div><strong>{team.length}</strong><span>STUDENTS ON THE TEAM</span></div>
+          <div><strong>{team.length || "—"}</strong><span>ACTIVE TEAM MEMBERS</span></div>
+          <div><strong>2</strong><span>MOBILE RIGS</span></div>
           <div><strong>2025</strong><span>BEST OF DECATURISH</span></div>
         </div>
       </section>
 
-      <section className="about-v2-student">
-        <div className="about-v2-shell">
-          <div className="about-v2-section-head">
-            <p className="about-v2-kicker">STUDENT-RUN, ON PURPOSE</p>
-            <h2>Being students is part of the story.<br/><span>The standard still has to hold.</span></h2>
-            <p>We know “student-run” can create a question before it creates confidence. So we built the company to answer that question through the way the work is done.</p>
+      <section className="about70-origin">
+        <div className="about70-shell about70-origin-grid">
+          <div className="about70-origin-title">
+            <p className="about70-kicker">THE IDEA</p>
+            <h2>THE NAME WAS<br /><span>THE STANDARD.</span></h2>
           </div>
-          <div className="about-v2-standards">
-            {standards.map(([n,title,body]) => (
-              <article key={n}>
-                <span className="about-v2-num">{n}</span>
-                <div><h3>{title}</h3><p>{body}</p></div>
-              </article>
+          <div className="about70-origin-copy">
+            <p className="about70-origin-lead">Every Detail meant exactly that.</p>
+            <p>Door jambs. Carpet edges. Switches. Wheels. The small places that decide whether a car actually feels finished.</p>
+            <p>As the company grew, the job became bigger than cleaning cars. We had to train people, build rigs, schedule around school and make the standard repeatable.</p>
+          </div>
+        </div>
+
+        <div className="about70-shell about70-workstrip">
+          <figure><Photo id="about-ops-01" ratio="4/3" sizes="32vw" /></figure>
+          <figure><Photo id="two-tech-interior-detail" ratio="4/3" sizes="32vw" /></figure>
+          <figure><Photo id="about-ops-05" ratio="4/3" sizes="32vw" /></figure>
+        </div>
+      </section>
+
+      <section id="team" className="about70-team">
+        <div className="about70-shell">
+          <div className="about70-section-head">
+            <div>
+              <p className="about70-kicker">THE CREW</p>
+              <h2>REAL RESPONSIBILITY.<br /><span>REAL TEAM.</span></h2>
+            </div>
+            <p>Detailing, operations, client experience, marketing and training are all handled by students.</p>
+          </div>
+
+          <div className="about70-team-grid">
+            <figure className="about70-team-image">
+              <Photo id="about-founder" ratio="3/4" sizes="(min-width: 900px) 36vw, 92vw" />
+              <figcaption>ON SITE / DECATUR</figcaption>
+            </figure>
+            <div className="about70-roster">
+              {team.length ? team.map((member, index) => (
+                <article key={member.id}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <div><strong>{member.name}</strong><small>{member.title}</small></div>
+                </article>
+              )) : <p className="about70-empty">Team roster is temporarily unavailable.</p>}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="about70-standard">
+        <div className="about70-shell">
+          <div className="about70-section-head about70-section-head-light">
+            <div><p className="about70-kicker">HOW WE WORK</p><h2>STUDENT-RUN.<br /><span>NOT STUDENT-GRADE.</span></h2></div>
+            <p>The story gets us noticed. The work is what has to earn the next booking.</p>
+          </div>
+          <div className="about70-standard-grid">
+            {standards.map(([title, body], index) => (
+              <article key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{body}</p></article>
             ))}
           </div>
+          <figure className="about70-wide-photo">
+            <Photo id="hq-branded-van-side" ratio="16/7" sizes="94vw" />
+          </figure>
         </div>
       </section>
 
-      <section className="about-v2-work">
-        <div className="about-v2-shell">
-          <div className="about-v2-work-head">
-            <div><p className="about-v2-kicker">WHAT IT LOOKS LIKE NOW</p><h2>Built in driveways<br/><span>around Decatur.</span></h2></div>
-            <p>The company grew, but the work still happens the same place it started: outside somebody&rsquo;s house, with a team that has to earn the result one car at a time.</p>
-          </div>
-          <div className="about-v2-work-grid">
-            <figure className="about-v2-work-wide"><Photo id="hq-branded-van-side" ratio="3/2" sizes="(min-width: 900px) 60vw, 92vw"/><figcaption>THE RIG / OUT IN DECATUR</figcaption></figure>
-            <figure><Photo id="hq-technician-trunk-detail" ratio="4/5" sizes="(min-width: 900px) 30vw, 92vw"/><figcaption>THE WORK / CARGO AREA</figcaption></figure>
-            <figure><Photo id="hq-white-ioniq-front" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>THE RESULT / FINISHED EXTERIOR</figcaption></figure>
-            <figure><Photo id="hq-van-through-flowers" ratio="3/2" sizes="(min-width: 900px) 45vw, 92vw"/><figcaption>THE NEIGHBORHOOD / DECATUR</figcaption></figure>
-          </div>
-        </div>
-      </section>
-
-      <section className="about-v2-timeline">
-        <div className="about-v2-shell">
-          <p className="about-v2-kicker">THE STORY SO FAR</p>
-          <h2>Still building.</h2>
-          <div className="about-v2-milestones">
-            {milestones.map(([year,title,body]) => <article key={year}><span>{year}</span><h3>{title === "__LIVE_REVIEWS__" ? <><LiveReviewCount /> five-star reviews <GoogleMapsAttribution /></> : title}</h3><p>{body}</p></article>)}
+      <section className="about70-close">
+        <div className="about70-shell about70-close-grid">
+          <h2>MORE CARS.<br />MORE STUDENTS.<br /><span>SAME STANDARD.</span></h2>
+          <div>
+            <p>Book the team for your car, or reach out if you are a student who wants real responsibility and is ready to learn.</p>
+            <div className="about70-close-actions">
+              <TrackedLink href="/book" event="booking_start" params={{ location: "about_final" }} className="about70-primary">BOOK A DETAIL ↗</TrackedLink>
+              <TrackedLink href={`mailto:${site.email}?subject=Joining%20the%20Every%20Detail%20team`} event="phone_click" params={{ location: "about_hiring" }} className="about70-secondary">JOIN THE TEAM ↗</TrackedLink>
+            </div>
           </div>
         </div>
       </section>
-
-      <section className="about-v2-belief">
-        <div className="about-v2-shell about-v2-belief-grid">
-          <p className="about-v2-kicker">WHAT WE CARE ABOUT</p>
-          <blockquote>“The goal is not to look impressive because we&rsquo;re students. <span>The goal is to do work that&rsquo;s impressive, period.</span>”</blockquote>
-        </div>
-      </section>
-
-      <section className="about-v2-join">
-        <div className="about-v2-shell about-v2-join-grid">
-          <div><p className="about-v2-kicker">JOIN THE TEAM</p><h2>Learn to do things <span>the right way.</span></h2></div>
-          <div><p>We hire students who care about the work, can take feedback and want real responsibility. Experience helps, but willingness to learn matters more.</p><TrackedLink href={`mailto:${site.email}?subject=Joining%20the%20team`} event="phone_click" params={{location:"about_hiring"}} className="about-v2-button">Email {site.email} ↗</TrackedLink></div>
-        </div>
-      </section>
-
-      <CtaBand location="about_final" />
     </div>
   );
 }

@@ -235,7 +235,7 @@ export function LiveJobPortal({ initialJobs, initialLoadFailed = false }: { init
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="t-h2">Your detail</h2>
-          <p className="mt-2 max-w-xl text-ink/80">Follow your crew from the drive over through final inspection. This page updates automatically while you watch.</p>
+          <p className="mt-2 max-w-xl text-ink/80">Follow your crew from the drive over through final inspection.</p>
         </div>
         {refreshError && <p className="text-xs text-muted">Live refresh paused. Showing the latest saved status.</p>}
       </div>

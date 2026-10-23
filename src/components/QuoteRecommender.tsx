@@ -7,6 +7,9 @@ import { ADDON_PRICES, PAINT_UPGRADES, type AddonId, type PaintUpgradeId } from 
 import { track } from "@/lib/analytics";
 import { submitLead } from "@/lib/submit";
 import { QuoteBookingContinuation } from "@/components/QuoteBookingContinuation";
+import { useVehicle } from "@/components/vehicle/VehicleContext";
+import { useJourney } from "@/components/journey/JourneyContext";
+import { vehicleClassForYear, vehicleMatches, yearFromVehicleQuery } from "@/lib/vehicle-search";
 
 const CONDITIONS = [
   { value: 1, label: "Like New", desc: "Looks great in there. Regular upkeep is all it needs." },
@@ -112,7 +115,9 @@ function concernLabel(id: ConcernId) {
 }
 
 export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string }) {
-  const [vehicle, setVehicle] = useState<RecommenderVehicle | null>(null);
+  const { vehicle: siteVehicle, selectVehicle: selectSiteVehicle, openPicker } = useVehicle();
+  const { setServiceIntent } = useJourney();
+  const [vehicle, setVehicle] = useState<RecommenderVehicle | null>(() => siteVehicle?.make && siteVehicle?.model ? { make: siteVehicle.make, model: siteVehicle.model, vehicle: siteVehicle.vehicle } : null);
   const [search, setSearch] = useState("");
   const [condition, setCondition] = useState<number | null>(null);
   const [concerns, setConcerns] = useState<Set<ConcernId>>(new Set());
@@ -141,6 +146,12 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     setSessionId(id);
   }, []);
 
+  useEffect(() => {
+    if (!siteVehicle?.make || !siteVehicle?.model) return;
+    setVehicle({ make: siteVehicle.make, model: siteVehicle.model, vehicle: siteVehicle.vehicle });
+    setSearch("");
+  }, [siteVehicle]);
+
   async function recordBehavior(stage: string, extra: Record<string, unknown> = {}) {
     const id = sessionId || sessionStorage.getItem("ed_quote_session_id");
     if (!id) return;
@@ -153,14 +164,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     track("quote_start", { location: "recommender" });
   };
 
-  const matches = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    const vehicleQuery = query.replace(/\b(?:19|20)\d{2}\b/g, "").replace(/\s+/g, " ").trim();
-    if (vehicleQuery.length < 2 || vehicle) return [];
-    return recommenderVehicles
-      .filter((item) => `${item.make} ${item.model}`.toLowerCase().includes(vehicleQuery) || item.make.toLowerCase().startsWith(vehicleQuery) || item.model.toLowerCase().startsWith(vehicleQuery))
-      .slice(0, 10);
-  }, [search, vehicle]);
+  const matches = useMemo(() => vehicle ? [] : vehicleMatches(search, 10), [search, vehicle]);
 
   const activeService = service && vehicle ? services[service] : null;
   const selectedCondition = condition ? CONDITIONS.find((item) => item.value === condition) ?? null : null;
@@ -184,7 +188,11 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
   function selectVehicle(item: RecommenderVehicle) {
     start();
-    setVehicle(item);
+    const selectedYear = yearFromVehicleQuery(search);
+    const pricedVehicle = vehicleClassForYear(item, selectedYear);
+    const selectedItem = { ...item, vehicle: pricedVehicle };
+    setVehicle(selectedItem);
+    selectSiteVehicle({ make: item.make, model: item.model, year: selectedYear || undefined, vehicle: pricedVehicle });
     setSearch("");
     setCondition(null);
     setConcerns(new Set());
@@ -196,11 +204,15 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     start();
     setCondition(value);
     setResult(null);
+    setService(null);
+    setServiceIntent(null);
   }
 
   function toggleConcern(id: ConcernId) {
     start();
     setResult(null);
+    setService(null);
+    setServiceIntent(null);
     setConcerns((current) => {
       const next = new Set(current);
       if (next.has(id)) next.delete(id);
@@ -214,6 +226,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     const next = recommendation(condition, concerns);
     setResult(next);
     setService(next.service);
+    setServiceIntent(next.service);
     setCheckedAddons(new Set(next.addons.filter((item) => item.recommended).map((item) => item.id)));
     const initialPaint = defaultInterest === "ceramic"
       ? new Set<PaintUpgradeId>(["ceramic"])
@@ -232,6 +245,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
   function applyUpgrade() {
     if (!result?.upgradeService) return;
     setService(result.upgradeService);
+    setServiceIntent(result.upgradeService);
     setResult({ ...result, upgradeService: null, upgradeMessage: null });
     if (sent) setQuoteDirty(true);
   }
@@ -274,12 +288,12 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     setSending(false);
     setSent(false);
     setDesiredTiming(null);
+    setServiceIntent(null);
   }
 
   function selectedBookingHref() {
     if (!vehicle || !service || !result) return "/book";
     const q = new URLSearchParams();
-    q.set("vehicle", vehicle.vehicle);
     q.set("service", service);
     const addonIds = result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.id);
     if (addonIds.length) q.set("addons", addonIds.join(","));
@@ -288,6 +302,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     if (desiredTiming) q.set("timing", desiredTiming);
     return `/book?${q.toString()}`;
   }
+
 
   async function sendBuild() {
     if (!vehicle || !condition || !service || !result) return;
@@ -366,12 +381,12 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     ] as const;
 
     const timingCopy = desiredTiming === "asap"
-      ? { eyebrow: "Let's get it handled", title: `Let's find the earliest fit for your ${vehicle.model}.`, body: "We'll save this recommendation and take you straight to the best available openings.", cta: "Find my earliest opening ↗" }
+      ? { eyebrow: "Let's get it handled", title: `Let's find the earliest fit for your ${vehicle.model}.`, body: "See the earliest openings.", cta: "Find my earliest opening ↗" }
       : desiredTiming === "weekend"
-        ? { eyebrow: "Weekend works", title: `Let's see what works for your ${vehicle.model} this weekend.`, body: "We'll keep your recommendation together and show you the weekend options that fit it.", cta: "Check weekend openings ↗" }
+        ? { eyebrow: "Weekend works", title: `Let's see what works for your ${vehicle.model} this weekend.`, body: "See the weekend openings.", cta: "Check weekend openings ↗" }
         : desiredTiming === "next_week"
-          ? { eyebrow: "Planning ahead", title: `We'll find a good time for your ${vehicle.model} next week.`, body: "A little flexibility usually gives you more choice. Save the build and we'll show you matching openings.", cta: "See next week's openings ↗" }
-          : { eyebrow: "No pressure", title: `Want to keep this ${vehicle.model} recommendation?`, body: "Save the service and price so you can come back without rebuilding everything when you're ready.", cta: `Save my ${totalDisplay} recommendation ↗` };
+          ? { eyebrow: "Planning ahead", title: `We'll find a good time for your ${vehicle.model} next week.`, body: "See next week's openings.", cta: "See next week's openings ↗" }
+          : { eyebrow: "No pressure", title: `Want to keep this ${vehicle.model} recommendation?`, body: "Keep this recommendation for later.", cta: `Save my ${totalDisplay} recommendation ↗` };
 
     const personalReason = concerns.has("selling")
       ? `Since you're getting the ${vehicle.model} ready to sell, we built this around presentation and value instead of adding work that will not meaningfully help.`
@@ -411,7 +426,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
             <div className="quote-rec-intent-context">
               <p className="eyebrow">NEXT STEP</p>
               <h2>When do you want it done?</h2>
-              <p>We&rsquo;ll shape the next step around your timing. You can also save this recommendation without booking.</p>
+
               <div className="quote-rec-mini-summary">
                 <span>{vehicleName}</span>
                 <span>{conditionLabel} condition</span>
@@ -425,7 +440,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
                   <span><strong>{item.label}</strong><small>{item.sub}</small></span><b>→</b>
                 </button>
               ))}
-              <p className="quote-rec-intent-note">No payment required to see availability.</p>
+              <p className="quote-rec-intent-note">No payment required.</p>
             </div>
           </section>
         </div>
@@ -442,13 +457,13 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       ? {
           kicker: "Save it for later",
           title: firstName ? `Nice to meet you, ${firstName}.` : `Want us to save this for you?`,
-          body: `We'll keep your ${vehicle.model}, ${activeService.name}, and ${totalDisplay} quote together so you can pick it back up whenever you're ready.`,
+          body: `${activeService.name} · ${totalDisplay} for your ${vehicle.model}.`,
           cta: `Save my recommendation ↗`,
         }
       : {
           kicker: desiredTiming === "asap" ? "Let's find a spot" : desiredTiming === "weekend" ? "Let's check the weekend" : "Let's plan next week",
           title: firstName ? `Perfect, ${firstName}. Let's find a time.` : `Want to see the openings that fit?`,
-          body: `Your ${vehicle.model} and ${totalDisplay} recommendation are ready. Tell us where to send the booking options and we'll carry everything forward.`,
+          body: `${activeService.name} · ${totalDisplay} for your ${vehicle.model}.`,
           cta: desiredTiming === "asap" ? "Show my earliest openings ↗" : desiredTiming === "weekend" ? "Show weekend openings ↗" : "Show next week's openings ↗",
         };
 
@@ -515,7 +530,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
               <div>
                 <span>{firstName ? `You're set, ${firstName}` : "Saved"}</span>
                 <h3>{desiredTiming === "exploring" ? `Your ${vehicle.model} recommendation is saved.` : `Your recommendation is saved. Now pick the time.`}</h3>
-                <p>{desiredTiming === "exploring" ? "Nothing else you need to do. You can check openings whenever you're ready." : `We'll carry your ${vehicle.model}, ${activeService.name}, ${totalDisplay} price, and contact info into booking.`}</p>
+                <p>{desiredTiming === "exploring" ? "Check openings whenever you&rsquo;re ready." : `${vehicle.model} · ${activeService.name} · ${totalDisplay}`}</p>
               </div>
               <div className="quote-rec-book-actions">
                 <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>{customizeExpanded ? "Hide options ↑" : "Customize detail +"}</button>
@@ -537,7 +552,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
             {customizeExpanded && (
               <section className="quote-rec-customize-panel">
-                <div className="quote-rec-options-head"><div><p className="eyebrow">Optional</p><h3>Customize your saved quote</h3></div><span>Changes stay with this recommendation</span></div>
+                <div className="quote-rec-options-head"><div><p className="eyebrow">Optional</p><h3>Customize your detail</h3></div></div>
                 {result.upgradeMessage && result.upgradeService && <button type="button" className="quote-rec-upgrade" onClick={applyUpgrade}><span>Consider upgrading</span><strong>{result.upgradeMessage}</strong><b>Upgrade to {services[result.upgradeService].name} ↗</b></button>}
                 {result.addons.length > 0 && <div className="quote-rec-customize-group"><h4>Add-ons</h4><div className="quote-rec-addon-list">{result.addons.map((addon) => { const checked = checkedAddons.has(addon.id); return <button key={addon.id} type="button" className={`quote-rec-addon ${checked ? "is-selected" : ""}`} onClick={() => toggleAddon(addon.id)} aria-pressed={checked}><span className="quote-rec-check">{checked ? "✓" : ""}</span><strong>{addon.name}</strong>{addon.recommended && <small>Recommended</small>}<b>{addon.price}</b></button>; })}</div></div>}
                 <div className="quote-rec-customize-group"><h4>Paint correction + protection</h4><div className="quote-rec-paint-grid">{(Object.keys(PAINT_UPGRADES) as PaintUpgradeId[]).map((id) => { const item = PAINT_UPGRADES[id]; const selected = paint.has(id); return <button key={id} type="button" className={`quote-rec-paint-card ${selected ? "is-selected" : ""}`} onClick={() => togglePaint(id)} aria-pressed={selected}><span>{item.tag}</span><strong>{item.name}</strong><b>${item.prices[vehicle.vehicle]}</b><p>{item.why}</p></button>; })}</div></div>
@@ -566,7 +581,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
             <div className="q51-step-body">
               <p className="q51-step-label">01 / YOUR VEHICLE</p>
               <h2>What are you driving?</h2>
-              <p className="q51-step-help">Search the make or model. We&rsquo;ll handle the vehicle class and pricing.</p>
+              <p className="q51-step-help">Search the make or model.</p>
               <div className="quote-rec-search-wrap q51-search-wrap">
                 <input className="field quote-rec-search q51-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Try RAV4, Ram 2500, Model Y..." autoComplete="off" aria-label="Search vehicle make or model" autoFocus />
                 {search.trim().length >= 2 && (
@@ -588,7 +603,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
             <div className="q51-step-body">
               <p className="q51-step-label">02 / CURRENT CONDITION</p>
               <h2>What shape is it in?</h2>
-              <p className="q51-step-help">Pick the closest match. This is about scope, not judging the car.</p>
+              <p className="q51-step-help">Pick the closest match.</p>
               <div className="quote-rec-condition-grid q51-condition-grid">
                 {CONDITIONS.map((item, index) => (
                   <button key={item.value} type="button" className={condition === item.value ? "is-selected" : ""} onClick={() => chooseCondition(item.value)} aria-pressed={condition === item.value}>
@@ -605,7 +620,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
             <div className="q51-step-body">
               <p className="q51-step-label">03 / SPECIFIC ISSUES</p>
               <h2>Anything bothering you?</h2>
-              <p className="q51-step-help">Optional. Choose everything that applies, or go straight to your recommendation.</p>
+              <p className="q51-step-help">Optional. Choose anything that applies.</p>
               <div className="quote-rec-concern-grid q51-concern-grid">
                 {CONCERNS.map((item) => {
                   const selected = concerns.has(item.id);
@@ -625,17 +640,17 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       </div>
 
       <aside className="q51-snapshot q53-snapshot" aria-label="Your quote inputs">
-        <p className="q51-snapshot-title">What we know</p>
+        <p className="q51-snapshot-title">Your car</p>
         <div className={vehicle ? "is-filled" : ""}>
           <span>Vehicle</span><strong>{vehicle ? `${vehicle.make} ${vehicle.model}` : "Not set yet"}</strong>{vehicle && <small>{vehicleLabel(vehicle.vehicle)}</small>}
-          {vehicle && <button type="button" onClick={() => { setVehicle(null); setSearch(""); setCondition(null); setConcerns(new Set()); setResult(null); setService(null); }}>Change</button>}
+          {vehicle && <button type="button" onClick={openPicker}>Change vehicle</button>}
         </div>
         <div className={condition ? "is-filled" : ""}>
           <span>Condition</span><strong>{selectedCondition?.label ?? "Not set yet"}</strong>
           {condition && <button type="button" onClick={() => { setCondition(null); setConcerns(new Set()); setResult(null); setService(null); }}>Change</button>}
         </div>
         <div className={concerns.size ? "is-filled" : ""}><span>Issues</span><strong>{concerns.size ? [...concerns].map(concernLabel).join(", ") : "None selected"}</strong></div>
-        <div className="q51-snapshot-foot"><b>{condition ? "READY" : vehicle ? "ONE MORE STEP" : "3 QUICK QUESTIONS"}</b><span>Then we show your service + exact vehicle price.</span></div>
+
       </aside>
     </div>
   );

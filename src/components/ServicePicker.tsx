@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
 import { bookingHref } from "@/data/booking";
 import { PRICING, serviceList, vehicles, type VehicleId } from "@/data/services";
 import { track } from "@/lib/analytics";
@@ -17,8 +18,10 @@ type Props = {
  * Server-rendered with Sedan selected, so every service, inclusion and price is in the HTML.
  */
 export function ServicePicker({ location, headingId }: Props) {
+  const { vehicle: siteVehicle, hydrated: siteVehicleHydrated, openPicker } = useVehicle();
   const [vehicle, setVehicle] = useState<VehicleId>("sedan");
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
+  useEffect(() => { if (siteVehicleHydrated && siteVehicle) setVehicle(siteVehicle.vehicle); }, [siteVehicleHydrated, siteVehicle]);
   const activeIndex = vehicles.findIndex((v) => v.id === vehicle);
 
   const choose = (id: VehicleId) => {
@@ -35,11 +38,14 @@ export function ServicePicker({ location, headingId }: Props) {
     refs.current[next]?.focus();
   };
 
-  const vehicleLabel = vehicles[activeIndex].label;
+  const vehicleLabel = siteVehicle ? siteVehicleLabel(siteVehicle) : vehicles[activeIndex].label;
 
   return (
     <div>
-      <div
+      {siteVehicle ? (
+        <div className="svc64-picker-vehicle"><span>PRICING FOR</span><strong>{siteVehicleLabel(siteVehicle)}</strong><button type="button" onClick={openPicker}>Change vehicle</button></div>
+      ) : null}
+      {!siteVehicle && <div
         role="radiogroup"
         aria-labelledby={headingId}
         onKeyDown={onKey}
@@ -62,7 +68,7 @@ export function ServicePicker({ location, headingId }: Props) {
             <span className="mt-0.5 text-sm leading-snug text-muted">{v.hint}</span>
           </button>
         ))}
-      </div>
+      </div>}
 
       <p className="sr-only" aria-live="polite">
         Showing prices for {vehicleLabel}

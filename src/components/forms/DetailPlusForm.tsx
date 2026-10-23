@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
+import { useJourney } from "@/components/journey/JourneyContext";
 import { coverages, frequencies } from "@/data/detailplus";
 import { vehicles } from "@/data/services";
 import { site } from "@/data/site";
@@ -19,6 +21,8 @@ const cadenceLabel = (id: string, customWeeks: number) => {
 };
 
 export function DetailPlusForm() {
+  const { vehicle: siteVehicle, hydrated: siteVehicleHydrated, openPicker } = useVehicle();
+  const { setServiceIntent } = useJourney();
   const [freq, setFreq] = useState<string>("monthly");
   const [customWeeks, setCustomWeeks] = useState(8);
   const [coverage, setCoverage] = useState<string>("full");
@@ -28,11 +32,16 @@ export function DetailPlusForm() {
   const [invalid, setInvalid] = useState<string[]>([]);
   const started = useRef(false);
 
+  useEffect(() => {
+    if (siteVehicleHydrated && siteVehicle) setVehicle(siteVehicle.vehicle);
+  }, [siteVehicleHydrated, siteVehicle]);
+
   const weeks = cadenceWeeks(freq, customWeeks);
   const displayFrequency = cadenceLabel(freq, customWeeks);
   const coverageLabel = coverages.find((item) => item.id === coverage)?.label ?? "";
-  const vehicleLabel = vehicles.find((item) => item.id === vehicle)?.label ?? "";
-  const summary = `${displayFrequency} · ${coverageLabel.toLowerCase()} · ${vehicleLabel.toLowerCase()}`;
+  const vehicleTypeLabel = vehicles.find((item) => item.id === vehicle)?.label ?? "";
+  const displayVehicle = siteVehicle ? siteVehicleLabel(siteVehicle) : vehicleTypeLabel;
+  const summary = `${displayFrequency} · ${coverageLabel.toLowerCase()} · ${displayVehicle.toLowerCase()}`;
 
   const cycleMarks = useMemo(() => {
     return Array.from({ length: 13 }, (_, index) => {
@@ -44,6 +53,7 @@ export function DetailPlusForm() {
   const touch = () => {
     if (started.current) return;
     started.current = true;
+    setServiceIntent("detailplus");
     track("detailplus_start");
   };
 
@@ -92,7 +102,7 @@ export function DetailPlusForm() {
       <input type="hidden" name="frequency" value={displayFrequency} />
       <input type="hidden" name="custom_weeks" value={freq === "custom" ? String(customWeeks) : ""} />
       <input type="hidden" name="coverage" value={coverageLabel} />
-      <input type="hidden" name="vehicle" value={vehicleLabel} />
+      <input type="hidden" name="vehicle" value={displayVehicle} />
 
       <div className="dp56-builder-grid">
         <div className="dp56-builder-controls">
@@ -166,11 +176,18 @@ export function DetailPlusForm() {
 
             <fieldset>
               <legend>03 / YOUR VEHICLE</legend>
-              <div className="dp56-vehicle-select-wrap">
-                <select value={vehicle} onChange={(event) => setVehicle(event.target.value)} aria-label="Vehicle type">
-                  {vehicles.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
-                </select>
-              </div>
+              {siteVehicle ? (
+                <button type="button" className="dp64-selected-vehicle" onClick={openPicker}>
+                  <strong>{siteVehicleLabel(siteVehicle)}</strong><span>{vehicleTypeLabel} · Change vehicle</span>
+                </button>
+              ) : (
+                <div className="dp56-vehicle-select-wrap">
+                  <select value={vehicle} onChange={(event) => setVehicle(event.target.value)} aria-label="Vehicle type">
+                    {vehicles.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
+                  </select>
+                  <button type="button" className="dp64-search-vehicle" onClick={openPicker}>Search exact vehicle</button>
+                </div>
+              )}
             </fieldset>
           </div>
         </div>
@@ -182,7 +199,7 @@ export function DetailPlusForm() {
             <div className="dp56-member-lines">
               <div><span>RHYTHM</span><strong>{displayFrequency}</strong></div>
               <div><span>COVERAGE</span><strong>{coverageLabel}</strong></div>
-              <div><span>VEHICLE</span><strong>{vehicleLabel}</strong></div>
+              <div><span>VEHICLE</span><strong>{displayVehicle}</strong></div>
             </div>
             <div className="dp56-member-stamp">ON<br/>REPEAT</div>
             <small>MEMBER CARD / PLAN PREVIEW</small>

@@ -17,10 +17,10 @@ export default async function QuotePage({ searchParams }: { searchParams: Promis
       <main id="quote-tool" className="q53-tool" tabIndex={-1}>
         <div className="q53-intro">
           <div>
-            <p>PERSONALIZED RECOMMENDATION · REAL PRICE</p>
-            <h1>FIND THE RIGHT DETAIL.</h1>
+            <p>FIND MY DETAIL</p>
+            <h1>WHAT DOES YOUR CAR NEED?</h1>
           </div>
-          <span>3 QUICK QUESTIONS · NO GUESSWORK · NO PAYMENT</span>
+          <span>3 QUICK QUESTIONS</span>
         </div>
         <QuoteRecommender defaultInterest={interest} />
       </main>

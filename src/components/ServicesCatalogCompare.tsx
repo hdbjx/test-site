@@ -1,12 +1,21 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
+import { useJourney } from "@/components/journey/JourneyContext";
 import { TrackedLink } from "./TrackedLink";
 import { catalogPrice, catalogService, catalogServices, type CatalogService, type CatalogServiceId } from "@/data/serviceCatalog";
 import { vehicles, type VehicleId } from "@/data/services";
 import { usd } from "@/lib/format";
 
 const groups = ["Detail", "Paint Care", "Recurring"] as const;
+
+function serviceHref(service: CatalogService, vehicle: VehicleId, hasVehicleContext: boolean) {
+  if (service.category !== "Detail") return service.href;
+  return hasVehicleContext
+    ? `/book?service=${service.id}&from=context`
+    : `/book?service=${service.id}&vehicle=${vehicle}&from=context`;
+}
 
 function ctaFor(service: CatalogService) {
   if (service.category === "Paint Care") return { label: "View Paint Care", event: "paint_inquiry" as const };
@@ -37,14 +46,24 @@ function ServiceSelect({ value, onChange, label }: { value: CatalogServiceId; on
 }
 
 export function ServicesCatalogCompare() {
-  const [vehicle, setVehicle] = useState<VehicleId>("sedan");
-  const [leftId, setLeftId] = useState<CatalogServiceId>("premium");
-  const [rightId, setRightId] = useState<CatalogServiceId>("factoryReset");
+  const { vehicle: siteVehicle, openPicker, selectVehicle } = useVehicle();
+  const { serviceIntent, setServiceIntent } = useJourney();
+  const [fallbackVehicle, setFallbackVehicle] = useState<VehicleId>("sedan");
+  const vehicle = siteVehicle?.vehicle ?? fallbackVehicle;
+  const [leftId, setLeftId] = useState<CatalogServiceId>(serviceIntent ?? "premium");
+  const [rightId, setRightId] = useState<CatalogServiceId>(serviceIntent === "factoryReset" ? "premium" : "factoryReset");
   const [differencesOnly, setDifferencesOnly] = useState(false);
+
+  useEffect(() => {
+    if (!serviceIntent) return;
+    setLeftId(serviceIntent);
+    setRightId((current) => current === serviceIntent ? (serviceIntent === "premium" ? "factoryReset" : "premium") : current);
+  }, [serviceIntent]);
 
   const left = catalogService(leftId);
   const right = catalogService(rightId);
-  const vehicleLabel = vehicles.find((item) => item.id === vehicle)?.label ?? "Sedan";
+  const vehicleTypeLabel = vehicles.find((item) => item.id === vehicle)?.label ?? "Sedan";
+  const displayVehicle = siteVehicle ? siteVehicleLabel(siteVehicle) : vehicleTypeLabel;
 
   const rows = useMemo(() => {
     const all = [
@@ -64,17 +83,26 @@ export function ServicesCatalogCompare() {
       <div className="svc62-vehicle-row">
         <div>
           <span className="svc62-mini-label">YOUR VEHICLE</span>
-          <strong>Prices update together.</strong>
+          <strong>{siteVehicle ? `Pricing for ${siteVehicleLabel(siteVehicle)}` : "Choose a vehicle size"}</strong>
         </div>
-        <label className="svc62-vehicle-select">
-          <span className="sr-only">Vehicle type</span>
-          <select value={vehicle} onChange={(event) => setVehicle(event.target.value as VehicleId)}>
-            {vehicles.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
-          </select>
-        </label>
+        {siteVehicle ? (
+          <button type="button" className="svc64-selected-vehicle" onClick={openPicker}>
+            <span>{siteVehicleLabel(siteVehicle)}</span><small>{vehicleTypeLabel} · Change vehicle</small>
+          </button>
+        ) : (
+          <div className="svc64-fallback-vehicle">
+            <label className="svc62-vehicle-select">
+              <span className="sr-only">Vehicle type</span>
+              <select value={fallbackVehicle} onChange={(event) => { const next = event.target.value as VehicleId; setFallbackVehicle(next); const label = vehicles.find((item) => item.id === next)?.label ?? "Vehicle"; selectVehicle({ make: "", model: "", vehicle: next, customLabel: label }, false); }}>
+                {vehicles.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+              </select>
+            </label>
+            <button type="button" onClick={openPicker}>Search exact vehicle</button>
+          </div>
+        )}
       </div>
 
-      <div className="svc62-service-list" aria-label={`Every Detail services and prices for ${vehicleLabel}`}>
+      <div className="svc62-service-list" aria-label={`Every Detail services and prices for ${displayVehicle}`}>
         {groups.map((group) => (
           <section key={group} className="svc62-service-group">
             <div className="svc62-group-name"><span>{group}</span></div>
@@ -89,14 +117,15 @@ export function ServicesCatalogCompare() {
                     </div>
                     <p>{service.short}</p>
                     <div className="svc62-service-price">
-                      <small>{service.id === "detailplus" ? "RATE" : vehicleLabel.toUpperCase()}</small>
+                      <small>{service.id === "detailplus" ? "RATE" : vehicleTypeLabel.toUpperCase()}</small>
                       <strong>{priceText(service.id, vehicle)}</strong>
                     </div>
                     <TrackedLink
-                      href={service.href}
+                      href={serviceHref(service, vehicle, !!siteVehicle)}
                       event={cta.event}
                       params={{ location: "services_all", service: service.id, vehicle }}
                       className="svc62-service-link"
+                      onClick={() => setServiceIntent(service.id)}
                     >
                       {cta.label} <span>↗</span>
                     </TrackedLink>
@@ -114,7 +143,7 @@ export function ServicesCatalogCompare() {
             <span className="svc62-mini-label">COMPARE</span>
             <h3>PUT TWO<br /><em>SIDE BY SIDE.</em></h3>
           </div>
-          <p>Pick any two services. We will show the meaningful differences for the same vehicle, including the exact listed price when the service has one.</p>
+          <p>See the differences in price, depth, correction and protection.</p>
         </div>
 
         <div className="svc62-compare-controls">
@@ -124,7 +153,7 @@ export function ServicesCatalogCompare() {
         </div>
 
         <div className="svc62-compare-actions">
-          <span>Showing {vehicleLabel} pricing</span>
+          <span>Showing {displayVehicle} pricing</span>
           <label className="svc62-diff-toggle">
             <input type="checkbox" checked={differencesOnly} onChange={(event) => setDifferencesOnly(event.target.checked)} />
             <span className="svc62-switch" aria-hidden="true"><i /></span>
@@ -142,8 +171,8 @@ export function ServicesCatalogCompare() {
                   <span>{service.categoryLabel}</span>
                   <h4>{service.name}</h4>
                   <strong>{priceText(service.id, vehicle)}</strong>
-                  <small>{service.id === "detailplus" ? "Plan-based rate" : `for ${vehicleLabel}`}</small>
-                  <TrackedLink href={service.href} event={cta.event} params={{ location: "services_compare", service: service.id, vehicle }}>
+                  <small>{service.id === "detailplus" ? "Plan-based rate" : `for ${displayVehicle}`}</small>
+                  <TrackedLink href={serviceHref(service, vehicle, !!siteVehicle)} event={cta.event} params={{ location: "services_compare", service: service.id, vehicle }} onClick={() => setServiceIntent(service.id)}>
                     {cta.label} <span>↗</span>
                   </TrackedLink>
                 </div>

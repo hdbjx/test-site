@@ -2,6 +2,8 @@
 
 import { FormEvent, useState } from "react";
 import { submitLead } from "@/lib/submit";
+import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
+import { useJourney } from "@/components/journey/JourneyContext";
 
 type Kind = "paint-correction" | "ceramic" | "paint-care";
 
@@ -32,6 +34,8 @@ const COPY = {
 } as const;
 
 export function PaintLeadForm({ kind }: Props) {
+  const { vehicle, openPicker } = useVehicle();
+  const { setServiceIntent } = useJourney();
   const copy = COPY[kind];
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [error, setError] = useState("");
@@ -54,6 +58,14 @@ export function PaintLeadForm({ kind }: Props) {
     const context = kind === "paint-correction"
       ? `Paint concern: ${concern || "Not specified"}${notes ? `\nAdditional notes: ${notes}` : ""}`
       : `Paint condition: ${paintCondition || "Not specified"}${notes ? `\nAdditional notes: ${notes}` : ""}`;
+
+    const inferredService = kind === "paint-correction" ? "correction"
+      : kind === "ceramic" ? "ceramic2yr"
+      : paintCondition.startsWith("Mostly clean") ? "ceramic2yr"
+      : paintCondition.startsWith("Dull") ? "enhancement"
+      : paintCondition.startsWith("Visible") ? "correction"
+      : null;
+    if (inferredService) setServiceIntent(inferredService);
 
     const result = await submitLead({
       type: "quote",
@@ -111,10 +123,18 @@ export function PaintLeadForm({ kind }: Props) {
 
           <label><span>Email</span><input name="email" type="email" autoComplete="email" required placeholder="you@example.com" /></label>
 
-          <div className="paint-field-grid">
-            <label><span>Make</span><input name="vehicleMake" autoComplete="off" required placeholder="BMW" /></label>
-            <label><span>Model</span><input name="vehicleModel" autoComplete="off" required placeholder="X5" /></label>
-          </div>
+          {vehicle ? (
+            <div className="paint-site-vehicle">
+              <input type="hidden" name="vehicleMake" value={vehicle.make} />
+              <input type="hidden" name="vehicleModel" value={vehicle.model} />
+              <span>Vehicle</span><strong>{siteVehicleLabel(vehicle)}</strong><button type="button" onClick={openPicker}>Change</button>
+            </div>
+          ) : (
+            <div className="paint-field-grid">
+              <label><span>Make</span><input name="vehicleMake" autoComplete="off" required placeholder="BMW" /></label>
+              <label><span>Model</span><input name="vehicleModel" autoComplete="off" required placeholder="X5" /></label>
+            </div>
+          )}
 
           <fieldset className="paint-choice-field">
             <legend>Which sounds closest?</legend>
@@ -140,7 +160,7 @@ export function PaintLeadForm({ kind }: Props) {
         <p className="eyebrow">{copy.eyebrow}</p>
         <h2>{copy.title}</h2>
         <p>{copy.body}</p>
-        <div className="paint-lead-meta"><span>Reviewed by our team</span><span>No obligation</span><span>No generic package push</span></div>
+        <div className="paint-lead-meta"><span>Paint correction included</span><span>2-year ceramic protection</span></div>
       </div>
 
       <form className="paint-lead-form" onSubmit={onSubmit}>
@@ -150,10 +170,18 @@ export function PaintLeadForm({ kind }: Props) {
           <label><span>Best number to reach you</span><input name="phone" type="tel" autoComplete="tel" inputMode="tel" required placeholder="(404) 555-0123" /></label>
         </div>
         <label><span>Email</span><input name="email" type="email" autoComplete="email" required placeholder="you@example.com" /></label>
-        <div className="paint-field-grid">
-          <label><span>What do you drive?</span><input name="vehicleMake" autoComplete="off" required placeholder="Toyota" /></label>
-          <label><span>Model</span><input name="vehicleModel" autoComplete="off" required placeholder="4Runner" /></label>
-        </div>
+        {vehicle ? (
+          <div className="paint-site-vehicle">
+            <input type="hidden" name="vehicleMake" value={vehicle.make} />
+            <input type="hidden" name="vehicleModel" value={vehicle.model} />
+            <span>Vehicle</span><strong>{siteVehicleLabel(vehicle)}</strong><button type="button" onClick={openPicker}>Change</button>
+          </div>
+        ) : (
+          <div className="paint-field-grid">
+            <label><span>What do you drive?</span><input name="vehicleMake" autoComplete="off" required placeholder="Toyota" /></label>
+            <label><span>Model</span><input name="vehicleModel" autoComplete="off" required placeholder="4Runner" /></label>
+          </div>
+        )}
 
         {kind === "paint-correction" ? (
           <fieldset className="paint-choice-field"><legend>What bothers you most about the paint?</legend><div className="paint-choice-grid">{["Swirls / wash marks","Light scratches","Dull or hazy paint","Water spots / etching","Not sure yet"].map((option) => <label className="paint-choice" key={option}><input type="radio" name="concern" value={option} required /><span>{option}</span></label>)}</div></fieldset>
@@ -164,7 +192,7 @@ export function PaintLeadForm({ kind }: Props) {
         <label><span>{kind === "paint-correction" ? "Anything you want us to know?" : "Anything else we should know?"} <em>Optional</em></span><textarea name="notes" rows={4} placeholder={kind === "paint-correction" ? "Tell us where you notice it most, or what you want the paint to look like again." : "Tell us how you use the car, what you want from the coating, or anything else that would help."} /></label>
         {status === "error" && <p className="paint-lead-error" role="alert">{error}</p>}
         <button className="btn btn-primary paint-lead-submit" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : copy.submit}</button>
-        <p className="paint-lead-fine">No instant sales pitch. We’ll review this and follow up with a recommendation that fits your car.</p>
+        <p className="paint-lead-fine">We’ll review the paint condition and confirm the prep your car needs before coating.</p>
       </form>
     </div>
   );

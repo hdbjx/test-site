@@ -5,6 +5,7 @@ import { CurvedTape } from "@/components/CurvedTape";
 import { AnimatedReviewCount } from "@/components/GoogleReviewStats";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
+import { PersonalizedHeroTitle } from "@/components/PersonalizedHeroTitle";
 import { reviews } from "@/data/reviews";
 import { reviewCountLabel } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
@@ -41,10 +42,7 @@ export default function Home() {
         <div className="v29-hero-shade" aria-hidden="true" />
         <div className="v30-hero-focus" aria-hidden="true" />
         <div className="v29-shell v29-hero-inner">
-          <h1 id="v29-hero-title" className="v29-hero-title v43-hero-title" data-v29-hero-type>
-            <span>YOUR CAR.</span>
-            <span>BACK TO ITS BEST.</span>
-          </h1>
+          <PersonalizedHeroTitle />
           <div className="v54-hero-actions" aria-label="Homepage actions">
             <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_hero" }} className="v29-hero-cta" data-v29-magnetic>Book a detail <span>↗</span></TrackedLink>
             <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "home_v29_hero" }} className="v54-hero-quote" data-v29-magnetic>Find my detail <span>↗</span></TrackedLink>
@@ -93,7 +91,6 @@ export default function Home() {
             <span className="v37-story-photo v37-story-photo-a" data-v29-fly="a" data-v41-drag><Photo id="about-team" sizes="(max-width: 900px) 86vw, 34vw" fill /></span>
             <span className="v37-story-photo v37-story-photo-b" data-v29-fly="b" data-v41-drag><Photo id="hq-branded-van-side" sizes="(max-width: 900px) 70vw, 26vw" fill /></span>
             <span className="v37-story-photo v37-story-photo-c" data-v29-fly="c" data-v41-drag><Photo id="team-tablet" sizes="(max-width: 900px) 52vw, 18vw" fill /></span>
-            <span className="v41-drag-hint" aria-hidden="true">DRAG THE PHOTOS</span>
           </div>
 
         </div>

@@ -92,7 +92,7 @@ export default function ServicesPage() {
               <div className="svc61-hero-copy">
                 <p className="svc61-kicker">MOBILE DETAILING / DECATUR, GA</p>
                 <h1>THE RIGHT DETAIL.<br /><span>WITHOUT THE GUESSWORK.</span></h1>
-                <p className="svc61-lede">Three core details cover almost every car we see. Start with the condition of yours, then see the exact price for your vehicle.</p>
+                <p className="svc61-lede">Maintenance, deep cleaning, paint care, and recurring service, brought to your driveway.</p>
                 <div className="svc61-hero-actions">
                   <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_hero" }} className="svc61-btn svc61-btn-primary">Find my detail <span>↗</span></TrackedLink>
                   <TrackedLink href="/book" event="book_click" params={{ location: "services_hero" }} className="svc61-btn svc61-btn-secondary">Book now <span>↗</span></TrackedLink>
@@ -120,7 +120,7 @@ export default function ServicesPage() {
                 <p className="svc61-kicker">START WITH THE CONDITION</p>
                 <h2 id="svc61-core-title">HOW FAR BEHIND<br /><span>IS THE CAR?</span></h2>
               </div>
-              <p>You do not need to understand detailing terminology. Pick the description that sounds closest. If you are between two, the quote tool will narrow it down.</p>
+              <p>Pick the condition that sounds closest.</p>
             </div>
 
             <div className="svc61-core-grid">
@@ -144,7 +144,7 @@ export default function ServicesPage() {
             </div>
 
             <div className="svc61-unsure">
-              <div><span>NOT SURE?</span><strong>Tell us what the car is like. We will pick the level.</strong></div>
+              <div><span>NOT SURE?</span><strong>Tell us what the car is like.</strong></div>
               <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_core_unsure" }} className="svc61-inline-link">Find my detail <span>↗</span></TrackedLink>
             </div>
           </div>
@@ -159,7 +159,7 @@ export default function ServicesPage() {
                   <br /><span>ONE PLACE.</span>
                 </h2>
               </div>
-              <p>Choose your vehicle once, see the listed price across the lineup, then compare any two services below. Detail+ uses a plan-based rate because cadence and coverage are built around the car.</p>
+              <p>See every current service and the price for your vehicle.</p>
             </div>
             <ServicesCatalogCompare />
           </div>
@@ -187,7 +187,7 @@ export default function ServicesPage() {
             <div>
               <p className="svc61-kicker">QUICK ANSWERS</p>
               <h2>SERVICE<br />QUESTIONS.</h2>
-              <p>The things people usually need to know before choosing a detail.</p>
+
             </div>
             <FaqList faqs={homeFaqs.slice(0, 6)} />
           </div>
@@ -197,7 +197,7 @@ export default function ServicesPage() {
       <CtaBand
         location="services_final"
         title="Know what your car needs?"
-        body="Book it directly. If you are still between services, answer three quick questions and we will point you to the right one."
+        body="Book it directly, or let us recommend the right level."
         quoteLabel="Find my detail"
       />
       <JsonLd data={schemas} />

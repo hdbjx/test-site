@@ -73,7 +73,7 @@ export function InfoForm() {
   if (status === "sent") {
     return (
       <Success title="You're all set">
-        <p>We saved your information. Our team can now book your detail without asking you for it again.</p>
+        <p>We have what we need to book your detail.</p>
       </Success>
     );
   }

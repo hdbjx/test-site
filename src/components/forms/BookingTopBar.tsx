@@ -1,12 +1,16 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/data/site";
+import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
 
 export const BOOKING_STAGES = ["Detail", "Car", "Schedule", "Confirm"] as const;
 const MOBILE_LABELS = ["Your detail", "Your vehicle", "Time + place", "Confirm"];
 
 /** Compact funnel header: logo, title, text-us link, and a 4-stage progress rail. */
 export function BookingTopBar({ stage = -1 }: { stage?: number }) {
+  const { vehicle, openPicker } = useVehicle();
   const showProgress = stage >= 0;
   const pct = showProgress ? ((stage + 1) / BOOKING_STAGES.length) * 100 : 0;
   return (
@@ -17,9 +21,12 @@ export function BookingTopBar({ stage = -1 }: { stage?: number }) {
           <Image src="/brand/every-detail-logo.png" alt="" width={120} height={120} priority />
         </Link>
         <p className="bk-top-title">Book your detail</p>
-        <a href={site.phone.sms} className="bk-top-help">
-          <span className="bk-top-help-long">Need help? </span>Text us <span aria-hidden="true">↗</span>
-        </a>
+        <div className="bk-top-actions">
+          <button type="button" className="bk-top-vehicle" onClick={openPicker}>{vehicle ? siteVehicleLabel(vehicle) : "+ Vehicle"}</button>
+          <a href={site.phone.sms} className="bk-top-help">
+            <span className="bk-top-help-long">Need help? </span>Text us <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </div>
       {showProgress && (
         <>

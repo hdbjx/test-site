@@ -107,8 +107,7 @@ export default function GiftCardsPage() {
           </div>
           <div>
             <p>
-              Purchased gift-card value and rewards stay separate behind the scenes, but the website
-              and app can surface both in one clean available credit area at checkout.
+              Gift-card and reward balances stay separate, but both are available to use when you check out.
             </p>
             <div className="gift-rewards-actions">
               <Link href="/account" className="btn btn-secondary">Open your account ↗</Link>

@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { paintServices } from "@/data/paint";
+import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
+import { useJourney } from "@/components/journey/JourneyContext";
+import { PAINT_PRICING, paintServices } from "@/data/paint";
 import { usd } from "@/lib/format";
 
 const OPTIONS = [
@@ -51,9 +53,13 @@ const OPTIONS = [
 type OptionId = (typeof OPTIONS)[number]["id"];
 
 export function PaintPlanBuilder() {
-  const [selected, setSelected] = useState<OptionId>("swirls");
+  const { vehicle, openPicker } = useVehicle();
+  const { serviceIntent, setServiceIntent } = useJourney();
+  const initialOption: OptionId = serviceIntent === "ceramic2yr" ? "protect" : serviceIntent === "enhancement" ? "dull" : serviceIntent === "correction" ? "swirls" : "swirls";
+  const [selected, setSelected] = useState<OptionId>(initialOption);
   const option = OPTIONS.find((item) => item.id === selected) ?? OPTIONS[2];
   const service = paintServices.find((item) => item.id === option.service) ?? paintServices[1];
+  const personalizedPrice = vehicle ? PAINT_PRICING[vehicle.vehicle][service.id] : service.startingAt;
 
   return (
     <div className="pl57-plan-builder">
@@ -67,7 +73,7 @@ export function PaintPlanBuilder() {
               aria-checked={on}
               key={item.id}
               className={`pl57-plan-option ${on ? "is-on" : ""}`}
-              onClick={() => setSelected(item.id)}
+              onClick={() => { setSelected(item.id); setServiceIntent(item.service); }}
             >
               <span className="pl57-plan-no">{item.number}</span>
               <span className="pl57-plan-label">{item.label}</span>
@@ -89,12 +95,13 @@ export function PaintPlanBuilder() {
         </div>
         <p>{option.reason}</p>
         <div className="pl57-plan-price">
-          <small>starting at</small>
-          <strong>{usd(service.startingAt)}</strong>
+          <small>{vehicle ? `for ${siteVehicleLabel(vehicle)}` : "starting at"}</small>
+          <strong>{usd(personalizedPrice)}</strong>
+          {vehicle ? <button type="button" onClick={openPicker}>Change vehicle</button> : null}
         </div>
         <p className="pl57-plan-fine">Likely starting point only. We confirm the finish before correction begins.</p>
         <div className="pl57-plan-actions">
-          <a href="#paint-quote" className="pl57-primary-btn">ASK ABOUT MY PAINT ↗</a>
+          <a href="#paint-quote" className="pl57-primary-btn" onClick={() => setServiceIntent(service.id)}>ASK ABOUT MY PAINT ↗</a>
           {service.id !== "ceramic2yr" ? <Link href="/paint-correction">See correction details →</Link> : null}
         </div>
       </aside>
