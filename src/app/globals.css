@@ -15580,32 +15580,38 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
    ============================================================ */
 
 @media (max-width: 560px) {
-  /* Shared header: long vehicle names get their own row below the logo/menu.
-     This prevents the context pill from colliding with the centered mark. */
+  /* Shared header: keep the original inline vehicle pill. Long names truncate
+     before they reach the centered logo instead of moving into a second row. */
   .site-context-pill.is-set,
   body:has(.v29-hero) .site-context-pill.is-set {
-    top: max(64px, calc(env(safe-area-inset-top) + 58px)) !important;
+    top: max(14px, calc(env(safe-area-inset-top) + 8px)) !important;
     left: 10px !important;
-    right: 10px !important;
+    right: auto !important;
     width: auto !important;
-    max-width: none !important;
-    min-height: 38px !important;
-    padding: .34rem .58rem .34rem .7rem !important;
+    max-width: calc(50vw - 44px) !important;
+    min-width: 0 !important;
+    min-height: 42px !important;
+    padding: .4rem .5rem .4rem .62rem !important;
+    grid-template-columns: minmax(0,1fr) auto !important;
     grid-template-areas: "main icon" !important;
     grid-template-rows: 1fr !important;
+    column-gap: .42rem !important;
     row-gap: 0 !important;
   }
   .site-context-pill.is-set > span {
-    font-size: .61rem !important;
-    line-height: 1.1 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    overflow: hidden !important;
     white-space: nowrap !important;
     text-overflow: ellipsis !important;
+    font-size: .6rem !important;
+    line-height: 1.05 !important;
   }
   .site-context-pill.is-set > small { display: none !important; }
-  .site-context-pill.is-set > i { font-size: .82rem !important; }
+  .site-context-pill.is-set > i { font-size: .8rem !important; }
 
-  /* Give homepage content enough clearance only when the context row exists. */
-  body:has(.site-context-pill.is-set) .v29-hero-inner { padding-top: 124px !important; }
+  /* Restore the normal phone hero clearance. The vehicle pill is back in-row. */
+  body:has(.site-context-pill.is-set) .v29-hero-inner { padding: 102px 0 72px !important; }
 
   /* Hero actions: identical geometry, no offset shadow making one read lower. */
   .v54-hero-actions {
@@ -15805,8 +15811,11 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
   .site-context-pill.is-set,
   body:has(.v29-hero) .site-context-pill.is-set {
     left: 8px !important;
-    right: 8px !important;
+    right: auto !important;
+    max-width: calc(50vw - 40px) !important;
+    padding-inline: .52rem .42rem !important;
   }
+  .site-context-pill.is-set > span { font-size: .57rem !important; }
   .v15-service-copy strong { font-size: 1.88rem !important; }
   .v15-service:first-child .v15-service-copy strong { font-size: 1.72rem !important; }
   .bk-top-row { grid-template-columns: 34px minmax(0,1fr) minmax(0,7.25rem) !important; }
