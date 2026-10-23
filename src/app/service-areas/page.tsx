@@ -14,48 +14,69 @@ export const metadata = pageMetadata({
 
 export default function ServiceAreas() {
   return (
-    <div className="areas-v2">
-      <section className="areas-v2-hero">
-        <div className="areas-v2-shell areas-v2-hero-grid">
-          <div>
-            <p className="areas-v2-kicker">SERVICE AREA / DECATUR + ATLANTA</p>
-            <h1>The detail shop<br/><span>comes to you.</span></h1>
-            <p className="areas-v2-lede">Based in Decatur, we bring the crew, power, water and equipment to homes across nearby Atlanta neighborhoods.</p>
-            <div className="areas-v2-actions"><Link href="/book" className="btn btn-primary">Check availability ↗</Link><Link href="/get-a-quote" className="areas-v2-text-link">Not sure if we reach you? Get a quote</Link></div>
+    <div className="areas84">
+      <section className="areas84-hero">
+        <div className="areas84-shell areas84-hero-grid">
+          <div className="areas84-copy">
+            <p className="areas84-eyebrow">MOBILE DETAILING / DECATUR + ATLANTA</p>
+            <h1>We come to your driveway.</h1>
+            <p>Every Detail is based in Decatur and serves nearby Atlanta neighborhoods with fully equipped mobile detailing rigs.</p>
+            <div className="areas84-actions">
+              <Link href="/book" className="btn btn-primary">Check availability ↗</Link>
+              <Link href="/get-a-quote" className="areas84-link">Check another address</Link>
+            </div>
           </div>
-          <figure className="areas-v2-hero-photo"><Photo id="rig-03" priority ratio="3/2" sizes="(min-width: 900px) 48vw, 94vw"/><figcaption>MOBILE RIG / POWER + WATER ON BOARD</figcaption></figure>
+          <figure className="areas84-photo">
+            <Photo id="rig-03" priority ratio="4/3" sizes="(min-width: 900px) 42vw, 92vw" />
+          </figure>
         </div>
       </section>
 
-      <section className="areas-v2-proof"><div className="areas-v2-shell"><span>BASED IN DECATUR</span><span><LiveReviewCount /> FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span><span>POWER + WATER INCLUDED</span><span>100% ELECTRIC RIGS</span></div></section>
-
-      <section className="areas-v2-list">
-        <div className="areas-v2-shell">
-          <div className="areas-v2-head"><div><p className="areas-v2-kicker">WHERE WE GO</p><h2>Our regular<br/><span>service area.</span></h2></div><p>Choose your area for local details. Nearby but not listed? Send us the address and we will let you know if we can make it work.</p></div>
-          <div className="areas-v2-grid">
-            {areas.map((area, i) => (
-              <Link key={area.slug} href={`/service-areas/${area.slug}`} className="areas-v2-card">
-                <span className="areas-v2-index">{String(i + 1).padStart(2,"0")}</span>
-                <div><h3>{area.name}</h3><p>{area.primary ? "Home base" : "Mobile service area"}</p></div>
-                <b>↗</b>
+      <section className="areas84-areas">
+        <div className="areas84-shell">
+          <div className="areas84-head">
+            <div>
+              <p className="areas84-eyebrow">REGULAR SERVICE AREA</p>
+              <h2>Where we’re usually working.</h2>
+            </div>
+            <p>Pick your area for local details. If you are nearby but not listed, send us the address and we will tell you if the schedule can support it.</p>
+          </div>
+          <div className="areas84-grid">
+            {areas.map((area) => (
+              <Link key={area.slug} href={`/service-areas/${area.slug}`} className="areas84-card">
+                <div>
+                  <h3>{area.name}</h3>
+                  <p>{area.primary ? "Home base" : "Mobile service area"}</p>
+                </div>
+                <span>↗</span>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="areas-v2-how">
-        <div className="areas-v2-shell areas-v2-how-grid">
-          <div><p className="areas-v2-kicker">WHAT WE NEED</p><h2>No shop visit.<br/><span>No hose required.</span></h2></div>
-          <div className="areas-v2-how-list">
-            <article><b>01</b><div><h3>Room around the vehicle</h3><p>A driveway or accessible parking area with enough space for our crew to work safely around the car.</p></div></article>
-            <article><b>02</b><div><h3>Access to the vehicle</h3><p>We handle the rest of the setup. Our mobile rigs arrive with the water, power, equipment and products for the service.</p></div></article>
-            <article><b>03</b><div><h3>A confirmed appointment</h3><p>Choose your vehicle and service online. Available appointment times account for where our crew can actually travel and work.</p></div></article>
+      <section className="areas84-proof">
+        <div className="areas84-shell areas84-proof-grid">
+          <div><strong><LiveReviewCount />+</strong><span>five-star reviews</span><small><GoogleMapsAttribution /></small></div>
+          <div><strong>Power + water</strong><span>included with the detail</span></div>
+          <div><strong>100% electric</strong><span>mobile rigs</span></div>
+          <div><strong>Decatur based</strong><span>student-run crew</span></div>
+        </div>
+      </section>
+
+      <section className="areas84-setup">
+        <div className="areas84-shell areas84-setup-grid">
+          <div>
+            <p className="areas84-eyebrow">DETAIL DAY</p>
+            <h2>You provide the car. We bring the setup.</h2>
+          </div>
+          <div className="areas84-setup-copy">
+            <p>We need safe working room around the vehicle and access to it at the appointment time. Our rigs bring the water, power, products, and equipment.</p>
+            <p>Outside the regular area? Call <a href={site.phone.href}>{site.phone.display}</a> or use the quote form and send us the address.</p>
           </div>
         </div>
       </section>
 
-      <section className="areas-v2-edge"><div className="areas-v2-shell"><div><p className="areas-v2-kicker">OUTSIDE THE LIST?</p><h2>Ask us anyway.</h2></div><p>We sometimes travel beyond our regular area when the schedule allows. Send us the address through the quote form, or call <a className="link" href={site.phone.href}>{site.phone.display}</a>.</p><Link href="/get-a-quote" className="btn btn-secondary">Check your address ↗</Link></div></section>
       <CtaBand location="areas_final" />
     </div>
   );
