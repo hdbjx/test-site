@@ -406,32 +406,44 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
         <div ref={resultRef} className="quote-rec-result quote-rec-conversation q51-result">
           <button type="button" onClick={reset} className="quote-rec-back">← Start over</button>
 
-          <section className="q76-recommendation" aria-live="polite">
-            <div className="q76-recommendation-head">
-              <div>
-                <p>WE’D GO WITH</p>
+          <section className="q79-plan" aria-live="polite">
+            <header className="q79-plan-head">
+              <p className="q79-eyebrow">YOUR MATCH · {vehicleName}</p>
+              <div className="q79-plan-title-row">
                 <h2>{activeService.name}</h2>
+                <div className="q79-price">
+                  <span>YOUR PRICE</span>
+                  <strong>{totalDisplay}</strong>
+                </div>
               </div>
-              <div className="q76-recommendation-price">
-                <span>YOUR PRICE</span>
-                <strong>{totalDisplay}</strong>
-                <small>{extrasSummary.length ? extrasSummary.join(" + ") : vehicleName}</small>
+              {extrasSummary.length > 0 ? <p className="q79-extras">{extrasSummary.join(" + ")} included in this price</p> : null}
+            </header>
+
+            <div className="q79-plan-body">
+              <div className="q79-fit">
+                <h3>Why this fits</h3>
+                <p>{personalReason}</p>
+              </div>
+
+              <div className="q79-included" aria-label="Included in your detail">
+                <span>INCLUDED</span>
+                <ul>
+                  {included.slice(0,3).map((item) => <li key={item}>{item}</li>)}
+                </ul>
               </div>
             </div>
 
-            <p className="q76-recommendation-reason">{personalReason}</p>
-            <div className="q76-recommendation-includes">{included.slice(0,3).map((item) => <span key={item}>{item}</span>)}</div>
-            <details className="q76-recommendation-why"><summary>Why this fits your {vehicle.model}</summary><p>{result.why}</p></details>
-
-            <div className="q76-timing">
-              <div className="q76-timing-head">
+            <div className="q79-next">
+              <div className="q79-next-copy">
                 <span>NEXT</span>
-                <h3>When would you like it done?</h3>
+                <h3>When works best?</h3>
+                <p>Pick a window and we’ll show the right availability.</p>
               </div>
-              <div className="q76-timing-options">
+              <div className="q79-timing-options">
                 {timingOptions.map((item) => (
                   <button key={item.value} type="button" onClick={() => chooseTiming(item.value)}>
-                    <span><strong>{item.label}</strong><small>{item.sub}</small></span><b>↗</b>
+                    <strong>{item.label}</strong>
+                    <small>{item.sub}</small>
                   </button>
                 ))}
               </div>
