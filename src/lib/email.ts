@@ -705,6 +705,112 @@ export type JobReminderEmail = {
   start: string;
 };
 
+export type DayOfTeamMember = {
+  name: string;
+  isLead?: boolean;
+};
+
+export type DayOfJobConfirmationEmail = JobReminderEmail & {
+  team: DayOfTeamMember[];
+};
+
+function formatAppointmentTime(value: string) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return value;
+
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(date);
+}
+
+function firstNameOnly(value: string) {
+  return value.trim().split(/\s+/)[0] || value.trim();
+}
+
+function initials(value: string) {
+  const words = value.trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return "ED";
+  return words.slice(0, 2).map((word) => word[0]?.toUpperCase() || "").join("") || "ED";
+}
+
+function teamMemberCard(member: DayOfTeamMember) {
+  const name = firstNameOnly(member.name) || "Every Detail";
+  const role = member.isLead ? "Lead detailer" : "Detailer";
+
+  return `
+    <tr>
+      <td style="padding:0 0 10px;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border:1px solid #dedbd5;border-radius:16px;background:#faf8f4;">
+          <tr>
+            <td width="62" style="padding:14px 0 14px 14px;vertical-align:middle;">
+              <div style="width:44px;height:44px;border-radius:999px;background:${BRAND.red};border:1px solid ${BRAND.black};color:#ffffff;text-align:center;line-height:44px;font-size:13px;font-weight:800;letter-spacing:.5px;">${escapeHtml(initials(member.name))}</div>
+            </td>
+            <td style="padding:14px 16px;vertical-align:middle;">
+              <div style="font-size:16px;line-height:1.2;color:${BRAND.black};font-weight:800;">${escapeHtml(name)}</div>
+              <div style="margin-top:3px;font-size:12px;line-height:1.3;color:${BRAND.gray};">${role}</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  `;
+}
+
+/** Send the personal same-day confirmation after the job crew has been assigned. */
+export async function sendDayOfJobConfirmationEmail(booking: DayOfJobConfirmationEmail) {
+  const appointment = formatAppointment(booking.start);
+  const appointmentTime = formatAppointmentTime(booking.start);
+  const firstName = firstNameOnly(booking.name);
+  const team = booking.team.filter((member) => member.name.trim());
+  const teamRows = team.map(teamMemberCard).join("");
+  const teamLabel = team.length === 1 ? "Your detailer today" : "Your team today";
+
+  const html = shell(
+    `
+      <div style="font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:${BRAND.coral};font-weight:700;">
+        Today with Every Detail
+      </div>
+
+      <h1 style="margin:10px 0 14px;font-size:34px;line-height:1.05;color:${BRAND.black};">
+        We're all set for today${firstName ? `, ${escapeHtml(firstName)}` : ""}.
+      </h1>
+
+      <p style="margin:0 0 24px;font-size:16px;line-height:1.65;color:${BRAND.gray};">
+        Your appointment is confirmed on our end, and the team below is scheduled for your detail. We'll see you around <strong style="color:${BRAND.black};">${escapeHtml(appointmentTime)}</strong>.
+      </p>
+
+      ${teamRows ? `
+        <div style="margin:0 0 10px;font-size:11px;line-height:1.2;letter-spacing:1.6px;text-transform:uppercase;color:${BRAND.black};font-weight:800;">${teamLabel}</div>
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 20px;">
+          ${teamRows}
+        </table>
+      ` : ""}
+
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+        ${detailRow("When", appointment)}
+        ${detailRow("Vehicle", booking.vehicle)}
+        ${detailRow("Service", booking.service)}
+        ${detailRow("Where", booking.address)}
+      </table>
+
+      <div style="margin-top:26px;padding:18px;background:${BRAND.cream};border-left:5px solid ${BRAND.coral};font-size:14px;line-height:1.6;">
+        <strong>No need to confirm anything.</strong> Just make sure we can access the vehicle at the scheduled time. We bring our own power and water. If anything changes, reply to this email and we'll take care of it.
+      </div>
+    `,
+    `We're all set for your ${appointmentTime} Every Detail appointment today.`,
+  );
+
+  return sendEmail({
+    to: booking.email,
+    subject: `We're all set for today${firstName ? `, ${firstName}` : ""}`,
+    html,
+    replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
+  });
+}
+
 /** Send the single customer reminder used roughly 24 hours before a job. */
 export async function sendJobReminderEmail(booking: JobReminderEmail) {
   const appointment = formatAppointment(booking.start);
