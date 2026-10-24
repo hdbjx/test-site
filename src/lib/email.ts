@@ -860,6 +860,19 @@ export async function sendDayOfJobConfirmationEmail(booking: DayOfJobConfirmatio
         "No need to confirm anything.",
         "We’ve got it from here. Just make sure we can access the vehicle at the scheduled time. We bring our own power and water. If anything changes, reply to this email.",
       )}
+
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:18px 0 0;background:#ffffff;border:1px solid rgba(17,17,17,.14);">
+        <tr>
+          <td style="padding:20px 20px 19px;">
+            <div style="font-size:10px;line-height:1.2;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.oxblood};font-weight:900;">Follow today’s detail</div>
+            <div style="margin-top:7px;font-size:19px;line-height:1.15;color:${BRAND.black};font-weight:900;">Booking details + live status.</div>
+            <div style="margin-top:8px;font-size:13px;line-height:1.6;color:${BRAND.gray};">Sign in or create your Every Detail account using <strong style="color:${BRAND.black};">${escapeHtml(booking.email)}</strong>, the same email used for this booking. Your account shows the appointment details, assigned crew, and live status changes as the job moves from on the way through final inspection.</div>
+            <div style="margin-top:16px;">
+              <a href="https://www.everydetail.co/account/sign-in?next=/account" style="display:block;padding:13px 16px;background:${BRAND.red};border:1px solid ${BRAND.black};box-shadow:3px 3px 0 ${BRAND.black};color:#ffffff;text-decoration:none;text-align:center;font-size:13px;line-height:1.2;font-weight:900;">View booking &amp; live status ↗</a>
+            </div>
+          </td>
+        </tr>
+      </table>
     `,
     `We’re all set for your ${appointmentTime} Every Detail appointment today.`,
   );
