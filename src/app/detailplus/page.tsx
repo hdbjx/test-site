@@ -17,7 +17,7 @@ export const metadata = pageMetadata({
 export default function DetailPlusPage() {
   return (
     <div className="dp56-page service85">
-      <section className="dp56-hero ed-paper ed-paper--ink ed-paper--crumpled">
+      <section className="dp56-hero ed-paper ed-paper--ink ed-paper--crumpled" data-header-tone="light">
         <div className="dp56-shell dp56-hero-grid">
           <div className="dp56-hero-copy">
             <p className="dp56-kicker">EVERY DETAIL / SERVICE CLUB</p>
@@ -48,7 +48,7 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section className="dp56-thesis">
+      <section className="dp56-thesis" data-header-tone="ink">
         <div className="dp56-shell">
           <p className="dp56-kicker dark">WHY THE CLUB EXISTS</p>
           <div className="dp56-thesis-grid">
@@ -68,7 +68,7 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section id="club-builder" className="dp56-builder">
+      <section id="club-builder" className="dp56-builder" data-header-tone="ink">
         <div className="dp56-shell">
           <div className="dp56-section-head">
             <div><p className="dp56-kicker dark">PICK YOUR RHYTHM</p><h2>Your car.<br/><span>Your clean cycle.</span></h2></div>
@@ -78,7 +78,7 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section className="dp56-covered">
+      <section className="dp56-covered" data-header-tone="ink">
         <div className="dp56-shell">
           <div className="dp56-section-head">
             <div><p className="dp56-kicker dark">THE DETAIL+ RULE</p><h2>If it&rsquo;s in the plan,<br/><span>it&rsquo;s covered.</span></h2></div>
@@ -104,7 +104,7 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section id="how-it-works" className="dp56-how ed-paper ed-paper--coral ed-paper--crumpled">
+      <section id="how-it-works" className="dp56-how ed-paper ed-paper--coral ed-paper--crumpled" data-header-tone="ink">
         <div className="dp56-shell dp56-how-grid">
           <div className="dp56-how-copy">
             <p className="dp56-kicker">THE LOOP</p>
@@ -121,14 +121,14 @@ export default function DetailPlusPage() {
         </div>
       </section>
 
-      <section className="dp56-faq">
+      <section className="dp56-faq" data-header-tone="ink">
         <div className="dp56-shell dp56-faq-grid">
           <div><p className="dp56-kicker dark">CLUB QUESTIONS</p><h2>Before you put it<br/><span>on repeat.</span></h2><p>Still want to start with one visit? <Link href="/book">Book a regular detail ↗</Link></p></div>
           <FaqList faqs={detailPlusFaqs} />
         </div>
       </section>
 
-      <section className="dp56-final ed-paper ed-paper--ink ed-paper--crumpled">
+      <section className="dp56-final ed-paper ed-paper--ink ed-paper--crumpled" data-header-tone="light">
         <div className="dp56-shell">
           <p className="dp56-kicker">DETAIL+ / READY WHEN YOU ARE</p>
           <h2>NEVER THINK ABOUT<br/><span>A DIRTY CAR AGAIN.</span></h2>

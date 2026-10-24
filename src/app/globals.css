@@ -16685,3 +16685,162 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
     transition:none!important;
   }
 }
+
+/* ============================================================
+   V100 — REACTIVE HEADER TONE SYSTEM
+   One global, art-directed contrast engine. Sections declare
+   ink / light / brand; the shared header samples the declared
+   section crossing its detection line. No pixel-luminance flicker.
+   ============================================================ */
+.site-shared-header{
+  --ed-header-fg:#f3eddf;
+  --ed-header-control-bg:rgba(8,8,7,.42);
+  --ed-header-control-border:rgba(243,237,223,.52);
+  --ed-header-control-fg:#f3eddf;
+  --ed-header-control-hover-bg:#f3eddf;
+  --ed-header-control-hover-border:#f3eddf;
+  --ed-header-control-hover-fg:#11100e;
+  --ed-header-logo-filter:drop-shadow(0 8px 22px rgba(0,0,0,.24));
+  color:var(--ed-header-fg)!important;
+}
+.site-shared-header[data-tone="ink"]{
+  --ed-header-fg:#11100e;
+  --ed-header-control-bg:rgba(244,240,231,.88);
+  --ed-header-control-border:rgba(17,16,14,.28);
+  --ed-header-control-fg:#11100e;
+  --ed-header-control-hover-bg:#11100e;
+  --ed-header-control-hover-border:#11100e;
+  --ed-header-control-hover-fg:#f4f0e7;
+  --ed-header-logo-filter:drop-shadow(0 7px 20px rgba(255,255,255,.10)) drop-shadow(0 5px 16px rgba(30,22,18,.12));
+}
+.site-shared-header[data-tone="light"]{
+  --ed-header-fg:#f4f0e7;
+  --ed-header-control-bg:rgba(8,8,7,.46);
+  --ed-header-control-border:rgba(244,240,231,.54);
+  --ed-header-control-fg:#f4f0e7;
+  --ed-header-control-hover-bg:#f4f0e7;
+  --ed-header-control-hover-border:#f4f0e7;
+  --ed-header-control-hover-fg:#11100e;
+  --ed-header-logo-filter:drop-shadow(0 8px 24px rgba(0,0,0,.28));
+}
+.site-shared-header[data-tone="brand"]{
+  --ed-header-fg:#b8363d;
+  --ed-header-control-bg:rgba(247,243,236,.90);
+  --ed-header-control-border:rgba(184,54,61,.48);
+  --ed-header-control-fg:#8f252b;
+  --ed-header-control-hover-bg:#b8363d;
+  --ed-header-control-hover-border:#b8363d;
+  --ed-header-control-hover-fg:#fff8ee;
+  --ed-header-logo-filter:drop-shadow(0 7px 20px rgba(255,255,255,.10)) drop-shadow(0 5px 18px rgba(62,20,18,.16));
+}
+
+/* The same alpha mask is recolored by current header state, so there
+   are no alternate image assets and no mismatched logo variants. */
+.site-shared-logo-mark{
+  display:block!important;
+  width:92px!important;
+  height:92px!important;
+  background:var(--ed-header-fg)!important;
+  mask:url('/brand/every-detail-logo.png') center/contain no-repeat!important;
+  -webkit-mask:url('/brand/every-detail-logo.png') center/contain no-repeat!important;
+  filter:var(--ed-header-logo-filter)!important;
+  transition:
+    background-color 220ms cubic-bezier(.22,1,.36,1),
+    filter 220ms cubic-bezier(.22,1,.36,1),
+    transform 220ms cubic-bezier(.22,1,.36,1)!important;
+}
+.site-shared-logo-control .home-logo-mark{
+  background:var(--ed-header-fg)!important;
+}
+
+/* The homepage used to hide the mark in several scenes. V100 keeps
+   it present and changes contrast instead. */
+html[data-home-scene] body:has(.v29-hero) .site-shared-logo-control.home-logo-control,
+html[data-proof-active="true"] body:has(.v29-hero) .site-shared-logo-control.home-logo-control{
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+  transform:translateX(-50%)!important;
+}
+
+body .site-shared-header[data-tone] .site-shared-menu-button{
+  background:var(--ed-header-control-bg)!important;
+  border-color:var(--ed-header-control-border)!important;
+  color:var(--ed-header-control-fg)!important;
+  box-shadow:0 9px 28px rgba(0,0,0,.12)!important;
+  backdrop-filter:blur(12px) saturate(120%)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(120%)!important;
+  transition:
+    background-color 220ms cubic-bezier(.22,1,.36,1),
+    border-color 220ms cubic-bezier(.22,1,.36,1),
+    color 220ms cubic-bezier(.22,1,.36,1),
+    transform 180ms cubic-bezier(.22,1,.36,1),
+    box-shadow 180ms cubic-bezier(.22,1,.36,1)!important;
+}
+body .site-shared-header[data-tone] .site-shared-menu-button:hover,
+body .site-shared-header[data-tone] .site-shared-menu-button[aria-expanded="true"]{
+  background:var(--ed-header-control-hover-bg)!important;
+  border-color:var(--ed-header-control-hover-border)!important;
+  color:var(--ed-header-control-hover-fg)!important;
+}
+
+body .site-shared-header[data-tone] .site-context-pill,
+body .site-shared-header[data-tone] .site-context-pill.is-set{
+  background:var(--ed-header-control-bg)!important;
+  border-color:var(--ed-header-control-border)!important;
+  color:var(--ed-header-control-fg)!important;
+  box-shadow:0 9px 26px rgba(0,0,0,.10)!important;
+  backdrop-filter:blur(12px) saturate(120%)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(120%)!important;
+  transition:
+    background-color 220ms cubic-bezier(.22,1,.36,1),
+    border-color 220ms cubic-bezier(.22,1,.36,1),
+    color 220ms cubic-bezier(.22,1,.36,1),
+    box-shadow 180ms cubic-bezier(.22,1,.36,1)!important;
+}
+body .site-shared-header[data-tone] .site-context-pill:hover,
+body .site-shared-header[data-tone] .site-context-pill.is-set:hover{
+  background:var(--ed-header-control-hover-bg)!important;
+  border-color:var(--ed-header-control-hover-border)!important;
+  color:var(--ed-header-control-hover-fg)!important;
+}
+
+/* The open menu owns the header. Its panel is dark, so the logo remains
+   warm white while the close control intentionally inverts. */
+.site-shared-header[data-menu-open="true"]{
+  --ed-header-fg:#f4f0e7;
+  --ed-header-logo-filter:drop-shadow(0 8px 24px rgba(0,0,0,.26));
+}
+
+/* Route-specific geometry can remain, but route-specific logo coloring cannot. */
+body:has(.pl60-page) .site-shared-logo-mark,
+body:has(.v29-hero) .site-shared-logo-mark{
+  background:var(--ed-header-fg)!important;
+}
+body:has(.pl60-page) .site-shared-logo-mark{
+  width:68px!important;
+  height:68px!important;
+}
+
+@media(max-width:900px){
+  .site-shared-logo-mark{
+    width:72px!important;
+    height:72px!important;
+  }
+}
+@media(max-width:560px){
+  .site-shared-logo-mark{
+    width:58px!important;
+    height:58px!important;
+  }
+  .site-shared-header{
+    --ed-header-logo-filter:drop-shadow(0 5px 15px rgba(0,0,0,.20));
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .site-shared-logo-mark,
+  body .site-shared-header[data-tone] .site-shared-menu-button,
+  body .site-shared-header[data-tone] .site-context-pill{
+    transition:none!important;
+  }
+}

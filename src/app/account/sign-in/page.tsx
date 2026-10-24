@@ -21,7 +21,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         title={mode === "signup" ? "Create your account" : "Sign in"}
         lede={<p>Save your vehicles and address, see your upcoming details, and book in a few taps.</p>}
       />
-      <section className="container-ed max-w-xl pb-24">
+      <section className="container-ed max-w-xl pb-24" data-header-tone="ink">
         <SignInForm initialMode={mode === "signup" ? "signup" : "signin"} next={safeNext} linkError={error === "link"} />
       </section>
     </div>

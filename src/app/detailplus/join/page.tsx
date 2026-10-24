@@ -20,7 +20,7 @@ export default function JoinDetailPlus() {
         title="Build your Detail+ plan"
         lede={<p>Choose your schedule, coverage and vehicle. We&rsquo;ll send your flat rate.</p>}
       />
-      <section className="container-ed max-w-4xl pb-24">
+      <section className="container-ed max-w-4xl pb-24" data-header-tone="ink">
         <DetailPlusForm />
       </section>
     </div>

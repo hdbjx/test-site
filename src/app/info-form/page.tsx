@@ -11,7 +11,7 @@ export const metadata = pageMetadata({
 
 export default function InfoFormPage() {
   return (
-    <section className="bg-paper2 info-form86">
+    <section className="bg-paper2 info-form86" data-header-tone="ink">
       <div className="container-ed mx-auto max-w-2xl info-form86-shell">
         <p className="eyebrow">EVERY DETAIL / CLIENT INFO</p>
         <h1>Let’s get you on the schedule.</h1>

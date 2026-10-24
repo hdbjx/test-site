@@ -75,7 +75,7 @@ export function VehicleGlobalUI() {
 
   return (
     <div className="veh-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target !== event.currentTarget) return; pickerOpen ? closePicker() : dismissPrompt(); }}>
-      <section ref={panelRef} className={`veh-modal veh-modal-clean ${onboarding ? "is-welcome" : "is-change"}`} role="dialog" aria-modal="true" aria-labelledby="veh-modal-title">
+      <section ref={panelRef} className={`veh-modal veh-modal-clean ${onboarding ? "is-welcome" : "is-change"}`} data-header-tone="ink" role="dialog" aria-modal="true" aria-labelledby="veh-modal-title">
         <button className="veh-modal-close" type="button" onClick={pickerOpen ? closePicker : dismissPrompt} aria-label="Close vehicle picker">×</button>
         {onboarding ? (
           <>

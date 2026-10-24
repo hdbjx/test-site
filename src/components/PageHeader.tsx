@@ -11,7 +11,7 @@ type Props = {
 
 export function PageHeader({ crumbs, title, lede, children, aside }: Props) {
   return (
-    <section className="site-page-header">
+    <section className="site-page-header" data-header-tone="light">
       <div className="container-ed site-page-header-inner">
         <div className="site-page-header-top"><Breadcrumbs items={crumbs} /><span aria-hidden="true">EVERY DETAIL / DECATUR + ATLANTA</span></div>
         <div className={`site-page-header-grid ${aside ? "has-aside" : ""}`}>

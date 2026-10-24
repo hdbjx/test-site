@@ -24,7 +24,7 @@ export default async function AboutPage() {
 
   return (
     <div className="about70">
-      <section className="about70-hero">
+      <section className="about70-hero" data-header-tone="light">
         <div className="about70-shell about70-hero-grid">
           <div className="about70-hero-copy">
             <p className="about70-kicker">EVERY DETAIL / DECATUR, GEORGIA</p>
@@ -48,7 +48,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="about70-facts" aria-label="Every Detail facts">
+      <section className="about70-facts" data-header-tone="light" aria-label="Every Detail facts">
         <div className={`about70-shell about70-facts-grid ${team.length ? "" : "is-three"}`}>
           <div><strong><LiveReviewCount /></strong><span>FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span></div>
           {team.length ? <div><strong>{team.length}</strong><span>ACTIVE TEAM MEMBERS</span></div> : null}
@@ -57,7 +57,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="about70-origin">
+      <section className="about70-origin" data-header-tone="ink">
         <div className="about70-shell about70-origin-grid">
           <div className="about70-origin-title">
             <p className="about70-kicker">THE IDEA</p>
@@ -77,7 +77,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section id="team" className="about70-team">
+      <section id="team" className="about70-team" data-header-tone="ink">
         <div className="about70-shell">
           <div className="about70-section-head">
             <div>
@@ -105,7 +105,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="about70-standard">
+      <section className="about70-standard" data-header-tone="light">
         <div className="about70-shell">
           <div className="about70-section-head about70-section-head-light">
             <div><p className="about70-kicker">HOW WE WORK</p><h2>STUDENT-RUN.<br /><span>NOT STUDENT-GRADE.</span></h2></div>
@@ -123,7 +123,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="about70-close">
+      <section className="about70-close" data-header-tone="brand">
         <div className="about70-shell about70-close-grid">
           <h2>MORE CARS.<br />MORE STUDENTS.<br /><span>SAME STANDARD.</span></h2>
           <div>

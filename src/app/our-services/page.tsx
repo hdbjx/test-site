@@ -39,8 +39,8 @@ export default function ServicesPage() {
 
   return (
     <>
-      <main className="services-v61 info80-page service85">
-        <section className="svc61-hero info80-hero">
+      <main className="services-v61 info80-page service85" data-header-tone="ink">
+        <section className="svc61-hero info80-hero" data-header-tone="ink">
           <div className="svc61-shell">
             <div className="svc61-crumbs"><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
             <div className="svc61-hero-grid">
@@ -66,7 +66,7 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="svc61-core info80-section" aria-labelledby="svc61-core-title">
+        <section className="svc61-core info80-section" data-header-tone="ink" aria-labelledby="svc61-core-title">
           <div className="svc61-shell">
             <div className="info80-heading-row">
               <div><p className="svc61-kicker">START WITH THE CAR</p><h2 id="svc61-core-title">WHAT SHAPE IS IT IN?</h2></div>
@@ -90,7 +90,7 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="svc62-catalog info80-section" id="all-services" aria-labelledby="svc62-catalog-title">
+        <section className="svc62-catalog info80-section" data-header-tone="ink" id="all-services" aria-labelledby="svc62-catalog-title">
           <div className="svc61-shell">
             <div className="info80-heading-row">
               <div><p className="svc61-kicker">ALL SERVICES</p><h2 id="svc62-catalog-title">SEE THE FULL LINEUP.</h2></div>
@@ -100,7 +100,7 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="svc86-mobile-section">
+        <section className="svc86-mobile-section" data-header-tone="light">
           <div className="svc61-shell svc86-mobile-grid">
             <figure><Photo id="mobile-rig-open-driveway" ratio="4/3" sizes="(min-width: 900px) 46vw, 92vw" /></figure>
             <div>
@@ -112,7 +112,7 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="svc61-faq info80-section">
+        <section className="svc61-faq info80-section" data-header-tone="ink">
           <div className="svc61-shell svc61-faq-grid"><div><p className="svc61-kicker">QUICK ANSWERS</p><h2>BEFORE YOU BOOK.</h2></div><FaqList faqs={homeFaqs.slice(0, 5)} /></div>
         </section>
       </main>

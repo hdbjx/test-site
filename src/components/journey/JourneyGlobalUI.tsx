@@ -111,7 +111,7 @@ export function JourneyGlobalUI() {
 
   return (
     <div className="journey-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) closeDrawer(); }}>
-      <aside ref={drawerRef} className="journey-drawer journey-drawer-clean" role="dialog" aria-modal="true" aria-label="Your detail">
+      <aside ref={drawerRef} className="journey-drawer journey-drawer-clean" data-header-tone="ink" role="dialog" aria-modal="true" aria-label="Your detail">
         <div className="journey-drawer-head">
           <div><span>YOUR DETAIL</span><h2>{service?.name ?? "Your car."}</h2></div>
           <button type="button" onClick={closeDrawer} aria-label="Close">×</button>

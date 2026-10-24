@@ -16,7 +16,7 @@ export const metadata = pageMetadata({
 export default function ServiceAreas() {
   return (
     <div className="areas84">
-      <section className="areas84-hero">
+      <section className="areas84-hero" data-header-tone="light">
         <div className="areas84-shell areas84-hero-grid">
           <div className="areas84-copy">
             <p className="areas84-eyebrow">MOBILE DETAILING / DECATUR + ATLANTA</p>
@@ -33,7 +33,7 @@ export default function ServiceAreas() {
         </div>
       </section>
 
-      <section className="areas84-areas">
+      <section className="areas84-areas" data-header-tone="ink">
         <div className="areas84-shell">
           <div className="areas84-head">
             <div>
@@ -56,7 +56,7 @@ export default function ServiceAreas() {
         </div>
       </section>
 
-      <section className="areas84-proof">
+      <section className="areas84-proof" data-header-tone="ink">
         <div className="areas84-shell areas84-proof-grid">
           <div><strong><LiveReviewCount /></strong><span>five-star reviews</span><small><GoogleMapsAttribution /></small></div>
           <div><strong>Power + water</strong><span>included with the detail</span></div>
@@ -65,7 +65,7 @@ export default function ServiceAreas() {
         </div>
       </section>
 
-      <section className="areas84-setup">
+      <section className="areas84-setup" data-header-tone="ink">
         <div className="areas84-shell areas84-setup-grid">
           <div>
             <p className="areas84-eyebrow">DETAIL DAY</p>

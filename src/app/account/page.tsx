@@ -22,7 +22,7 @@ export default async function AccountPage() {
   if (session.state === "unconfirmed" || session.state === "staff") {
     return (
       <div className="account68 account68-state">
-        <section className="account68-state-card">
+        <section className="account68-state-card" data-header-tone="ink">
           <p className="account68-kicker">EVERY DETAIL ACCOUNT</p>
           <h1>{session.state === "unconfirmed" ? "CHECK YOUR EMAIL." : "STAFF ACCOUNT."}</h1>
           <p>{session.state === "unconfirmed" ? `Confirm ${session.email} to finish setting up your customer account.` : `${session.email} is connected to the Every Detail team. Use the team app for work scheduling.`}</p>
@@ -57,7 +57,7 @@ export default async function AccountPage() {
 
   return (
     <div className="account68">
-      <section className="account68-hero">
+      <section className="account68-hero" data-header-tone="ink">
         <div className="account68-shell account68-hero-grid">
           <div>
             <p className="account68-kicker">YOUR EVERY DETAIL ACCOUNT</p>
@@ -76,20 +76,20 @@ export default async function AccountPage() {
         </div>
       </section>
 
-      <main className="account68-main">
+      <main className="account68-main" data-header-tone="ink">
         <div className="account68-shell account68-grid">
           <div className="account68-primary-column">
-            <section className="account68-section account68-live">
+            <section className="account68-section account68-live" data-header-tone="ink">
               <LiveJobPortal initialJobs={portalJobs} initialLoadFailed={portalLoadFailed} />
             </section>
 
-            <section className="account68-section">
+            <section className="account68-section" data-header-tone="ink">
               <div className="account68-section-title"><div><p className="account68-kicker">GARAGE</p><h2>YOUR VEHICLES</h2></div><span>{garage.length} SAVED</span></div>
               <VehicleManager garage={garage} />
             </section>
 
             {past.length > 0 && (
-              <section className="account68-section">
+              <section className="account68-section" data-header-tone="ink">
                 <div className="account68-section-title"><div><p className="account68-kicker">HISTORY</p><h2>PAST DETAILS</h2></div></div>
                 <div className="account68-history">
                   {past.map((job) => (
@@ -100,8 +100,8 @@ export default async function AccountPage() {
             )}
           </div>
 
-          <aside className="account68-side">
-            <section className="account68-credit">
+          <aside className="account68-side" data-header-tone="ink">
+            <section className="account68-credit" data-header-tone="ink">
               <p className="account68-kicker">AVAILABLE CREDIT</p>
               <strong>${(totalCredit / 100).toFixed(totalCredit % 100 ? 2 : 0)}</strong>
               <div className="account68-credit-lines"><span>Rewards <b>${(rewards.balance_cents / 100).toFixed(2)}</b></span><span>Gift cards <b>${(giftBalance / 100).toFixed(2)}</b></span></div>

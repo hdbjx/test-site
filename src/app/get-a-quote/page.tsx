@@ -15,7 +15,7 @@ export default async function QuotePage({ searchParams }: { searchParams: Promis
   return (
     <div className="q51-page q53-page">
       <QuoteTopBar />
-      <main id="quote-tool" className="q53-tool" tabIndex={-1}>
+      <main id="quote-tool" className="q53-tool" data-header-tone="ink" tabIndex={-1}>
         <div className="q53-intro">
           <div>
             <p>FIND MY DETAIL</p>

@@ -51,7 +51,7 @@ const jobs = [
 export default function OurWorkPage() {
   return (
     <div className="work-page-v18">
-      <section className="work-page-hero">
+      <section className="work-page-hero" data-header-tone="light">
         <div className="container-ed work-page-hero-grid">
           <div>
             <p className="eyebrow">REAL CARS / REAL DRIVEWAYS / REAL CREW</p>
@@ -64,7 +64,7 @@ export default function OurWorkPage() {
         </div>
       </section>
 
-      <section className="work-page-jobs">
+      <section className="work-page-jobs" data-header-tone="light">
         <div className="container-ed">
           {jobs.map((job, index) => (
             <article className={`work-case ${index % 2 ? "is-reverse" : ""} ${index === 3 ? "work86-featured-case" : ""}`} key={job.n}>
@@ -83,14 +83,14 @@ export default function OurWorkPage() {
         </div>
       </section>
 
-      <section className="work-page-crew">
+      <section className="work-page-crew" data-header-tone="ink">
         <div className="container-ed work-page-crew-grid">
           <figure><Photo id="about-ops-05" sizes="(min-width: 900px) 50vw, 100vw" ratio="3/2" /></figure>
           <div><p className="eyebrow">WHO SHOWS UP</p><h2>A real local team, not an anonymous contractor.</h2><p>Every Detail is built and run by students who take the work seriously. The same team you see here is the team working in customers’ driveways.</p><Link href="/about-us" className="btn btn-secondary">Meet the team ↗</Link></div>
         </div>
       </section>
 
-      <section className="work-page-final">
+      <section className="work-page-final" data-header-tone="light">
         <div className="container-ed work-page-final-grid">
           <div><p className="eyebrow">YOUR CAR NEXT</p><h2>Know what you need?</h2><p>Book it now. If you are not sure, answer a few questions and we will point you to the right detail.</p></div>
           <div className="work-page-final-actions"><Link href="/get-a-quote" className="btn btn-secondary">Find my detail</Link><Link href="/book" className="btn btn-primary">Book now ↗</Link></div>

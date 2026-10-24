@@ -17,7 +17,7 @@ export const metadata = pageMetadata({
 export default function MobileCarDetailingPage() {
   return (
     <div className="services-v161 mobile-detailing-page service85">
-      <section className="edu-hero mobile86-hero">
+      <section className="edu-hero mobile86-hero" data-header-tone="ink">
         <div className="mobile86-hero-photo" aria-hidden="true"><Photo id="hq-mobile-rig-fleet" sizes="100vw" fill priority /></div>
         <div className="mobile86-hero-shade" aria-hidden="true" />
         <div className="svc-shell mobile86-hero-inner">
@@ -33,7 +33,7 @@ export default function MobileCarDetailingPage() {
         </div>
       </div></section>
 
-      <section className="edu-anatomy"><div className="svc-shell">
+      <section className="edu-anatomy" data-header-tone="ink"><div className="svc-shell">
         <div className="edu-section-intro"><p className="svc-eyebrow">WHAT MOBILE DETAILING MEANS HERE</p><h2>One appointment.<br/><span>The whole vehicle.</span></h2><p>Our standard first-visit approach is comprehensive. We work through the interior and exterior so the car leaves with a consistent baseline instead of one half being cleaned while the other is left behind.</p></div>
         <figure className="mobile86-anatomy-photo"><Photo id="two-tech-interior-detail" ratio="16/7" sizes="92vw" /></figure>
         <div className="grid gap-6 md:grid-cols-3 mt-10">
@@ -43,18 +43,18 @@ export default function MobileCarDetailingPage() {
         </div>
       </div></section>
 
-      <section className="area-v2-pricing"><div className="area-v2-shell">
+      <section className="area-v2-pricing" data-header-tone="ink"><div className="area-v2-shell">
         <div className="area-v2-pricing-head"><div><p className="area-v2-kicker">CHOOSE THE RIGHT STARTING POINT</p><h2>First visit?<br/><span>Start with condition.</span></h2></div><p>Premium fits most first-time vehicles. Factory Reset is for heavier buildup. Maintenance makes the most sense once the vehicle already has a clean baseline.</p></div>
         <ServicePicker location="mobile_detailing_seo" headingId="mobile-detailing-pricing" />
         <p className="mt-6"><Link href="/our-services" className="link">Compare exactly what each service includes ↗</Link></p>
       </div></section>
 
-      <section className="mobile86-photo-break" aria-label="Every Detail mobile setup">
+      <section className="mobile86-photo-break" data-header-tone="light" aria-label="Every Detail mobile setup">
         <Photo id="mobile-rig-open-driveway" ratio="16/6" sizes="100vw" />
         <div><span>YOUR DRIVEWAY</span><strong>OUR DETAIL SHOP.</strong></div>
       </section>
 
-      <section className="areas-v2-list"><div className="areas-v2-shell">
+      <section className="areas-v2-list" data-header-tone="ink"><div className="areas-v2-shell">
         <div className="areas-v2-head"><div><p className="areas-v2-kicker">SERVICE AREA</p><h2>Based in Decatur.<br/><span>Mobile across nearby Atlanta.</span></h2></div><p>We serve Decatur and nearby communities with appointment availability based on where our crews can actually travel and work.</p></div>
         <div className="areas-v2-grid">{areas.map((area, i) => <Link key={area.slug} href={`/service-areas/${area.slug}`} className="areas-v2-card"><span className="areas-v2-index">{String(i+1).padStart(2,"0")}</span><div><h3>{area.name}</h3><p>{area.primary ? "Home base" : "Mobile service area"}</p></div><b>↗</b></Link>)}</div>
       </div></section>

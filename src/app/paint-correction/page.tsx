@@ -25,7 +25,7 @@ const maxCorrection = Math.max(...Object.values(PAINT_PRICING).map((price) => pr
 export default function PaintCorrectionPage() {
   return (
     <div className="paint85 paint85-correction service85">
-      <section className="paint85-hero">
+      <section className="paint85-hero" data-header-tone="light">
         <Image src="/images/red-paint-detail.webp" alt="Red automotive paint being polished by Every Detail" fill priority sizes="100vw" />
         <div className="paint85-hero-shade" />
         <div className="paint85-shell paint85-hero-inner">
@@ -44,7 +44,7 @@ export default function PaintCorrectionPage() {
         </div>
       </section>
 
-      <section id="paint-options" className="paint85-price-section">
+      <section id="paint-options" className="paint85-price-section" data-header-tone="ink">
         <div className="paint85-shell">
           <div className="paint85-section-intro paint85-section-intro-tight">
             <div><p className="paint85-kicker dark">START WITH THE FINISH</p><h2>TWO LEVELS.<br /><span>ONE HONEST CALL.</span></h2></div>
@@ -54,7 +54,7 @@ export default function PaintCorrectionPage() {
         </div>
       </section>
 
-      <section className="paint85-defects">
+      <section className="paint85-defects" data-header-tone="ink">
         <div className="paint85-shell">
           <div className="paint85-section-intro">
             <div><p className="paint85-kicker dark">WHAT WE ARE LOOKING AT</p><h2>DEFECTS THAT<br /><span>BREAK THE REFLECTION.</span></h2></div>
@@ -73,7 +73,7 @@ export default function PaintCorrectionPage() {
         </div>
       </section>
 
-      <section className="paint85-proof-section">
+      <section className="paint85-proof-section" data-header-tone="light">
         <div className="paint85-shell paint85-proof-grid">
           <figure className="paint85-proof-photo">
             <Image src="/images/red-audi-finished.jpg" alt="Red Audi with clear glossy paint after Every Detail paint care" fill sizes="(max-width: 900px) 100vw, 56vw" />
@@ -89,7 +89,7 @@ export default function PaintCorrectionPage() {
         </div>
       </section>
 
-      <section className="paint85-compare">
+      <section className="paint85-compare" data-header-tone="ink">
         <div className="paint85-shell">
           <div className="paint85-option-grid">
             {[enhancement, correction].map((service) => (
@@ -108,14 +108,14 @@ export default function PaintCorrectionPage() {
         </div>
       </section>
 
-      <section id="paint-quote" className="paint85-quote">
+      <section id="paint-quote" className="paint85-quote" data-header-tone="ink">
         <div className="paint85-shell">
           <div className="paint85-section-intro paint85-section-intro-tight"><div><p className="paint85-kicker dark">YOUR PAINT</p><h2>LET'S SEE WHAT<br /><span>IT ACTUALLY NEEDS.</span></h2></div><p>Tell us what you drive and what bothers you most. We will recommend the level that makes sense before work starts.</p></div>
           <PaintLeadForm kind="paint-correction" hideIntro />
         </div>
       </section>
 
-      <section className="paint85-faq"><div className="paint85-shell paint85-faq-grid"><div><p className="paint85-kicker dark">QUICK ANSWERS</p><h2>BEFORE<br />WE POLISH.</h2></div><FaqList faqs={paintCorrectionFaqs} /></div></section>
+      <section className="paint85-faq" data-header-tone="ink"><div className="paint85-shell paint85-faq-grid"><div><p className="paint85-kicker dark">QUICK ANSWERS</p><h2>BEFORE<br />WE POLISH.</h2></div><FaqList faqs={paintCorrectionFaqs} /></div></section>
 
       <JsonLd data={[
         serviceSchema({ name: enhancement.name, description: enhancement.summary, path: "/paint-correction", lowPrice: enhancement.startingAt, highPrice: maxEnhancement }),

@@ -3,7 +3,7 @@ import { TrackedLink } from "@/components/TrackedLink";
 
 export default function NotFound() {
   return (
-    <section className="container-ed py-24 md:py-32">
+    <section className="container-ed py-24 md:py-32" data-header-tone="ink">
       <p className="t-numeral text-7xl text-oxblood">404</p>
       <h1 className="t-h2 mt-4 max-w-2xl">That page isn&rsquo;t here anymore.</h1>
       <p className="mt-4 max-w-xl text-lg text-ink/80">

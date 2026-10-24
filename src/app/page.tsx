@@ -37,7 +37,7 @@ export default function Home() {
     <>
       <HomeArtMotion />
 
-      <section className="v29-hero" data-v29-scene="hero" aria-labelledby="v29-hero-title">
+      <section className="v29-hero" data-header-tone="brand" data-v29-scene="hero" aria-labelledby="v29-hero-title">
         <div className="v29-hero-photo" data-v29-depth><Photo id="hero" sizes="100vw" fill priority /></div>
         <div className="v29-hero-shade" aria-hidden="true" />
         <div className="v30-hero-focus" aria-hidden="true" />
@@ -53,7 +53,7 @@ export default function Home() {
 
       <CurvedTape text="WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU • " label="Every Detail promise" />
 
-      <section className="v29-choice" id="pricing" data-v29-scene="choice" aria-labelledby="v29-choice-title">
+      <section className="v29-choice" data-header-tone="ink" id="pricing" data-v29-scene="choice" aria-labelledby="v29-choice-title">
         <div className="v29-shell">
           <div className="v29-choice-intro v38-choice-intro">
             <h2 id="v29-choice-title"><span>ONE CAR.</span><span>THREE WAYS BACK.</span></h2>
@@ -62,7 +62,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v29-work" data-v29-work data-v29-scene="work" aria-labelledby="v29-work-title">
+      <section className="v29-work" data-header-tone="light" data-v29-work data-v29-scene="work" aria-labelledby="v29-work-title">
         <div className="v29-work-sticky">
           <div className="v29-work-heading v29-shell">
             <h2 id="v29-work-title"><span>NO STOCK CARS.</span><span>NO MYSTERY SHOP.</span></h2>
@@ -80,7 +80,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v37-story" data-v29-story data-v29-scene="story" aria-labelledby="v37-story-title">
+      <section className="v37-story" data-header-tone="light" data-v29-story data-v29-scene="story" aria-labelledby="v37-story-title">
         <div className="v29-shell v37-story-inner">
           <h2 id="v37-story-title" className="v37-story-title">
             <span>BUILT BY STUDENTS.</span>
@@ -96,7 +96,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v38-proof" data-v36-proof data-v29-scene="proof" aria-label="Customer reviews">
+      <section className="v38-proof" data-header-tone="light" data-v36-proof data-v29-scene="proof" aria-label="Customer reviews">
         <div className="v38-proof-sticky">
           <div className="v38-proof-stage">
             <div className="v41-proof-rail" data-v41-proof-rail>
@@ -120,7 +120,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v41-care" data-v29-scene="beyond" aria-labelledby="v41-care-title">
+      <section className="v41-care" data-header-tone="ink" data-v29-scene="beyond" aria-labelledby="v41-care-title">
         <div className="v29-shell v41-care-inner">
           <div className="v41-care-heading">
             <span>AFTER THE RESET</span>
@@ -129,7 +129,7 @@ export default function Home() {
           </div>
 
           <div className="v41-care-grid">
-            <Link href="/ceramic" className="v41-care-card v41-care-card-paint">
+            <Link href="/ceramic" className="v41-care-card v41-care-card-paint" data-header-tone="light">
               <div className="v41-care-card-image"><Photo id="hq-black-suv-finished" sizes="(max-width: 900px) 100vw, 58vw" fill /></div>
               <div className="v41-care-card-shade" />
               <div className="v41-care-card-top"><span>01</span><b>PAINT CARE</b></div>
@@ -140,7 +140,7 @@ export default function Home() {
               </div>
             </Link>
 
-            <Link href="/detailplus" className="v41-care-card v41-care-card-plus">
+            <Link href="/detailplus" className="v41-care-card v41-care-card-plus" data-header-tone="light">
               <div className="v41-care-card-image"><Photo id="hq-technician-window-detail" sizes="(max-width: 900px) 100vw, 42vw" fill /></div>
               <div className="v41-care-card-shade" />
               <div className="v41-care-card-top"><span>02</span><b>DETAIL+</b></div>
@@ -155,7 +155,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v39-clean-life v41-clean-life" data-v39-life aria-labelledby="v39-clean-life-title">
+      <section className="v39-clean-life v41-clean-life" data-header-tone="brand" data-v39-life aria-labelledby="v39-clean-life-title">
         <div className="v39-clean-life-grain" aria-hidden="true" />
         <div className="v39-clean-life-inner v41-clean-life-inner">
           <h2 id="v39-clean-life-title" className="v39-clean-life-title v41-clean-life-title">
@@ -165,7 +165,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v29-close" data-v29-scene="close" aria-labelledby="v29-close-title">
+      <section className="v29-close" data-header-tone="light" data-v29-scene="close" aria-labelledby="v29-close-title">
         <div className="v29-close-photo"><Photo id="hq-van-through-flowers" sizes="100vw" fill /></div>
         <div className="v29-close-shade" />
         <div className="v29-shell v29-close-inner">

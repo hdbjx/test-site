@@ -18,7 +18,7 @@ export default function BlogIndex() {
 
   return (
     <div className="shine84">
-      <section className="shine84-masthead">
+      <section className="shine84-masthead" data-header-tone="light">
         <div className="shine84-shell">
           <div className="shine84-mast-row">
             <div>
@@ -31,7 +31,7 @@ export default function BlogIndex() {
       </section>
 
       {lead && (
-        <section className="shine84-lead">
+        <section className="shine84-lead" data-header-tone="ink">
           <div className="shine84-shell">
             <Link href={`/post/${lead.slug}`} className="shine84-lead-card shine86-lead-card">
               {lead.image && <div className="shine86-lead-image"><Image src={lead.image} alt={`Every Detail: ${lead.title}`} fill priority sizes="(max-width: 800px) 92vw, 48vw" /></div>}
@@ -53,7 +53,7 @@ export default function BlogIndex() {
         </section>
       )}
 
-      <section className="shine84-index">
+      <section className="shine84-index" data-header-tone="ink">
         <div className="shine84-shell">
           <div className="shine84-index-head">
             <h2>More from the driveway</h2>

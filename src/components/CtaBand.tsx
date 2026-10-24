@@ -14,7 +14,7 @@ export function CtaBand({
   quoteLabel = "Find my detail",
 }: Props) {
   return (
-    <section className="site-cta-band">
+    <section className="site-cta-band" data-header-tone="light">
       <div className="site-cta-word" aria-hidden="true">CLEAN CAR / GOOD DAY / CLEAN CAR / GOOD DAY</div>
       <div className="container-ed site-cta-inner">
         <div>

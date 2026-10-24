@@ -13,7 +13,7 @@ const updated = "October 7, 2026";
 export default function PrivacyPolicyPage() {
   return (
     <div className="legal-v1">
-      <header className="legal-v1-hero">
+      <header className="legal-v1-hero" data-header-tone="light">
         <div className="legal-v1-shell">
           <p className="legal-v1-kicker">EVERY DETAIL / LEGAL</p>
           <h1>Privacy<br/><span>Policy.</span></h1>
@@ -24,9 +24,9 @@ export default function PrivacyPolicyPage() {
         </div>
       </header>
 
-      <section className="legal-v1-body">
+      <section className="legal-v1-body" data-header-tone="ink">
         <div className="legal-v1-shell legal-v1-grid">
-          <aside className="legal-v1-aside">
+          <aside className="legal-v1-aside" data-header-tone="ink">
             <p>QUICK READ</p>
             <strong>We use customer information to quote, schedule, perform and support detailing services. We do not sell your personal information.</strong>
             <nav aria-label="Privacy policy sections">
@@ -40,13 +40,13 @@ export default function PrivacyPolicyPage() {
           </aside>
 
           <article className="legal-v1-copy">
-            <section>
+            <section data-header-tone="ink">
               <p className="legal-v1-num">00</p>
               <h2>Who this policy covers</h2>
               <p>This Privacy Policy applies to information collected by Every Detail through {site.url.replace("https://", "")}, our booking and quote forms, customer accounts, and communications connected to those services. It does not control the privacy practices of third-party websites or services that we do not operate.</p>
             </section>
 
-            <section id="collect">
+            <section id="collect" data-header-tone="ink">
               <p className="legal-v1-num">01</p>
               <h2>Information we collect</h2>
               <p>We collect information you give us when you request information, ask for a quote, book a service, create or use an account, save a vehicle, or contact us. Depending on what you use, this may include:</p>
@@ -62,7 +62,7 @@ export default function PrivacyPolicyPage() {
               <p>We may also receive basic technical information automatically when you use the site, such as device/browser information, pages viewed, referral information and interactions with the website. The exact analytics data collected depends on the tools enabled on the site at the time of your visit.</p>
             </section>
 
-            <section id="use">
+            <section id="use" data-header-tone="ink">
               <p className="legal-v1-num">02</p>
               <h2>How we use information</h2>
               <p>We use information when reasonably necessary to operate Every Detail and serve customers. That includes to:</p>
@@ -79,7 +79,7 @@ export default function PrivacyPolicyPage() {
               <p>We may use contact information to follow up about a quote, booking or prior service. You can ask us to stop non-essential promotional communications at any time. Transactional messages about an active booking or account may still be necessary.</p>
             </section>
 
-            <section id="share">
+            <section id="share" data-header-tone="ink">
               <p className="legal-v1-num">03</p>
               <h2>How we share information</h2>
               <p>We do not sell your personal information. We may share information with service providers that help us run the website and business, only as needed for their role. Our current website infrastructure may include:</p>
@@ -92,46 +92,46 @@ export default function PrivacyPolicyPage() {
               <p>We may also disclose information if reasonably necessary to comply with law, respond to valid legal process, protect the rights or safety of Every Detail, our customers or others, investigate misuse, or as part of a business reorganization or transfer.</p>
             </section>
 
-            <section id="cookies">
+            <section id="cookies" data-header-tone="ink">
               <p className="legal-v1-num">04</p>
               <h2>Cookies, accounts and analytics</h2>
               <p>The site may use cookies or similar browser storage that are necessary for account sign-in, security and site functionality. If Google Analytics is enabled, Google may also use cookies or similar technologies to measure site usage.</p>
               <p>You can control cookies through your browser settings. Blocking necessary cookies may prevent account sign-in or other website features from working correctly.</p>
             </section>
 
-            <section>
+            <section data-header-tone="ink">
               <p className="legal-v1-num">05</p>
               <h2>Payments</h2>
               <p>Our website does not currently ask you to enter payment-card information to book a standard detailing appointment. Payment for detailing services is handled separately using the payment methods we make available. If we add online payment processing later, this policy may be updated to describe the payment provider and information involved.</p>
             </section>
 
-            <section>
+            <section data-header-tone="ink">
               <p className="legal-v1-num">06</p>
               <h2>Retention and security</h2>
               <p>We keep personal information for as long as reasonably necessary for the purposes described in this policy, including providing services, maintaining customer and business records, resolving disputes, preventing abuse and meeting legal obligations. Different records may be kept for different periods.</p>
               <p>We use reasonable administrative and technical measures designed to protect information. No website, database or transmission method can be guaranteed to be completely secure, so we cannot promise absolute security.</p>
             </section>
 
-            <section id="choices">
+            <section id="choices" data-header-tone="ink">
               <p className="legal-v1-num">07</p>
               <h2>Your choices</h2>
               <p>You may contact us to ask about the personal information we maintain about you, request a correction, or ask us to delete information that we no longer need to keep. Some information may need to be retained for legitimate business, security or legal reasons.</p>
               <p>If you have an Every Detail customer account, some account and vehicle information can also be managed through the <Link href="/account">customer portal</Link>.</p>
             </section>
 
-            <section>
+            <section data-header-tone="ink">
               <p className="legal-v1-num">08</p>
               <h2>Children&apos;s privacy</h2>
               <p>Our customer website and booking services are not directed to children under 13, and we do not knowingly collect personal information from children under 13 through these services. If you believe a child under 13 has provided personal information to us, contact us so we can review the situation.</p>
             </section>
 
-            <section>
+            <section data-header-tone="ink">
               <p className="legal-v1-num">09</p>
               <h2>Changes to this policy</h2>
               <p>We may update this Privacy Policy as our website, services or legal obligations change. The “Last updated” date at the top shows when this version took effect. Material changes may also be communicated in another reasonable way when appropriate.</p>
             </section>
 
-            <section id="contact" className="legal-v1-contact">
+            <section id="contact" className="legal-v1-contact" data-header-tone="ink">
               <p className="legal-v1-num">10</p>
               <h2>Questions about privacy?</h2>
               <p>Contact Every Detail at <a href={`mailto:${site.email}`}>{site.email}</a> or <a href={site.phone.href}>{site.phone.display}</a>. We are based in {site.city}, {site.region}.</p>

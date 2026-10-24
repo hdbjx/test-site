@@ -15,7 +15,7 @@ export default function GiftCardsPage() {
     <div className="gift-page">
       <GiftCardIntro />
 
-      <section className="gift-showcase" id="gift-builder">
+      <section className="gift-showcase" id="gift-builder" data-header-tone="light" data-header-tone-after="ink" data-header-tone-split="0.46">
         <div className="container-ed gift-builder-grid">
           <aside className="gift-preview-wrap gift-preview-wrap-v2">
             <p className="eyebrow">Build the gift</p>
@@ -67,7 +67,7 @@ export default function GiftCardsPage() {
         </div>
       </section>
 
-      <section className="gift-how gift-how-v2">
+      <section className="gift-how gift-how-v2" data-header-tone="light">
         <div className="container-ed">
           <div className="gift-how-head">
             <div>
@@ -102,7 +102,7 @@ export default function GiftCardsPage() {
         </div>
       </section>
 
-      <section className="gift-rewards-bridge gift-rewards-bridge-v2">
+      <section className="gift-rewards-bridge gift-rewards-bridge-v2" data-header-tone="light">
         <div className="container-ed gift-rewards-grid">
           <div>
             <p className="eyebrow">Connected to the Every Detail account</p>

@@ -23,7 +23,7 @@ const maxCeramic = Math.max(...Object.values(PAINT_PRICING).map((price) => price
 export default function CeramicPage() {
   return (
     <div className="paint85 paint85-ceramic service85">
-      <section className="paint85-hero">
+      <section className="paint85-hero" data-header-tone="light">
         <Image src="/images/mercedes-paint.webp" alt="Corrected Mercedes paint with deep gloss" fill priority sizes="100vw" />
         <div className="paint85-hero-shade" />
         <div className="paint85-shell paint85-hero-inner">
@@ -42,7 +42,7 @@ export default function CeramicPage() {
         </div>
       </section>
 
-      <section id="ceramic-price" className="paint85-price-section">
+      <section id="ceramic-price" className="paint85-price-section" data-header-tone="ink">
         <div className="paint85-shell">
           <div className="paint85-section-intro paint85-section-intro-tight">
             <div><p className="paint85-kicker dark">YOUR PACKAGE</p><h2>CORRECT.<br /><span>COAT. MAINTAIN.</span></h2></div>
@@ -52,7 +52,7 @@ export default function CeramicPage() {
         </div>
       </section>
 
-      <section className="paint85-proof-section paint85-proof-section-light">
+      <section className="paint85-proof-section paint85-proof-section-light" data-header-tone="ink">
         <div className="paint85-shell paint85-proof-grid reverse">
           <figure className="paint85-proof-photo">
             <Image src="/images/red-paint-detail.webp" alt="Every Detail preparing automotive paint before ceramic coating" fill sizes="(max-width: 900px) 100vw, 56vw" />
@@ -66,7 +66,7 @@ export default function CeramicPage() {
         </div>
       </section>
 
-      <section className="paint85-truth">
+      <section className="paint85-truth" data-header-tone="light">
         <div className="paint85-shell">
           <div className="paint85-section-intro"><div><p className="paint85-kicker">CERAMIC, CLEARLY</p><h2>EASIER TO KEEP CLEAN.<br /><span>NOT MAGIC ARMOR.</span></h2></div><p>A coating changes how the finish sheds water and contamination. It does not turn paint into an impact-resistant surface.</p></div>
           <div className="paint85-truth-grid">
@@ -76,7 +76,7 @@ export default function CeramicPage() {
         </div>
       </section>
 
-      <section className="paint85-package">
+      <section className="paint85-package" data-header-tone="ink">
         <div className="paint85-shell">
           <div className="paint85-section-intro paint85-section-intro-tight"><div><p className="paint85-kicker dark">INCLUDED</p><h2>ONE PACKAGE.<br /><span>THREE THINGS THAT MATTER.</span></h2></div><p>{ceramic.bestFor}</p></div>
           <div className="paint86-package-layout">
@@ -90,14 +90,14 @@ export default function CeramicPage() {
         </div>
       </section>
 
-      <section className="paint85-result">
+      <section className="paint85-result" data-header-tone="light">
         <div className="paint85-shell paint85-result-grid">
           <figure><Image src="/images/black-truck-finished.jpg" alt="Black vehicle with a deep gloss after Every Detail paint care" fill sizes="(max-width: 900px) 100vw, 58vw" /></figure>
           <div><p className="paint85-kicker">THE RESULT</p><h2>DEEPER GLOSS.<br /><span>EASIER WASHES.</span></h2><p>A coated vehicle still needs washing. The difference is that water, dirt and contamination release more easily while the corrected finish stays protected.</p><div className="paint85-review-proof"><strong><LiveReviewCount /></strong><span>FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span></div></div>
         </div>
       </section>
 
-      <section id="coating-quote" className="paint85-quote">
+      <section id="coating-quote" className="paint85-quote" data-header-tone="ink">
         <div className="paint85-shell">
           <div className="paint85-section-intro paint85-section-intro-tight"><div><p className="paint85-kicker dark">YOUR CAR</p><h2>LET'S LOOK AT<br /><span>THE PAINT.</span></h2></div><p>Tell us what you drive and how the finish looks today. We will confirm the preparation before anything is booked.</p></div>
           <div className="paint86-quote-body">
@@ -107,7 +107,7 @@ export default function CeramicPage() {
         </div>
       </section>
 
-      <section className="paint85-faq"><div className="paint85-shell paint85-faq-grid"><div><p className="paint85-kicker dark">QUICK ANSWERS</p><h2>BEFORE<br />YOU COAT.</h2></div><FaqList faqs={ceramicFaqs} /></div></section>
+      <section className="paint85-faq" data-header-tone="ink"><div className="paint85-shell paint85-faq-grid"><div><p className="paint85-kicker dark">QUICK ANSWERS</p><h2>BEFORE<br />YOU COAT.</h2></div><FaqList faqs={ceramicFaqs} /></div></section>
 
       <JsonLd data={[serviceSchema({ name: ceramic.name, description: ceramic.summary, path: "/ceramic", lowPrice: ceramic.startingAt, highPrice: maxCeramic }), breadcrumbSchema([{ name: "Services", path: "/our-services" }, { name: "Ceramic Coating", path: "/ceramic" }])]} />
     </div>

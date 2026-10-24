@@ -38,8 +38,8 @@ export default async function PostPage({ params }: Params) {
 
   return (
     <div className="post-v2 post85">
-      <article>
-        <header className="post-v2-hero">
+      <article data-header-tone="ink">
+        <header className="post-v2-hero" data-header-tone="ink">
           <div className="post-v2-shell">
             <div className="mb-5"><Breadcrumbs items={[{ name: "Shine On", path: "/blog" }, { name: post.title, path }]} /></div>
             <Link href="/blog" className="post-v2-back">← SHINE ON</Link>
@@ -61,7 +61,7 @@ export default async function PostPage({ params }: Params) {
         </div>
       </article>
 
-      {related.length > 0 && <section className="post-v2-related"><div className="post-v2-shell"><p className="post-v2-label">KEEP READING</p><div>{related.map((p, i) => <Link href={`/post/${p.slug}`} key={p.slug}><span>{String(i + 1).padStart(2, "0")}</span><div><small>{p.category} · {p.readingMinutes} MIN</small><h2>{p.title}</h2></div><b>↗</b></Link>)}</div></div></section>}
+      {related.length > 0 && <section className="post-v2-related" data-header-tone="ink"><div className="post-v2-shell"><p className="post-v2-label">KEEP READING</p><div>{related.map((p, i) => <Link href={`/post/${p.slug}`} key={p.slug}><span>{String(i + 1).padStart(2, "0")}</span><div><small>{p.category} · {p.readingMinutes} MIN</small><h2>{p.title}</h2></div><b>↗</b></Link>)}</div></div></section>}
 
       <JsonLd data={[
         articleSchema({ title: post.title, description: post.description, path, date: post.date, image: post.image }),

@@ -94,7 +94,7 @@ export function CurvedTape({ text, speed = 70, boost = 0.9, followScroll = true,
   }, [text, speed, boost, followScroll]);
 
   return (
-    <section className="ed-tape" aria-label={label ?? text.trim()}>
+    <section className="ed-tape" data-header-tone="brand" aria-label={label ?? text.trim()}>
       <svg
         ref={svgRef}
         className="ed-tape-svg"

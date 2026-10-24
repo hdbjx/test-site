@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -13,12 +12,76 @@ import { catalogPrice, catalogService } from "@/data/serviceCatalog";
 import { usd } from "@/lib/format";
 import { useJourney } from "@/components/journey/JourneyContext";
 
+type HeaderTone = "ink" | "light" | "brand";
+
+const ROUTE_HEADER_TONE: Record<string, HeaderTone> = {
+  "/": "brand",
+  "/about-us": "light",
+  "/account": "ink",
+  "/account/sign-in": "ink",
+  "/account/update-password": "ink",
+  "/blog": "light",
+  "/ceramic": "light",
+  "/detailplus": "light",
+  "/gift-cards": "light",
+  "/info-form": "ink",
+  "/mobile-car-detailing": "ink",
+  "/our-services": "ink",
+  "/our-work": "light",
+  "/paint-correction": "light",
+  "/privacy-policy": "light",
+  "/service-areas": "light",
+  "/terms": "light",
+};
+
+function routeTone(pathname: string): HeaderTone {
+  if (pathname.startsWith("/detailplus/")) return "light";
+  if (pathname.startsWith("/post/")) return "ink";
+  if (pathname.startsWith("/service-areas/")) return "ink";
+  return ROUTE_HEADER_TONE[pathname] ?? "ink";
+}
+
+function toneFromOwner(owner: HTMLElement, y: number): HeaderTone | null {
+  const mobile = window.matchMedia("(max-width: 760px)").matches;
+  const before = (mobile ? owner.dataset.headerToneMobile : undefined) ?? owner.dataset.headerTone;
+  const after = (mobile ? owner.dataset.headerToneAfterMobile : undefined) ?? owner.dataset.headerToneAfter;
+  const split = Number.parseFloat(owner.dataset.headerToneSplit ?? "");
+
+  let raw = before;
+  if (after && Number.isFinite(split)) {
+    const rect = owner.getBoundingClientRect();
+    const local = rect.height > 0 ? (y - rect.top) / rect.height : 0;
+    if (local >= Math.max(0, Math.min(1, split))) raw = after;
+  }
+
+  return raw === "ink" || raw === "light" || raw === "brand" ? raw : null;
+}
+
+function declaredToneAtPoint(x: number, y: number): HeaderTone | null {
+  const elements = document.elementsFromPoint(x, y);
+  for (const element of elements) {
+    const owner = element.closest<HTMLElement>("[data-header-tone]");
+    if (!owner) continue;
+    const tone = toneFromOwner(owner, y);
+    if (tone) return tone;
+  }
+
+  const candidates = Array.from(document.querySelectorAll<HTMLElement>("[data-header-tone]"));
+  const crossing = candidates
+    .map((element) => ({ element, rect: element.getBoundingClientRect() }))
+    .filter(({ rect }) => rect.top <= y && rect.bottom > y && rect.width > 0 && rect.height > 0)
+    .sort((a, b) => a.rect.height - b.rect.height);
+
+  return crossing[0] ? toneFromOwner(crossing[0].element, y) : null;
+}
+
 export function Header() {
   const pathname = usePathname();
   const onHome = pathname === "/";
   const { vehicle, hydrated: vehicleHydrated, openPicker } = useVehicle();
   const { serviceIntent, openDrawer } = useJourney();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [headerTone, setHeaderTone] = useState<HeaderTone>(() => routeTone(pathname));
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -26,6 +89,50 @@ export function Header() {
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    setHeaderTone(routeTone(pathname));
+    let frame = 0;
+
+    const updateTone = () => {
+      frame = 0;
+      if (menuOpen) {
+        setHeaderTone("light");
+        return;
+      }
+
+      const sampleY = Math.min(window.innerHeight - 1, window.innerWidth <= 760 ? 54 : 72);
+      const sampleX = Math.round(window.innerWidth * 0.5);
+      const next = declaredToneAtPoint(sampleX, sampleY) ?? routeTone(pathname);
+      setHeaderTone((current) => current === next ? current : next);
+    };
+
+    const schedule = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateTone);
+    };
+
+    updateTone();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    window.addEventListener("orientationchange", schedule);
+
+    const observer = new MutationObserver(schedule);
+    observer.observe(document.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["class", "style", "data-header-tone", "data-header-tone-mobile", "data-header-tone-after", "data-header-tone-after-mobile", "data-header-tone-split"],
+    });
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      window.removeEventListener("orientationchange", schedule);
+    };
+  }, [pathname, menuOpen]);
 
   // Mobile panel: lock scroll, Escape closes, keep focus inside
   useEffect(() => {
@@ -75,13 +182,13 @@ export function Header() {
 
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
-  const headerClass = "fixed inset-x-0 top-0 z-40 text-white site-shared-header";
+  const headerClass = "fixed inset-x-0 top-0 z-40 site-shared-header";
 
   // The booking funnel renders its own compact header; keep exits to a minimum there.
   if (pathname === "/book" || pathname === "/get-a-quote") return null;
 
   return (
-    <header className={headerClass}>
+    <header className={headerClass} data-tone={headerTone} data-menu-open={menuOpen ? "true" : "false"}>
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
@@ -91,14 +198,8 @@ export function Header() {
 
       <div className="site-shared-nav-shell">
         <Link href="/" className={`site-shared-logo-control ${onHome ? "home-logo-control" : ""}`} aria-label="Every Detail home">
-          {onHome ? (
-            <>
-              <span className="home-logo-mark" aria-hidden="true" />
-              <span className="sr-only">Every Detail home</span>
-            </>
-          ) : (
-            <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} className="site-shared-logo" priority />
-          )}
+          <span className={`site-shared-logo-mark ${onHome ? "home-logo-mark" : ""}`} aria-hidden="true" />
+          <span className="sr-only">Every Detail home</span>
         </Link>
 
         <div className="site-shared-nav-actions">

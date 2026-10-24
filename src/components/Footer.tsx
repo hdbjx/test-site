@@ -10,7 +10,7 @@ export function Footer() {
   const year = new Date().getFullYear();
   const companyLinks = [...primaryNav.filter((n) => n.href !== "/ceramic"), ...moreNav];
   return (
-    <footer className="site-footer">
+    <footer className="site-footer" data-header-tone="light">
       <div className="container-ed site-footer-grid">
         <div className="site-footer-brand">
           <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={1000} height={1000} />

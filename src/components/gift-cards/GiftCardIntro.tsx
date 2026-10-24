@@ -89,7 +89,7 @@ export function GiftCardIntro() {
   };
 
   return (
-    <section className="gift-intro" ref={sectionRef}>
+    <section className="gift-intro" data-header-tone="light" ref={sectionRef}>
       <div className="gift-intro-bg" aria-hidden="true">
         <span className="gift-intro-orbit gift-intro-orbit-a" />
         <span className="gift-intro-orbit gift-intro-orbit-b" />

@@ -42,7 +42,7 @@ export default async function BookPage({
               <p className="bk-intro-facts">Pick your vehicle and service, tell us where the car will be and which days work. We&rsquo;ll confirm the exact time with you.</p>
             </div>
           </div>
-          <section id="booking-main" className="container-ed pb-24">
+          <section id="booking-main" className="container-ed pb-24" data-header-tone="ink">
             <BookingForm initialVehicle={initialVehicle} initialService={initialService} />
           </section>
         </div>
