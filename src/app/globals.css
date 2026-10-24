@@ -16355,3 +16355,333 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
 .bk-top-logo img,
 .q51-top-logo img,
 .site-shared-logo-control > * { pointer-events: none; }
+
+/* ============================================================
+   V99 — SITE-WIDE DEPTH SYSTEM
+   Depth is a hierarchy, not decoration:
+   flat content -> soft interactive surfaces -> physical objects
+   -> hard offset actions / selected states.
+   ============================================================ */
+:root{
+  --ed-depth-surface:
+    inset 0 1px 0 rgba(255,255,255,.72),
+    0 14px 34px rgba(36,27,22,.065),
+    0 3px 8px rgba(36,27,22,.035);
+  --ed-depth-surface-hover:
+    inset 0 1px 0 rgba(255,255,255,.82),
+    0 20px 44px rgba(36,27,22,.095),
+    0 5px 12px rgba(36,27,22,.055);
+  --ed-depth-surface-lg:
+    inset -12px -12px 30px rgba(255,255,255,.24),
+    inset 10px 10px 28px rgba(50,38,30,.035),
+    0 30px 66px rgba(36,27,22,.115),
+    0 8px 18px rgba(36,27,22,.065);
+  --ed-depth-object:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 30px 64px rgba(31,22,18,.16),
+    0 10px 22px rgba(31,22,18,.10);
+  --ed-depth-photo:
+    0 28px 55px rgba(25,20,17,.16),
+    0 8px 16px rgba(25,20,17,.10);
+  --ed-depth-dark:
+    inset -12px -12px 30px rgba(255,255,255,.035),
+    inset 12px 12px 28px rgba(0,0,0,.20),
+    0 32px 72px rgba(25,18,15,.17),
+    0 10px 22px rgba(25,18,15,.10);
+  --ed-depth-modal:
+    inset 0 1px 0 rgba(255,255,255,.82),
+    0 36px 100px rgba(0,0,0,.30),
+    0 10px 28px rgba(0,0,0,.13);
+  --ed-depth-hard:4px 4px 0 #171717;
+  --ed-depth-hard-hover:6px 6px 0 #171717;
+
+  /* Existing editorial objects inherit the same depth family. */
+  --site-shadow:var(--ed-depth-object);
+}
+
+/* ---------- Homepage: one raised interaction stage, flat editorial rows ---------- */
+.v15-stage.is-open{
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.055);
+  border-radius:18px;
+  box-shadow:var(--ed-depth-dark);
+}
+
+/* Keep the draggable prints retro, but add believable ambient depth beneath them. */
+.v41-story-collage .v37-story-photo{
+  box-shadow:
+    12px 14px 0 rgba(65,20,20,.19),
+    var(--ed-depth-photo) !important;
+}
+.v41-story-collage .v37-story-photo:hover{
+  box-shadow:
+    14px 17px 0 rgba(65,20,20,.22),
+    0 34px 62px rgba(25,20,17,.18),
+    0 10px 18px rgba(25,20,17,.11) !important;
+}
+.v41-story-collage .v37-story-photo[data-dragging="true"]{
+  box-shadow:
+    18px 22px 0 rgba(65,20,20,.24),
+    0 38px 72px rgba(42,8,10,.24),
+    0 12px 24px rgba(25,20,17,.12) !important;
+}
+
+/* ---------- Booking: tactile at rest, decisive hard shadow when selected ---------- */
+.bk-pkg:not(.is-on),
+.bk-size:not(.is-on),
+.bk-saved-opt:not(.is-on):not(:disabled),
+.bk-addon:not(.is-on),
+.bk-got,
+.bk-school{
+  box-shadow:var(--ed-depth-surface);
+}
+.bk-pkg:not(.is-on),
+.bk-size:not(.is-on),
+.bk-saved-opt:not(.is-on):not(:disabled),
+.bk-addon:not(.is-on){
+  transition:
+    transform .22s var(--ease-out,ease),
+    border-color .18s ease,
+    box-shadow .22s var(--ease-out,ease),
+    background-color .18s ease;
+}
+@media(hover:hover) and (pointer:fine){
+  .bk-pkg:not(.is-on):hover,
+  .bk-size:not(.is-on):hover,
+  .bk-saved-opt:not(.is-on):not(:disabled):hover,
+  .bk-addon:not(.is-on):hover{
+    transform:translateY(-2px);
+    box-shadow:var(--ed-depth-surface-hover);
+  }
+}
+.bk-pkg.is-on{
+  box-shadow:
+    6px 6px 0 var(--bk-ink),
+    0 22px 42px rgba(36,27,22,.11) !important;
+}
+.bk-size.is-on,
+.bk-saved-opt.is-on,
+.bk-addon.is-on{
+  box-shadow:
+    inset 0 -4px 0 var(--bk-coral),
+    0 16px 34px rgba(36,27,22,.075);
+}
+.bk-calendar{
+  box-shadow:var(--ed-depth-surface-lg);
+}
+
+/* ---------- Quote: soft selectable surfaces, elevated recommendation ---------- */
+.q53-page .q51-condition-grid.quote-rec-condition-grid button,
+.q53-page .q51-concern-grid.quote-rec-concern-grid button,
+.q53-page .quote-rec-intent-choice{
+  box-shadow:var(--ed-depth-surface);
+  transition:
+    transform .18s var(--site-ease),
+    box-shadow .18s var(--site-ease),
+    border-color .18s ease,
+    background-color .18s ease;
+}
+@media(hover:hover) and (pointer:fine){
+  .q53-page .q51-condition-grid.quote-rec-condition-grid button:not(.is-selected):hover,
+  .q53-page .q51-concern-grid.quote-rec-concern-grid button:not(.is-selected):hover,
+  .q53-page .quote-rec-intent-choice:hover{
+    transform:translateY(-3px) !important;
+    box-shadow:var(--ed-depth-surface-hover) !important;
+  }
+}
+.q53-page .q51-condition-grid.quote-rec-condition-grid button.is-selected,
+.q53-page .q51-concern-grid.quote-rec-concern-grid button.is-selected{
+  box-shadow:
+    6px 7px 0 var(--q51-ink),
+    0 20px 38px rgba(36,27,22,.10) !important;
+}
+.q53-page .q51-result .quote-rec-reveal-card{
+  box-shadow:var(--ed-depth-surface-lg) !important;
+}
+.q53-page .q51-intent.quote-rec-intent-stage,
+.q53-page .quote-rec-flow>.quote-rec-answerbar,
+.q53-page .quote-rec-customize-panel,
+.q53-page .quote-inline-booking{
+  box-shadow:var(--ed-depth-surface) !important;
+}
+
+/* ---------- Services: cards feel actionable, information remains flat ---------- */
+.svc61-core-card{
+  box-shadow:var(--ed-depth-surface);
+  transition:transform .22s var(--site-ease),box-shadow .22s var(--site-ease),border-color .2s ease;
+}
+@media(hover:hover) and (pointer:fine){
+  .svc61-core-card:hover{
+    transform:translateY(-4px);
+    box-shadow:var(--ed-depth-surface-hover);
+  }
+}
+.svc61-core-card.is-featured{
+  box-shadow:
+    5px 5px 0 var(--site-ink),
+    0 22px 44px rgba(36,27,22,.10);
+}
+
+/* ---------- Detail+: strongest physical-object treatment ---------- */
+.dp56-club-card,
+.dp56-member-card{
+  box-shadow:
+    inset -10px -10px 26px rgba(255,255,255,.08),
+    inset 8px 8px 24px rgba(70,20,18,.06),
+    0 32px 60px rgba(35,22,18,.19),
+    0 10px 20px rgba(35,22,18,.11) !important;
+}
+.dp56-polaroid,
+.dp56-benefit-photo{
+  box-shadow:var(--ed-depth-photo) !important;
+}
+.dp56-benefit-card,
+.dp56-compare-card,
+.dp56-rate-note,
+.dp56-contact-sheet,
+.dp56-cycle-card,
+.dp56-how-card,
+.dp56-how-steps article{
+  box-shadow:var(--ed-depth-surface) !important;
+}
+.dp56-cadence-ticket:not(.is-selected){
+  box-shadow:var(--ed-depth-surface) !important;
+}
+.dp56-cadence-ticket.is-selected{
+  box-shadow:
+    7px 8px 0 var(--dp-coral),
+    0 22px 40px rgba(40,30,20,.14) !important;
+}
+
+/* ---------- Gift cards: object + purchase console ---------- */
+.gift-card-preview,
+.gift-card-preview-intro{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    inset -12px -12px 30px rgba(0,0,0,.075),
+    0 32px 72px rgba(38,16,13,.23),
+    0 10px 20px rgba(38,16,13,.10) !important;
+}
+.gift-form-shell{
+  box-shadow:var(--ed-depth-surface-lg) !important;
+}
+.gift-points-grid>div,
+.gift-how-v2 .gift-how-grid article{
+  box-shadow:var(--ed-depth-surface);
+}
+
+/* ---------- Account: utility UI inherits the same tactile surfaces ---------- */
+.account68-section .panel,
+.account68-credit,
+.account68-settings,
+.account68-state-card{
+  box-shadow:var(--ed-depth-surface) !important;
+}
+.account68-section .panel.panel-red{
+  box-shadow:
+    5px 5px 0 var(--ac68-red),
+    0 22px 44px rgba(36,27,22,.105) !important;
+}
+.account68-primary{
+  box-shadow:var(--ed-depth-hard);
+  transition:transform .14s ease,box-shadow .14s ease,background-color .14s ease;
+}
+@media(hover:hover) and (pointer:fine){
+  .account68-primary:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:var(--ed-depth-hard-hover);
+  }
+}
+.account68-primary:active{
+  transform:translate(2px,2px);
+  box-shadow:1px 1px 0 #171717;
+}
+
+/* ---------- Paint + ceramic: keep editorial sections flat, lift only the tool ---------- */
+.paint85-quote .paint-lead-form,
+.cer70-quote .paint-lead-form,
+.cer68-quote .paint-lead-form,
+.paint-lead-shell-compact .paint-lead-form{
+  box-shadow:var(--ed-depth-surface-lg) !important;
+}
+.paint-choice,
+.paint-site-vehicle{
+  box-shadow:var(--ed-depth-surface);
+}
+
+/* ---------- Global context UI: drawers and modals should feel above the page ---------- */
+.veh-modal.veh-modal-clean,
+.veh-modal.is-welcome,
+.journey-drawer{
+  box-shadow:var(--ed-depth-modal) !important;
+}
+.journey-recent,
+.journey-resume,
+.journey-nudge{
+  box-shadow:var(--ed-depth-surface);
+}
+
+/* ---------- Shared interaction rule ---------- */
+@media(hover:hover) and (pointer:fine){
+  .gift-points-grid>div,
+  .gift-how-v2 .gift-how-grid article,
+  .account68-credit,
+  .account68-settings,
+  .journey-recent,
+  .journey-resume,
+  .journey-nudge{
+    transition:transform .2s var(--site-ease),box-shadow .2s var(--site-ease);
+  }
+}
+
+/* Mobile keeps the same hierarchy with less blur/spread so surfaces do not feel floaty. */
+@media(max-width:700px){
+  :root{
+    --ed-depth-surface:
+      inset 0 1px 0 rgba(255,255,255,.72),
+      0 8px 22px rgba(36,27,22,.065),
+      0 2px 6px rgba(36,27,22,.035);
+    --ed-depth-surface-hover:var(--ed-depth-surface);
+    --ed-depth-surface-lg:
+      inset 0 1px 0 rgba(255,255,255,.74),
+      0 14px 34px rgba(36,27,22,.095),
+      0 4px 10px rgba(36,27,22,.05);
+    --ed-depth-object:
+      inset 0 1px 0 rgba(255,255,255,.14),
+      0 18px 42px rgba(31,22,18,.15),
+      0 6px 14px rgba(31,22,18,.08);
+    --ed-depth-photo:
+      0 18px 38px rgba(25,20,17,.15),
+      0 6px 12px rgba(25,20,17,.09);
+  }
+  .v15-stage.is-open{border-radius:12px}
+  .v41-story-collage .v37-story-photo{
+    box-shadow:
+      8px 10px 0 rgba(65,20,20,.18),
+      var(--ed-depth-photo) !important;
+  }
+  .bk-pkg.is-on{
+    box-shadow:4px 4px 0 var(--bk-ink),0 12px 24px rgba(36,27,22,.08) !important;
+  }
+  .svc61-core-card.is-featured{
+    box-shadow:4px 4px 0 var(--site-ink),0 12px 26px rgba(36,27,22,.08);
+  }
+  .dp56-club-card,
+  .dp56-member-card{
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.08),
+      0 20px 42px rgba(35,22,18,.17),
+      0 7px 15px rgba(35,22,18,.09) !important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .bk-pkg,.bk-size,.bk-saved-opt,.bk-addon,
+  .q53-page .q51-condition-grid.quote-rec-condition-grid button,
+  .q53-page .q51-concern-grid.quote-rec-concern-grid button,
+  .q53-page .quote-rec-intent-choice,
+  .svc61-core-card,
+  .account68-primary{
+    transition:none!important;
+  }
+}
