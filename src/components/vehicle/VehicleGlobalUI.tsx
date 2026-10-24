@@ -33,7 +33,7 @@ export function VehicleGlobalUI() {
     const closeButton = panel?.querySelector<HTMLButtonElement>(".veh-modal-close");
     let focusTimer: number | undefined;
     if (window.matchMedia("(pointer: fine)").matches) {
-      if (onboarding) focusTimer = window.setTimeout(() => searchInput?.focus(), 2300);
+      if (onboarding) focusTimer = window.setTimeout(() => searchInput?.focus(), 520);
       else searchInput?.focus();
     } else closeButton?.focus({ preventScroll: true });
     const key = (event: KeyboardEvent) => {
@@ -79,49 +79,51 @@ export function VehicleGlobalUI() {
         <button className="veh-modal-close" type="button" onClick={pickerOpen ? closePicker : dismissPrompt} aria-label="Close vehicle picker">×</button>
         {onboarding ? (
           <div className="veh-welcome-shell">
-            <div className="veh-welcome-poster">
-              <div className="veh-welcome-poster-top">
-                <span>EVERY DETAIL</span>
-                <span>DECATUR / ATLANTA</span>
-              </div>
-              <div className="veh-welcome-intro">
-                <p>YOUR CAR. YOUR VERSION OF THE SITE.</p>
-                <h2 id="veh-modal-title"><span>Welcome</span><span>in.</span></h2>
-              </div>
-              <div className="veh-welcome-poster-foot">
-                <span>Mobile detailing, shaped around what you drive.</span>
-                <b>01</b>
-              </div>
+            <div className="veh-welcome-ticket" aria-hidden="true">
+              <span>EVERY DETAIL</span>
+              <b>ATL / 01</b>
             </div>
 
-            <div className="veh-welcome-utility">
-              <div className="veh-welcome-question">
-                <p className="veh-modal-kicker">START WITH YOUR CAR</p>
-                <h3>What do you drive?</h3>
-                <p className="veh-modal-copy">We’ll tune pricing, recommendations, and booking around your exact vehicle.</p>
+            <div className="veh-welcome-brandrow" aria-hidden="true">
+              <img src="/brand/every-detail-mark.png" alt="" />
+              <span>Mobile detailing · Decatur / Atlanta</span>
+            </div>
+
+            <div className="veh-welcome-layout">
+              <div className="veh-welcome-intro">
+                <p>WELCOME IN</p>
+                <h2 id="veh-modal-title">Your car makes this site <em>yours.</em></h2>
+                <p className="veh-welcome-lede">Tell us what you drive and we’ll quietly tune pricing, recommendations, and booking around it.</p>
               </div>
 
-              <VehicleSearch onSelect={(next) => selectVehicle(next, rememberChoice)} />
+              <div className="veh-welcome-utility">
+                <div className="veh-welcome-question">
+                  <p className="veh-modal-kicker">ONE QUICK THING</p>
+                  <h3>What do you drive?</h3>
+                </div>
 
-              <label className="veh-remember">
-                <input type="checkbox" checked={rememberChoice} onChange={(event) => setRememberChoice(event.target.checked)} />
-                <span><b>Keep this car for next time</b></span>
-              </label>
+                <VehicleSearch onSelect={(next) => selectVehicle(next, rememberChoice)} />
 
-              <div className="veh-account-entry" aria-label="Account options">
-                {signedIn ? (
-                  <Link href="/account" className="veh-account-link veh-account-primary">Open my account</Link>
-                ) : (
-                  <>
-                    <span>Already know us?</span>
-                    <Link href="/account/sign-in?next=/" className="veh-account-link">Sign in</Link>
-                    <i aria-hidden="true" />
-                    <Link href="/account/sign-in?mode=signup&next=/" className="veh-account-link">Create account</Link>
-                  </>
-                )}
+                <label className="veh-remember">
+                  <input type="checkbox" checked={rememberChoice} onChange={(event) => setRememberChoice(event.target.checked)} />
+                  <span><b>Remember this car</b><small>So you don’t have to choose it again next time.</small></span>
+                </label>
+
+                <div className="veh-account-entry" aria-label="Account options">
+                  {signedIn ? (
+                    <Link href="/account" className="veh-account-link veh-account-primary">Open my account</Link>
+                  ) : (
+                    <>
+                      <span>Already have an account?</span>
+                      <Link href="/account/sign-in?next=/" className="veh-account-link">Sign in</Link>
+                      <i aria-hidden="true" />
+                      <Link href="/account/sign-in?mode=signup&next=/" className="veh-account-link">Create one</Link>
+                    </>
+                  )}
+                </div>
+
+                <button type="button" className="veh-skip" onClick={dismissPrompt}>I’m just looking around</button>
               </div>
-
-              <button type="button" className="veh-skip" onClick={dismissPrompt}>Just browsing for now</button>
             </div>
           </div>
         ) : (
