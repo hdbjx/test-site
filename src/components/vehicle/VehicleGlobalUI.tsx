@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { vehicleLabel, vehicles, type VehicleId } from "@/data/services";
 import { siteVehicleLabel, useVehicle } from "./VehicleContext";
 import { supabaseConfigured } from "@/lib/supabase/config";
@@ -12,6 +12,28 @@ import { supabaseBrowser } from "@/lib/supabase/browser";
 const VehicleSearch = dynamic(() => import("./VehicleSearch").then((mod) => mod.VehicleSearch), { ssr: false });
 
 const PROMPT_ON = ["/", "/our-services", "/ceramic", "/paint-correction", "/detailplus", "/mobile-car-detailing"];
+
+function WelcomeRibbon({ placement }: { placement: "top" | "bottom" }) {
+  const rawId = useId();
+  const pathId = `veh-welcome-ribbon-${placement}-${rawId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const curve = placement === "top"
+    ? "M -180 94 C 220 24, 585 164, 980 88 S 1580 35, 1980 92"
+    : "M -180 76 C 215 154, 610 -8, 1005 82 S 1585 140, 1980 70";
+  const copy = "WE COME TO YOU • REAL CREW • POWER + WATER INCLUDED • YOUR CAR, YOUR VERSION OF THE SITE • ";
+
+  return (
+    <div className={`veh-welcome-ribbon veh-welcome-ribbon-${placement}`} aria-hidden="true">
+      <svg viewBox="0 0 1800 180" preserveAspectRatio="none" focusable="false">
+        <path id={pathId} className="veh-welcome-ribbon-line" d={curve} />
+        <text className="veh-welcome-ribbon-text" dy="0.34em">
+          <textPath href={`#${pathId}`} startOffset={placement === "top" ? "-8%" : "-3%"}>
+            {copy.repeat(4)}
+          </textPath>
+        </text>
+      </svg>
+    </div>
+  );
+}
 
 export function VehicleGlobalUI() {
   const pathname = usePathname();
@@ -75,30 +97,29 @@ export function VehicleGlobalUI() {
 
   return (
     <div className="veh-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target !== event.currentTarget) return; pickerOpen ? closePicker() : dismissPrompt(); }}>
+      {onboarding && <WelcomeRibbon placement="top" />}
       <section ref={panelRef} className={`veh-modal veh-modal-clean ${onboarding ? "is-welcome" : "is-change"}`} data-header-tone="ink" role="dialog" aria-modal="true" aria-labelledby="veh-modal-title">
         <button className="veh-modal-close" type="button" onClick={pickerOpen ? closePicker : dismissPrompt} aria-label="Close vehicle picker">×</button>
         {onboarding ? (
           <div className="veh-welcome-shell">
-            <div className="veh-welcome-ticket" aria-hidden="true">
-              <span>EVERY DETAIL</span>
-              <b>ATL / 01</b>
-            </div>
-
             <div className="veh-welcome-brandrow" aria-hidden="true">
-              <img src="/brand/every-detail-mark.png" alt="" />
-              <span>Mobile detailing · Decatur / Atlanta</span>
+              <div className="veh-welcome-brandlock">
+                <img src="/brand/every-detail-mark.png" alt="" />
+                <span>Mobile detailing · Decatur / Atlanta</span>
+              </div>
+              <b>WELCOME / 01</b>
             </div>
 
             <div className="veh-welcome-layout">
               <div className="veh-welcome-intro">
                 <p>WELCOME IN</p>
-                <h2 id="veh-modal-title">Your car makes this site <em>yours.</em></h2>
-                <p className="veh-welcome-lede">Tell us what you drive and we’ll quietly tune pricing, recommendations, and booking around it.</p>
+                <h2 id="veh-modal-title"><span>Your car makes</span><span>this site</span><em>yours.</em></h2>
+                <p className="veh-welcome-lede">Tell us what you drive. We’ll quietly tune pricing, recommendations, and booking around it.</p>
               </div>
 
               <div className="veh-welcome-utility">
                 <div className="veh-welcome-question">
-                  <p className="veh-modal-kicker">ONE QUICK THING</p>
+                  <p className="veh-modal-kicker">01 / YOUR CAR</p>
                   <h3>What do you drive?</h3>
                 </div>
 
@@ -155,6 +176,7 @@ export function VehicleGlobalUI() {
           </>
         )}
       </section>
+      {onboarding && <WelcomeRibbon placement="bottom" />}
     </div>
   );
 }

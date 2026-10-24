@@ -17538,3 +17538,243 @@ body:has(.pl60-page) .site-shared-logo-mark{
     opacity:1!important;
   }
 }
+
+/* ============================================================
+   V103 — OPENING CARD: CURVED RIBBON REVEAL + COMPOSITION TUNE
+   Two one-shot homepage-language ribbons carry the entrance.
+   The card itself stays calm and fully composed. No looping,
+   no layout morphs, no resize choreography.
+   ============================================================ */
+.veh-modal-backdrop:has(.veh-modal.is-welcome){
+  isolation:isolate;
+  overflow:hidden!important;
+}
+.veh-modal-backdrop:has(.veh-modal.is-welcome)::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(8,8,7,.04),rgba(8,8,7,.14));
+}
+.veh-modal.is-welcome{
+  z-index:3!important;
+  width:min(748px,calc(100vw - 52px))!important;
+  max-height:min(610px,calc(100svh - 54px))!important;
+  border-radius:28px!important;
+  animation:v103CardArrive .56s .16s cubic-bezier(.2,.82,.22,1) both!important;
+}
+.veh-welcome-shell{
+  padding:32px 38px 30px!important;
+}
+.veh-welcome-ticket{display:none!important}
+.veh-welcome-brandrow{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:1rem!important;
+  padding-bottom:14px!important;
+}
+.veh-welcome-brandlock{
+  display:flex;
+  align-items:center;
+  gap:.72rem;
+  min-width:0;
+}
+.veh-welcome-brandrow>b{
+  flex:none;
+  color:#8b8278;
+  font:850 .56rem/1 var(--font-display);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.veh-welcome-brandrow img{
+  width:39px!important;
+  height:39px!important;
+}
+.veh-welcome-layout{
+  grid-template-columns:minmax(0,.93fr) minmax(300px,1.07fr)!important;
+  gap:38px!important;
+  align-items:center!important;
+  padding-top:26px!important;
+}
+.veh-modal.is-welcome .veh-welcome-intro>p:first-child{
+  margin-bottom:.65rem!important;
+  animation:v103ContentSettle .42s .24s cubic-bezier(.2,.82,.22,1) both!important;
+}
+.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
+  max-width:none!important;
+  font-size:clamp(2.8rem,4.25vw,3.9rem)!important;
+  line-height:.9!important;
+  letter-spacing:-.058em!important;
+  animation:v103ContentSettle .44s .27s cubic-bezier(.2,.82,.22,1) both!important;
+}
+.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title span,
+.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title em{
+  display:block!important;
+  white-space:nowrap;
+}
+.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title em{
+  margin-top:.02em;
+  font-size:.92em!important;
+}
+.veh-welcome-lede{
+  max-width:25rem!important;
+  margin-top:.9rem!important;
+  font-size:.88rem!important;
+  line-height:1.48!important;
+  animation:v103ContentSettle .44s .3s cubic-bezier(.2,.82,.22,1) both!important;
+}
+.veh-welcome-utility{
+  animation:v103ContentSettle .46s .32s cubic-bezier(.2,.82,.22,1) both!important;
+}
+.veh-modal.is-welcome .veh-welcome-question .veh-modal-kicker{
+  margin-bottom:.52rem!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:#b8363d!important;
+  font-size:.57rem!important;
+  letter-spacing:.15em!important;
+}
+.veh-modal.is-welcome .veh-welcome-question h3{
+  font-size:clamp(2rem,3.15vw,2.55rem)!important;
+}
+.veh-modal.is-welcome .veh-search{margin-top:.82rem!important}
+.veh-modal.is-welcome .veh-search input{
+  min-height:55px!important;
+  border:1.35px solid rgba(17,16,14,.28)!important;
+  border-radius:12px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.94),0 8px 18px rgba(36,27,22,.045)!important;
+}
+.veh-modal.is-welcome .veh-search input:focus{
+  transform:none!important;
+  box-shadow:2px 2px 0 #b8363d!important;
+}
+.veh-modal.is-welcome .veh-remember{
+  margin-top:.8rem!important;
+  padding-top:.8rem!important;
+}
+.veh-modal.is-welcome .veh-account-entry{
+  margin-top:.8rem!important;
+  padding-top:.8rem!important;
+}
+.veh-modal.is-welcome .veh-skip{margin-top:.58rem!important}
+
+.veh-welcome-ribbon{
+  position:fixed;
+  left:-15vw;
+  width:130vw;
+  height:126px;
+  pointer-events:none;
+  will-change:transform,opacity;
+}
+.veh-welcome-ribbon svg{
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:visible;
+}
+.veh-welcome-ribbon-line{
+  fill:none;
+  stroke:#d56865;
+  stroke-width:72;
+  stroke-linecap:round;
+}
+.veh-welcome-ribbon-text{
+  fill:#f2ecdf;
+  font-family:var(--font-display);
+  font-size:34px;
+  font-weight:850;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+  white-space:pre;
+}
+.veh-welcome-ribbon-top{
+  z-index:1;
+  top:calc(50% - 276px);
+  opacity:.96;
+  filter:drop-shadow(0 12px 22px rgba(30,18,15,.12));
+  animation:v103RibbonRight .9s cubic-bezier(.18,.82,.2,1) both;
+}
+.veh-welcome-ribbon-bottom{
+  z-index:5;
+  top:calc(50% + 210px);
+  opacity:.98;
+  filter:drop-shadow(0 16px 28px rgba(30,18,15,.18));
+  animation:v103RibbonLeft 1s .06s cubic-bezier(.18,.82,.2,1) both;
+}
+
+@keyframes v103RibbonRight{
+  0%{opacity:0;transform:translate3d(108vw,-9px,0) rotate(-1.2deg)}
+  28%{opacity:1}
+  100%{opacity:.96;transform:translate3d(-2vw,0,0) rotate(-.7deg)}
+}
+@keyframes v103RibbonLeft{
+  0%{opacity:0;transform:translate3d(-108vw,9px,0) rotate(1deg)}
+  28%{opacity:1}
+  100%{opacity:.98;transform:translate3d(2vw,0,0) rotate(.55deg)}
+}
+@keyframes v103CardArrive{
+  from{opacity:0;transform:translateY(10px) scale(.995)}
+  to{opacity:1;transform:none}
+}
+@keyframes v103ContentSettle{
+  from{opacity:0;transform:translateY(5px)}
+  to{opacity:1;transform:none}
+}
+
+@media(max-width:760px){
+  .veh-modal.is-welcome{
+    z-index:3!important;
+    width:calc(100% - 18px)!important;
+    max-height:calc(100svh - 26px)!important;
+    margin-bottom:8px;
+    border-radius:24px!important;
+  }
+  .veh-welcome-shell{padding:30px 20px 22px!important}
+  .veh-welcome-brandrow>b{display:none}
+  .veh-welcome-layout{display:block!important;padding-top:20px!important}
+  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
+    font-size:clamp(2.65rem,11vw,3.55rem)!important;
+    max-width:9.7ch!important;
+  }
+  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title span,
+  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title em{white-space:normal}
+  .veh-welcome-lede{margin-top:.7rem!important;font-size:.86rem!important}
+  .veh-welcome-utility{
+    margin-top:1.15rem!important;
+    padding-top:1rem!important;
+  }
+  .veh-welcome-ribbon{
+    left:-34vw;
+    width:168vw;
+    height:102px;
+  }
+  .veh-welcome-ribbon-line{stroke-width:62}
+  .veh-welcome-ribbon-text{font-size:30px}
+  .veh-welcome-ribbon-top{top:7.5svh}
+  .veh-welcome-ribbon-bottom{top:auto;bottom:8px}
+}
+
+@media(max-width:430px){
+  .veh-welcome-brandrow span{font-size:.5rem!important}
+  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{font-size:clamp(2.45rem,10.8vw,3.15rem)!important}
+  .veh-welcome-ribbon-bottom{bottom:0}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .veh-modal.is-welcome,
+  .veh-modal.is-welcome .veh-welcome-intro>p:first-child,
+  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title,
+  .veh-welcome-lede,
+  .veh-welcome-utility,
+  .veh-welcome-ribbon-top,
+  .veh-welcome-ribbon-bottom{
+    animation:none!important;
+    opacity:1!important;
+  }
+  .veh-welcome-ribbon-top{transform:translate3d(-2vw,0,0) rotate(-.7deg)!important}
+  .veh-welcome-ribbon-bottom{transform:translate3d(2vw,0,0) rotate(.55deg)!important}
+}
