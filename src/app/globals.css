@@ -13708,89 +13708,6 @@ body:has(.v29-hero) .site-context-pill>small{display:block!important}
    Personal, useful, and intentionally quiet. No seasonal layer.
    ============================================================ */
 
-/* Vehicle welcome: a friendly arrival, not a setup form. */
-.veh-modal-backdrop{
-  animation:v76BackdropIn .24s ease-out both!important;
-}
-.veh-modal.veh-modal-clean{
-  width:min(620px,calc(100vw - 34px))!important;
-  padding:clamp(28px,4.4vw,48px)!important;
-  border-radius:30px!important;
-  box-shadow:0 28px 90px rgba(0,0,0,.28)!important;
-  animation:v76WelcomeIn .46s cubic-bezier(.16,1,.3,1) both!important;
-  transform-origin:50% 70%;
-}
-.veh-modal.is-welcome .veh-modal-kicker,
-.veh-modal.is-welcome #veh-modal-title,
-.veh-modal.is-welcome .veh-modal-copy,
-.veh-modal.is-welcome .veh-search,
-.veh-modal.is-welcome .veh-remember,
-.veh-modal.is-welcome .veh-skip{
-  animation:v76WelcomeContent .46s cubic-bezier(.16,1,.3,1) both;
-}
-.veh-modal.is-welcome #veh-modal-title{animation-delay:.035s}
-.veh-modal.is-welcome .veh-modal-copy{animation-delay:.07s}
-.veh-modal.is-welcome .veh-search{animation-delay:.105s}
-.veh-modal.is-welcome .veh-remember{animation-delay:.14s}
-.veh-modal.is-welcome .veh-skip{animation-delay:.175s}
-.veh-modal-kicker{
-  margin-bottom:.8rem!important;
-  color:#b54e4e!important;
-  font-size:.68rem!important;
-  letter-spacing:.15em!important;
-}
-.veh-modal.veh-modal-clean h2{
-  max-width:11ch!important;
-  margin:0!important;
-  font-size:clamp(3rem,5.5vw,5.2rem)!important;
-  line-height:.88!important;
-  letter-spacing:-.06em!important;
-}
-.veh-modal-copy{
-  max-width:30rem!important;
-  margin:1rem 0 1.4rem!important;
-  color:#625e58!important;
-  font-size:1rem!important;
-  line-height:1.5!important;
-}
-.veh-search input{
-  min-height:62px!important;
-  padding:0 18px!important;
-  border:1.5px solid rgba(17,17,17,.35)!important;
-  border-radius:16px!important;
-  background:#fffdfa!important;
-  box-shadow:none!important;
-  font-size:1rem!important;
-}
-.veh-search input:focus{
-  border-color:#111!important;
-  outline:3px solid rgba(213,104,101,.18)!important;
-  outline-offset:2px!important;
-}
-.veh-remember{
-  margin-top:1rem!important;
-  padding-top:1rem!important;
-  border-top:1px solid rgba(17,17,17,.12)!important;
-  color:#292725!important;
-}
-.veh-skip{
-  margin-top:.7rem!important;
-  color:#625e58!important;
-  font-weight:700!important;
-  text-underline-offset:4px!important;
-}
-.veh-modal-close{
-  top:18px!important;
-  right:18px!important;
-  width:44px!important;
-  height:44px!important;
-  border-radius:999px!important;
-  background:rgba(255,255,255,.62)!important;
-}
-@keyframes v76BackdropIn{from{opacity:0}to{opacity:1}}
-@keyframes v76WelcomeIn{from{opacity:0;transform:translateY(18px) scale(.975)}to{opacity:1;transform:none}}
-@keyframes v76WelcomeContent{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
-
 /* Selected service + known vehicle: stop asking/ explaining and show the useful summary. */
 .v15-stage-main.has-site-vehicle{
   display:block!important;
@@ -14155,7 +14072,7 @@ body:has(.v29-hero) .site-context-pill>small{display:block!important}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .veh-modal-backdrop,.veh-modal.veh-modal-clean,.veh-modal.is-welcome>*{animation:none!important}
+  .veh-modal-backdrop,.veh-modal.veh-modal-clean{animation:none!important}
 }
 
 /* ============================================================
@@ -14196,7 +14113,7 @@ body:has(.v29-hero) .site-context-pill>small{display:block!important}
   scroll-padding-top:68px;
   scroll-padding-bottom:calc(28px + env(safe-area-inset-bottom));
 }
-.veh-modal.veh-modal-clean .veh-modal-close{
+.veh-modal.is-change .veh-modal-close{
   position:sticky!important;
   top:0!important;
   z-index:10!important;
@@ -14246,7 +14163,7 @@ body:has(.v29-hero) .site-context-pill>small{display:block!important}
     max-height:min(92dvh,92svh)!important;
     padding-bottom:calc(26px + env(safe-area-inset-bottom))!important;
   }
-  .veh-modal.veh-modal-clean .veh-modal-close{
+  .veh-modal.is-change .veh-modal-close{
     top:2px!important;
     margin:-4px 0 -38px auto!important;
     width:46px!important;
@@ -16018,328 +15935,6 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
   .bk-done-addon-offer button{grid-column:1/-1;width:100%}
 }
 
-/* ============================================================
-   V92 — FIRST-VISIT WELCOME SEQUENCE
-   A short arrival moment before the vehicle question. Account
-   entry stays secondary, and later vehicle changes remain unchanged.
-   ============================================================ */
-.veh-modal.is-welcome .veh-welcome-intro{
-  min-height:clamp(118px,15vw,166px);
-  display:flex;
-  align-items:flex-end;
-  overflow:hidden;
-}
-.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
-  max-width:13ch!important;
-  padding-right:54px;
-  display:flex;
-  flex-direction:column;
-  gap:.02em;
-  margin:0!important;
-  color:#111;
-  font-size:clamp(2.2rem,3.1vw,2.85rem)!important;
-  line-height:.9!important;
-  letter-spacing:-.055em!important;
-  transform-origin:left bottom;
-  animation:v92WelcomeSettle .68s cubic-bezier(.16,1,.3,1) both!important;
-}
-.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title span{display:block}
-.veh-modal.is-welcome .veh-welcome-question{
-  margin-top:1.1rem;
-  opacity:0;
-  transform:translateY(24px);
-  animation:v92QuestionIn .48s .43s cubic-bezier(.16,1,.3,1) both;
-}
-.veh-modal.is-welcome .veh-welcome-question .veh-modal-kicker{
-  margin:0 0 .55rem!important;
-}
-.veh-modal.is-welcome .veh-welcome-question h3{
-  max-width:11ch;
-  margin:0;
-  font-family:var(--font-display);
-  font-size:clamp(2.85rem,5vw,4.45rem);
-  font-weight:700;
-  line-height:.9;
-  letter-spacing:-.055em;
-  color:#111;
-}
-.veh-modal.is-welcome .veh-welcome-question .veh-modal-copy{
-  margin:.7rem 0 0!important;
-}
-.veh-modal.is-welcome .veh-search{
-  opacity:0;
-  transform:translateY(18px);
-  animation:v92QuestionIn .42s .54s cubic-bezier(.16,1,.3,1) both!important;
-}
-.veh-modal.is-welcome .veh-remember{
-  opacity:0;
-  transform:translateY(12px);
-  animation:v92QuestionIn .4s .61s cubic-bezier(.16,1,.3,1) both!important;
-}
-.veh-account-entry{
-  margin-top:.75rem;
-  min-height:42px;
-  display:flex;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:.45rem .7rem;
-  color:rgba(17,17,17,.62);
-  font:650 .82rem/1.25 var(--font-body);
-}
-.veh-modal.is-welcome .veh-account-entry{
-  opacity:0;
-  transform:translateY(10px);
-  animation:v92QuestionIn .4s .67s cubic-bezier(.16,1,.3,1) both;
-}
-.veh-account-entry>span{color:rgba(17,17,17,.58)}
-.veh-account-entry>i{
-  width:3px;
-  height:3px;
-  border-radius:999px;
-  background:rgba(17,17,17,.28);
-}
-.veh-account-link{
-  color:#111;
-  font-weight:800;
-  text-decoration:underline;
-  text-decoration-thickness:1px;
-  text-underline-offset:4px;
-}
-.veh-account-primary{
-  display:inline-flex;
-  min-height:40px;
-  align-items:center;
-}
-.veh-modal.is-welcome .veh-skip{
-  opacity:0;
-  transform:translateY(8px);
-  animation:v92QuestionIn .38s .72s cubic-bezier(.16,1,.3,1) both!important;
-}
-@keyframes v92WelcomeSettle{
-  0%{opacity:0;transform:translateY(28px) scale(1.42);filter:blur(3px)}
-  24%{opacity:1;filter:blur(0)}
-  100%{opacity:1;transform:none;filter:none}
-}
-@keyframes v92QuestionIn{
-  from{opacity:0;transform:translateY(24px)}
-  to{opacity:1;transform:none}
-}
-@media(max-width:640px){
-  .veh-modal.is-welcome .veh-welcome-intro{min-height:108px}
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
-    max-width:12ch!important;
-    padding-right:48px;
-    font-size:clamp(1.92rem,8.3vw,2.45rem)!important;
-  }
-  .veh-modal.is-welcome .veh-welcome-question{margin-top:.8rem}
-  .veh-modal.is-welcome .veh-welcome-question h3{
-    max-width:10ch;
-    font-size:clamp(2.55rem,12.5vw,3.45rem);
-  }
-  .veh-modal.is-welcome .veh-welcome-question .veh-modal-copy{font-size:.9rem!important}
-  .veh-account-entry{gap:.4rem .6rem;font-size:.8rem}
-}
-@media(prefers-reduced-motion:reduce){
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title,
-  .veh-modal.is-welcome .veh-welcome-question,
-  .veh-modal.is-welcome .veh-search,
-  .veh-modal.is-welcome .veh-remember,
-  .veh-modal.is-welcome .veh-account-entry,
-  .veh-modal.is-welcome .veh-skip{
-    animation:none!important;
-    opacity:1!important;
-    transform:none!important;
-    filter:none!important;
-  }
-}
-
-/* ============================================================
-   V94 — FIRST-VISIT WELCOME, SLOWER ARRIVAL
-   Give the welcome its own beat, then compress smoothly into the
-   vehicle question. Final state is calmer, tighter, and more premium.
-   ============================================================ */
-.veh-modal.is-welcome{
-  width:min(590px,calc(100vw - 34px))!important;
-  padding:clamp(34px,4vw,46px)!important;
-  border:1px solid rgba(17,17,17,.14)!important;
-  background:#f3f1ec!important;
-  box-shadow:0 32px 100px rgba(0,0,0,.32)!important;
-}
-.veh-modal.is-welcome .veh-welcome-intro{
-  height:250px;
-  min-height:0!important;
-  display:flex;
-  align-items:center;
-  overflow:hidden;
-  border-bottom:1px solid transparent;
-  animation:v94WelcomeFrame 2.05s cubic-bezier(.22,.8,.2,1) both;
-}
-.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
-  max-width:12ch!important;
-  padding-right:54px;
-  margin:0!important;
-  font-size:clamp(2.25rem,3.4vw,2.9rem)!important;
-  line-height:.92!important;
-  letter-spacing:-.055em!important;
-  transform-origin:left center;
-  animation:v94WelcomeTitle 2.05s cubic-bezier(.22,.8,.2,1) both!important;
-}
-.veh-modal.is-welcome .veh-welcome-question{
-  margin-top:1rem;
-  opacity:0;
-  transform:translateY(22px);
-  animation:v94Reveal .72s 1.48s cubic-bezier(.16,1,.3,1) both;
-}
-.veh-modal.is-welcome .veh-welcome-question .veh-modal-kicker{
-  margin:0 0 .5rem!important;
-  font-size:.66rem!important;
-}
-.veh-modal.is-welcome .veh-welcome-question h3{
-  max-width:none;
-  margin:0;
-  font-family:var(--font-display);
-  font-size:clamp(2.55rem,4.25vw,3.45rem);
-  font-weight:700;
-  line-height:.94;
-  letter-spacing:-.05em;
-  color:#111;
-}
-.veh-modal.is-welcome .veh-welcome-question .veh-modal-copy{
-  margin:.6rem 0 0!important;
-  max-width:34rem!important;
-  font-size:.96rem!important;
-  line-height:1.45!important;
-}
-.veh-modal.is-welcome .veh-search{
-  margin-top:1.15rem!important;
-  opacity:0;
-  transform:translateY(18px);
-  animation:v94Reveal .66s 1.62s cubic-bezier(.16,1,.3,1) both!important;
-}
-.veh-modal.is-welcome .veh-search input{
-  min-height:58px!important;
-  border-radius:14px!important;
-  background:#fffdfa!important;
-}
-.veh-modal.is-welcome .veh-remember{
-  margin-top:.9rem!important;
-  padding-top:.9rem!important;
-  opacity:0;
-  transform:translateY(14px);
-  animation:v94Reveal .62s 1.72s cubic-bezier(.16,1,.3,1) both!important;
-}
-.veh-modal.is-welcome .veh-account-entry{
-  margin-top:.7rem;
-  padding:.8rem 0 0;
-  min-height:0;
-  border-top:1px solid rgba(17,17,17,.1);
-  display:grid;
-  grid-template-columns:auto auto auto;
-  justify-content:start;
-  align-items:center;
-  gap:.5rem;
-  opacity:0;
-  transform:translateY(12px);
-  animation:v94Reveal .58s 1.82s cubic-bezier(.16,1,.3,1) both;
-}
-.veh-modal.is-welcome .veh-account-entry>span{
-  grid-column:1/-1;
-  margin-bottom:.08rem;
-  color:rgba(17,17,17,.55);
-  font-size:.76rem;
-  font-weight:700;
-}
-.veh-modal.is-welcome .veh-account-entry>i{display:none}
-.veh-modal.is-welcome .veh-account-link{
-  min-height:38px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:.5rem .75rem;
-  border:1px solid rgba(17,17,17,.22);
-  border-radius:999px;
-  background:rgba(255,255,255,.44);
-  color:#111;
-  font:800 .76rem/1 var(--font-display);
-  text-decoration:none;
-}
-.veh-modal.is-welcome .veh-account-link:hover{
-  border-color:#111;
-  background:#fffdfa;
-}
-.veh-modal.is-welcome .veh-account-primary{
-  grid-column:1/-1;
-  justify-self:start;
-}
-.veh-modal.is-welcome .veh-skip{
-  margin-top:.75rem!important;
-  opacity:0;
-  transform:translateY(10px);
-  animation:v94Reveal .55s 1.92s cubic-bezier(.16,1,.3,1) both!important;
-}
-@keyframes v94WelcomeFrame{
-  0%,52%{height:250px;border-bottom-color:transparent}
-  100%{height:92px;border-bottom-color:rgba(17,17,17,.1)}
-}
-@keyframes v94WelcomeTitle{
-  0%{opacity:0;transform:translateY(18px) scale(1.48);filter:blur(2px)}
-  16%{opacity:1;transform:translateY(0) scale(1.48);filter:blur(0)}
-  52%{opacity:1;transform:translateY(0) scale(1.48);filter:none}
-  100%{opacity:1;transform:translateY(0) scale(.78);filter:none}
-}
-@keyframes v94Reveal{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:none}
-}
-@media(max-width:640px){
-  .veh-modal.is-welcome{
-    width:100%!important;
-    padding:28px 18px calc(24px + env(safe-area-inset-bottom))!important;
-    border-radius:24px 24px 0 0!important;
-  }
-  .veh-modal.is-welcome .veh-welcome-intro{height:220px}
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
-    max-width:11ch!important;
-    padding-right:44px;
-    font-size:clamp(2rem,8.2vw,2.5rem)!important;
-  }
-  .veh-modal.is-welcome .veh-welcome-question{margin-top:.85rem}
-  .veh-modal.is-welcome .veh-welcome-question h3{
-    font-size:clamp(2.35rem,10.6vw,3rem);
-  }
-  .veh-modal.is-welcome .veh-welcome-question .veh-modal-copy{font-size:.9rem!important}
-  @keyframes v94WelcomeFrame{
-    0%,52%{height:220px;border-bottom-color:transparent}
-    100%{height:80px;border-bottom-color:rgba(17,17,17,.1)}
-  }
-}
-@media(max-width:390px){
-  .veh-modal.is-welcome{padding-inline:16px!important}
-  .veh-modal.is-welcome .veh-welcome-question h3{font-size:clamp(2.2rem,10vw,2.72rem)}
-  .veh-modal.is-welcome .veh-account-entry{grid-template-columns:auto auto}
-}
-@media(prefers-reduced-motion:reduce){
-  .veh-modal.is-welcome .veh-welcome-intro{
-    height:92px!important;
-    border-bottom-color:rgba(17,17,17,.1)!important;
-    animation:none!important;
-  }
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
-    transform:scale(.78)!important;
-    animation:none!important;
-  }
-  .veh-modal.is-welcome .veh-welcome-question,
-  .veh-modal.is-welcome .veh-search,
-  .veh-modal.is-welcome .veh-remember,
-  .veh-modal.is-welcome .veh-account-entry,
-  .veh-modal.is-welcome .veh-skip{
-    animation:none!important;
-    opacity:1!important;
-    transform:none!important;
-  }
-}
-
-
 /* V95 link interaction hardening */
 .bk-top-logo,
 .q51-top-logo {
@@ -16846,935 +16441,535 @@ body:has(.pl60-page) .site-shared-logo-mark{
 }
 
 /* ============================================================
-   V101 — HOMEPAGE OPENING CARD, ART-DIRECTED ARRIVAL
-   The first-visit vehicle prompt behaves like a composed homepage
-   object: a branded poster holds, then compresses to reveal the
-   useful vehicle/account controls. Change-vehicle flow is unchanged.
+   V104 — ONE AUTHORITATIVE VEHICLE WELCOME SYSTEM
+   Friendly retro-premium card + card-anchored ribbons. This is the
+   only welcome-card style layer. No historical welcome overrides.
    ============================================================ */
-.veh-modal.is-welcome{
-  width:min(900px,calc(100vw - 40px))!important;
-  max-height:min(680px,calc(100svh - 40px))!important;
-  padding:0!important;
+
+html.ed-vehicle-modal-open,
+html.ed-vehicle-modal-open body{
+  overscroll-behavior:none;
+}
+
+/* Hide the homepage's own curved tape while the opening composition is up. */
+html.ed-vehicle-welcome-open .ed-tape{
+  opacity:0!important;
+  visibility:hidden!important;
+}
+
+.veh-modal-backdrop.is-welcome-backdrop{
+  display:grid!important;
+  place-items:center!important;
+  align-items:center!important;
+  padding:max(36px,env(safe-area-inset-top)) 18px max(58px,env(safe-area-inset-bottom))!important;
   overflow:hidden!important;
-  border:1px solid rgba(17,16,14,.22)!important;
-  border-radius:26px!important;
-  background:#f3f1ec!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.64),
-    0 36px 110px rgba(8,8,7,.35),
-    0 10px 28px rgba(8,8,7,.16)!important;
-  animation:v101CardArrive .72s cubic-bezier(.16,1,.3,1) both!important;
-}
-.veh-modal.is-welcome::before{display:none!important}
-.veh-modal.is-welcome .veh-modal-close{
-  z-index:8;
-  top:16px!important;
-  right:16px!important;
-  border-color:rgba(243,237,223,.42)!important;
-  background:rgba(8,8,7,.26)!important;
-  color:#f4f0e7!important;
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .2s ease!important;
-}
-.veh-modal.is-welcome .veh-modal-close:hover{
-  transform:rotate(4deg);
-  background:#f4f0e7!important;
-  border-color:#f4f0e7!important;
-  color:#11100e!important;
-}
-.veh-welcome-shell{
-  min-height:560px;
-  display:grid;
-  grid-template-columns:1fr 0fr;
-  background:#f3f1ec;
-  animation:v101WelcomeSplit 2.5s cubic-bezier(.22,.78,.18,1) both;
-}
-.veh-welcome-poster{
-  position:relative;
-  min-width:0;
-  min-height:560px;
-  padding:28px 30px 26px;
-  display:grid;
-  grid-template-rows:auto 1fr auto;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 76% 18%,rgba(255,255,255,.08),transparent 20%),
-    linear-gradient(145deg,#7c1718 0%,#5b0e0d 57%,#420908 100%);
-  color:#f4f0e7;
-  isolation:isolate;
-}
-.veh-welcome-poster::before{
-  content:"";
-  position:absolute;
-  inset:-18% -25% auto auto;
-  width:68%;
-  aspect-ratio:1;
-  border:1px solid rgba(244,240,231,.17);
-  border-radius:50%;
-  box-shadow:0 0 0 34px rgba(244,240,231,.025),0 0 0 68px rgba(244,240,231,.018);
-  transform:rotate(-14deg);
-  pointer-events:none;
-}
-.veh-welcome-poster::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:-1;
-  opacity:.2;
-  background-image:radial-gradient(rgba(244,240,231,.46) .45px,transparent .45px);
-  background-size:5px 5px;
-  pointer-events:none;
-}
-.veh-welcome-poster-top,
-.veh-welcome-poster-foot{
-  position:relative;
-  z-index:2;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:1rem;
-  font:850 .62rem/1 var(--font-display);
-  letter-spacing:.13em;
-  text-transform:uppercase;
-}
-.veh-welcome-poster-top{padding-bottom:16px;border-bottom:1px solid rgba(244,240,231,.26)}
-.veh-welcome-poster-top span:last-child{opacity:.58}
-.veh-welcome-poster-foot{padding-top:16px;border-top:1px solid rgba(244,240,231,.26);align-items:flex-end}
-.veh-welcome-poster-foot span{max-width:22rem;opacity:.68;letter-spacing:.06em;line-height:1.35}
-.veh-welcome-poster-foot b{font-size:1.15rem;letter-spacing:-.02em}
-.veh-modal.is-welcome .veh-welcome-intro{
-  height:auto!important;
-  min-height:0!important;
-  margin:0!important;
-  display:flex!important;
-  flex-direction:column;
-  align-items:flex-start!important;
-  justify-content:center;
-  overflow:visible!important;
-  border:0!important;
-  animation:none!important;
-}
-.veh-modal.is-welcome .veh-welcome-intro>p{
-  margin:0 0 1rem;
-  color:rgba(244,240,231,.66);
-  font:850 .64rem/1.2 var(--font-display);
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  opacity:0;
-  transform:translateY(8px);
-  animation:v101PosterLine .6s .26s cubic-bezier(.16,1,.3,1) both;
-}
-.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
-  max-width:none!important;
-  padding:0!important;
-  display:block!important;
-  color:#f4f0e7!important;
-  font-size:clamp(5.6rem,10.5vw,9.5rem)!important;
-  font-weight:850!important;
-  line-height:.72!important;
-  letter-spacing:-.07em!important;
-  text-transform:uppercase;
-  transform-origin:left center;
-  animation:v101PosterTitle 2.5s cubic-bezier(.22,.78,.18,1) both!important;
-}
-.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title span{display:block}
-.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title span:last-child{
-  margin-left:.46em;
-  color:#f0b0aa;
-}
-.veh-welcome-utility{
-  min-width:0;
-  min-height:0;
-  padding:clamp(34px,4vw,48px);
-  align-self:stretch;
-  overflow:auto;
-  opacity:0;
-  transform:translateX(28px);
-  animation:v101UtilityIn .7s 1.72s cubic-bezier(.16,1,.3,1) both;
-}
-.veh-modal.is-welcome .veh-welcome-question{
-  margin:0!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:none!important;
-}
-.veh-modal.is-welcome .veh-welcome-question .veh-modal-kicker{
-  margin:0 0 .7rem!important;
-  color:#b8363d!important;
-  font-size:.64rem!important;
-  letter-spacing:.16em!important;
-}
-.veh-modal.is-welcome .veh-welcome-question h3{
-  max-width:8ch;
-  margin:0;
-  color:#11100e;
-  font-family:var(--font-display);
-  font-size:clamp(3rem,5vw,4.45rem);
-  font-weight:800;
-  line-height:.84;
-  letter-spacing:-.058em;
-}
-.veh-modal.is-welcome .veh-welcome-question .veh-modal-copy{
-  max-width:28rem!important;
-  margin:.85rem 0 0!important;
-  color:#615b54!important;
-  font-size:.95rem!important;
-  line-height:1.5!important;
-}
-.veh-modal.is-welcome .veh-search{
-  margin-top:1.35rem!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:none!important;
-}
-.veh-modal.is-welcome .veh-search input{
-  min-height:60px!important;
-  border:1.5px solid rgba(17,16,14,.28)!important;
-  border-radius:3px!important;
-  background:#fffdfa!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.84),
-    0 10px 24px rgba(36,27,22,.055)!important;
-}
-.veh-modal.is-welcome .veh-search input:focus{
-  border-color:#11100e!important;
-  outline:0!important;
-  box-shadow:4px 4px 0 #b8363d!important;
-}
-.veh-modal.is-welcome .veh-search-results{
-  border:1.5px solid #11100e!important;
-  border-top:0!important;
-  box-shadow:0 18px 36px rgba(36,27,22,.11);
-}
-.veh-modal.is-welcome .veh-remember{
-  margin-top:1rem!important;
-  padding-top:1rem!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:none!important;
-}
-.veh-modal.is-welcome .veh-account-entry{
-  margin-top:1rem!important;
-  padding:1rem 0 0!important;
-  border-top:1px solid rgba(17,16,14,.11)!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:none!important;
-}
-.veh-modal.is-welcome .veh-account-entry>span{
-  color:rgba(17,16,14,.52)!important;
-  font-size:.72rem!important;
-  letter-spacing:.02em;
-}
-.veh-modal.is-welcome .veh-account-link{
-  border-radius:3px!important;
-  background:transparent!important;
-  border-color:rgba(17,16,14,.22)!important;
-  transition:transform .15s ease,box-shadow .15s ease,background-color .15s ease!important;
-}
-.veh-modal.is-welcome .veh-account-link:hover{
-  transform:translate(-1px,-1px);
-  background:#fffdfa!important;
-  box-shadow:2px 2px 0 #11100e;
-}
-.veh-modal.is-welcome .veh-skip{
-  margin-top:.8rem!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:none!important;
-  color:#716a62!important;
-}
-@keyframes v101CardArrive{
-  from{opacity:0;transform:translateY(24px) scale(.982)}
-  to{opacity:1;transform:none}
-}
-@keyframes v101WelcomeSplit{
-  0%,55%{grid-template-columns:1fr 0fr}
-  100%{grid-template-columns:minmax(290px,.82fr) minmax(430px,1.18fr)}
-}
-@keyframes v101PosterTitle{
-  0%{opacity:0;transform:translateY(28px) scale(.95);filter:blur(2px)}
-  13%{opacity:1;transform:none;filter:none}
-  55%{opacity:1;transform:none;filter:none}
-  100%{opacity:1;transform:scale(.58);filter:none}
-}
-@keyframes v101PosterLine{
-  from{opacity:0;transform:translateY(8px)}
-  to{opacity:1;transform:none}
-}
-@keyframes v101UtilityIn{
-  from{opacity:0;transform:translateX(28px)}
-  to{opacity:1;transform:none}
+  background:rgba(12,11,10,.55)!important;
+  backdrop-filter:blur(8px)!important;
+  -webkit-backdrop-filter:blur(8px)!important;
+  touch-action:none;
+  animation:v104BackdropIn .24s ease-out both;
 }
 
-@media(max-width:760px){
-  .veh-modal.is-welcome{
-    width:100%!important;
-    max-height:94svh!important;
-    border-radius:24px 24px 0 0!important;
-    border-bottom:0!important;
-  }
-  .veh-welcome-shell{
-    min-height:0;
-    display:grid;
-    grid-template-columns:1fr!important;
-    grid-template-rows:270px auto;
-    animation:v101WelcomeSplitMobile 2.45s cubic-bezier(.22,.78,.18,1) both;
-  }
-  .veh-welcome-poster{
-    min-height:0;
-    height:100%;
-    padding:22px 20px 18px;
-  }
-  .veh-welcome-poster-top{padding-bottom:11px}
-  .veh-welcome-poster-foot{padding-top:10px}
-  .veh-welcome-poster-foot span{max-width:15rem;font-size:.56rem}
-  .veh-modal.is-welcome .veh-welcome-intro>p{margin-bottom:.6rem;font-size:.57rem}
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
-    font-size:clamp(4.6rem,22vw,7rem)!important;
-    line-height:.7!important;
-    animation:v101PosterTitleMobile 2.45s cubic-bezier(.22,.78,.18,1) both!important;
-  }
-  .veh-welcome-utility{
-    padding:24px 18px calc(24px + env(safe-area-inset-bottom));
-    transform:translateY(18px);
-    animation:v101UtilityInMobile .65s 1.72s cubic-bezier(.16,1,.3,1) both;
-  }
-  .veh-modal.is-welcome .veh-welcome-question h3{font-size:clamp(2.55rem,12vw,3.25rem)}
-  .veh-modal.is-welcome .veh-search input{min-height:56px!important;font-size:16px!important}
-  .veh-modal.is-welcome .veh-account-entry{grid-template-columns:auto auto!important}
-  .veh-modal.is-welcome .veh-modal-close{top:14px!important;right:14px!important}
-}
-@keyframes v101WelcomeSplitMobile{
-  0%,55%{grid-template-rows:270px 0fr}
-  100%{grid-template-rows:126px 1fr}
-}
-@keyframes v101PosterTitleMobile{
-  0%{opacity:0;transform:translateY(20px) scale(.96);filter:blur(2px)}
-  14%{opacity:1;transform:none;filter:none}
-  55%{opacity:1;transform:none;filter:none}
-  100%{opacity:1;transform:translateY(1px) scale(.43);filter:none}
-}
-@keyframes v101UtilityInMobile{
-  from{opacity:0;transform:translateY(18px)}
-  to{opacity:1;transform:none}
-}
-@media(max-width:410px){
-  .veh-welcome-poster-top span:last-child{display:none}
-  .veh-welcome-poster-foot span{max-width:12rem}
-  .veh-modal.is-welcome .veh-welcome-question .veh-modal-copy{font-size:.89rem!important}
-}
-@media(prefers-reduced-motion:reduce){
-  .veh-modal.is-welcome,
-  .veh-welcome-shell,
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title,
-  .veh-modal.is-welcome .veh-welcome-intro>p,
-  .veh-welcome-utility{
-    animation:none!important;
-    filter:none!important;
-  }
-  .veh-welcome-shell{grid-template-columns:minmax(290px,.82fr) minmax(430px,1.18fr)!important}
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{transform:scale(.58)!important}
-  .veh-welcome-utility{opacity:1!important;transform:none!important}
-  @media(max-width:760px){
-    .veh-welcome-shell{grid-template-columns:1fr!important;grid-template-rows:126px 1fr!important}
-    .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{transform:scale(.43)!important}
-  }
+.veh-welcome-stage{
+  position:relative;
+  z-index:0;
+  width:min(820px,calc(100vw - 44px));
+  display:grid;
+  place-items:center;
 }
 
-/* ============================================================
-   V102 — OPENING CARD: FRIENDLY RETRO PREMIUM
-   One composed paper object. No timed layout morph, no shrinking
-   headline, no split-screen reveal. Retro character lives in the
-   ticket, mark, type, paper texture, and small physical details.
-   ============================================================ */
 .veh-modal.is-welcome{
-  width:min(790px,calc(100vw - 40px))!important;
-  max-height:min(720px,calc(100svh - 40px))!important;
-  padding:0!important;
+  position:relative!important;
+  z-index:3!important;
+  width:100%!important;
+  max-height:calc(100svh - 94px)!important;
   overflow:visible!important;
-  border:1px solid rgba(17,16,14,.18)!important;
-  border-radius:30px!important;
-  background:#f4f0e7!important;
+  padding:0!important;
+  border:1px solid rgba(17,16,14,.17)!important;
+  border-radius:27px!important;
+  background:#f7f2e8!important;
+  color:#111!important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.9),
-    0 34px 90px rgba(15,12,10,.28),
-    0 8px 20px rgba(15,12,10,.12)!important;
-  animation:v102WelcomeArrive .46s cubic-bezier(.2,.82,.22,1) both!important;
+    0 30px 82px rgba(14,10,8,.24),
+    0 8px 24px rgba(14,10,8,.12)!important;
+  outline:none!important;
+  touch-action:pan-y;
+  animation:v104CardIn .48s .09s cubic-bezier(.2,.82,.22,1) both!important;
 }
-.veh-modal.is-welcome::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
+
+.veh-modal.is-welcome::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:0!important;
+  pointer-events:none!important;
   border-radius:inherit;
-  opacity:.18;
-  background-image:radial-gradient(rgba(72,55,42,.28) .45px,transparent .45px);
-  background-size:5px 5px;
-  mix-blend-mode:multiply;
+  opacity:.26!important;
+  background-image:radial-gradient(rgba(64,47,37,.24) .42px,transparent .48px)!important;
+  background-size:4px 4px!important;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.82),rgba(0,0,0,.28));
 }
+
+.veh-modal.is-welcome>*{position:relative;z-index:1}
+
 .veh-modal.is-welcome .veh-modal-close{
-  z-index:10;
-  top:16px!important;
-  right:16px!important;
-  width:38px!important;
-  height:38px!important;
-  border:1px solid rgba(17,16,14,.14)!important;
-  border-radius:50%!important;
-  background:rgba(244,240,231,.82)!important;
-  color:#11100e!important;
-  box-shadow:0 8px 20px rgba(17,16,14,.08)!important;
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  transition:transform .18s ease,background-color .18s ease!important;
+  position:absolute!important;
+  top:14px!important;
+  right:14px!important;
+  z-index:8!important;
+  margin:0!important;
+  width:40px!important;
+  height:40px!important;
+  display:grid!important;
+  place-items:center!important;
+  border:1px solid rgba(17,16,14,.15)!important;
+  border-radius:999px!important;
+  background:rgba(247,242,232,.88)!important;
+  color:#111!important;
+  box-shadow:0 6px 16px rgba(35,27,22,.06)!important;
+  font:500 1.22rem/1 var(--font-body)!important;
+  cursor:pointer;
+  transition:transform .16s ease,background-color .16s ease,border-color .16s ease!important;
 }
 .veh-modal.is-welcome .veh-modal-close:hover{
-  transform:rotate(5deg) scale(1.03)!important;
-  background:#fffaf2!important;
+  transform:translateY(-1px);
+  background:#fffaf1!important;
+  border-color:rgba(17,16,14,.28)!important;
 }
+.veh-modal.is-welcome .veh-modal-close:focus{outline:none!important}
+.veh-modal.is-welcome .veh-modal-close:focus-visible{
+  outline:2px solid #b8363d!important;
+  outline-offset:3px!important;
+}
+
 .veh-welcome-shell{
-  position:relative;
-  z-index:1;
-  min-height:0!important;
-  display:block!important;
-  padding:clamp(34px,4.8vw,52px)!important;
-  background:transparent!important;
-  animation:none!important;
-  overflow:visible;
+  padding:29px 34px 28px!important;
 }
-.veh-welcome-ticket{
-  position:absolute;
-  left:clamp(28px,4vw,44px);
-  top:-18px;
-  z-index:4;
-  display:flex;
-  align-items:center;
-  gap:.85rem;
-  padding:.7rem .9rem .64rem;
-  border:1.5px solid #11100e;
-  border-radius:4px;
-  background:#b8363d;
-  color:#fff8ee;
-  box-shadow:4px 4px 0 #11100e;
-  transform:rotate(-2.2deg);
-  font:850 .58rem/1 var(--font-display);
-  letter-spacing:.12em;
-  text-transform:uppercase;
-}
-.veh-welcome-ticket b{
-  padding-left:.8rem;
-  border-left:1px solid rgba(255,255,255,.38);
-  font-weight:850;
-}
+
 .veh-welcome-brandrow{
-  display:flex;
-  align-items:center;
-  gap:.8rem;
-  padding-bottom:1.2rem;
-  border-bottom:1px solid rgba(17,16,14,.14);
-  color:#6d655d;
-  font:800 .6rem/1 var(--font-display);
-  letter-spacing:.11em;
-  text-transform:uppercase;
-}
-.veh-welcome-brandrow img{
-  width:46px;
-  height:46px;
-  object-fit:contain;
-  filter:sepia(.1) saturate(.88);
-}
-.veh-welcome-layout{
-  display:grid;
-  grid-template-columns:minmax(0,.88fr) minmax(320px,1.12fr);
-  gap:clamp(30px,5vw,58px);
-  align-items:start;
-  padding-top:clamp(28px,4vw,42px);
-}
-.veh-modal.is-welcome .veh-welcome-intro{
-  display:block!important;
-  height:auto!important;
-  min-height:0!important;
-  margin:0!important;
-  border:0!important;
-  overflow:visible!important;
-  animation:none!important;
-}
-.veh-modal.is-welcome .veh-welcome-intro>p:first-child{
-  margin:0 0 .9rem!important;
-  color:#b8363d!important;
-  font:900 .62rem/1 var(--font-display)!important;
-  letter-spacing:.16em!important;
-  text-transform:uppercase;
-  opacity:1!important;
-  transform:none!important;
-  animation:v102WelcomeContent .42s .08s cubic-bezier(.2,.82,.22,1) both!important;
-}
-.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
-  max-width:8.2ch!important;
-  margin:0!important;
-  padding:0!important;
-  color:#11100e!important;
-  font-family:var(--font-display)!important;
-  font-size:clamp(3.15rem,6.2vw,5.25rem)!important;
-  font-weight:720!important;
-  line-height:.88!important;
-  letter-spacing:-.062em!important;
-  text-transform:none!important;
-  transform:none!important;
-  filter:none!important;
-  animation:v102WelcomeContent .46s .12s cubic-bezier(.2,.82,.22,1) both!important;
-}
-.veh-modal.is-welcome .veh-welcome-intro #veh-modal-title em{
-  display:block;
-  color:#b8363d;
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:.9em;
-  font-weight:500;
-  letter-spacing:-.055em;
-}
-.veh-welcome-lede{
-  max-width:28rem;
-  margin:1.25rem 0 0!important;
-  color:#625b53!important;
-  font-size:.94rem!important;
-  line-height:1.55!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:v102WelcomeContent .46s .16s cubic-bezier(.2,.82,.22,1) both!important;
-}
-.veh-welcome-utility{
-  min-width:0!important;
-  min-height:0!important;
-  padding:0!important;
-  overflow:visible!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:v102WelcomeContent .46s .18s cubic-bezier(.2,.82,.22,1) both!important;
-}
-.veh-modal.is-welcome .veh-welcome-question{
-  margin:0!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:none!important;
-}
-.veh-modal.is-welcome .veh-welcome-question .veh-modal-kicker{
-  display:inline-flex;
-  width:max-content;
-  margin:0 0 .65rem!important;
-  padding:.4rem .54rem .36rem;
-  border:1px solid rgba(184,54,61,.35);
-  border-radius:999px;
-  background:rgba(184,54,61,.07);
-  color:#9e2b31!important;
-  font-size:.56rem!important;
-  letter-spacing:.14em!important;
-}
-.veh-modal.is-welcome .veh-welcome-question h3{
-  max-width:none!important;
-  margin:0!important;
-  color:#11100e!important;
-  font-family:var(--font-display)!important;
-  font-size:clamp(2rem,3.5vw,2.8rem)!important;
-  font-weight:720!important;
-  line-height:.96!important;
-  letter-spacing:-.045em!important;
-}
-.veh-modal.is-welcome .veh-search{
-  margin-top:1rem!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:none!important;
-}
-.veh-modal.is-welcome .veh-search input{
-  min-height:58px!important;
-  padding-inline:1rem!important;
-  border:1.5px solid rgba(17,16,14,.24)!important;
-  border-radius:13px!important;
-  background:#fffaf2!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.94),
-    0 10px 24px rgba(36,27,22,.05)!important;
-  transition:border-color .16s ease,box-shadow .16s ease,transform .16s ease!important;
-}
-.veh-modal.is-welcome .veh-search input:focus{
-  border-color:#11100e!important;
-  outline:0!important;
-  transform:translate(-1px,-1px);
-  box-shadow:3px 3px 0 #b8363d!important;
-}
-.veh-modal.is-welcome .veh-search-results{
-  margin-top:5px;
-  border:1.5px solid rgba(17,16,14,.45)!important;
-  border-radius:12px!important;
-  background:#fffaf2!important;
-  box-shadow:0 20px 40px rgba(36,27,22,.13)!important;
-}
-.veh-modal.is-welcome .veh-remember{
-  margin-top:1rem!important;
-  padding:1rem 0 0!important;
-  border-top:1px solid rgba(17,16,14,.1)!important;
-  align-items:flex-start!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:none!important;
-}
-.veh-modal.is-welcome .veh-remember span{
-  display:grid;
-  gap:.15rem;
-}
-.veh-modal.is-welcome .veh-remember small{
-  color:#777067;
-  font-size:.7rem;
-  line-height:1.35;
-  font-weight:500;
-}
-.veh-modal.is-welcome .veh-account-entry{
-  margin-top:1rem!important;
-  padding:1rem 0 0!important;
-  border-top:1px solid rgba(17,16,14,.1)!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:none!important;
-}
-.veh-modal.is-welcome .veh-account-entry>span{
-  color:#6c655d!important;
-  font-size:.72rem!important;
-}
-.veh-modal.is-welcome .veh-account-link{
-  border-radius:999px!important;
-  border:1px solid rgba(17,16,14,.2)!important;
-  background:rgba(255,250,242,.65)!important;
-  box-shadow:none!important;
-  transition:background-color .15s ease,transform .15s ease,border-color .15s ease!important;
-}
-.veh-modal.is-welcome .veh-account-link:hover{
-  transform:translateY(-1px)!important;
-  border-color:rgba(17,16,14,.42)!important;
-  background:#fffaf2!important;
-  box-shadow:none!important;
-}
-.veh-modal.is-welcome .veh-skip{
-  margin-top:.75rem!important;
-  color:#766f67!important;
-  opacity:1!important;
-  transform:none!important;
-  animation:none!important;
-  text-underline-offset:3px;
-}
-@keyframes v102WelcomeArrive{
-  from{opacity:0;transform:translateY(14px) scale(.992)}
-  to{opacity:1;transform:none}
-}
-@keyframes v102WelcomeContent{
-  from{opacity:0;transform:translateY(7px)}
-  to{opacity:1;transform:none}
-}
-
-@media(max-width:760px){
-  .veh-modal.is-welcome{
-    width:calc(100% - 18px)!important;
-    max-height:calc(100svh - 18px)!important;
-    border-radius:24px!important;
-    border-bottom:1px solid rgba(17,16,14,.18)!important;
-    overflow:auto!important;
-  }
-  .veh-welcome-shell{
-    padding:34px 20px 22px!important;
-  }
-  .veh-welcome-ticket{
-    left:22px;
-    top:-12px;
-    padding:.6rem .72rem .56rem;
-  }
-  .veh-welcome-brandrow{
-    padding-bottom:.95rem;
-  }
-  .veh-welcome-brandrow img{width:39px;height:39px}
-  .veh-welcome-layout{
-    display:block!important;
-    padding-top:24px;
-  }
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
-    max-width:10ch!important;
-    font-size:clamp(2.75rem,12vw,4rem)!important;
-  }
-  .veh-welcome-lede{
-    max-width:34rem;
-    margin-top:.85rem!important;
-    font-size:.9rem!important;
-  }
-  .veh-welcome-utility{
-    margin-top:1.55rem;
-    padding-top:1.35rem!important;
-    border-top:1px solid rgba(17,16,14,.14);
-  }
-  .veh-modal.is-welcome .veh-welcome-question h3{
-    font-size:clamp(2rem,9vw,2.7rem)!important;
-  }
-  .veh-modal.is-welcome .veh-search input{
-    min-height:56px!important;
-    font-size:16px!important;
-  }
-  .veh-modal.is-welcome .veh-account-entry{grid-template-columns:auto auto!important}
-  .veh-modal.is-welcome .veh-modal-close{top:12px!important;right:12px!important}
-}
-
-@media(max-width:410px){
-  .veh-welcome-brandrow span{font-size:.52rem}
-  .veh-welcome-ticket b{display:none}
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{font-size:clamp(2.55rem,11.5vw,3.4rem)!important}
-}
-
-@media(prefers-reduced-motion:reduce){
-  .veh-modal.is-welcome,
-  .veh-modal.is-welcome .veh-welcome-intro>p:first-child,
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title,
-  .veh-welcome-lede,
-  .veh-welcome-utility{
-    animation:none!important;
-    transform:none!important;
-    opacity:1!important;
-  }
-}
-
-/* ============================================================
-   V103 — OPENING CARD: CURVED RIBBON REVEAL + COMPOSITION TUNE
-   Two one-shot homepage-language ribbons carry the entrance.
-   The card itself stays calm and fully composed. No looping,
-   no layout morphs, no resize choreography.
-   ============================================================ */
-.veh-modal-backdrop:has(.veh-modal.is-welcome){
-  isolation:isolate;
-  overflow:hidden!important;
-}
-.veh-modal-backdrop:has(.veh-modal.is-welcome)::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:-2;
-  pointer-events:none;
-  background:linear-gradient(180deg,rgba(8,8,7,.04),rgba(8,8,7,.14));
-}
-.veh-modal.is-welcome{
-  z-index:3!important;
-  width:min(748px,calc(100vw - 52px))!important;
-  max-height:min(610px,calc(100svh - 54px))!important;
-  border-radius:28px!important;
-  animation:v103CardArrive .56s .16s cubic-bezier(.2,.82,.22,1) both!important;
-}
-.veh-welcome-shell{
-  padding:32px 38px 30px!important;
-}
-.veh-welcome-ticket{display:none!important}
-.veh-welcome-brandrow{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:space-between!important;
-  gap:1rem!important;
-  padding-bottom:14px!important;
-}
-.veh-welcome-brandlock{
+  min-height:42px;
   display:flex;
   align-items:center;
   gap:.72rem;
-  min-width:0;
-}
-.veh-welcome-brandrow>b{
-  flex:none;
-  color:#8b8278;
-  font:850 .56rem/1 var(--font-display);
-  letter-spacing:.14em;
-  text-transform:uppercase;
+  padding:0 50px 14px 0;
+  border-bottom:1px solid rgba(17,16,14,.12);
+  color:#6f675f;
 }
 .veh-welcome-brandrow img{
-  width:39px!important;
-  height:39px!important;
+  width:38px;
+  height:38px;
+  object-fit:contain;
+  filter:saturate(.78);
 }
+.veh-welcome-brandrow span{
+  font:800 .58rem/1.1 var(--font-display);
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
 .veh-welcome-layout{
-  grid-template-columns:minmax(0,.93fr) minmax(300px,1.07fr)!important;
-  gap:38px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,.92fr) minmax(320px,1.08fr)!important;
+  gap:clamp(34px,5vw,58px)!important;
   align-items:center!important;
-  padding-top:26px!important;
+  padding-top:25px!important;
 }
-.veh-modal.is-welcome .veh-welcome-intro>p:first-child{
-  margin-bottom:.65rem!important;
-  animation:v103ContentSettle .42s .24s cubic-bezier(.2,.82,.22,1) both!important;
+
+.veh-modal.is-welcome .veh-welcome-intro{
+  min-width:0;
+  display:block!important;
+  overflow:visible!important;
 }
 .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
-  max-width:none!important;
-  font-size:clamp(2.8rem,4.25vw,3.9rem)!important;
-  line-height:.9!important;
-  letter-spacing:-.058em!important;
-  animation:v103ContentSettle .44s .27s cubic-bezier(.2,.82,.22,1) both!important;
+  max-width:8.6ch!important;
+  margin:0!important;
+  padding:0!important;
+  display:block!important;
+  color:#111!important;
+  font-family:var(--font-display)!important;
+  font-size:clamp(2.8rem,4.25vw,3.75rem)!important;
+  font-weight:900!important;
+  line-height:.88!important;
+  letter-spacing:-.06em!important;
+  text-wrap:balance;
 }
 .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title span,
 .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title em{
   display:block!important;
-  white-space:nowrap;
+  white-space:normal!important;
 }
 .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title em{
-  margin-top:.02em;
+  margin-top:.05em;
+  color:#b8363d;
+  font-family:Georgia,"Times New Roman",serif!important;
   font-size:.92em!important;
+  font-style:italic;
+  font-weight:700!important;
+  letter-spacing:-.045em!important;
 }
 .veh-welcome-lede{
-  max-width:25rem!important;
-  margin-top:.9rem!important;
-  font-size:.88rem!important;
-  line-height:1.48!important;
-  animation:v103ContentSettle .44s .3s cubic-bezier(.2,.82,.22,1) both!important;
+  max-width:29rem!important;
+  margin:.9rem 0 0!important;
+  color:#625b54!important;
+  font-family:var(--font-body)!important;
+  font-size:.9rem!important;
+  font-weight:450!important;
+  line-height:1.52!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
 }
+
 .veh-welcome-utility{
-  animation:v103ContentSettle .46s .32s cubic-bezier(.2,.82,.22,1) both!important;
-}
-.veh-modal.is-welcome .veh-welcome-question .veh-modal-kicker{
-  margin-bottom:.52rem!important;
+  min-width:0;
   padding:0!important;
   border:0!important;
-  border-radius:0!important;
+}
+.veh-modal.is-welcome .veh-welcome-question{
+  margin:0!important;
+}
+.veh-modal.is-welcome .veh-welcome-question .veh-modal-kicker{
+  margin:0 0 .42rem!important;
+  padding:0!important;
+  border:0!important;
   background:transparent!important;
   color:#b8363d!important;
-  font-size:.57rem!important;
+  font:850 .59rem/1 var(--font-display)!important;
   letter-spacing:.15em!important;
+  text-transform:uppercase!important;
 }
 .veh-modal.is-welcome .veh-welcome-question h3{
-  font-size:clamp(2rem,3.15vw,2.55rem)!important;
+  margin:0!important;
+  color:#111!important;
+  font-family:var(--font-display)!important;
+  font-size:clamp(2rem,3.1vw,2.52rem)!important;
+  font-weight:900!important;
+  line-height:.94!important;
+  letter-spacing:-.045em!important;
 }
-.veh-modal.is-welcome .veh-search{margin-top:.82rem!important}
+
+.veh-modal.is-welcome .veh-search{
+  position:relative;
+  z-index:7;
+  margin-top:.78rem!important;
+}
 .veh-modal.is-welcome .veh-search input{
-  min-height:55px!important;
-  border:1.35px solid rgba(17,16,14,.28)!important;
+  width:100%!important;
+  min-height:54px!important;
+  height:54px!important;
+  padding:0 16px!important;
+  border:1.4px solid rgba(17,16,14,.34)!important;
   border-radius:12px!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.94),0 8px 18px rgba(36,27,22,.045)!important;
+  background:#fffdf8!important;
+  color:#111!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 7px 18px rgba(36,27,22,.045)!important;
+  font:650 1rem/1 var(--font-body)!important;
+  outline:none!important;
+  transition:border-color .16s ease,box-shadow .16s ease!important;
 }
 .veh-modal.is-welcome .veh-search input:focus{
-  transform:none!important;
-  box-shadow:2px 2px 0 #b8363d!important;
+  border-color:#111!important;
+  box-shadow:2px 2px 0 rgba(184,54,61,.78)!important;
 }
-.veh-modal.is-welcome .veh-remember{
-  margin-top:.8rem!important;
-  padding-top:.8rem!important;
+.veh-modal.is-welcome .veh-search-results{
+  position:absolute!important;
+  top:calc(100% + 6px);
+  left:0;
+  right:0;
+  z-index:12!important;
+  max-height:min(250px,34svh)!important;
+  margin:0!important;
+  overflow:auto!important;
+  border:1px solid rgba(17,16,14,.2)!important;
+  border-radius:12px!important;
+  background:#fffdf8!important;
+  box-shadow:0 18px 38px rgba(19,14,11,.16)!important;
+  -webkit-overflow-scrolling:touch;
 }
-.veh-modal.is-welcome .veh-account-entry{
-  margin-top:.8rem!important;
-  padding-top:.8rem!important;
+.veh-modal.is-welcome .veh-search-results button{
+  min-height:50px!important;
+  padding:.62rem .82rem!important;
+  background:#fffdf8!important;
 }
-.veh-modal.is-welcome .veh-skip{margin-top:.58rem!important}
+.veh-modal.is-welcome .veh-search-results button:hover,
+.veh-modal.is-welcome .veh-search-results [role="option"][aria-selected="true"]{
+  background:#eee7dc!important;
+}
+.veh-modal.is-welcome .veh-search-empty{
+  margin-top:.5rem;
+  padding:.65rem .75rem;
+  border:1px solid rgba(17,16,14,.12);
+  border-radius:10px;
+  background:rgba(255,253,248,.8);
+}
 
+.veh-modal.is-welcome .veh-remember{
+  margin-top:.78rem!important;
+  padding-top:.72rem!important;
+  gap:.7rem!important;
+  border-top:1px solid rgba(17,16,14,.11)!important;
+}
+.veh-modal.is-welcome .veh-remember input{
+  width:17px!important;
+  height:17px!important;
+  margin-top:.08rem!important;
+  accent-color:#b8363d;
+}
+.veh-modal.is-welcome .veh-remember b{
+  color:#292621!important;
+  font:700 .84rem/1.2 var(--font-body)!important;
+}
+.veh-modal.is-welcome .veh-remember small{
+  margin-top:.12rem;
+  color:#756e66!important;
+  font:.74rem/1.35 var(--font-body)!important;
+}
+
+.veh-modal.is-welcome .veh-account-entry{
+  margin-top:.72rem!important;
+  padding-top:.7rem!important;
+  display:flex!important;
+  align-items:center!important;
+  flex-wrap:wrap!important;
+  gap:.45rem .5rem!important;
+  border-top:1px solid rgba(17,16,14,.1)!important;
+}
+.veh-modal.is-welcome .veh-account-entry>span{
+  margin-right:.18rem;
+  color:#756e66!important;
+  font:.74rem/1.2 var(--font-body)!important;
+}
+.veh-modal.is-welcome .veh-account-link{
+  min-height:34px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:.45rem .68rem;
+  border:1px solid rgba(17,16,14,.19);
+  border-radius:999px;
+  background:rgba(255,253,248,.7);
+  color:#171513;
+  font:750 .74rem/1 var(--font-body);
+  text-decoration:none;
+  transition:transform .15s ease,border-color .15s ease,background-color .15s ease;
+}
+.veh-modal.is-welcome .veh-account-link:hover{
+  transform:translateY(-1px);
+  border-color:rgba(17,16,14,.38);
+  background:#fffdf8;
+}
+.veh-modal.is-welcome .veh-account-primary{
+  background:#171513;
+  border-color:#171513;
+  color:#f7f2e8;
+}
+
+.veh-modal.is-welcome .veh-skip{
+  margin-top:.6rem!important;
+  padding:.12rem 0!important;
+  border:0!important;
+  background:transparent!important;
+  color:#756e66!important;
+  font:650 .77rem/1.2 var(--font-body)!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+  text-decoration:underline!important;
+  text-underline-offset:3px!important;
+}
+
+/* Ribbons are anchored to the card stage, not the viewport. */
 .veh-welcome-ribbon{
-  position:fixed;
-  left:-15vw;
-  width:130vw;
-  height:126px;
+  position:absolute;
+  left:50%;
+  z-index:1;
+  width:clamp(1100px,115vw,1500px);
+  height:118px;
   pointer-events:none;
+  opacity:0;
   will-change:transform,opacity;
 }
 .veh-welcome-ribbon svg{
-  display:block;
+  position:absolute;
+  left:50%;
+  top:50%;
   width:100%;
-  height:100%;
+  height:auto;
   overflow:visible;
+  transform:translate(-50%,-50%);
 }
 .veh-welcome-ribbon-line{
   fill:none;
   stroke:#d56865;
-  stroke-width:72;
+  stroke-width:68;
   stroke-linecap:round;
 }
 .veh-welcome-ribbon-text{
-  fill:#f2ecdf;
+  fill:#f7f2e8;
   font-family:var(--font-display);
-  font-size:34px;
+  font-size:30px;
   font-weight:850;
-  letter-spacing:.7px;
+  letter-spacing:.65px;
   text-transform:uppercase;
   white-space:pre;
 }
 .veh-welcome-ribbon-top{
+  top:-30px;
   z-index:1;
-  top:calc(50% - 276px);
-  opacity:.96;
-  filter:drop-shadow(0 12px 22px rgba(30,18,15,.12));
-  animation:v103RibbonRight .9s cubic-bezier(.18,.82,.2,1) both;
+  filter:drop-shadow(0 10px 18px rgba(30,18,15,.12));
+  animation:v104RibbonFromRight .82s cubic-bezier(.18,.82,.2,1) both;
 }
 .veh-welcome-ribbon-bottom{
+  bottom:-54px;
   z-index:5;
-  top:calc(50% + 210px);
-  opacity:.98;
-  filter:drop-shadow(0 16px 28px rgba(30,18,15,.18));
-  animation:v103RibbonLeft 1s .06s cubic-bezier(.18,.82,.2,1) both;
+  filter:drop-shadow(0 13px 23px rgba(30,18,15,.17));
+  animation:v104RibbonFromLeft .9s .04s cubic-bezier(.18,.82,.2,1) both;
 }
 
-@keyframes v103RibbonRight{
-  0%{opacity:0;transform:translate3d(108vw,-9px,0) rotate(-1.2deg)}
-  28%{opacity:1}
-  100%{opacity:.96;transform:translate3d(-2vw,0,0) rotate(-.7deg)}
-}
-@keyframes v103RibbonLeft{
-  0%{opacity:0;transform:translate3d(-108vw,9px,0) rotate(1deg)}
-  28%{opacity:1}
-  100%{opacity:.98;transform:translate3d(2vw,0,0) rotate(.55deg)}
-}
-@keyframes v103CardArrive{
-  from{opacity:0;transform:translateY(10px) scale(.995)}
+@keyframes v104BackdropIn{from{opacity:0}to{opacity:1}}
+@keyframes v104CardIn{
+  from{opacity:0;transform:translateY(8px) scale(.996)}
   to{opacity:1;transform:none}
 }
-@keyframes v103ContentSettle{
-  from{opacity:0;transform:translateY(5px)}
-  to{opacity:1;transform:none}
+@keyframes v104RibbonFromRight{
+  from{opacity:0;transform:translate3d(78vw,-4px,0) rotate(-1deg)}
+  30%{opacity:1}
+  to{opacity:.97;transform:translate3d(0,0,0) rotate(-.45deg)}
+}
+@keyframes v104RibbonFromLeft{
+  from{opacity:0;transform:translate3d(-78vw,4px,0) rotate(.8deg)}
+  30%{opacity:1}
+  to{opacity:.98;transform:translate3d(0,0,0) rotate(.35deg)}
 }
 
 @media(max-width:760px){
-  .veh-modal.is-welcome{
-    z-index:3!important;
-    width:calc(100% - 18px)!important;
-    max-height:calc(100svh - 26px)!important;
-    margin-bottom:8px;
-    border-radius:24px!important;
+  .veh-modal-backdrop.is-welcome-backdrop{
+    align-items:center!important;
+    padding:max(24px,env(safe-area-inset-top)) 14px max(50px,env(safe-area-inset-bottom))!important;
   }
-  .veh-welcome-shell{padding:30px 20px 22px!important}
-  .veh-welcome-brandrow>b{display:none}
-  .veh-welcome-layout{display:block!important;padding-top:20px!important}
+  .veh-welcome-stage{
+    width:min(520px,calc(100vw - 28px));
+  }
+  .veh-modal.is-welcome{
+    width:100%!important;
+    max-height:calc(100svh - 74px)!important;
+    margin:0!important;
+    overflow:auto!important;
+    border-radius:23px!important;
+    -webkit-overflow-scrolling:touch;
+  }
+  .veh-welcome-shell{padding:20px 18px 18px!important}
+  .veh-welcome-brandrow{
+    min-height:32px;
+    padding:0 42px 10px 0;
+  }
+  .veh-welcome-brandrow img{width:31px;height:31px}
+  .veh-welcome-brandrow span{font-size:.51rem;letter-spacing:.11em}
+  .veh-welcome-layout{
+    display:block!important;
+    padding-top:14px!important;
+  }
   .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
-    font-size:clamp(2.65rem,11vw,3.55rem)!important;
-    max-width:9.7ch!important;
+    max-width:11ch!important;
+    font-size:clamp(2.15rem,9.6vw,3rem)!important;
+    line-height:.9!important;
   }
   .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title span,
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title em{white-space:normal}
-  .veh-welcome-lede{margin-top:.7rem!important;font-size:.86rem!important}
+  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title em{
+    display:inline!important;
+    white-space:normal!important;
+  }
+  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title span::after{content:" ";}
+  .veh-welcome-lede{
+    max-width:34rem!important;
+    margin-top:.55rem!important;
+    font-size:.82rem!important;
+    line-height:1.4!important;
+  }
   .veh-welcome-utility{
-    margin-top:1.15rem!important;
-    padding-top:1rem!important;
+    margin-top:.9rem!important;
+    padding-top:.82rem!important;
+    border-top:1px solid rgba(17,16,14,.11)!important;
+  }
+  .veh-modal.is-welcome .veh-welcome-question{
+    display:flex;
+    align-items:baseline;
+    gap:.55rem;
+  }
+  .veh-modal.is-welcome .veh-welcome-question .veh-modal-kicker{
+    margin:0!important;
+    flex:none;
+  }
+  .veh-modal.is-welcome .veh-welcome-question h3{
+    font-size:clamp(1.65rem,7vw,2rem)!important;
+  }
+  .veh-modal.is-welcome .veh-search{margin-top:.58rem!important}
+  .veh-modal.is-welcome .veh-search input{
+    min-height:50px!important;
+    height:50px!important;
+    font-size:16px!important;
+  }
+  .veh-modal.is-welcome .veh-remember{
+    margin-top:.62rem!important;
+    padding-top:.58rem!important;
+  }
+  .veh-modal.is-welcome .veh-account-entry{
+    margin-top:.58rem!important;
+    padding-top:.56rem!important;
+  }
+  .veh-modal.is-welcome .veh-skip{margin-top:.48rem!important}
+  .veh-modal.is-welcome .veh-modal-close{
+    top:10px!important;
+    right:10px!important;
+    width:36px!important;
+    height:36px!important;
   }
   .veh-welcome-ribbon{
-    left:-34vw;
-    width:168vw;
-    height:102px;
+    width:1100px;
+    height:88px;
   }
-  .veh-welcome-ribbon-line{stroke-width:62}
-  .veh-welcome-ribbon-text{font-size:30px}
-  .veh-welcome-ribbon-top{top:7.5svh}
-  .veh-welcome-ribbon-bottom{top:auto;bottom:8px}
+  .veh-welcome-ribbon-line{stroke-width:58}
+  .veh-welcome-ribbon-text{font-size:27px}
+  .veh-welcome-ribbon-top{top:-31px}
+  .veh-welcome-ribbon-bottom{bottom:-49px}
 }
 
-@media(max-width:430px){
-  .veh-welcome-brandrow span{font-size:.5rem!important}
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{font-size:clamp(2.45rem,10.8vw,3.15rem)!important}
-  .veh-welcome-ribbon-bottom{bottom:0}
+@media(max-width:390px), (max-height:700px){
+  .veh-modal-backdrop.is-welcome-backdrop{
+    padding:max(18px,env(safe-area-inset-top)) 10px max(42px,env(safe-area-inset-bottom))!important;
+  }
+  .veh-welcome-stage{width:calc(100vw - 20px)}
+  .veh-modal.is-welcome{max-height:calc(100svh - 58px)!important}
+  .veh-welcome-shell{padding:16px 15px 15px!important}
+  .veh-welcome-brandrow{padding-bottom:8px}
+  .veh-welcome-brandrow img{width:28px;height:28px}
+  .veh-welcome-brandrow span{font-size:.48rem}
+  .veh-welcome-layout{padding-top:10px!important}
+  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
+    max-width:12ch!important;
+    font-size:clamp(1.95rem,9vw,2.45rem)!important;
+  }
+  .veh-welcome-lede{font-size:.78rem!important;line-height:1.34!important;margin-top:.42rem!important}
+  .veh-welcome-utility{margin-top:.65rem!important;padding-top:.62rem!important}
+  .veh-modal.is-welcome .veh-welcome-question h3{font-size:1.55rem!important}
+  .veh-modal.is-welcome .veh-search input{height:48px!important;min-height:48px!important}
+  .veh-modal.is-welcome .veh-remember small{display:none}
+  .veh-modal.is-welcome .veh-account-link{min-height:32px;padding:.4rem .58rem;font-size:.7rem}
+  .veh-modal.is-welcome .veh-account-entry>span{font-size:.69rem}
+  .veh-welcome-ribbon-top{top:-35px}
+  .veh-welcome-ribbon-bottom{bottom:-46px}
 }
 
 @media(prefers-reduced-motion:reduce){
+  .veh-modal-backdrop.is-welcome-backdrop,
   .veh-modal.is-welcome,
-  .veh-modal.is-welcome .veh-welcome-intro>p:first-child,
-  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title,
-  .veh-welcome-lede,
-  .veh-welcome-utility,
   .veh-welcome-ribbon-top,
   .veh-welcome-ribbon-bottom{
     animation:none!important;
-    opacity:1!important;
   }
-  .veh-welcome-ribbon-top{transform:translate3d(-2vw,0,0) rotate(-.7deg)!important}
-  .veh-welcome-ribbon-bottom{transform:translate3d(2vw,0,0) rotate(.55deg)!important}
+  .veh-welcome-ribbon-top,
+  .veh-welcome-ribbon-bottom{
+    opacity:.97!important;
+    transform:none!important;
+  }
 }
