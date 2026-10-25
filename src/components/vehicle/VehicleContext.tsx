@@ -121,8 +121,8 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
           if (auth.user) {
             nextAuthState = "signed-in";
             nextEmail = auth.user.email ?? null;
-            const meta = (auth.user.user_metadata ?? {}) as { full_name?: string; phone?: string };
-            await supabase.rpc("ensure_my_client", { p_full_name: meta.full_name ?? null, p_phone: meta.phone ?? null });
+            // Reading site personalization should not mutate the customer record.
+            // Account pages perform ensure_my_client when they actually need the linked client.
             const { data: garageRows, error } = await supabase.rpc("get_my_garage");
             if (!error && Array.isArray(garageRows)) {
               nextGarage = garageRows as GarageSummary[];
@@ -164,7 +164,9 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
 
       const persistedLocally = !!savedVehicle && !!next && JSON.stringify(savedVehicle) === JSON.stringify(next);
       const persistedInGarage = !!next && nextGarage.some((item) => sameGarageVehicle(next!, item));
-      setRememberedState(nextAuthState === "signed-in" ? persistedInGarage || persistedLocally : persistedLocally);
+      // For signed-in customers, "remembered" means the vehicle really exists in
+      // their account garage. A browser-only copy must never masquerade as a saved car.
+      setRememberedState(nextAuthState === "signed-in" ? persistedInGarage : persistedLocally);
       setPromptDismissed(!!next || promptIsDismissed());
       setHydrated(true);
     }
@@ -179,7 +181,8 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
     if (existing) return true;
 
     try {
-      const { data, error } = await supabaseBrowser().rpc("save_my_vehicle", {
+      const supabase = supabaseBrowser();
+      const args = {
         p_id: null,
         p_year: next.year ? Number(next.year) || null : null,
         p_make: next.make.trim(),
@@ -190,8 +193,20 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
         p_odor_issues: "",
         p_problem_areas: "",
         p_is_primary: garage.length === 0,
-      });
-      if (error) throw error;
+      };
+
+      let result = await supabase.rpc("save_my_vehicle", args);
+
+      // Brand-new auth users may not have a client_accounts link yet. Create/link
+      // it only when they actually ask us to save a car, never on every page load.
+      if (result.error?.message?.includes("no_client")) {
+        const ensured = await supabase.rpc("ensure_my_client", { p_full_name: null, p_phone: null });
+        if (ensured.error) throw ensured.error;
+        result = await supabase.rpc("save_my_vehicle", args);
+      }
+
+      if (result.error) throw result.error;
+      const data = result.data;
 
       // The RPC's return shape can vary by migration. We only need a local
       // identity marker so this selection behaves as persisted immediately.
@@ -222,11 +237,13 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
     window.dispatchEvent(new CustomEvent("ed:vehicle-change", { detail: next }));
 
     if (remember) {
-      localStorage.setItem(SAVED_KEY, JSON.stringify(next));
       if (authState === "signed-in") {
         const savedToAccount = await persistSignedInVehicle(next);
-        setRememberedState(savedToAccount || true);
+        setRememberedState(savedToAccount);
+        if (savedToAccount) localStorage.setItem(SAVED_KEY, JSON.stringify(next));
+        else localStorage.removeItem(SAVED_KEY);
       } else {
+        localStorage.setItem(SAVED_KEY, JSON.stringify(next));
         setRememberedState(true);
       }
       return;
@@ -247,9 +264,17 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
   const setRemembered = useCallback((remember: boolean) => {
     if (!vehicle) return;
     if (remember) {
-      localStorage.setItem(SAVED_KEY, JSON.stringify(vehicle));
-      setRememberedState(true);
-      if (authState === "signed-in") void persistSignedInVehicle(vehicle);
+      if (authState === "signed-in") {
+        // Do not optimistically claim an account save succeeded.
+        void persistSignedInVehicle(vehicle).then((saved) => {
+          setRememberedState(saved);
+          if (saved) localStorage.setItem(SAVED_KEY, JSON.stringify(vehicle));
+          else localStorage.removeItem(SAVED_KEY);
+        });
+      } else {
+        localStorage.setItem(SAVED_KEY, JSON.stringify(vehicle));
+        setRememberedState(true);
+      }
     } else {
       localStorage.removeItem(SAVED_KEY);
       setRememberedState(authState === "signed-in" && garage.some((item) => sameGarageVehicle(vehicle, item)));

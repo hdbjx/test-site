@@ -16441,7 +16441,7 @@ body:has(.pl60-page) .site-shared-logo-mark{
 }
 
 /* ============================================================
-   V104 — ONE AUTHORITATIVE VEHICLE WELCOME SYSTEM
+   V105 — ONE AUTHORITATIVE VEHICLE WELCOME SYSTEM
    Friendly retro-premium card + card-anchored ribbons. This is the
    only welcome-card style layer. No historical welcome overrides.
    ============================================================ */
@@ -16467,7 +16467,7 @@ html.ed-vehicle-welcome-open .ed-tape{
   backdrop-filter:blur(8px)!important;
   -webkit-backdrop-filter:blur(8px)!important;
   touch-action:none;
-  animation:v104BackdropIn .24s ease-out both;
+  animation:v105BackdropIn .24s ease-out both;
 }
 
 .veh-welcome-stage{
@@ -16495,7 +16495,7 @@ html.ed-vehicle-welcome-open .ed-tape{
     0 8px 24px rgba(14,10,8,.12)!important;
   outline:none!important;
   touch-action:pan-y;
-  animation:v104CardIn .48s .09s cubic-bezier(.2,.82,.22,1) both!important;
+  animation:v105CardIn .48s .09s cubic-bezier(.2,.82,.22,1) both!important;
 }
 
 .veh-modal.is-welcome::before{
@@ -16783,7 +16783,7 @@ html.ed-vehicle-welcome-open .ed-tape{
   position:absolute;
   left:50%;
   z-index:1;
-  width:clamp(1100px,115vw,1500px);
+  width:clamp(1160px,128vw,1640px);
   height:118px;
   pointer-events:none;
   opacity:0;
@@ -16814,32 +16814,43 @@ html.ed-vehicle-welcome-open .ed-tape{
   white-space:pre;
 }
 .veh-welcome-ribbon-top{
-  top:-30px;
+  top:-58px;
   z-index:1;
   filter:drop-shadow(0 10px 18px rgba(30,18,15,.12));
-  animation:v104RibbonFromRight .82s cubic-bezier(.18,.82,.2,1) both;
+  animation:v105RibbonFromRight .82s cubic-bezier(.18,.82,.2,1) both;
 }
 .veh-welcome-ribbon-bottom{
-  bottom:-54px;
+  bottom:-86px;
   z-index:5;
   filter:drop-shadow(0 13px 23px rgba(30,18,15,.17));
-  animation:v104RibbonFromLeft .9s .04s cubic-bezier(.18,.82,.2,1) both;
+  animation:v105RibbonFromLeft .9s .04s cubic-bezier(.18,.82,.2,1) both;
 }
 
-@keyframes v104BackdropIn{from{opacity:0}to{opacity:1}}
-@keyframes v104CardIn{
+@keyframes v105BackdropIn{from{opacity:0}to{opacity:1}}
+@keyframes v105CardIn{
   from{opacity:0;transform:translateY(8px) scale(.996)}
   to{opacity:1;transform:none}
 }
-@keyframes v104RibbonFromRight{
-  from{opacity:0;transform:translate3d(78vw,-4px,0) rotate(-1deg)}
+@keyframes v105RibbonFromRight{
+  from{opacity:0;transform:translateX(-50%) translateX(78vw) translateY(-4px) rotate(-1deg)}
   30%{opacity:1}
-  to{opacity:.97;transform:translate3d(0,0,0) rotate(-.45deg)}
+  to{opacity:.97;transform:translateX(-50%) translateY(0) rotate(-.45deg)}
 }
-@keyframes v104RibbonFromLeft{
-  from{opacity:0;transform:translate3d(-78vw,4px,0) rotate(.8deg)}
+@keyframes v105RibbonFromLeft{
+  from{opacity:0;transform:translateX(-50%) translateX(-78vw) translateY(4px) rotate(.8deg)}
   30%{opacity:1}
-  to{opacity:.98;transform:translate3d(0,0,0) rotate(.35deg)}
+  to{opacity:.98;transform:translateX(-50%) translateY(0) rotate(.35deg)}
+}
+
+/* The lower ribbon can sit in front of the card at rest, but an open vehicle
+   result surface always becomes the foremost interactive layer. */
+.veh-welcome-stage:has(.veh-search-results),
+.veh-welcome-stage:has(.veh-search-empty){
+  --veh-results-open:1;
+}
+.veh-welcome-stage:has(.veh-search-results) .veh-modal.is-welcome,
+.veh-welcome-stage:has(.veh-search-empty) .veh-modal.is-welcome{
+  z-index:7!important;
 }
 
 @media(max-width:760px){
@@ -16892,18 +16903,28 @@ html.ed-vehicle-welcome-open .ed-tape{
     border-top:1px solid rgba(17,16,14,.11)!important;
   }
   .veh-modal.is-welcome .veh-welcome-question{
-    display:flex;
-    align-items:baseline;
-    gap:.55rem;
+    display:block;
   }
   .veh-modal.is-welcome .veh-welcome-question .veh-modal-kicker{
-    margin:0!important;
-    flex:none;
+    margin:0 0 .36rem!important;
   }
   .veh-modal.is-welcome .veh-welcome-question h3{
     font-size:clamp(1.65rem,7vw,2rem)!important;
   }
   .veh-modal.is-welcome .veh-search{margin-top:.58rem!important}
+  /* On phones the result surface participates in the card's scroll flow.
+     This prevents clipping and keeps it independent of the decorative ribbon. */
+  .veh-modal.is-welcome .veh-search-results{
+    position:relative!important;
+    top:auto!important;
+    left:auto!important;
+    right:auto!important;
+    max-height:min(220px,28svh)!important;
+    margin-top:6px!important;
+  }
+  .veh-modal.is-welcome .veh-search-empty{
+    position:relative!important;
+  }
   .veh-modal.is-welcome .veh-search input{
     min-height:50px!important;
     height:50px!important;
@@ -16930,11 +16951,13 @@ html.ed-vehicle-welcome-open .ed-tape{
   }
   .veh-welcome-ribbon-line{stroke-width:58}
   .veh-welcome-ribbon-text{font-size:27px}
-  .veh-welcome-ribbon-top{top:-31px}
-  .veh-welcome-ribbon-bottom{bottom:-49px}
+  .veh-welcome-ribbon-top{top:-46px}
+  .veh-welcome-ribbon-bottom{bottom:-84px}
 }
 
-@media(max-width:390px), (max-height:700px){
+/* Narrow phones get the compact composition. Desktop/laptop layouts never
+   collapse merely because browser chrome leaves a short viewport. */
+@media(max-width:390px){
   .veh-modal-backdrop.is-welcome-backdrop{
     padding:max(18px,env(safe-area-inset-top)) 10px max(42px,env(safe-area-inset-bottom))!important;
   }
@@ -16956,8 +16979,42 @@ html.ed-vehicle-welcome-open .ed-tape{
   .veh-modal.is-welcome .veh-remember small{display:none}
   .veh-modal.is-welcome .veh-account-link{min-height:32px;padding:.4rem .58rem;font-size:.7rem}
   .veh-modal.is-welcome .veh-account-entry>span{font-size:.69rem}
-  .veh-welcome-ribbon-top{top:-35px}
-  .veh-welcome-ribbon-bottom{bottom:-46px}
+  .veh-welcome-ribbon-top{top:-42px}
+  .veh-welcome-ribbon-bottom{bottom:-82px}
+}
+
+/* Short laptop windows keep the two-column desktop composition. Only vertical
+   rhythm tightens, avoiding the old edge-to-edge pseudo-mobile fallback. */
+@media(min-width:761px) and (max-height:720px){
+  .veh-modal-backdrop.is-welcome-backdrop{
+    padding:18px 28px 54px!important;
+  }
+  .veh-welcome-stage{
+    width:min(820px,calc(100vw - 96px));
+  }
+  .veh-modal.is-welcome{
+    max-height:calc(100svh - 72px)!important;
+  }
+  .veh-welcome-shell{padding:23px 30px 22px!important}
+  .veh-welcome-brandrow{min-height:36px;padding-bottom:11px}
+  .veh-welcome-brandrow img{width:34px;height:34px}
+  .veh-welcome-layout{
+    grid-template-columns:minmax(0,.92fr) minmax(300px,1.08fr)!important;
+    gap:34px!important;
+    padding-top:18px!important;
+  }
+  .veh-modal.is-welcome .veh-welcome-intro #veh-modal-title{
+    font-size:clamp(2.55rem,4vw,3.3rem)!important;
+  }
+  .veh-welcome-lede{margin-top:.7rem!important;font-size:.84rem!important}
+  .veh-modal.is-welcome .veh-welcome-question h3{font-size:2.08rem!important}
+  .veh-modal.is-welcome .veh-search{margin-top:.62rem!important}
+  .veh-modal.is-welcome .veh-search input{height:50px!important;min-height:50px!important}
+  .veh-modal.is-welcome .veh-remember{margin-top:.62rem!important;padding-top:.58rem!important}
+  .veh-modal.is-welcome .veh-account-entry{margin-top:.58rem!important;padding-top:.56rem!important}
+  .veh-modal.is-welcome .veh-skip{margin-top:.46rem!important}
+  .veh-welcome-ribbon-top{top:-52px}
+  .veh-welcome-ribbon-bottom{bottom:-86px}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -16970,6 +17027,6 @@ html.ed-vehicle-welcome-open .ed-tape{
   .veh-welcome-ribbon-top,
   .veh-welcome-ribbon-bottom{
     opacity:.97!important;
-    transform:none!important;
+    transform:translateX(-50%)!important;
   }
 }

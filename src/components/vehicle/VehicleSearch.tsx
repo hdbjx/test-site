@@ -41,10 +41,17 @@ export function VehicleSearch({ onSelect, autoFocus = false, initialQuery = "" }
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (!hasQuery || matches.length === 0) {
-      if (event.key === "Escape" && listOpen) setListOpen(false);
+    // Escape belongs to the search first whenever a query/result state is open.
+    // Stop propagation so the dialog-level Escape handler does not dismiss the card.
+    if (event.key === "Escape" && listOpen && hasQuery) {
+      event.preventDefault();
+      event.stopPropagation();
+      setListOpen(false);
+      setActiveIndex(-1);
       return;
     }
+
+    if (!hasQuery || matches.length === 0) return;
 
     if (event.key === "ArrowDown") {
       event.preventDefault();
@@ -62,12 +69,6 @@ export function VehicleSearch({ onSelect, autoFocus = false, initialQuery = "" }
       event.preventDefault();
       choose(matches[activeIndex >= 0 ? activeIndex : 0]);
       return;
-    }
-    if (event.key === "Escape") {
-      event.preventDefault();
-      event.stopPropagation();
-      setListOpen(false);
-      setActiveIndex(-1);
     }
   };
 
