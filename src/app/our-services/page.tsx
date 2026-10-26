@@ -71,10 +71,6 @@ export default function ServicesPage() {
 
         <section className="sv90-core" data-header-tone="ink" aria-labelledby="sv90-core-title">
           <div className="sv90-shell">
-            <div className="sv90-core-heading">
-              <h2 id="sv90-core-title" className="ed90-heading">WHAT SHAPE<br /><span>IS IT IN?</span></h2>
-              <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_core_unsure" }}>Not sure? Find my detail ↗</TrackedLink>
-            </div>
             <ServiceConditionGauge anchors={serviceAnchors} />
           </div>
         </section>

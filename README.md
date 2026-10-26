@@ -168,3 +168,12 @@ Historical implementation notes, including the gift-card integration handoff, ar
 
 ## Gift cards and rewards v18.1
 Legacy gift-card SQL is retained under `database/legacy-root/`. Use `supabase/migrations/` as the source of truth for current deployable migrations.
+
+## V111.3 Services Flow Rebuild
+
+- Rebuilt the `/our-services` condition section so the heading and gauge share one compact intro row on desktop.
+- Removed the large blank vertical zones between the heading, gauge, and service cards.
+- Reduced the service hero height and tightened its spacing without removing the photography or curved tape.
+- Reduced desktop card height to a controlled viewport range so the cards read as a complete composition instead of an oversized wall.
+- Tightened the menu board, comparison table, mobile-rig section, and FAQ pacing.
+- Preserves the V111.2 clean floating header with no extra desktop text navigation and no white scroll box.

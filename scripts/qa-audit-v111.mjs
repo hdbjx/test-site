@@ -26,8 +26,8 @@ if (!live.includes('<div className="bk-security-fields">')) failures.push('booki
 if (!css.includes('.bk-security-fields{display:contents}')) failures.push('booking security wrapper must not become a grid item');
 if (!live.includes('Pick a service to continue')) failures.push('booking disabled CTA guidance');
 if (!live.includes('services.maintenance.includes') || !home.includes('services.maintenance.includes')) failures.push('detail inclusions must share the canonical service data');
-if (!header.includes('site-desktop-nav')) failures.push('desktop navigation');
-if (!header.includes('is-scrolled')) failures.push('scrolled header surface');
+if (header.includes('site-desktop-nav')) failures.push('unexpected desktop navigation');
+if (header.includes('is-scrolled')) failures.push('unexpected full-width scrolled header surface');
 if (header.includes('serviceIntent ? catalogService(serviceIntent).name : "+ ADD YOUR VEHICLE"')) failures.push('stale service intent still replaces vehicle pill');
 if (!footer.includes('funnel-footer')) failures.push('minimal booking/quote footer');
 if (!css.includes('.v90-hero-word{opacity:1!important')) failures.push('home hero content immediate visibility');

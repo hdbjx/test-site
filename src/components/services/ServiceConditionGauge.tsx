@@ -80,7 +80,12 @@ export function ServiceConditionGauge({ anchors }: Props) {
 
   return (
     <div className={`sv90-condition-module ${enhanced ? "is-enhanced" : ""}`}>
-      <div className="sv90-gauge" aria-hidden="true" style={{ "--sv90-needle": `${angle}deg` } as CSSProperties}>
+      <div className="sv90-core-intro">
+        <div className="sv90-core-heading">
+          <h2 id="sv90-core-title" className="ed90-heading">WHAT SHAPE<br /><span>IS IT IN?</span></h2>
+          <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_core_unsure" }}>Not sure? Find my detail ↗</TrackedLink>
+        </div>
+        <div className="sv90-gauge" aria-hidden="true" style={{ "--sv90-needle": `${angle}deg` } as CSSProperties}>
         <svg viewBox="0 0 300 178">
           <path className="sv90-gauge-arc" d="M35 145 A115 115 0 0 1 265 145" />
           {[-70,-55,-40,-25,-10,5,20,35,50,65,80].map((tick) => (
@@ -92,8 +97,9 @@ export function ServiceConditionGauge({ anchors }: Props) {
           <circle cx="150" cy="145" r="18" className="sv90-gauge-cap" />
           <text x="150" y="150" textAnchor="middle" className="sv90-gauge-ed">ED</text>
         </svg>
-        <span className="sv90-gauge-needle" />
-        <span className="sr-only">Selected condition: {activeLabel}</span>
+          <span className="sv90-gauge-needle" />
+          <span className="sr-only">Selected condition: {activeLabel}</span>
+        </div>
       </div>
 
       <div className="sv90-core-panels">

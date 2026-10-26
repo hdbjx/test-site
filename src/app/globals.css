@@ -12602,37 +12602,9 @@ form[data-turnstile-verifying="true"] button[type="submit"]{opacity:.72;pointer-
 @media(min-width:1000px) and (max-width:1179px){.bk-pkgs{grid-template-columns:1fr 1fr}.bk-pkg:last-child{grid-column:1/-1}}
 .bk-btn:disabled{opacity:1;background:#ead9d3!important;border-color:#c5ada6!important;color:#655650!important}
 
-/* Shared header: protect content after scrolling and expose real desktop navigation. */
-.site-shared-header{pointer-events:none}
-.site-shared-header.is-scrolled .site-shared-nav-shell,
-.site-shared-header[data-menu-open="true"] .site-shared-nav-shell{
-  background:rgba(244,240,231,.94)!important;
-  border-bottom:1px solid rgba(17,16,14,.12);
-  box-shadow:0 10px 30px rgba(17,16,14,.08);
-  backdrop-filter:blur(18px) saturate(125%)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(125%)!important;
-}
-.site-shared-header.is-scrolled[data-tone="light"] .site-shared-nav-shell,
-.site-shared-header[data-menu-open="true"] .site-shared-nav-shell{
-  background:rgba(12,11,10,.92)!important;
-  border-bottom-color:rgba(244,240,231,.14);
-}
-.site-desktop-nav{
-  position:fixed;left:max(3.6vw,28px);top:24px;z-index:48;display:flex;align-items:center;gap:1.15rem;
-  pointer-events:auto;font:800 .7rem/1 var(--font-display);letter-spacing:.08em;text-transform:uppercase
-}
-.site-desktop-nav a{color:var(--ed-header-fg);text-decoration:none;padding:.7rem .15rem;border-bottom:1px solid transparent;white-space:nowrap}
-.site-desktop-nav a:hover,.site-desktop-nav a[aria-current="page"]{border-bottom-color:currentColor}
-.site-desktop-nav .site-desktop-book{padding:.72rem .9rem;border:1px solid currentColor}
+/* Shared header: keep the original floating composition.
+   No full-width desktop surface or extra text navigation. */
 .site-shared-nav-actions{pointer-events:auto}
-@media(min-width:1001px){
-  .site-context-pill{top:59px!important;left:max(3.6vw,28px)!important;max-width:270px!important}
-}
-@media(max-width:1180px){.site-desktop-nav{display:none}}
-@media(max-width:900px){
-  .site-shared-header.is-scrolled .site-shared-nav-shell{height:72px!important;background:rgba(244,240,231,.95)!important}
-  .site-shared-header.is-scrolled[data-tone="light"] .site-shared-nav-shell{background:rgba(12,11,10,.93)!important}
-}
 
 /* Never make primary hero/media content wait for JavaScript or long entrance animations. */
 .v90-hero-word{opacity:1!important;filter:none!important;transform:none!important;animation:none!important;will-change:auto!important}
@@ -12802,3 +12774,67 @@ img{max-width:100%}
 /* V111.1: the current paint 50/50 is one genuine split photograph, not two images. */
 .pc90-fifty-static{cursor:default}
 .pc90-fifty-static .pc90-fifty-layer{inset:0}
+
+/* V111.3 / SERVICES FLOW REBUILD ------------------------------------------ */
+/* Keep the service decision section visually connected: intro + gauge, then cards. */
+.sv90-core-intro{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(2rem,5vw,6rem);align-items:end;margin-bottom:clamp(1.5rem,2.5vw,2.5rem)}
+.sv90-core-intro .sv90-core-heading{display:block;margin:0}
+.sv90-core-intro .sv90-core-heading>a{display:inline-block;margin-top:1.1rem;margin-bottom:0}
+.sv90-core-intro .sv90-gauge{margin:0}
+
+@media(min-width:901px){
+  .sv90-hero{padding-top:112px!important}
+  .sv90-hero-inner{padding-bottom:2.75rem!important}
+  .sv90-hero-crumbs{margin-bottom:clamp(2rem,3.5vw,3.5rem)!important}
+  .sv90-hero h1{font-size:clamp(4.6rem,9.2vw,9.4rem)!important;line-height:.78!important}
+  .sv90-hero-lower{margin-top:2rem!important;gap:3rem!important}
+  .sv90-hero-media{height:clamp(380px,38vw,560px)!important;min-height:0!important}
+  .sv90-page>.ed-tape{margin-top:clamp(-104px,-7vw,-72px)!important}
+
+  .sv90-core{padding:clamp(3.2rem,4.5vw,4.8rem) 0 clamp(5rem,7vw,7rem)!important}
+  .sv90-core-heading .ed90-heading{max-width:none!important;font-size:clamp(3.8rem,5.7vw,6.1rem)!important;line-height:.82!important;letter-spacing:-.045em!important}
+  .sv90-core-heading>a{font-size:.72rem!important}
+  .sv90-gauge{width:236px!important;height:142px!important}
+  .sv90-gauge-needle{height:101px!important}
+  .sv90-core-panels{min-height:clamp(560px,67svh,690px)!important}
+  .sv90-core-panel{min-height:clamp(560px,67svh,690px)!important}
+  .sv90-core-panel.is-active .sv90-core-photo{inset:0 0 50% 0!important}
+  .sv90-core-panel.is-active .sv90-core-shade{bottom:50%!important}
+  .sv90-core-panel.is-active .sv90-core-content{height:50%!important;padding:clamp(1.25rem,1.8vw,2rem)!important}
+  .sv90-core-content h3{font-size:clamp(2rem,3vw,3.15rem)!important}
+  .sv90-core-short{font-size:clamp(1.35rem,2vw,2rem)!important}
+  .sv90-core-price strong{font-size:clamp(4rem,5vw,5rem)!important}
+  .sv90-core-content li{padding:.45rem 0!important}
+  .sv90-most-booked{top:calc(50% - 56px)!important}
+}
+
+@media(min-width:901px) and (max-height:760px){
+  .sv90-core{padding-top:2.75rem!important}
+  .sv90-core-intro{margin-bottom:1.4rem}
+  .sv90-core-heading .ed90-heading{font-size:clamp(3.4rem,5vw,5rem)!important}
+  .sv90-gauge{width:210px!important;height:126px!important}
+  .sv90-gauge-needle{height:90px!important}
+  .sv90-core-panels,.sv90-core-panel{min-height:540px!important}
+}
+
+@media(max-width:900px){
+  .sv90-core-intro{grid-template-columns:1fr;gap:2rem;margin-bottom:2rem}
+  .sv90-core-intro .sv90-gauge{justify-self:center}
+  .sv90-core{padding-top:4.5rem!important;padding-bottom:5.5rem!important}
+}
+
+@media(max-width:600px){
+  .sv90-core-intro{gap:1.5rem;margin-bottom:1.5rem}
+  .sv90-core-intro .sv90-core-heading>a{margin-top:.8rem}
+  .sv90-gauge{width:220px;height:132px}
+}
+
+/* Services page pacing: remove oversized dead zones between major sections. */
+@media(min-width:901px){
+  .sv90-menu{padding:clamp(4.75rem,6vw,6.5rem) 0!important}
+  .sv90-compare{padding:clamp(4.75rem,6vw,6.5rem) 0!important}
+  .sv90-compare-heading{margin-bottom:2.5rem!important}
+  .sv90-mobile{min-height:clamp(560px,72svh,760px)!important}
+  .sv90-mobile-copy{min-height:clamp(560px,72svh,760px)!important;padding:clamp(4.75rem,7vw,7rem) 0 4rem!important}
+  .sv90-faq{padding:clamp(4.75rem,6vw,6.5rem) 0!important}
+}
