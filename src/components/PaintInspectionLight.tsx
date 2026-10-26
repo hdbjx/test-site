@@ -19,7 +19,7 @@ export function PaintInspectionLight() {
   return (
     <div className="pl57-inspection-stage pl60-inspection-stage" ref={stage} onPointerMove={move}>
       <Image
-        src="/images/red-paint-detail.jpg"
+        src="/images/red-paint-detail.webp"
         alt="Close-up of a vehicle finish under inspection lighting"
         fill
         sizes="(max-width: 900px) 100vw, 72vw"

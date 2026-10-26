@@ -1274,8 +1274,8 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
 
       <form id="booking-main" ref={formRef} noValidate onSubmit={onSubmit} className="bk-layout">
         <Honeypot />
-        <TurnstileField action="booking" />
         <div className="bk-flow">
+          <TurnstileField action="booking" />
           {renderStep("service", "01", "What does your car need?", (
             <div className="bk-pkgs" role="radiogroup" aria-label="Choose your detail">
               {PACKAGE_ORDER.map((id, i) => {

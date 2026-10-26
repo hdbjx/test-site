@@ -21,7 +21,7 @@ const jobs = [...src.matchAll(/file:\s*"([^"]+)",\s*wix:\s*"([^"]+)"/g)].map(([,
 // Logo files: same crops the Wix site used.
 jobs.push(
   {
-    out: path.join(root, "public/brand/every-detail-mark.png"),
+    out: path.join(root, "public/brand/every-detail-logo.png"),
     url: "https://static.wixstatic.com/media/01523f_7ba3b18cfb9942999add0e63504c9919~mv2.png/v1/crop/x_0,y_778,w_2737,h_2232/fill/w_520,h_424,al_c/every-detail-mark.png",
   },
   {

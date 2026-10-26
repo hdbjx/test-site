@@ -102,7 +102,7 @@ export default function CeramicPage() {
           <div className="paint85-section-intro paint85-section-intro-tight"><div><p className="paint85-kicker dark">YOUR CAR</p><h2>LET'S LOOK AT<br /><span>THE PAINT.</span></h2></div><p>Tell us what you drive and how the finish looks today. We will confirm the preparation before anything is booked.</p></div>
           <div className="paint86-quote-body">
             <PaintLeadForm kind="ceramic" hideIntro />
-            <figure className="paint86-quote-photo"><Image src="/images/hq-black-suv-finished.jpg" alt="Finished black SUV after Every Detail paint care" fill sizes="(max-width: 900px) 92vw, 38vw" /></figure>
+            <figure className="paint86-quote-photo"><Image src="/images/hq-black-suv-finished.webp" alt="Finished black SUV after Every Detail paint care" fill sizes="(max-width: 900px) 92vw, 38vw" /></figure>
           </div>
         </div>
       </section>

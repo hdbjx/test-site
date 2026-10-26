@@ -65,7 +65,7 @@ export function PaintInspectionLight() {
     <div ref={ref} className="pc90-inspection-visual" aria-hidden="true">
       <div className="pc90-inspection-photo ed90-photo-grade">
         <Image
-          src="/images/mercedes-paint.jpg"
+          src="/images/mercedes-paint.webp"
           alt=""
           fill
           priority

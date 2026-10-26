@@ -22,8 +22,8 @@ const DIR = path.join(process.cwd(), "content", "blog");
 function fallbackImage(category: string, cta?: PostMeta["cta"]) {
   if (cta === "ceramic" || category.toLowerCase().includes("paint")) return "/images/red-paint-detail.webp";
   if (cta === "detailplus") return "/images/interior-detail-team.webp";
-  if (category.toLowerCase().includes("services")) return "/images/team-driveway-detail.jpg";
-  return "/images/exterior-hand-detail.jpg";
+  if (category.toLowerCase().includes("services")) return "/images/team-driveway-detail.webp";
+  return "/images/exterior-hand-detail.webp";
 }
 
 export type PostMeta = {

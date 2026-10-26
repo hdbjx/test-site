@@ -44,7 +44,7 @@ export const images: SiteImage[] = [
   // Homepage hero is intentionally locked to _DSC0553.
   {
     id: "hero",
-    file: "/images/hero.jpg",
+    file: "/images/hero.webp",
     alt: "Red Volvo being foam washed by Every Detail in a residential driveway",
     w: 3,
     h: 2,
@@ -67,37 +67,37 @@ export const images: SiteImage[] = [
 
   // Additional real-job photography added October 2026. Kept as individual
   // registry entries so pages can use the crop that best fits each photo.
-  { id: "crew-shirt-van", file: "/images/crew-shirt-van.jpg", alt: "Every Detail technician beside the branded mobile detailing van", w: 2, h: 3, category: "team" },
-  { id: "mobile-rig-open-job", file: "/images/mobile-rig-open-job.jpg", alt: "Open Every Detail mobile detailing van set up beside a customer vehicle", w: 2, h: 3, category: "rig" },
-  { id: "black-car-pressure-wash", file: "/images/black-car-pressure-wash.jpg", alt: "Every Detail technician pressure washing a black vehicle beside the mobile rig", w: 2, h: 3, category: "work" },
-  { id: "clean-white-interior", file: "/images/clean-white-interior.jpg", alt: "Clean white vehicle interior after detailing", w: 2, h: 3, category: "interior" },
+  { id: "crew-shirt-van", file: "/images/crew-shirt-van.webp", alt: "Every Detail technician beside the branded mobile detailing van", w: 2, h: 3, category: "team" },
+  { id: "mobile-rig-open-job", file: "/images/mobile-rig-open-job.webp", alt: "Open Every Detail mobile detailing van set up beside a customer vehicle", w: 2, h: 3, category: "rig" },
+  { id: "black-car-pressure-wash", file: "/images/black-car-pressure-wash.webp", alt: "Every Detail technician pressure washing a black vehicle beside the mobile rig", w: 2, h: 3, category: "work" },
+  { id: "clean-white-interior", file: "/images/clean-white-interior.webp", alt: "Clean white vehicle interior after detailing", w: 2, h: 3, category: "interior" },
   { id: "clean-white-cabin", file: "/images/clean-white-cabin.jpg", alt: "Clean light-colored vehicle cabin viewed from the rear seats", w: 2, h: 3, category: "interior" },
-  { id: "mobile-rig-open-driveway", file: "/images/mobile-rig-open-driveway.jpg", alt: "Every Detail mobile detailing van open and fully set up in a residential driveway", w: 2, h: 3, category: "rig" },
-  { id: "classic-red-wheel", file: "/images/classic-red-wheel.jpg", alt: "Glossy red classic car wheel and fender after detailing", w: 2, h: 3, category: "exterior" },
-  { id: "classic-car-cockpit", file: "/images/classic-car-cockpit.jpg", alt: "Clean classic car cockpit with the Every Detail van visible outside", w: 3, h: 2, category: "interior" },
-  { id: "technician-branded-van", file: "/images/technician-branded-van.jpg", alt: "Every Detail technician walking beside the branded mobile detailing van", w: 2, h: 3, category: "team" },
-  { id: "two-tech-interior-detail", file: "/images/two-tech-interior-detail.jpg", alt: "Two Every Detail technicians working together inside a customer vehicle", w: 3, h: 2, category: "team" },
-  { id: "rear-seat-detail", file: "/images/rear-seat-detail.jpg", alt: "Every Detail technician wiping down a vehicle rear seat", w: 3, h: 2, category: "interior" },
-  { id: "tesla-foam-wash", file: "/images/tesla-foam-wash.jpg", alt: "Every Detail technician foam washing a Tesla in a residential driveway", w: 2, h: 3, category: "work" },
+  { id: "mobile-rig-open-driveway", file: "/images/mobile-rig-open-driveway.webp", alt: "Every Detail mobile detailing van open and fully set up in a residential driveway", w: 2, h: 3, category: "rig" },
+  { id: "classic-red-wheel", file: "/images/classic-red-wheel.webp", alt: "Glossy red classic car wheel and fender after detailing", w: 2, h: 3, category: "exterior" },
+  { id: "classic-car-cockpit", file: "/images/classic-car-cockpit.webp", alt: "Clean classic car cockpit with the Every Detail van visible outside", w: 3, h: 2, category: "interior" },
+  { id: "technician-branded-van", file: "/images/technician-branded-van.webp", alt: "Every Detail technician walking beside the branded mobile detailing van", w: 2, h: 3, category: "team" },
+  { id: "two-tech-interior-detail", file: "/images/two-tech-interior-detail.webp", alt: "Two Every Detail technicians working together inside a customer vehicle", w: 3, h: 2, category: "team" },
+  { id: "rear-seat-detail", file: "/images/rear-seat-detail.webp", alt: "Every Detail technician wiping down a vehicle rear seat", w: 3, h: 2, category: "interior" },
+  { id: "tesla-foam-wash", file: "/images/tesla-foam-wash.webp", alt: "Every Detail technician foam washing a Tesla in a residential driveway", w: 2, h: 3, category: "work" },
 
 
   // Additional full-resolution originals from the October 2026 iCloud photo set.
   // These stay in the shared registry so future pages can rotate photography
   // without falling back to compressed exports.
-  { id: "hq-branded-van-side", file: "/images/hq-branded-van-side.jpg", alt: "Every Detail branded mobile detailing van parked at a local job", w: 3, h: 2, category: "rig" },
+  { id: "hq-branded-van-side", file: "/images/hq-branded-van-side.webp", alt: "Every Detail branded mobile detailing van parked at a local job", w: 3, h: 2, category: "rig" },
   { id: "hq-van-through-flowers", file: "/images/hq-van-through-flowers.jpg", alt: "Every Detail van photographed through flowers at a neighborhood job", w: 3, h: 2, category: "brand" },
-  { id: "hq-interior-team-front-seats", file: "/images/hq-interior-team-front-seats.jpg", alt: "Every Detail technicians cleaning the front seats of a vehicle", w: 3, h: 2, category: "team" },
-  { id: "hq-technician-trunk-detail", file: "/images/hq-technician-trunk-detail.jpg", alt: "Every Detail technician cleaning the rear cargo area of a vehicle", w: 3, h: 2, category: "work" },
-  { id: "hq-decatur-summer-sky", file: "/images/hq-decatur-summer-sky.jpg", alt: "Blue sky and flowering trees during an Every Detail neighborhood job", w: 2, h: 3, category: "local" },
-  { id: "hq-white-ioniq-front", file: "/images/hq-white-ioniq-front.jpg", alt: "Clean white Hyundai Ioniq after detailing", w: 2, h: 3, category: "exterior" },
-  { id: "hq-black-suv-finished", file: "/images/hq-black-suv-finished.jpg", alt: "Finished black SUV after an Every Detail service", w: 2, h: 3, category: "exterior" },
-  { id: "hq-technician-window-detail", file: "/images/hq-technician-window-detail.jpg", alt: "Every Detail technician cleaning the side of a customer vehicle", w: 3, h: 2, category: "work" },
-  { id: "hq-mobile-rig-fleet", file: "/images/hq-mobile-rig-fleet.jpg", alt: "Every Detail mobile detailing vehicles lined up at a local job site", w: 3, h: 2, category: "rig" },
-  { id: "hq-black-suv-grille", file: "/images/hq-black-suv-grille.jpg", alt: "Detailed black SUV grille and front finish", w: 3, h: 2, category: "exterior" },
-  { id: "hq-white-suv-finished", file: "/images/hq-white-suv-finished.jpg", alt: "Finished white SUV after detailing", w: 2, h: 3, category: "exterior" },
-  { id: "hq-interior-front-seat-work", file: "/images/hq-interior-front-seat-work.jpg", alt: "Every Detail technician working inside a tan vehicle interior", w: 3, h: 2, category: "interior" },
-  { id: "hq-crew-shirt-detail", file: "/images/hq-crew-shirt-detail.jpg", alt: "Every Detail technician wearing a branded shirt during a detail", w: 2, h: 3, category: "team" },
-  { id: "hq-white-ioniq-wheel", file: "/images/hq-white-ioniq-wheel.jpg", alt: "Clean wheel and front quarter of a white Hyundai Ioniq", w: 2, h: 3, category: "exterior" },
+  { id: "hq-interior-team-front-seats", file: "/images/hq-interior-team-front-seats.webp", alt: "Every Detail technicians cleaning the front seats of a vehicle", w: 3, h: 2, category: "team" },
+  { id: "hq-technician-trunk-detail", file: "/images/hq-technician-trunk-detail.webp", alt: "Every Detail technician cleaning the rear cargo area of a vehicle", w: 3, h: 2, category: "work" },
+  { id: "hq-decatur-summer-sky", file: "/images/hq-decatur-summer-sky.webp", alt: "Blue sky and flowering trees during an Every Detail neighborhood job", w: 2, h: 3, category: "local" },
+  { id: "hq-white-ioniq-front", file: "/images/hq-white-ioniq-front.webp", alt: "Clean white Hyundai Ioniq after detailing", w: 2, h: 3, category: "exterior" },
+  { id: "hq-black-suv-finished", file: "/images/hq-black-suv-finished.webp", alt: "Finished black SUV after an Every Detail service", w: 2, h: 3, category: "exterior" },
+  { id: "hq-technician-window-detail", file: "/images/hq-technician-window-detail.webp", alt: "Every Detail technician cleaning the side of a customer vehicle", w: 3, h: 2, category: "work" },
+  { id: "hq-mobile-rig-fleet", file: "/images/hq-mobile-rig-fleet.webp", alt: "Every Detail mobile detailing vehicles lined up at a local job site", w: 3, h: 2, category: "rig" },
+  { id: "hq-black-suv-grille", file: "/images/hq-black-suv-grille.webp", alt: "Detailed black SUV grille and front finish", w: 3, h: 2, category: "exterior" },
+  { id: "hq-white-suv-finished", file: "/images/hq-white-suv-finished.webp", alt: "Finished white SUV after detailing", w: 2, h: 3, category: "exterior" },
+  { id: "hq-interior-front-seat-work", file: "/images/hq-interior-front-seat-work.webp", alt: "Every Detail technician working inside a tan vehicle interior", w: 3, h: 2, category: "interior" },
+  { id: "hq-crew-shirt-detail", file: "/images/hq-crew-shirt-detail.webp", alt: "Every Detail technician wearing a branded shirt during a detail", w: 2, h: 3, category: "team" },
+  { id: "hq-white-ioniq-wheel", file: "/images/hq-white-ioniq-wheel.webp", alt: "Clean wheel and front quarter of a white Hyundai Ioniq", w: 2, h: 3, category: "exterior" },
 
   // Detail+ recurring-care photography. These aliases intentionally
   // use descriptive IDs so the Detail+ story can reference the exact
@@ -112,7 +112,7 @@ export const images: SiteImage[] = [
   },
   {
     id: "team-tablet",
-    file: "/images/team-tablet.jpg",
+    file: "/images/team-tablet.webp",
     alt: "Every Detail team using a tablet during a mobile detailing job",
     w: 2,
     h: 3,
@@ -120,7 +120,7 @@ export const images: SiteImage[] = [
   },
   {
     id: "branded-rig-driveway",
-    file: "/images/branded-rig-driveway.jpg",
+    file: "/images/branded-rig-driveway.webp",
     alt: "Every Detail branded mobile detailing rig at a residential driveway",
     w: 2,
     h: 3,
@@ -128,7 +128,7 @@ export const images: SiteImage[] = [
   },
   {
     id: "interior-detail-team",
-    file: "/images/interior-detail-team.jpg",
+    file: "/images/interior-detail-team.webp",
     alt: "Every Detail technicians working together on a vehicle interior",
     w: 3,
     h: 2,
@@ -145,7 +145,7 @@ export const images: SiteImage[] = [
   },
   {
     id: "work-02",
-    file: "/images/foam-wash.jpg",
+    file: "/images/foam-wash.webp",
     alt: "Every Detail technician foam washing a black SUV in a residential driveway",
     w: 2,
     h: 3,
@@ -153,7 +153,7 @@ export const images: SiteImage[] = [
   },
   {
     id: "work-03",
-    file: "/images/interior-detail.jpg",
+    file: "/images/interior-detail.webp",
     alt: "Every Detail technician detailing the front interior of a vehicle",
     w: 2,
     h: 3,
@@ -169,7 +169,7 @@ export const images: SiteImage[] = [
   },
   {
     id: "work-05",
-    file: "/images/finished-sedan-rig.jpg",
+    file: "/images/finished-sedan-rig.webp",
     alt: "Finished sedan beside the Every Detail mobile detailing rig",
     w: 3,
     h: 2,
@@ -177,7 +177,7 @@ export const images: SiteImage[] = [
   },
   {
     id: "work-06",
-    file: "/images/exterior-hand-wash.jpg",
+    file: "/images/exterior-hand-wash.webp",
     alt: "Every Detail technician hand washing a black SUV",
     w: 2,
     h: 3,
@@ -185,7 +185,7 @@ export const images: SiteImage[] = [
   },
   {
     id: "work-07",
-    file: "/images/wheel-detail-team.jpg",
+    file: "/images/wheel-detail-team.webp",
     alt: "Two Every Detail technicians working together on a vehicle exterior",
     w: 2,
     h: 3,
@@ -193,7 +193,7 @@ export const images: SiteImage[] = [
   },
   {
     id: "work-08",
-    file: "/images/clean-interior.jpg",
+    file: "/images/clean-interior.webp",
     alt: "Clean vehicle interior after an Every Detail detailing service",
     w: 3,
     h: 2,
@@ -202,13 +202,13 @@ export const images: SiteImage[] = [
 
   {
     id: "work-mateo-0670",
-    file: "/images/work-mateo-0670.jpg",
+    file: "/images/work-mateo-0670.webp",
     alt: "Every Detail technician Mateo foam washing a vehicle",
     w: 3, h: 2, category: "work",
   },
   {
     id: "work-rex-0467",
-    file: "/images/work-rex-0467.jpg",
+    file: "/images/work-rex-0467.webp",
     alt: "Every Detail technician Rex foam washing a vehicle",
     w: 2, h: 3, category: "work",
   },
@@ -220,7 +220,7 @@ export const images: SiteImage[] = [
   },
   {
     id: "work-will-0920",
-    file: "/images/work-will-0920.jpg",
+    file: "/images/work-will-0920.webp",
     alt: "Every Detail technician Will using the job iPad inside the mobile detailing van",
     w: 2, h: 3, category: "team",
   },
@@ -238,7 +238,7 @@ export const images: SiteImage[] = [
   // Primary team photograph used on the About page.
   {
     id: "about-team",
-    file: "/images/full-team.jpg",
+    file: "/images/full-team.webp",
     alt: "Every Detail team gathered with the company mobile detailing rigs",
     w: 3,
     h: 2,
@@ -247,7 +247,7 @@ export const images: SiteImage[] = [
 
   {
     id: "about-founder",
-    file: "/images/team-tablet.jpg",
+    file: "/images/team-tablet.webp",
     alt: "Every Detail team member managing a mobile detailing job on site",
     w: 2,
     h: 3,
@@ -258,7 +258,7 @@ export const images: SiteImage[] = [
   // reference the older team image naming system.
   {
     id: "team-01",
-    file: "/images/full-team.jpg",
+    file: "/images/full-team.webp",
     alt: "Every Detail team gathered with the company mobile detailing rigs",
     w: 3,
     h: 2,
@@ -267,7 +267,7 @@ export const images: SiteImage[] = [
 
   {
     id: "team-02",
-    file: "/images/full-team.jpg",
+    file: "/images/full-team.webp",
     alt: "Every Detail student-run mobile detailing team in Decatur, Georgia",
     w: 3,
     h: 2,
@@ -280,7 +280,7 @@ export const images: SiteImage[] = [
 
   {
     id: "rig-01",
-    file: "/images/organized-rig.jpg",
+    file: "/images/organized-rig.webp",
     alt: "Every Detail technicians accessing equipment in the organized mobile detailing rig",
     w: 2,
     h: 3,
@@ -289,7 +289,7 @@ export const images: SiteImage[] = [
 
   {
     id: "rig-02",
-    file: "/images/rig-access.jpg",
+    file: "/images/rig-access.webp",
     alt: "Every Detail technician working from the mobile detailing rig",
     w: 2,
     h: 3,
@@ -298,7 +298,7 @@ export const images: SiteImage[] = [
 
   {
     id: "rig-03",
-    file: "/images/branded-trailer-van.jpg",
+    file: "/images/branded-trailer-van.webp",
     alt: "Every Detail branded mobile detailing van and trailer",
     w: 3,
     h: 2,
@@ -307,7 +307,7 @@ export const images: SiteImage[] = [
 
   {
   id: "rig-04",
-  file: "/images/branded-trailer-van.jpg",
+  file: "/images/branded-trailer-van.webp",
   alt: "Every Detail mobile detailing van and trailer in Decatur, Georgia",
   w: 3,
   h: 2,
@@ -315,16 +315,16 @@ export const images: SiteImage[] = [
 },
   
   // Additional unique photography for editorial galleries.
-  { id: "about-ops-01", file: "/images/team-rig-setup.jpg", alt: "Every Detail team setting up a mobile detailing rig", w: 3, h: 2, category: "team" },
-  { id: "about-ops-02", file: "/images/technician-rig.jpg", alt: "Every Detail technician working from a mobile detailing rig", w: 2, h: 3, category: "rig" },
+  { id: "about-ops-01", file: "/images/team-rig-setup.webp", alt: "Every Detail team setting up a mobile detailing rig", w: 3, h: 2, category: "team" },
+  { id: "about-ops-02", file: "/images/technician-rig.webp", alt: "Every Detail technician working from a mobile detailing rig", w: 2, h: 3, category: "rig" },
   { id: "about-ops-03", file: "/images/every-detail-flag.jpg", alt: "Every Detail flag beside a mobile detailing setup", w: 2, h: 3, category: "brand" },
-  { id: "about-ops-04", file: "/images/mobile-rig-work.jpg", alt: "Every Detail mobile rig set up for a driveway detail", w: 3, h: 2, category: "rig" },
-  { id: "about-ops-05", file: "/images/exterior-wash-team.jpg", alt: "Every Detail technicians washing a vehicle together", w: 3, h: 2, category: "team" },
-  { id: "about-ops-06", file: "/images/team-driveway-detail.jpg", alt: "Every Detail technicians detailing a vehicle in a residential driveway", w: 3, h: 2, category: "team" },
-  { id: "home-team", file: "/images/branded-rig-home.jpg", alt: "Every Detail mobile detailing rig at a residential job", w: 3, h: 2, category: "rig" },
-  { id: "ceramic-01", file: "/images/red-car-rig.jpg", alt: "Glossy red vehicle beside the Every Detail mobile rig", w: 3, h: 2, category: "paint" },
-  { id: "ceramic-02", file: "/images/exterior-hand-detail.jpg", alt: "Hand detailing a vehicle exterior finish", w: 3, h: 2, category: "paint" },
-  { id: "ceramic-03", file: "/images/driveway-detail.jpg", alt: "Vehicle being detailed in a residential driveway", w: 3, h: 2, category: "work" },
+  { id: "about-ops-04", file: "/images/mobile-rig-work.webp", alt: "Every Detail mobile rig set up for a driveway detail", w: 3, h: 2, category: "rig" },
+  { id: "about-ops-05", file: "/images/exterior-wash-team.webp", alt: "Every Detail technicians washing a vehicle together", w: 3, h: 2, category: "team" },
+  { id: "about-ops-06", file: "/images/team-driveway-detail.webp", alt: "Every Detail technicians detailing a vehicle in a residential driveway", w: 3, h: 2, category: "team" },
+  { id: "home-team", file: "/images/branded-rig-home.webp", alt: "Every Detail mobile detailing rig at a residential job", w: 3, h: 2, category: "rig" },
+  { id: "ceramic-01", file: "/images/red-car-rig.webp", alt: "Glossy red vehicle beside the Every Detail mobile rig", w: 3, h: 2, category: "paint" },
+  { id: "ceramic-02", file: "/images/exterior-hand-detail.webp", alt: "Hand detailing a vehicle exterior finish", w: 3, h: 2, category: "paint" },
+  { id: "ceramic-03", file: "/images/driveway-detail.webp", alt: "Vehicle being detailed in a residential driveway", w: 3, h: 2, category: "work" },
 
   // ------------------------------------------------------------
   // PAINT + CERAMIC
@@ -332,7 +332,7 @@ export const images: SiteImage[] = [
 
   {
     id: "paint-01",
-    file: "/images/mercedes-paint.jpg",
+    file: "/images/mercedes-paint.webp",
     alt: "Water beading on glossy black Mercedes paint",
     w: 2,
     h: 3,
@@ -341,7 +341,7 @@ export const images: SiteImage[] = [
 
   {
     id: "paint-02",
-    file: "/images/red-paint-detail.jpg",
+    file: "/images/red-paint-detail.webp",
     alt: "Glossy red vehicle paint after detailing",
     w: 2,
     h: 3,
@@ -350,7 +350,7 @@ export const images: SiteImage[] = [
 
   {
     id: "paint-03",
-    file: "/images/classic-red-car.jpg",
+    file: "/images/classic-red-car.webp",
     alt: "Glossy red classic car paint finish",
     w: 2,
     h: 3,
@@ -429,7 +429,7 @@ export const imagesIn = (...categories: ImageCategory[]): SiteImage[] =>
  */
 export const logo = {
   mark: {
-    file: "/brand/every-detail-mark.png",
+    file: "/brand/every-detail-logo.png",
     w: 520,
     h: 424,
   },

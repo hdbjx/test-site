@@ -154,7 +154,7 @@ export function VehicleGlobalUI() {
       {onboarding ? (
         <div className="veh-welcome-shell">
           <div className="veh-welcome-brandrow" aria-hidden="true">
-            <img src="/brand/every-detail-mark.png" alt="" />
+            <img src="/brand/every-detail-logo.png" alt="" />
             <span>Mobile detailing · Decatur / Atlanta</span>
           </div>
 

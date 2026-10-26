@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   applicationName: site.name,
   formatDetection: { telephone: false },
   verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } : undefined,
-  icons: { icon: "/brand/every-detail-mark.png", apple: "/brand/every-detail-mark.png" },
+  icons: { icon: "/brand/every-detail-logo.png", apple: "/brand/every-detail-logo.png" },
 };
 
 export const viewport: Viewport = {

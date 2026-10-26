@@ -12480,3 +12480,114 @@ form[data-turnstile-verifying="true"] button[type="submit"]{opacity:.72;pointer-
   font-weight:700;
   line-height:1.4;
 }
+
+/* V110 / RESPONSIVE HARDENING ---------------------------------------------- */
+/* Keep the booking flow anchored even if non-visual form controls are added. */
+.bk-layout > .bk-flow{
+  grid-column:1;
+  grid-row:1;
+  min-width:0;
+}
+.bk-layout > .bk-aside{
+  grid-column:2;
+  grid-row:1;
+  min-width:0;
+}
+.bk-pkg-name{
+  overflow-wrap:normal;
+  word-break:normal;
+  hyphens:none;
+}
+
+/* 1000-1179px is the tightest two-column booking band. Give the flow room. */
+@media (min-width:1000px) and (max-width:1179px){
+  .bk-layout{
+    grid-template-columns:minmax(0,1fr) minmax(258px,280px)!important;
+    gap:clamp(22px,2.8vw,30px)!important;
+  }
+  .bk-aside-inner{
+    padding:.95rem!important;
+  }
+}
+
+@media (max-width:999px){
+  .bk-layout > .bk-flow{
+    grid-column:1;
+    grid-row:1;
+  }
+  .bk-layout > .bk-aside{
+    grid-column:1;
+    grid-row:2;
+  }
+}
+
+/* Header controls must stay on one line and inside the viewport at every width. */
+.site-context-pill > i,
+.site-shared-menu-label,
+.site-shared-menu-label i{
+  white-space:nowrap;
+  flex:none;
+}
+.site-context-pill > span,
+.site-context-pill > small{
+  min-width:0;
+}
+
+@media (max-width:360px){
+  .site-context-pill,
+  body:has(.v29-hero) .site-context-pill{
+    left:8px!important;
+    max-width:calc(100vw - 98px)!important;
+    min-height:40px!important;
+    padding:.36rem .5rem .36rem .58rem!important;
+  }
+  .site-context-pill > span{
+    font-size:.56rem!important;
+    letter-spacing:.025em!important;
+  }
+  body:has(.v29-hero) .site-shared-menu-button,
+  .site-shared-menu-button{
+    right:8px!important;
+    min-width:70px!important;
+    height:40px!important;
+    padding-inline:9px!important;
+  }
+  .site-shared-menu-label{
+    gap:.45rem!important;
+    font-size:.68rem!important;
+  }
+}
+
+/* The fixed menu occupied the fifth amount button at mid-size desktop widths. */
+@media (min-width:901px) and (max-width:1350px){
+  .gift-amount-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+  .gift-amount-grid button:last-child{
+    grid-column:1;
+  }
+}
+
+/* Center the rotated collapsed service label so long names cannot clip at the top. */
+@media (min-width:900px){
+  .sv90-core-collapsed-name{
+    bottom:50%;
+    font-size:clamp(2.15rem,3.25vw,4rem);
+    transform:translateX(-50%) translateY(50%) rotate(-90deg);
+  }
+}
+
+/* The paint stamp is decorative. Hide it in the width band where it hits pricing links. */
+@media (min-width:900px) and (max-width:1399px){
+  .pc90-stage-stamp{
+    display:none!important;
+  }
+}
+
+/* Do not leave a separator orphaned before reading time on narrow blog rows. */
+@media (max-width:640px){
+  .shine84-row-meta span:nth-child(3)::before{
+    content:none;
+    margin-right:0;
+  }
+}

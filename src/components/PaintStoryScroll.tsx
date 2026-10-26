@@ -9,21 +9,21 @@ const chapters = [
     kicker: "See the paint honestly",
     title: "Swirls are scratches. Shine can hide them.",
     body: "Under direct light, wash marring, haze and oxidation become obvious. We inspect the finish first so the process matches the paint instead of forcing every car into the same package.",
-    image: "/images/mercedes-paint.jpg",
+    image: "/images/mercedes-paint.webp",
   },
   {
     number: "02",
     kicker: "Correct the surface",
     title: "Gloss comes from the paint underneath.",
     body: "Machine polishing refines the clear coat itself. An enhancement targets light haze and swirls. Full correction goes further when the finish needs multiple polishing stages.",
-    image: "/images/red-paint-detail.jpg",
+    image: "/images/red-paint-detail.webp",
   },
   {
     number: "03",
     kicker: "Protect the result",
     title: "Then ceramic locks in the work.",
     body: "The coating bonds to clean, corrected paint and adds durable hydrophobic protection. It makes the finish easier to maintain, but it does not make paint scratch-proof or replace proper washing.",
-    image: "/images/red-car-rig.jpg",
+    image: "/images/red-car-rig.webp",
   },
 ];
 
