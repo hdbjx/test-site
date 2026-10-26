@@ -27,6 +27,7 @@
   --color-ink: #111111;
   --color-muted: #666666;
   --color-red: #b8363d;
+  --color-logo-red: #d56865;
   --color-red-hover: #9f2c33;
   --color-oxblood: #590d07;
   --color-line: rgb(17 17 17 / 0.14);
@@ -16289,6 +16290,7 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
    ============================================================ */
 .site-shared-header{
   --ed-header-fg:#f3eddf;
+  --ed-header-logo-fg:var(--ed-header-fg);
   --ed-header-control-bg:rgba(8,8,7,.42);
   --ed-header-control-border:rgba(243,237,223,.52);
   --ed-header-control-fg:#f3eddf;
@@ -16320,6 +16322,7 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
 }
 .site-shared-header[data-tone="brand"]{
   --ed-header-fg:#b8363d;
+  --ed-header-logo-fg:var(--color-logo-red);
   --ed-header-control-bg:rgba(247,243,236,.90);
   --ed-header-control-border:rgba(184,54,61,.48);
   --ed-header-control-fg:#8f252b;
@@ -16335,7 +16338,7 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
   display:block!important;
   width:92px!important;
   height:92px!important;
-  background:var(--ed-header-fg)!important;
+  background:var(--ed-header-logo-fg)!important;
   mask:url('/brand/every-detail-logo.png') center/contain no-repeat!important;
   -webkit-mask:url('/brand/every-detail-logo.png') center/contain no-repeat!important;
   filter:var(--ed-header-logo-filter)!important;
@@ -16345,7 +16348,7 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
     transform 220ms cubic-bezier(.22,1,.36,1)!important;
 }
 .site-shared-logo-control .home-logo-mark{
-  background:var(--ed-header-fg)!important;
+  background:var(--ed-header-logo-fg)!important;
 }
 
 /* The homepage used to hide the mark in several scenes. V100 keeps
@@ -16410,7 +16413,7 @@ body .site-shared-header[data-tone] .site-context-pill.is-set:hover{
 /* Route-specific geometry can remain, but route-specific logo coloring cannot. */
 body:has(.pl60-page) .site-shared-logo-mark,
 body:has(.v29-hero) .site-shared-logo-mark{
-  background:var(--ed-header-fg)!important;
+  background:var(--ed-header-logo-fg)!important;
 }
 body:has(.pl60-page) .site-shared-logo-mark{
   width:68px!important;
