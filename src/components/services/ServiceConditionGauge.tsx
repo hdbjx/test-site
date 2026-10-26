@@ -1,18 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import { Photo } from "@/components/Photo";
 import { RubberStamp } from "@/components/ed/RubberStamp";
+import { ConditionDial } from "@/components/services/ConditionDial";
 import { TrackedLink } from "@/components/TrackedLink";
 import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
 import { PRICING, services, startingPrice, type ServiceId } from "@/data/services";
 import { usd } from "@/lib/format";
-
-const angles: Record<ServiceId, number> = {
-  maintenance: -55,
-  premium: 0,
-  factoryReset: 55,
-};
 
 function ServicePrice({ id }: { id: ServiceId }) {
   const { vehicle, openPicker } = useVehicle();
@@ -65,7 +60,6 @@ type Props = {
 export function ServiceConditionGauge({ anchors }: Props) {
   const [active, setActive] = useState<ServiceId>("premium");
   const [enhanced, setEnhanced] = useState(false);
-  const angle = angles[active];
 
   useEffect(() => {
     setEnhanced(true);
@@ -76,8 +70,6 @@ export function ServiceConditionGauge({ anchors }: Props) {
     requestAnimationFrame(() => document.querySelector(hash)?.scrollIntoView({ block: "start" }));
   }, []);
 
-  const activeLabel = useMemo(() => active === "maintenance" ? "Clean" : active === "premium" ? "Daily buildup" : "Neglected", [active]);
-
   return (
     <div className={`sv90-condition-module ${enhanced ? "is-enhanced" : ""}`}>
       <div className="sv90-core-intro">
@@ -85,20 +77,8 @@ export function ServiceConditionGauge({ anchors }: Props) {
           <h2 id="sv90-core-title" className="ed90-heading">WHAT SHAPE<br /><span>IS IT IN?</span></h2>
           <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_core_unsure" }}>Not sure? Find my detail ↗</TrackedLink>
         </div>
-        <div className="sv90-gauge" aria-hidden="true" style={{ "--sv90-needle": `${angle}deg` } as CSSProperties}>
-        <svg viewBox="0 0 300 178">
-          <path className="sv90-gauge-arc" d="M35 145 A115 115 0 0 1 265 145" />
-          {[-70,-55,-40,-25,-10,5,20,35,50,65,80].map((tick) => (
-            <line key={tick} x1="150" y1="22" x2="150" y2={tick % 20 === 0 ? "38" : "32"} transform={`rotate(${tick} 150 145)`} />
-          ))}
-          <text x="26" y="165">CLEAN</text>
-          <text x="150" y="30" textAnchor="middle">DAILY BUILDUP</text>
-          <text x="274" y="165" textAnchor="end">NEGLECTED</text>
-          <circle cx="150" cy="145" r="18" className="sv90-gauge-cap" />
-          <text x="150" y="150" textAnchor="middle" className="sv90-gauge-ed">ED</text>
-        </svg>
-          <span className="sv90-gauge-needle" />
-          <span className="sr-only">Selected condition: {activeLabel}</span>
+        <div className="sv90-dial-slot">
+          <ConditionDial value={active} onChange={setActive} />
         </div>
       </div>
 

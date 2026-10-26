@@ -177,3 +177,10 @@ Legacy gift-card SQL is retained under `database/legacy-root/`. Use `supabase/mi
 - Reduced desktop card height to a controlled viewport range so the cards read as a complete composition instead of an oversized wall.
 - Tightened the menu board, comparison table, mobile-rig section, and FAQ pacing.
 - Preserves the V111.2 clean floating header with no extra desktop text navigation and no white scroll box.
+
+## V111.4 condition dial integration
+- Replaced the static services condition gauge with the interactive ConditionDial component.
+- Dial selection drives Maintenance, Premium, and Factory Reset active states.
+- Added drag and keyboard controls plus a live service/price booking readout.
+- Kept the V111.3 compact services-page pacing by constraining the dial on desktop and tightening intro spacing.
+- Preserved the V111.2 simplified header with no extra desktop text links or scroll white-box surface.

@@ -1,0 +1,266 @@
+/* Condition dial: draggable needle that picks the service, plus a live price readout. */
+
+.dial {
+  --dial-ink: var(--v29-ink, #0b0a09);
+  --dial-paper: var(--v29-paper, #f2ecdf);
+  --dial-red: var(--v29-red, #d56865);
+  width: min(312px, 100%);
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  color: var(--dial-ink);
+}
+
+.face {
+  width: 100%;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 10px;
+  outline: none;
+}
+
+.face:focus-visible {
+  box-shadow: 0 0 0 2px var(--dial-paper), 0 0 0 4px var(--dial-red);
+}
+
+.dragging {
+  cursor: grabbing;
+}
+
+.face svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.arc {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.band {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.1;
+  stroke-width: 6;
+  transition: stroke 0.3s ease, stroke-opacity 0.3s ease;
+}
+
+.bandActive {
+  stroke: var(--dial-red);
+  stroke-opacity: 1;
+}
+
+.tick {
+  stroke: currentColor;
+  stroke-width: 1.4;
+}
+
+.tickMajor {
+  stroke-width: 2.6;
+}
+
+.tickRed {
+  stroke: var(--dial-red);
+}
+
+.num {
+  font-family: var(--font-numeral);
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  fill: currentColor;
+  fill-opacity: 0.32;
+  stroke: var(--dial-paper);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  pointer-events: none;
+  transition: fill-opacity 0.3s ease, fill 0.3s ease;
+}
+
+.numActive {
+  fill: var(--dial-red);
+  fill-opacity: 1;
+}
+
+.label {
+  font-family: var(--font-numeral);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  fill: currentColor;
+  transition: fill 0.3s ease;
+}
+
+.labelActive {
+  fill: var(--dial-red);
+}
+
+.needle {
+  transform-box: view-box;
+  transform-origin: 160px 168px;
+  transition: transform 0.55s cubic-bezier(0.2, 1.4, 0.35, 1);
+}
+
+.dragging .needle {
+  transition: none;
+}
+
+.needleBody {
+  fill: var(--dial-red);
+}
+
+.hub {
+  fill: var(--dial-paper);
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.hubText {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.hint {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+
+.hintHidden {
+  opacity: 0;
+}
+
+/* Readout: the dial's "display window". Links straight to booking for the picked service. */
+.readout {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.7rem 0.85rem 0.7rem 1rem;
+  background: var(--dial-ink);
+  color: var(--dial-paper);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06), 4px 4px 0 var(--dial-red);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.readout:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06), 5px 5px 0 var(--dial-red);
+}
+
+.readout:focus-visible {
+  outline: 2px solid var(--dial-red);
+  outline-offset: 3px;
+}
+
+.readoutText {
+  min-width: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.readoutEyebrow {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.readoutName {
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.readoutTime {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  opacity: 0.65;
+}
+
+.readoutPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--font-numeral);
+  font-size: 2.1rem;
+  line-height: 1;
+  color: var(--dial-red);
+  animation: dialRoll 0.35s cubic-bezier(0.2, 1.2, 0.35, 1);
+}
+
+.readoutPrice small {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dial-paper);
+  opacity: 0.55;
+}
+
+.readoutArrow {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+@keyframes dialRoll {
+  from {
+    transform: translateY(45%);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .dial {
+    justify-self: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .dial {
+    width: min(288px, 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .needle,
+  .band,
+  .num,
+  .label,
+  .readout {
+    transition: none;
+  }
+
+  .readoutPrice {
+    animation: none;
+  }
+}
