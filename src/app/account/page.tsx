@@ -8,6 +8,21 @@ import { getMyGiftCards, getMyJobs, getMyPortalJobs, getMyRewardBalance, getSess
 import { supabaseConfigured } from "@/lib/supabase/config";
 import { pageMetadata } from "@/lib/seo";
 
+/** Past jobs store the service as a display name; match it back to a bookable service. */
+function bookAgainHref(serviceName: string | null | undefined) {
+  const name = (serviceName ?? "").toLowerCase();
+  const service = name.includes("factory") ? "factoryReset" : name.includes("premium") ? "premium" : name.includes("maintenance") ? "maintenance" : null;
+  return service ? `/book?service=${service}` : "/book";
+}
+
+const bookAgainStyle = {
+  color: "#131210",
+  font: "800 .68rem/1 var(--font-display)",
+  letterSpacing: ".04em",
+  textDecoration: "underline",
+  textUnderlineOffset: "4px",
+} as const;
+
 export const metadata = pageMetadata({ title: "Your account | Every Detail", description: "Your vehicles, bookings, credit, and live detail status.", path: "/account", noindex: true });
 export const dynamic = "force-dynamic";
 
@@ -93,7 +108,7 @@ export default async function AccountPage() {
                 <div className="account68-section-title"><div><p className="account68-kicker">HISTORY</p><h2>PAST DETAILS</h2></div></div>
                 <div className="account68-history">
                   {past.map((job) => (
-                    <article key={job.id}><div><strong>{job.service_name}</strong><span>{job.vehicle}</span></div><time dateTime={job.scheduled_start}>{when(job.scheduled_start)}</time></article>
+                    <article key={job.id}><div><strong>{job.service_name}</strong><span>{job.vehicle}</span></div><div style={{ justifyItems: "end", textAlign: "right" }}><time dateTime={job.scheduled_start}>{when(job.scheduled_start)}</time><Link href={bookAgainHref(job.service_name)} style={bookAgainStyle}>Book again ↗</Link></div></article>
                   ))}
                 </div>
               </section>
@@ -106,6 +121,7 @@ export default async function AccountPage() {
               <strong>${(totalCredit / 100).toFixed(totalCredit % 100 ? 2 : 0)}</strong>
               <div className="account68-credit-lines"><span>Rewards <b>${(rewards.balance_cents / 100).toFixed(2)}</b></span><span>Gift cards <b>${(giftBalance / 100).toFixed(2)}</b></span></div>
               {giftCards.length > 0 && <div className="account68-gift-codes">{giftCards.map((card) => <span key={card.id}>{card.code} · ${(card.balance_cents / 100).toFixed(card.balance_cents % 100 ? 2 : 0)}</span>)}</div>}
+              {totalCredit > 0 && <Link href="/book" style={{ marginRight: "1.2rem" }}>USE YOUR ${(totalCredit / 100).toFixed(totalCredit % 100 ? 2 : 0)} CREDIT ↗</Link>}
               <Link href="/gift-cards">BUY A GIFT CARD ↗</Link>
             </section>
 

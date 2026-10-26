@@ -5,6 +5,7 @@ import { submitLead } from "@/lib/submit";
 import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
 import { useJourney } from "@/components/journey/JourneyContext";
 import { TurnstileField } from "@/components/forms/TurnstileField";
+import { track } from "@/lib/analytics";
 
 type Kind = "paint-correction" | "ceramic" | "paint-care";
 
@@ -84,6 +85,7 @@ export function PaintLeadForm({ kind, hideIntro = false }: Props) {
     });
 
     if (result.ok) {
+      track("paint_inquiry", { location: `${kind}_lead_form`, service: inferredService ?? undefined });
       setFirstName(submittedName.split(/\s+/)[0] || "");
       setStatus("success");
       event.currentTarget.reset();

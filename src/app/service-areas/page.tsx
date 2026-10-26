@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackedLink } from "@/components/TrackedLink";
 import { CtaBand } from "@/components/CtaBand";
 import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { Photo } from "@/components/Photo";
@@ -23,8 +24,8 @@ export default function ServiceAreas() {
             <h1>We come to your driveway.</h1>
             <p>Every Detail is based in Decatur and serves nearby Atlanta neighborhoods with fully equipped mobile detailing rigs.</p>
             <div className="areas84-actions">
-              <Link href="/book" className="btn btn-primary">Check availability ↗</Link>
-              <a href={site.phone.sms} className="areas84-link">Not listed? Text your address ↗</a>
+              <TrackedLink href="/book" event="book_click" params={{ location: "areas_hero" }} className="btn btn-primary">Check availability ↗</TrackedLink>
+              <TrackedLink href={site.phone.sms} event="text_click" params={{ location: "areas_hero" }} className="areas84-link">Not listed? Text your address ↗</TrackedLink>
             </div>
           </div>
           <figure className="areas84-photo">

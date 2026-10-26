@@ -19,7 +19,9 @@ export type EventName =
   | "text_click" // { location }
   | "detailplus_start" // plan builder interaction
   | "detailplus_submit" // Detail+ request sent
-  | "paint_inquiry"; // any paint/ceramic quote click or submit
+  | "paint_inquiry" // any paint/ceramic quote click or submit
+  | "gift_card_submit" // gift card request created: { amount }
+  | "hiring_click"; // join-the-team link: { location }
 
 type Params = Record<string, string | number | undefined>;
 

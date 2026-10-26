@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackedLink } from "@/components/TrackedLink";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
@@ -38,8 +39,8 @@ export default async function AreaPage({ params }: Params) {
               <h1><span>Car detailing</span><strong>{area.name}.</strong></h1>
               <p className="area90-intro">{page.intro}</p>
               <div className="area90-actions">
-                <Link href="/book" className="btn btn-primary">Book your detail ↗</Link>
-                <Link href="/get-a-quote" className="area-v2-inline">Get a recommendation</Link>
+                <TrackedLink href="/book" event="book_click" params={{ location: `area_${slug}_hero` }} className="btn btn-primary">Book your detail ↗</TrackedLink>
+                <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: `area_${slug}_hero` }} className="area-v2-inline">Get a recommendation</TrackedLink>
               </div>
             </div>
             <figure className="area90-hero-photo">

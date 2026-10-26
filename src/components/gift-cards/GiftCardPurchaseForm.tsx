@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Honeypot } from "@/components/forms/parts";
 import { TurnstileField } from "@/components/forms/TurnstileField";
+import { track } from "@/lib/analytics";
 
 const PRESETS = [100, 150, 250, 400];
 
@@ -41,6 +42,7 @@ export function GiftCardPurchaseForm() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "We couldn't create the gift card request.");
+      track("gift_card_submit", { amount: data.amount ?? amount });
       setResult({
         reference: data.reference,
         amount: data.amount,

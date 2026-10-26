@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { NextOpeningNote } from "@/components/journey/NextOpeningNote";
 import { TrackedLink } from "@/components/TrackedLink";
 import { useVehicle } from "@/components/vehicle/VehicleContext";
 import { PRICING, services, startingPrice, type ServiceId } from "@/data/services";
 import { durationShort, usd } from "@/lib/format";
+import { track } from "@/lib/analytics";
 import styles from "./ConditionDial.module.css";
 
 /* Dial geometry (SVG user units). 0° points straight up; the needle sweeps ±SWEEP. */
@@ -80,6 +82,7 @@ type Props = {
  * prices it for the saved vehicle.
  */
 export function ConditionDial({ value, onChange }: Props) {
+  const { vehicle } = useVehicle();
   const svgRef = useRef<SVGSVGElement>(null);
   const faceRef = useRef<HTMLDivElement>(null);
   const [drag, setDrag] = useState<number | null>(null);
@@ -128,7 +131,9 @@ export function ConditionDial({ value, onChange }: Props) {
   function select(id: ServiceId) {
     setTouched(true);
     setRev(null);
-    if (id !== value) onChange(id);
+    if (id === value) return;
+    onChange(id);
+    track("service_select", { service: id, location: "services_gauge" });
   }
 
   function onPointerDown(e: PointerEvent<HTMLDivElement>) {
@@ -247,6 +252,7 @@ export function ConditionDial({ value, onChange }: Props) {
       </p>
 
       <Readout id={value} />
+      <NextOpeningNote service={value} vehicle={vehicle?.vehicle} location="services_gauge" className={styles.next} />
     </div>
   );
 }

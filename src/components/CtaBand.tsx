@@ -1,4 +1,5 @@
 import { TrackedLink } from "./TrackedLink";
+import { CtaNextOpening } from "@/components/journey/CtaNextOpening";
 
 type Props = {
   title?: string;
@@ -21,6 +22,7 @@ export function CtaBand({
           <p className="site-cta-kicker">YOUR DRIVEWAY / OUR DETAIL SHOP</p>
           <h2>{title}</h2>
           <p>{body}</p>
+          <CtaNextOpening location={location} />
         </div>
         <div className="site-cta-actions">
           <TrackedLink href="/book" event="book_click" params={{ location }} className="site-cta-primary">Book your detail <span>↗</span></TrackedLink>

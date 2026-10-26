@@ -8,6 +8,7 @@ import { PRICING, serviceList, services, vehicleLabel, vehicles, type ServiceId,
 import { track } from "@/lib/analytics";
 import { durationShort, usd } from "@/lib/format";
 import { TrackedLink } from "./TrackedLink";
+import { NextOpeningNote } from "@/components/journey/NextOpeningNote";
 
 const serviceMeta: Record<ServiceId, { number: string; cue: string; subline: string; includes: string; detail: string }> = {
   maintenance: {
@@ -177,6 +178,7 @@ export function HomeBookingFlow() {
                     <span>Your detail</span>
                     <strong>{chosenService.name} · {siteVehicle ? siteVehicleLabel(siteVehicle) : chosenVehicle.label}</strong>
                     <small>About {durationShort(quote.minutes)} in your driveway <span>· Power + water included</span></small>
+                    <NextOpeningNote service={service} vehicle={vehicle} location="home_flow" />
                   </div>
                   <div className="v15-result-price"><span>Total</span><strong>{usd(quote.price)}</strong></div>
                   <TrackedLink href={siteVehicle ? `/book?service=${service}` : bookingHref(vehicle!, service)} event="book_click" params={{ location: "home_flow", vehicle: vehicle ?? undefined, service: service ?? undefined }} className="btn btn-primary v15-continue" onClick={() => service && setServiceIntent(service)}>Choose a time ↗</TrackedLink>

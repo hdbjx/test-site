@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackedLink } from "@/components/TrackedLink";
 import Image from "next/image";
 import { Photo } from "@/components/Photo";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
@@ -94,7 +95,7 @@ export default function OurWorkPage() {
             <p className="eyebrow">BEFORE / AFTER PROOF</p>
             <h2 id="work-before-after-title">Same panel.<br/><span>Different finish.</span></h2>
             <p>This is a real 50/50 paint-correction test spot under an inspection light. The corrected side is on the left; the as-arrived side is on the right.</p>
-            <Link href="/paint-correction" className="btn btn-secondary">See paint correction ↗</Link>
+            <TrackedLink href="/paint-correction" event="paint_inquiry" params={{ location: "work_before_after" }} className="btn btn-secondary">See paint correction ↗</TrackedLink>
           </div>
           <figure>
             <Image src="/images/paint-5050-single.jpg" alt="Real 50/50 paint correction test spot, corrected on the left and uncorrected on the right" fill sizes="(min-width: 900px) 58vw, 92vw" />
@@ -113,7 +114,7 @@ export default function OurWorkPage() {
       <section className="work-page-final" data-header-tone="light">
         <div className="container-ed work-page-final-grid">
           <div><p className="eyebrow">YOUR CAR NEXT</p><h2>Know what you need?</h2><p>Book it now. If you are not sure, answer a few questions and we will point you to the right detail.</p></div>
-          <div className="work-page-final-actions"><Link href="/get-a-quote" className="btn btn-secondary">Find my detail</Link><Link href="/book" className="btn btn-primary">Book now ↗</Link></div>
+          <div className="work-page-final-actions"><TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "work_final" }} className="btn btn-secondary">Find my detail</TrackedLink><TrackedLink href="/book" event="book_click" params={{ location: "work_final" }} className="btn btn-primary">Book now ↗</TrackedLink></div>
         </div>
       </section>
     </div>

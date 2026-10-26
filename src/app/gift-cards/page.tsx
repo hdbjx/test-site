@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackedLink } from "@/components/TrackedLink";
 import { GiftCardPurchaseForm } from "@/components/gift-cards/GiftCardPurchaseForm";
 import { GiftCardIntro } from "@/components/gift-cards/GiftCardIntro";
 import { Photo } from "@/components/Photo";
@@ -114,7 +115,7 @@ export default function GiftCardsPage() {
             </p>
             <div className="gift-rewards-actions">
               <Link href="/account" className="btn btn-secondary">Open your account ↗</Link>
-              <Link href="/book" className="btn btn-primary">Book a detail ↗</Link>
+              <TrackedLink href="/book" event="book_click" params={{ location: "gift_rewards" }} className="btn btn-primary">Book a detail ↗</TrackedLink>
             </div>
           </div>
         </div>

@@ -144,6 +144,11 @@
   opacity: 0;
 }
 
+.next {
+  justify-self: start;
+  padding-left: 0.15rem;
+}
+
 /* Readout: the dial's "display window". Links straight to booking for the picked service. */
 .readout {
   width: 100%;

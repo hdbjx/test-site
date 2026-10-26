@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackedLink } from "@/components/TrackedLink";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { JsonLd } from "@/components/JsonLd";
@@ -28,7 +29,7 @@ export default function MobileCarDetailingPage() {
           <div className="edu-hero-copy">
             <p className="edu-lede">Every Detail brings the crew, water, power, products and equipment to you in a 100% electric mobile setup. Our core detailing services clean the vehicle inside and out rather than treating the first visit like a quick interior-only or exterior-only clean.</p>
             <p>For most first-time clients, Premium is the starting point. If the vehicle has heavy stains, pet hair, spills, odor or long-term buildup, Factory Reset adds the labor needed for a deeper recovery. Maintenance is designed mainly for vehicles that are already clean and being kept that way.</p>
-            <div className="mt-7 flex flex-wrap gap-3"><Link href="/book" className="btn btn-primary">Book your detail ↗</Link><Link href="/get-a-quote" className="btn btn-secondary">Get a recommendation</Link></div>
+            <div className="mt-7 flex flex-wrap gap-3"><TrackedLink href="/book" event="book_click" params={{ location: "mobile_detailing_hero" }} className="btn btn-primary">Book your detail ↗</TrackedLink><TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "mobile_detailing_hero" }} className="btn btn-secondary">Get a recommendation</TrackedLink></div>
           </div>
         </div>
       </div></section>

@@ -8,7 +8,11 @@ import { TrackedLink } from "@/components/TrackedLink";
 import { PersonalizedHeroTitle } from "@/components/PersonalizedHeroTitle";
 import { reviews } from "@/data/reviews";
 import { reviewCountLabel } from "@/data/site";
+import { paintServices } from "@/data/paint";
+import { usd } from "@/lib/format";
 import { pageMetadata } from "@/lib/seo";
+
+const paintFrom = Math.min(...paintServices.map((service) => service.startingAt));
 
 export const metadata = pageMetadata({
   title: "Mobile Car Detailing in Decatur & Atlanta | Every Detail",
@@ -135,7 +139,7 @@ export default function Home() {
               <div className="v41-care-card-top"><span>01</span><b>PAINT CARE</b></div>
               <div className="v41-care-card-copy">
                 <h3>BRING BACK<br />THE GLOSS.</h3>
-                <p>Correction and protection for paint that deserves more than a wash.</p>
+                <p>Correction and protection for paint that deserves more than a wash. From {usd(paintFrom)}.</p>
                 <strong>Explore paint care ↗</strong>
               </div>
             </Link>

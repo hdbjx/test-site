@@ -130,7 +130,7 @@ export default function AboutPage() {
             <p>Book the team for your car, or reach out if you are a student who wants real responsibility and is ready to learn.</p>
             <div className="about70-close-actions">
               <TrackedLink href="/book" event="book_click" params={{ location: "about_final" }} className="about70-primary">BOOK A DETAIL ↗</TrackedLink>
-              <TrackedLink href={`mailto:${site.email}?subject=Joining%20the%20Every%20Detail%20team`} event="phone_click" params={{ location: "about_hiring" }} className="about70-secondary">JOIN THE TEAM ↗</TrackedLink>
+              <TrackedLink href={`mailto:${site.email}?subject=Joining%20the%20Every%20Detail%20team`} event="hiring_click" params={{ location: "about_hiring" }} className="about70-secondary">JOIN THE TEAM ↗</TrackedLink>
             </div>
           </div>
         </div>

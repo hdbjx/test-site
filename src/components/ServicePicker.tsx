@@ -7,6 +7,7 @@ import { PRICING, serviceList, vehicles, type VehicleId } from "@/data/services"
 import { track } from "@/lib/analytics";
 import { durationShort, usd } from "@/lib/format";
 import { TrackedLink } from "./TrackedLink";
+import { NextOpeningNote } from "@/components/journey/NextOpeningNote";
 
 type Props = {
   location: string; // analytics label: "home", "services"
@@ -109,6 +110,8 @@ export function ServicePicker({ location, headingId }: Props) {
                   {vehicleLabel.toLowerCase()}
                 </p>
               </div>
+
+              <NextOpeningNote service={s.id} vehicle={vehicle} location={location} className="mt-3" />
 
               <p className="mt-5 text-[0.9375rem] text-ink/80">{s.summary}</p>
 
