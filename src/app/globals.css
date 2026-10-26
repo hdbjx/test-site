@@ -10970,6 +10970,75 @@ body:has(.info-form86) .site-shared-menu-button[aria-expanded="true"]{
 }
 
 
+
+/* ============================================================
+   V107.1 — HEADER TONE PROVIDERS RESTORED
+   V107's dead-CSS pruning removed these provider rules because
+   they mostly declare custom properties. Header consumers below
+   depend on them at runtime. Keep this block with the consumers.
+   ============================================================ */
+.site-shared-header{
+  --ed-header-fg:#f3eddf;
+  --ed-header-logo-fg:var(--ed-header-fg);
+  --ed-header-control-bg:rgba(8,8,7,.42);
+  --ed-header-control-border:rgba(243,237,223,.52);
+  --ed-header-control-fg:#f3eddf;
+  --ed-header-control-hover-bg:#f3eddf;
+  --ed-header-control-hover-border:#f3eddf;
+  --ed-header-control-hover-fg:#11100e;
+  --ed-header-logo-filter:drop-shadow(0 8px 22px rgba(0,0,0,.24));
+  color:var(--ed-header-fg)!important;
+}
+.site-shared-header[data-tone="ink"]{
+  --ed-header-fg:#11100e;
+  --ed-header-logo-fg:var(--ed-header-fg);
+  --ed-header-control-bg:rgba(244,240,231,.88);
+  --ed-header-control-border:rgba(17,16,14,.28);
+  --ed-header-control-fg:#11100e;
+  --ed-header-control-hover-bg:#11100e;
+  --ed-header-control-hover-border:#11100e;
+  --ed-header-control-hover-fg:#f4f0e7;
+  --ed-header-logo-filter:drop-shadow(0 7px 20px rgba(255,255,255,.10)) drop-shadow(0 5px 16px rgba(30,22,18,.12));
+}
+.site-shared-header[data-tone="light"]{
+  --ed-header-fg:#f4f0e7;
+  --ed-header-logo-fg:var(--ed-header-fg);
+  --ed-header-control-bg:rgba(8,8,7,.46);
+  --ed-header-control-border:rgba(244,240,231,.54);
+  --ed-header-control-fg:#f4f0e7;
+  --ed-header-control-hover-bg:#f4f0e7;
+  --ed-header-control-hover-border:#f4f0e7;
+  --ed-header-control-hover-fg:#11100e;
+  --ed-header-logo-filter:drop-shadow(0 8px 24px rgba(0,0,0,.28));
+}
+.site-shared-header[data-tone="brand"]{
+  --ed-header-fg:#b8363d;
+  --ed-header-logo-fg:var(--color-logo-red);
+  --ed-header-control-bg:rgba(247,243,236,.90);
+  --ed-header-control-border:rgba(184,54,61,.48);
+  --ed-header-control-fg:#8f252b;
+  --ed-header-control-hover-bg:#b8363d;
+  --ed-header-control-hover-border:#b8363d;
+  --ed-header-control-hover-fg:#fff8ee;
+  --ed-header-logo-filter:drop-shadow(0 7px 20px rgba(255,255,255,.10)) drop-shadow(0 5px 18px rgba(62,20,18,.16));
+}
+.site-shared-header[data-menu-open="true"]{
+  --ed-header-fg:#f4f0e7;
+  --ed-header-logo-fg:#f4f0e7;
+  --ed-header-control-bg:rgba(8,8,7,.46);
+  --ed-header-control-border:rgba(244,240,231,.54);
+  --ed-header-control-fg:#f4f0e7;
+  --ed-header-control-hover-bg:#f4f0e7;
+  --ed-header-control-hover-border:#f4f0e7;
+  --ed-header-control-hover-fg:#11100e;
+  --ed-header-logo-filter:drop-shadow(0 8px 24px rgba(0,0,0,.26));
+}
+@media(max-width:560px){
+  .site-shared-header{
+    --ed-header-logo-filter:drop-shadow(0 5px 15px rgba(0,0,0,.20));
+  }
+}
+
 .site-shared-logo-mark{
   display:block!important;
   width:92px!important;
