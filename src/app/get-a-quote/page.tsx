@@ -21,7 +21,7 @@ export default async function QuotePage({ searchParams }: { searchParams: Promis
             <p>FIND MY DETAIL</p>
             <h1>WHAT DOES YOUR CAR NEED?</h1>
           </div>
-          <span>3 QUICK QUESTIONS</span>
+          <span>4 QUICK STEPS</span>
         </div>
         <QuoteRecommender defaultInterest={interest} />
       </main>

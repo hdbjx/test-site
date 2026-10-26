@@ -3,7 +3,7 @@ import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
 import { site } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
-import { getPublicTeamRoster } from "@/lib/team-roster";
+import { roleLabels, team as publicTeam } from "@/data/team";
 
 export const metadata = pageMetadata({
   title: "About Every Detail | Student-Run Detailing in Decatur",
@@ -17,10 +17,10 @@ const standards = [
   ["CHECK THE WORK", "Every car gets a final quality check before the team leaves the driveway."],
 ] as const;
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
-export default async function AboutPage() {
-  const team = await getPublicTeamRoster();
+export default function AboutPage() {
+  const team = publicTeam.map((member, index) => ({ id: `${member.name}-${index}`, name: member.name, title: roleLabels[member.role] }));
 
   return (
     <div className="about70">

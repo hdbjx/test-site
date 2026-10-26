@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Params) {
   const { slug } = await params;
   const area = areasWithPages.find((a) => a.slug === slug);
   if (!area) return {};
-  return pageMetadata({ title: `${area.page.title} | Every Detail`, description: area.page.description, path: `/service-areas/${slug}` });
+  return pageMetadata({ title: `${area.page.title} | Every Detail`, description: area.page.description, path: `/service-areas/${slug}`, noindex: area.indexable !== true });
 }
 
 export default async function AreaPage({ params }: Params) {

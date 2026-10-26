@@ -1,5 +1,5 @@
 ---
-title: "Maintenance, Premium or Factory Reset: which detail does your car need?"
+title: "Which Every Detail service does your car need?"
 description: "A simple way to choose between Every Detail's three core service levels based on the condition of your car."
 date: 2026-09-29
 category: "Services"

@@ -1,5 +1,5 @@
 ---
-title: "Mobile detailing vs. a car wash: what are you actually paying for?"
+title: "Mobile detailing vs. a car wash: what’s the difference?"
 description: "A car wash and a professional detail solve different problems. Here is where the extra time in detailing actually goes."
 date: 2026-09-20
 category: "Services"

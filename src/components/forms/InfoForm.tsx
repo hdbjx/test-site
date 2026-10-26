@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { FormError, Success, TextField } from "./parts";
+import { FormError, Honeypot, Success, TextField } from "./parts";
+import { TurnstileField } from "./TurnstileField";
 import { AddressFields } from "./AddressFields";
 
 type ContactResponse = {
@@ -52,7 +53,11 @@ export function InfoForm() {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(fields),
+        body: JSON.stringify({
+          ...fields,
+          company: String(data.company ?? ""),
+          turnstileToken: String(data.turnstileToken ?? ""),
+        }),
       });
       const result = (await response.json().catch(() => ({}))) as ContactResponse;
 
@@ -82,6 +87,8 @@ export function InfoForm() {
 
   return (
     <form noValidate onSubmit={onSubmit} className="space-y-5">
+      <Honeypot />
+      <TurnstileField action="contact" />
       <TextField label="Full name" name="name" autoComplete="name" error={bad("name")} />
       <TextField
         label="Phone"

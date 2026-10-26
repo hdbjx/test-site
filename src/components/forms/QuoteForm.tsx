@@ -5,6 +5,7 @@ import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { submitLead } from "@/lib/submit";
 import { FormError, formToObject, Honeypot, SelectField, Success, TextArea, TextField } from "./parts";
+import { TurnstileField } from "./TurnstileField";
 
 export const quoteInterests = [
   { value: "not-sure", label: "Not sure yet. Help me choose" },
@@ -75,6 +76,7 @@ export function QuoteForm({ defaultInterest }: { defaultInterest?: string }) {
   return (
     <form noValidate onSubmit={onSubmit} onFocus={onStart} className="relative space-y-6">
       <Honeypot />
+      <TurnstileField action="lead" />
       <div className="grid gap-6 sm:grid-cols-2">
         <TextField label="Name" name="name" autoComplete="name" error={bad("name")} />
         <TextField

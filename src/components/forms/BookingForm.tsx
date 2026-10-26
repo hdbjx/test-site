@@ -11,6 +11,7 @@ import { submitLead } from "@/lib/submit";
 import { FormError, formToObject, Honeypot, SelectField, Success, TextField } from "./parts";
 import { AutofillSafeNotes } from "./AutofillSafeNotes";
 import { LeadSourceField } from "./LeadSourceField";
+import { TurnstileField } from "./TurnstileField";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -77,6 +78,7 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
   return (
     <form noValidate onSubmit={onSubmit} className="relative grid gap-10 lg:grid-cols-12">
       <Honeypot />
+      <TurnstileField action="lead" />
       <div className="space-y-10 lg:col-span-8">
         <fieldset>
           <legend className="t-h3">1. Your vehicle</legend>

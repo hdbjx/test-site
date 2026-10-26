@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { buildGiftCardRequestEmail, sendEmail } from "@/lib/email";
+import { enforceRateLimits, ipLimit, normalizedEmail, normalizedPhone, valueLimit, verifyTurnstile } from "@/lib/public-security";
 
 function clean(value: unknown, max = 300) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
@@ -15,6 +16,25 @@ export async function POST(req: Request) {
   let body: Record<string, unknown>;
   try { body = await req.json(); } catch {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
+  }
+
+  if (typeof body.company === "string" && body.company.trim()) {
+    return NextResponse.json({ ok: true });
+  }
+
+  const rateEmail = normalizedEmail(body.purchaserEmail);
+  const ratePhone = normalizedPhone(body.purchaserPhone);
+  const rateRules = [
+    ipLimit(req, "gift_order_ip", 900, 5),
+    rateEmail ? valueLimit("gift_order_email", rateEmail, 3600, 4) : null,
+    ratePhone ? valueLimit("gift_order_phone", ratePhone, 3600, 4) : null,
+  ].filter(Boolean) as Parameters<typeof enforceRateLimits>[1];
+  const limited = await enforceRateLimits(req, rateRules);
+  if (limited) return limited;
+
+  const turnstile = await verifyTurnstile(req, body.turnstileToken, "gift_order");
+  if (!turnstile.ok) {
+    return NextResponse.json({ ok: false, error: "Please retry the verification and submit again." }, { status: 403 });
   }
 
   const amount = Number(body.amount);
@@ -38,6 +58,12 @@ export async function POST(req: Request) {
   }
   if (!new Set(["venmo", "zelle"]).has(paymentMethod)) {
     return NextResponse.json({ ok: false, error: "Choose Venmo or Zelle." }, { status: 422 });
+  }
+  if (paymentMethod === "zelle" && !process.env.GIFT_CARD_ZELLE_LABEL?.trim()) {
+    return NextResponse.json(
+      { ok: false, error: "Zelle is temporarily unavailable. Choose Venmo or contact Every Detail." },
+      { status: 503 },
+    );
   }
   if (!new Set(["purchaser", "recipient"]).has(deliveryMode)) {
     return NextResponse.json({ ok: false, error: "Choose who should receive the gift card." }, { status: 422 });
@@ -66,7 +92,7 @@ export async function POST(req: Request) {
   const dollars = data.amount_cents / 100;
   const paymentTarget = data.payment_method === "venmo"
     ? (process.env.GIFT_CARD_VENMO_LABEL || "@Every-Detail")
-    : (process.env.GIFT_CARD_ZELLE_LABEL || "404-268-7748 · Joseph Perreault");
+    : (process.env.GIFT_CARD_ZELLE_LABEL || "");
   const paymentUrl = data.payment_method === "venmo" ? (process.env.GIFT_CARD_VENMO_URL || "https://venmo.com/u/Every-Detail") : "";
   const html = buildGiftCardRequestEmail({
     purchaserName,
@@ -79,7 +105,12 @@ export async function POST(req: Request) {
     deliveryMode: deliveryMode as "purchaser" | "recipient",
   });
 
-  sendEmail({ to: purchaserEmail, subject: `Gift card request ${data.reference} · Every Detail`, html }).catch((emailError) => console.error("[gift-cards] confirmation email failed", emailError));
+  const emailSent = await sendEmail({ to: purchaserEmail, subject: `Gift card request ${data.reference} · Every Detail`, html })
+    .then(() => true)
+    .catch((emailError) => {
+      console.error("[gift-cards] confirmation email failed", emailError);
+      return false;
+    });
 
   return NextResponse.json({
     ok: true,
@@ -88,5 +119,6 @@ export async function POST(req: Request) {
     paymentMethod: data.payment_method,
     paymentTarget: paymentTarget || undefined,
     paymentUrl: paymentUrl || undefined,
+    confirmationEmailSent: emailSent,
   });
 }

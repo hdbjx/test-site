@@ -167,7 +167,8 @@ export function ServicesCatalogCompare() {
           </label>
         </div>
 
-        <div className="svc62-compare-table">
+        <p className="svc107-scroll-hint" aria-hidden="true">Swipe to compare <span>→</span></p>
+        <div className="svc62-compare-table" tabIndex={0} aria-label="Service comparison table. Swipe or scroll horizontally on smaller screens.">
           <div className="svc62-compare-head">
             <div aria-hidden="true" />
             {[left, right].map((service) => {

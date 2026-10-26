@@ -6,6 +6,8 @@ import { type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { services, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { AddressFields } from "@/components/forms/AddressFields";
 import { LeadSourceField } from "@/components/forms/LeadSourceField";
+import { Honeypot } from "@/components/forms/parts";
+import { TurnstileField } from "@/components/forms/TurnstileField";
 import { track } from "@/lib/analytics";
 
 const TZ = "America/New_York";
@@ -115,6 +117,7 @@ export function QuoteBookingContinuation({
     const res = await fetch("/api/book", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({
       vehicles:[{vehicle,service,vehicleId:null,addons,paint}], start:selected.toISOString(), name, phone:phone.replace(/\D/g,""), email, address,
       notes:get("service_notes"), leadSource, leadSourceDetail:get("leadSourceDetail"),
+      company:get("company"), turnstileToken:get("turnstileToken"),
     })}).catch(() => null);
     const json = res ? await res.json().catch(() => ({})) : {};
     setSending(false);
@@ -143,6 +146,8 @@ export function QuoteBookingContinuation({
     {!selected && <div className="quote-inline-more"><Link href={`${bookingHref}${bookingHref.includes("?") ? "&" : "?"}focus=time`}>See the full calendar →</Link></div>}
 
     {selected && <form ref={finishRef} className="quote-inline-finish scroll-mt-28" onSubmit={book}>
+      <Honeypot />
+      <TurnstileField action="booking" />
       <div className="quote-inline-selected"><span>Your time</span><strong>{fmtDay(selected)} at {fmtTime(selected)}</strong><button type="button" onClick={() => setSelected(null)}>Change</button></div>
       <div><p className="field-label">Where are we coming?</p><p className="quote-inline-help">You already gave us your name, phone, email, vehicle and service. We only need the service address.</p><AddressFields /></div>
       <div className="quote-inline-source"><LeadSourceField /></div>

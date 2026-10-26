@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sendLeadEmails } from "@/lib/email";
 import { upsertWebsiteContact } from "@/lib/website-contact";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { enforceRateLimits, ipLimit, normalizedEmail, normalizedPhone, valueLimit, verifyTurnstile } from "@/lib/public-security";
 
 const REQUIRED: Record<string, string[]> = {
   quote: ["name", "phone", "email", "vehicleMake", "vehicleModel", "interest"],
@@ -96,6 +97,21 @@ export async function POST(req: Request) {
   // Honeypot. Bots that fill the hidden company field should not create contacts.
   if (typeof body.company === "string" && body.company.trim()) {
     return NextResponse.json({ ok: true });
+  }
+
+  const preEmail = normalizedEmail(body.email);
+  const prePhone = normalizedPhone(body.phone);
+  const rateRules = [
+    ipLimit(req, "lead_ip", 900, 8),
+    preEmail ? valueLimit("lead_email", preEmail, 3600, 5) : null,
+    prePhone ? valueLimit("lead_phone", prePhone, 3600, 5) : null,
+  ].filter(Boolean) as Parameters<typeof enforceRateLimits>[1];
+  const limited = await enforceRateLimits(req, rateRules);
+  if (limited) return limited;
+
+  const turnstile = await verifyTurnstile(req, body.turnstileToken, "lead");
+  if (!turnstile.ok) {
+    return NextResponse.json({ ok: false, error: "Please retry the verification and submit again." }, { status: 403 });
   }
 
   const type = String(body.type ?? "");

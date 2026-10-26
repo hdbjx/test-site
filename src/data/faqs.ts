@@ -27,8 +27,8 @@ export const homeFaqs: Faq[] = [
   },
   {
     q: "Do I need to be home?",
-    a: "CONFIRM: answer about access, keys and unlocked vehicles.",
-    confirmed: false,
+    a: "Not necessarily. As long as we can access the vehicle and have a safe place to work, you can go about your day. If the car is locked, behind a gate, or inside a garage, arrange key or access details with us before the appointment.",
+    confirmed: true,
   },
   {
     q: "How long does a detail take?",
@@ -42,8 +42,8 @@ export const homeFaqs: Faq[] = [
   },
   {
     q: "Can you detail my car at work?",
-    a: "CONFIRM: whether workplace lots / parking decks are OK and any requirements.",
-    confirmed: false,
+    a: "Yes, if the property allows detailing and there is enough safe space around the vehicle for our crew and equipment. For office lots, apartments, or parking decks, check the property rules first and let us know about access or clearance limits.",
+    confirmed: true,
   },
   {
     q: "Do you charge extra for pet hair or really dirty cars?",
@@ -57,8 +57,8 @@ export const homeFaqs: Faq[] = [
   },
   {
     q: "What is your satisfaction guarantee?",
-    a: "CONFIRM: 24-hour satisfaction guarantee — exact terms (how to report an issue, what we do about it).",
-    confirmed: false,
+    a: "If something included in your booked service was missed, contact us within 24 hours with the details and, when helpful, a photo. We’ll review it and work with you on a reasonable correction. New messes, new damage, or issues outside the booked service are not covered.",
+    confirmed: true,
   },
 ];
 
@@ -170,8 +170,8 @@ export const detailPlusFaqs: Faq[] = [
   },
   {
     q: "Should I get a full detail before joining?",
-    a: "CONFIRM: whether new members need a Premium / Factory Reset first visit.",
-    confirmed: false,
+    a: "Not automatically. Detail+ is meant to maintain a vehicle that is already in a manageable condition. If the car is too far behind for maintenance, we may recommend a Premium Detail or Factory Reset first, and we’ll tell you before setting up the plan.",
+    confirmed: true,
   },
 ];
 

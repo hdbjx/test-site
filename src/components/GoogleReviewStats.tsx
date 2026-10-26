@@ -24,7 +24,6 @@ export function GoogleReviewStatsProvider({ children }: { children: React.ReactN
     const controller = new AbortController();
 
     fetch("/api/google-review-stats", {
-      cache: "no-store",
       signal: controller.signal,
     })
       .then((response) => (response.ok ? response.json() : null))
@@ -59,15 +58,17 @@ export function LiveReviewCount({ plus = true }: { plus?: boolean }) {
 export function AnimatedReviewCount({ plus = true, duration = 700 }: { plus?: boolean; duration?: number }) {
   const { count } = useContext(ReviewStatsContext);
   const target = Number.isFinite(Number(count)) ? Number(count) : site.reviews.count;
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState(() => site.reviews.count);
   const ref = useRef<HTMLSpanElement>(null);
   const hasRun = useRef(false);
+  const visibleRef = useRef(false);
 
   useEffect(() => {
     const node = ref.current;
     if (!node || hasRun.current) return;
     const observer = new IntersectionObserver((entries) => {
       if (!entries.some((entry) => entry.isIntersecting) || hasRun.current) return;
+      visibleRef.current = true;
       hasRun.current = true;
       observer.disconnect();
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -75,7 +76,7 @@ export function AnimatedReviewCount({ plus = true, duration = 700 }: { plus?: bo
         return;
       }
       const start = performance.now();
-      const from = Math.max(0, Math.min(40, target - 40));
+      const from = Math.max(0, Math.min(display, target));
       const tick = (now: number) => {
         const p = Math.min(1, (now - start) / Math.max(duration, 1));
         const eased = 1 - Math.pow(1 - p, 3);
@@ -86,9 +87,14 @@ export function AnimatedReviewCount({ plus = true, duration = 700 }: { plus?: bo
     }, { threshold: 0.45 });
     observer.observe(node);
     return () => observer.disconnect();
-  }, [target, duration]);
+  }, [duration]);
 
-  return <span ref={ref}>{reviewCountFormatter.format(display || 0)}{plus ? "+" : ""}</span>;
+  useEffect(() => {
+    if (!hasRun.current || !visibleRef.current) return;
+    setDisplay(target);
+  }, [target]);
+
+  return <span ref={ref}>{reviewCountFormatter.format(display)}{plus ? "+" : ""}</span>;
 }
 
 export function GoogleMapsAttribution({ className = "" }: { className?: string }) {

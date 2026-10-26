@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { submitLead } from "@/lib/submit";
 import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
 import { useJourney } from "@/components/journey/JourneyContext";
+import { TurnstileField } from "@/components/forms/TurnstileField";
 
 type Kind = "paint-correction" | "ceramic" | "paint-care";
 
@@ -79,6 +80,7 @@ export function PaintLeadForm({ kind, hideIntro = false }: Props) {
       source: kind === "paint-correction" ? "Website Paint Correction Page" : kind === "ceramic" ? "Website Ceramic Coating Page" : "Website Paint Care Page",
       message: context,
       company: String(form.get("company") ?? ""),
+      turnstileToken: String(form.get("turnstileToken") ?? ""),
     });
 
     if (result.ok) {
@@ -115,6 +117,7 @@ export function PaintLeadForm({ kind, hideIntro = false }: Props) {
 
         <form className="paint-lead-form paint-lead-form-compact" onSubmit={onSubmit}>
           <input className="paint-hp" type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+          <TurnstileField action="lead" />
 
           <div className="paint-field-grid">
             <label><span>Name</span><input name="name" autoComplete="name" required placeholder="Your name" /></label>
@@ -167,6 +170,7 @@ export function PaintLeadForm({ kind, hideIntro = false }: Props) {
 
       <form className="paint-lead-form" onSubmit={onSubmit}>
         <input className="paint-hp" type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+        <TurnstileField action="lead" />
         <div className="paint-field-grid">
           <label><span>What should we call you?</span><input name="name" autoComplete="name" required placeholder="Your name" /></label>
           <label><span>Best number to reach you</span><input name="phone" type="tel" autoComplete="tel" inputMode="tel" required placeholder="(404) 555-0123" /></label>

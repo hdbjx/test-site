@@ -48,6 +48,29 @@ const DISMISS_FOR_MS = 1000 * 60 * 60 * 24 * 30;
 
 const VehicleContext = createContext<VehicleContextValue | null>(null);
 
+function safeGet(storage: "local" | "session", key: string) {
+  try {
+    return (storage === "local" ? window.localStorage : window.sessionStorage).getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSet(storage: "local" | "session", key: string, value: string) {
+  try {
+    (storage === "local" ? window.localStorage : window.sessionStorage).setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function safeRemove(storage: "local" | "session", key: string) {
+  try {
+    (storage === "local" ? window.localStorage : window.sessionStorage).removeItem(key);
+  } catch {}
+}
+
 function readVehicle(raw: string | null): SiteVehicle | null {
   if (!raw) return null;
   try {
@@ -77,20 +100,20 @@ function sameGarageVehicle(siteVehicle: SiteVehicle, garageVehicle: GarageSummar
 }
 
 function promptIsDismissed() {
-  const until = Number(localStorage.getItem(DISMISSED_UNTIL_KEY) ?? "0");
+  const until = Number(safeGet("local", DISMISSED_UNTIL_KEY) ?? "0");
   if (Number.isFinite(until) && until > Date.now()) return true;
 
   // Migrate the old session-only choice into a real short-term preference.
-  if (sessionStorage.getItem(LEGACY_DISMISSED_KEY) === "1") {
-    localStorage.setItem(DISMISSED_UNTIL_KEY, String(Date.now() + DISMISS_FOR_MS));
-    sessionStorage.removeItem(LEGACY_DISMISSED_KEY);
+  if (safeGet("session", LEGACY_DISMISSED_KEY) === "1") {
+    safeSet("local", DISMISSED_UNTIL_KEY, String(Date.now() + DISMISS_FOR_MS));
+    safeRemove("session", LEGACY_DISMISSED_KEY);
     return true;
   }
   return false;
 }
 
 function persistPromptDismissal() {
-  localStorage.setItem(DISMISSED_UNTIL_KEY, String(Date.now() + DISMISS_FOR_MS));
+  safeSet("local", DISMISSED_UNTIL_KEY, String(Date.now() + DISMISS_FOR_MS));
 }
 
 export function VehicleProvider({ children }: { children: ReactNode }) {
@@ -107,8 +130,8 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
 
     async function hydrateVehicle() {
-      const sessionVehicle = readVehicle(sessionStorage.getItem(SESSION_KEY));
-      const savedVehicle = readVehicle(localStorage.getItem(SAVED_KEY));
+      const sessionVehicle = readVehicle(safeGet("session", SESSION_KEY));
+      const savedVehicle = readVehicle(safeGet("local", SAVED_KEY));
       let next = sessionVehicle;
       let nextGarage: GarageSummary[] = [];
       let nextAuthState: AuthState = supabaseConfigured ? "loading" : "signed-out";
@@ -159,7 +182,7 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
 
       if (next) {
         setVehicle(next);
-        sessionStorage.setItem(SESSION_KEY, JSON.stringify(next));
+        safeSet("session", SESSION_KEY, JSON.stringify(next));
       }
 
       const persistedLocally = !!savedVehicle && !!next && JSON.stringify(savedVehicle) === JSON.stringify(next);
@@ -230,7 +253,7 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
 
   const selectVehicle = useCallback(async (next: SiteVehicle, remember = false) => {
     setVehicle(next);
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(next));
+    safeSet("session", SESSION_KEY, JSON.stringify(next));
     persistPromptDismissal();
     setPromptDismissed(true);
     setPickerOpen(false);
@@ -240,24 +263,24 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
       if (authState === "signed-in") {
         const savedToAccount = await persistSignedInVehicle(next);
         setRememberedState(savedToAccount);
-        if (savedToAccount) localStorage.setItem(SAVED_KEY, JSON.stringify(next));
-        else localStorage.removeItem(SAVED_KEY);
+        if (savedToAccount) safeSet("local", SAVED_KEY, JSON.stringify(next));
+        else safeRemove("local", SAVED_KEY);
       } else {
-        localStorage.setItem(SAVED_KEY, JSON.stringify(next));
+        safeSet("local", SAVED_KEY, JSON.stringify(next));
         setRememberedState(true);
       }
       return;
     }
 
-    const saved = readVehicle(localStorage.getItem(SAVED_KEY));
+    const saved = readVehicle(safeGet("local", SAVED_KEY));
     const inGarage = garage.some((item) => sameGarageVehicle(next, item));
     setRememberedState(authState === "signed-in" ? inGarage : !!saved && JSON.stringify(saved) === JSON.stringify(next));
   }, [authState, garage, persistSignedInVehicle]);
 
   const clearVehicle = useCallback(() => {
     setVehicle(null);
-    sessionStorage.removeItem(SESSION_KEY);
-    localStorage.removeItem(SAVED_KEY);
+    safeRemove("session", SESSION_KEY);
+    safeRemove("local", SAVED_KEY);
     setRememberedState(false);
   }, []);
 
@@ -268,15 +291,15 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
         // Do not optimistically claim an account save succeeded.
         void persistSignedInVehicle(vehicle).then((saved) => {
           setRememberedState(saved);
-          if (saved) localStorage.setItem(SAVED_KEY, JSON.stringify(vehicle));
-          else localStorage.removeItem(SAVED_KEY);
+          if (saved) safeSet("local", SAVED_KEY, JSON.stringify(vehicle));
+          else safeRemove("local", SAVED_KEY);
         });
       } else {
-        localStorage.setItem(SAVED_KEY, JSON.stringify(vehicle));
+        safeSet("local", SAVED_KEY, JSON.stringify(vehicle));
         setRememberedState(true);
       }
     } else {
-      localStorage.removeItem(SAVED_KEY);
+      safeRemove("local", SAVED_KEY);
       setRememberedState(authState === "signed-in" && garage.some((item) => sameGarageVehicle(vehicle, item)));
     }
   }, [vehicle, authState, garage, persistSignedInVehicle]);

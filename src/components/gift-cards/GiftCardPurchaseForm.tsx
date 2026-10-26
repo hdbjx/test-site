@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import { Honeypot } from "@/components/forms/parts";
+import { TurnstileField } from "@/components/forms/TurnstileField";
 
 const PRESETS = [100, 150, 250, 400];
 
@@ -90,6 +92,8 @@ export function GiftCardPurchaseForm() {
 
   return (
     <form className="gift-form" onSubmit={submit}>
+      <Honeypot />
+      <TurnstileField action="gift_order" />
       <div className="gift-form-section">
         <div className="gift-form-step"><b>01</b><span>Choose the value</span></div>
         <div className="gift-amount-grid">

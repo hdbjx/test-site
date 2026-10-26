@@ -127,26 +127,19 @@ Kept at the same URL: `/`, `/our-services`, `/ceramic`, `/detailplus`, `/about-u
 1. **Run `images:pull` and `blog:pull`**, then review the output. Blog bodies are converted automatically, so check headings, lists and links, and set `category` / `cta` on each post.
 2. **Alt text.** Every photo marked `altReview: true` in `images.ts` has a generic description because the photos couldn't be inspected.
 3. **Before/after pairs.** The sliders appear once you add pairs to `beforeAfterPairs`. Paint and ceramic photos (category `paint` / `ceramic`) will also fill the Paint & Ceramic hero automatically.
-4. **Hidden FAQs** (`confirmed: false`): the 24-hour satisfaction guarantee terms, "Do I need to be home?", "Can you detail my car at work?", and whether Detail+ requires a first full detail.
 5. **`site.ts`**: legal business name, social profile URLs, Google Business Profile URL, client portal and gift card URLs (hidden until set).
 6. **Team photos**: add ids in `team.ts`. Without a photo, a person shows as an initial.
-7. **Privacy policy page.** The forms collect names, phones, emails and addresses, so add `/privacy` and link it in the footer.
-8. **Location pages**: none are published until an area in `areas.ts` has real local content.
 9. **Reviews**: only 3 verbatim reviews were available. Add more from Google, especially ones about pet hair, family cars and repeat service.
 
-## QA completed
+## QA
 
-- `tsc` and `next build` pass.
-- All pages return 200, unknown slugs return 404, and every redirect was checked.
-- The `/api/lead` validation, honeypot, and missing-webhook error path were checked.
-- axe-core (WCAG 2 A/AA + best practice) reports zero violations on all 10 pages at mobile width.
-- No horizontal overflow at 390px or 1440px.
-- One H1 per page, plus unique titles, meta descriptions and canonicals. LocalBusiness, Service, BreadcrumbList and BlogPosting schema are in place. FAQ schema was left out on purpose, since Google no longer shows FAQ results for business sites.
-- The mobile menu, focus trap, Escape to close, vehicle selector keyboard arrows, and booking form validation were exercised in Chromium.
+The repository includes static QA for vehicle data, site context, SEO, links, the welcome card, and public-endpoint security. `npm run prebuild` runs all of them.
+
+V107 was syntax-transpiled across all TS/TSX source files and the static QA suite passed. A full production `next build` still needs to run in the deployment environment where dependencies and production environment variables are available.
 
 ## Gift cards
 
-`/gift-cards` uses the existing Supabase project and the migration in `gift-cards-v1.sql`.
+`/gift-cards` uses the existing Supabase project. Canonical deployable migrations live in `supabase/migrations/`; legacy manual SQL is retained under `database/legacy-root/`.
 
 Current payment flow intentionally matches the existing Every Detail process:
 
@@ -163,11 +156,13 @@ Optional environment variables:
 |---|---|
 | `GIFT_CARD_VENMO_LABEL` | Venmo handle/name shown after a request, for example `@EveryDetailATL` |
 | `GIFT_CARD_VENMO_URL` | Direct Venmo profile/payment URL shown as a button |
-| `GIFT_CARD_ZELLE_LABEL` | Zelle email/phone/name shown after a request |
+| `GIFT_CARD_ZELLE_LABEL` | Required to offer Zelle. If missing, Zelle orders are rejected rather than showing guessed payment details. |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key used by public forms. |
+| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile server-side verification secret. Configure together with the public site key. |
 
-If a payment label is not configured, the site tells first-time buyers to text Every Detail for the correct payment details instead of guessing.
+If the Zelle label is not configured, Zelle is unavailable. The site never falls back to a hardcoded person or phone number.
 
-See `GIFT-CARDS-APP-INTEGRATION.md` for the manager approval, checkout redemption, customer account, and rewards integration contract.
+Historical implementation notes, including the gift-card integration handoff, are under `docs/version-history/`.
 
 ## Gift cards and rewards v18.1
-Run `gift-cards-and-rewards-v1.1.sql` in Supabase SQL Editor before deploying this build.
+Legacy gift-card SQL is retained under `database/legacy-root/`. Use `supabase/migrations/` as the source of truth for current deployable migrations.

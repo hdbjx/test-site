@@ -1,5 +1,5 @@
 ---
-title: "Pollen season car care: how to clean the yellow layer without making things worse"
+title: "Atlanta pollen: how to wash it off without scratching"
 description: "A practical approach to keeping a car cleaner through heavy pollen without grinding dry contamination across the paint."
 date: 2026-09-14
 category: "Care tips"

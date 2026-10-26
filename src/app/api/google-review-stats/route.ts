@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { site } from "@/data/site";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 3600;
 
 type GooglePlaceResponse = {
   userRatingCount?: number;
@@ -21,7 +20,7 @@ export async function GET() {
 
   if (!apiKey || !placeId) {
     return NextResponse.json(fallback, {
-      headers: { "Cache-Control": "no-store, max-age=0" },
+      headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" },
     });
   }
 
@@ -33,14 +32,14 @@ export async function GET() {
           "X-Goog-Api-Key": apiKey,
           "X-Goog-FieldMask": "userRatingCount,rating",
         },
-        cache: "no-store",
+        next: { revalidate: 3600 },
       },
     );
 
     if (!response.ok) {
       console.error("Google Places review-count request failed", response.status, await response.text());
       return NextResponse.json(fallback, {
-        headers: { "Cache-Control": "no-store, max-age=0" },
+        headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" },
       });
     }
 
@@ -50,7 +49,7 @@ export async function GET() {
 
     if (!Number.isFinite(count) || count < 0) {
       return NextResponse.json(fallback, {
-        headers: { "Cache-Control": "no-store, max-age=0" },
+        headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" },
       });
     }
 
@@ -60,12 +59,12 @@ export async function GET() {
         rating: Number.isFinite(rating) ? rating : site.reviews.rating,
         live: true,
       },
-      { headers: { "Cache-Control": "no-store, max-age=0" } },
+      { headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" } },
     );
   } catch (error) {
     console.error("Google Places review-count request errored", error);
     return NextResponse.json(fallback, {
-      headers: { "Cache-Control": "no-store, max-age=0" },
+      headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" },
     });
   }
 }

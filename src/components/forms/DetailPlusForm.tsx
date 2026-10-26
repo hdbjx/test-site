@@ -9,6 +9,7 @@ import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { submitLead } from "@/lib/submit";
 import { FormError, formToObject, Honeypot, Success, TextArea, TextField } from "./parts";
+import { TurnstileField } from "./TurnstileField";
 
 const cadenceWeeks = (id: string, customWeeks: number) => {
   const match = frequencies.find((frequency) => frequency.id === id);
@@ -99,6 +100,7 @@ export function DetailPlusForm() {
   return (
     <form noValidate onSubmit={onSubmit} onChange={touch} className="dp56-builder-form">
       <Honeypot />
+      <TurnstileField action="lead" />
       <input type="hidden" name="frequency" value={displayFrequency} />
       <input type="hidden" name="custom_weeks" value={freq === "custom" ? String(customWeeks) : ""} />
       <input type="hidden" name="coverage" value={coverageLabel} />

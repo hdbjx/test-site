@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { enforceRateLimits, ipLimit, valueLimit } from "@/lib/public-security";
 
 function cleanCode(value: unknown) {
   return typeof value === "string" ? value.trim().toUpperCase().slice(0, 64) : "";
@@ -18,10 +19,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Enter a gift card code." }, { status: 422 });
   }
 
+  const rules = [
+    ipLimit(req, "gift_validate_ip", 60, 10),
+    valueLimit("gift_validate_code", code, 300, 5),
+  ].filter(Boolean) as Parameters<typeof enforceRateLimits>[1];
+  const limited = await enforceRateLimits(req, rules);
+  if (limited) return limited;
+
   const { data, error } = await supabaseAdmin()
     .from("gift_cards")
-    .select("id, code, balance_cents, recipient_name, status, expires_at")
-    .ilike("code", code)
+    .select("id, code, balance_cents, status, expires_at")
+    .eq("code", code)
     .maybeSingle();
 
   if (error) {
@@ -43,9 +51,7 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     ok: true,
-    code: data.code,
     codeLast4: data.code.slice(-4),
     balanceCents: Number(data.balance_cents),
-    recipientName: data.recipient_name || null,
   });
 }

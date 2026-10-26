@@ -12,7 +12,7 @@ export type AreaPage = {
   photos?: string[];
 };
 
-export type Area = { name: string; slug: string; primary?: boolean; page?: AreaPage };
+export type Area = { name: string; slug: string; primary?: boolean; indexable?: boolean; page?: AreaPage };
 
 const page = (name: string, intro: string, notes: string[]): AreaPage => ({
   title: `Mobile Car Detailing in ${name}, GA`,
@@ -33,6 +33,7 @@ export const areas: Area[] = [
     name: "Decatur",
     slug: "decatur",
     primary: true,
+    indexable: true,
     page: page(
       "Decatur",
       "Decatur is home base for Every Detail. Our student-run crew operates mobile detailing rigs built to bring the shop to you, with the power, water, products and equipment already on board.",
@@ -114,6 +115,7 @@ export const areas: Area[] = [
   {
     name: "Atlanta",
     slug: "atlanta",
+    indexable: true,
     page: page(
       "Atlanta",
       "Every Detail serves select Atlanta neighborhoods from our Decatur-based mobile operation. Because travel and parking conditions vary across the city, online availability is the best way to confirm a specific appointment window.",

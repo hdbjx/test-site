@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
   return [
     ...pages.map(([p, priority]) => ({ url: `${site.url}${p}`, priority })),
-    ...areasWithPages.map((a) => ({ url: `${site.url}/service-areas/${a.slug}`, priority: 0.6 })),
+    ...areasWithPages.filter((a) => a.indexable === true).map((a) => ({ url: `${site.url}/service-areas/${a.slug}`, priority: 0.6 })),
     ...getAllPosts().map((p) => ({ url: `${site.url}/post/${p.slug}`, lastModified: new Date(p.date + "T12:00:00"), priority: 0.4 })),
   ];
 }

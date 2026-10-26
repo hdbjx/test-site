@@ -14,6 +14,7 @@ import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, isAddonId, isAddonIncludedI
 import { getSession, vehicleName, type GarageVehicle } from "@/lib/supabase/account";
 import { sendBookingEmails } from "@/lib/email";
 import { upsertWebsiteContact } from "@/lib/website-contact";
+import { enforceRateLimits, ipLimit, normalizedEmail, normalizedPhone, valueLimit, verifyTurnstile } from "@/lib/public-security";
 
 export const dynamic = "force-dynamic";
 
@@ -79,6 +80,27 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
   }
 
+  // Hidden field used by the real booking form. Bots that fill every field are
+  // acknowledged without creating a job or sending email.
+  if (typeof body.company === "string" && body.company.trim()) {
+    return NextResponse.json({ ok: true });
+  }
+
+  const preEmail = normalizedEmail(body.email);
+  const prePhone = normalizedPhone(body.phone);
+  const rateRules = [
+    ipLimit(req, "book_ip", 900, 6),
+    preEmail ? valueLimit("book_email", preEmail, 3600, 4) : null,
+    prePhone ? valueLimit("book_phone", prePhone, 3600, 4) : null,
+  ].filter(Boolean) as Parameters<typeof enforceRateLimits>[1];
+  const limited = await enforceRateLimits(req, rateRules);
+  if (limited) return limited;
+
+  const turnstile = await verifyTurnstile(req, body.turnstileToken, "booking");
+  if (!turnstile.ok) {
+    return NextResponse.json({ ok: false, error: "Please retry the verification before booking." }, { status: 403 });
+  }
+
   const start = str(body.start);
   const address = str(body.address);
   const notes = str(body.notes, 2000);
@@ -136,7 +158,7 @@ export async function POST(req: Request) {
     const { data: giftCard, error: giftCardError } = await supabaseAdmin()
       .from("gift_cards")
       .select("id, code, balance_cents, recipient_name, status, expires_at")
-      .ilike("code", giftCardCode)
+      .eq("code", giftCardCode)
       .maybeSingle();
 
     if (giftCardError) {

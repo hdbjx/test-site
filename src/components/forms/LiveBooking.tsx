@@ -17,6 +17,8 @@ import type { AccountInfo, GarageVehicle } from "@/lib/supabase/account";
 import { AutofillSafeNotes } from "./AutofillSafeNotes";
 import { LeadSourceField } from "./LeadSourceField";
 import { BookingTopBar } from "./BookingTopBar";
+import { Honeypot } from "./parts";
+import { TurnstileField } from "./TurnstileField";
 
 /* ------------------------------------------------------------------ */
 /* Time helpers (all scheduling is Eastern)                            */
@@ -304,7 +306,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   const [giftCardCode, setGiftCardCode] = useState("");
   const [giftCardBusy, setGiftCardBusy] = useState(false);
   const [giftCardError, setGiftCardError] = useState<string | null>(null);
-  const [giftCardPreview, setGiftCardPreview] = useState<{ code: string; codeLast4: string; balanceCents: number; recipientName: string | null } | null>(null);
+  const [giftCardPreview, setGiftCardPreview] = useState<{ codeLast4: string; balanceCents: number } | null>(null);
 
   const formRef = useRef<HTMLFormElement>(null);
   const quoteSessionRef = useRef<string | null>(null);
@@ -655,8 +657,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       const response = await fetch("/api/gift-cards/validate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }) });
       const json = await response.json().catch(() => ({}));
       if (!response.ok || !json.ok) throw new Error(json.error || "We couldn't check that gift card.");
-      setGiftCardPreview({ code: String(json.code), codeLast4: String(json.codeLast4), balanceCents: Number(json.balanceCents), recipientName: json.recipientName ? String(json.recipientName) : null });
-      setGiftCardCode(String(json.code));
+      setGiftCardPreview({ codeLast4: String(json.codeLast4), balanceCents: Number(json.balanceCents) });
     } catch (giftError) {
       setGiftCardPreview(null);
       setGiftCardError(giftError instanceof Error ? giftError.message : "We couldn't check that gift card.");
@@ -705,7 +706,9 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         notes,
         leadSource: get("leadSource"),
         leadSourceDetail: get("leadSourceDetail"),
-        giftCardCode: giftCardPreview?.code ?? null,
+        giftCardCode: giftCardPreview ? giftCardCode.trim().toUpperCase() : null,
+        company: get("company"),
+        turnstileToken: get("turnstileToken"),
       }),
     }).catch(() => null);
     const json = res ? await res.json().catch(() => ({})) : {};
@@ -1270,6 +1273,8 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       </div>
 
       <form id="booking-main" ref={formRef} noValidate onSubmit={onSubmit} className="bk-layout">
+        <Honeypot />
+        <TurnstileField action="booking" />
         <div className="bk-flow">
           {renderStep("service", "01", "What does your car need?", (
             <div className="bk-pkgs" role="radiogroup" aria-label="Choose your detail">
@@ -1501,7 +1506,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                   <p className="bk-label">Have a gift card?</p>
                   {giftCardPreview ? (
                     <div className="bk-gift-on">
-                      <span>Gift card •••• {giftCardPreview.codeLast4} · {usd(giftCardPreview.balanceCents / 100)} available{giftCardPreview.recipientName ? ` · ${giftCardPreview.recipientName}` : ""}</span>
+                      <span>Gift card •••• {giftCardPreview.codeLast4} · {usd(giftCardPreview.balanceCents / 100)} available</span>
                       <button type="button" onClick={() => { setGiftCardCode(""); setGiftCardPreview(null); setGiftCardError(null); }}>Remove</button>
                     </div>
                   ) : (
