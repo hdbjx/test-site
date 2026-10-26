@@ -8,7 +8,7 @@ export const metadata = pageMetadata({
   path: "/privacy-policy",
 });
 
-const updated = "October 7, 2026";
+const updated = "October 26, 2026";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -87,6 +87,7 @@ export default function PrivacyPolicyPage() {
                 <li><strong>Supabase</strong> for database, account authentication and customer-portal infrastructure.</li>
                 <li><strong>Resend</strong> for transactional email such as booking confirmations.</li>
                 <li><strong>Google Analytics</strong> when analytics is enabled, to understand website traffic and usage.</li>
+                <li><strong>Cloudflare Turnstile</strong> for bot, spam and abuse prevention on forms and booking flows. Turnstile may process browser, device and security signals needed to distinguish people from automated traffic. See Cloudflare&rsquo;s <a href="https://www.cloudflare.com/turnstile-privacy-policy/" target="_blank" rel="noopener noreferrer">Turnstile Privacy Addendum</a>.</li>
                 <li>Hosting, security and other technical providers necessary to operate the website.</li>
               </ul>
               <p>We may also disclose information if reasonably necessary to comply with law, respond to valid legal process, protect the rights or safety of Every Detail, our customers or others, investigate misuse, or as part of a business reorganization or transfer.</p>
@@ -95,7 +96,7 @@ export default function PrivacyPolicyPage() {
             <section id="cookies" data-header-tone="ink">
               <p className="legal-v1-num">04</p>
               <h2>Cookies, accounts and analytics</h2>
-              <p>The site may use cookies or similar browser storage that are necessary for account sign-in, security and site functionality. If Google Analytics is enabled, Google may also use cookies or similar technologies to measure site usage.</p>
+              <p>The site may use cookies or similar browser storage that are necessary for account sign-in, security and site functionality. We also use Cloudflare Turnstile on protected forms to help distinguish legitimate visitors from automated abuse. Turnstile runs security checks in the browser and may operate invisibly during form submission. If Google Analytics is enabled, Google may also use cookies or similar technologies to measure site usage.</p>
               <p>You can control cookies through your browser settings. Blocking necessary cookies may prevent account sign-in or other website features from working correctly.</p>
             </section>
 
