@@ -1,6 +1,6 @@
 {
   "name": "every-detail-site",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,13 +10,14 @@
     "images:pull": "node scripts/pull-wix-images.mjs",
     "blog:pull": "node scripts/pull-wix-blog.mjs",
     "qa:vehicles": "node scripts/qa-vehicle-catalog.mjs",
-    "prebuild": "npm run qa:vehicles && npm run qa:site && npm run qa:seo && npm run qa:links && npm run qa:welcome && npm run qa:security && npm run qa:header",
+    "prebuild": "npm run qa:vehicles && npm run qa:site && npm run qa:seo && npm run qa:links && npm run qa:welcome && npm run qa:security && npm run qa:header && npm run qa:audit",
     "qa:site": "node scripts/qa-site-context.mjs",
     "qa:seo": "node scripts/qa-seo.mjs",
     "qa:links": "node scripts/qa-links.mjs",
     "qa:welcome": "node scripts/qa-welcome-card.mjs",
     "qa:security": "node scripts/qa-security.mjs",
-    "qa:header": "node scripts/qa-header.mjs"
+    "qa:header": "node scripts/qa-header.mjs",
+    "qa:audit": "node scripts/qa-audit-v111.mjs"
   },
   "dependencies": {
     "@fontsource/barlow": "^5.2.5",

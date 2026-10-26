@@ -24,7 +24,7 @@ function RollingPrice({ value }: { value: string }) {
     setVersion((current) => current + 1);
   }, [value]);
 
-  const slotCount = 6;
+  const slotCount = Math.max(4, value.length, from.length);
   const oldChars = Array.from(from.padStart(slotCount, " "));
   const nextChars = Array.from(value.padStart(slotCount, " "));
 

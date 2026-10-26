@@ -1,5 +1,7 @@
 # everydetail.co
 
+> V111 audit corrective build: see `AUDIT-CORRECTIVE-PASS-V111.md` for the full fix list and QA notes.
+
 The Every Detail website. Next.js 16 (App Router), TypeScript and Tailwind CSS v4, with no Wix dependency.
 
 ## Setup

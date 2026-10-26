@@ -3,11 +3,8 @@ import { FaqList } from "@/components/FaqList";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
 import { PaintAssessmentTicket } from "@/components/paint/PaintAssessmentTicket";
-import { PaintDefectFieldGuide } from "@/components/paint/PaintDefectFieldGuide";
-import { PaintFiftyFifty } from "@/components/paint/PaintFiftyFifty";
 import { PaintInspectionLight } from "@/components/paint/PaintInspectionLight";
 import { PaintProcessChapters } from "@/components/paint/PaintProcessChapters";
-import { PaintResultBridge } from "@/components/paint/PaintResultBridge";
 import { PaintStagePricing } from "@/components/paint/PaintStagePricing";
 import { paintCorrectionFaqs } from "@/data/faqs";
 import { PAINT_PRICING, paintServices } from "@/data/paint";
@@ -34,7 +31,7 @@ export default function PaintCorrectionPage() {
           <div className="pc90-hero-crumbs">
             <Breadcrumbs items={[{ name: "Services", path: "/our-services" }, { name: "Paint Correction", path: "/paint-correction" }]} />
           </div>
-          <p className="pc90-hero-figure">FIG. 01 - CLEAR COAT UNDER DIRECT LIGHT</p>
+          <p className="pc90-hero-figure">FIG. 01 - REAL 50/50 TEST SPOT · LEFT CORRECTED / RIGHT AS ARRIVED</p>
           <div className="pc90-hero-copy">
             <h1 id="pc90-hero-title">BRING THE<br />REFLECTION<br /><span>BACK.</span></h1>
             <p>Swirls, haze and dull clear coat, corrected to the level your paint actually needs.</p>
@@ -48,6 +45,7 @@ export default function PaintCorrectionPage() {
         </div>
       </section>
 
+
       <section id="paint-options" className="pc90-pricing" data-header-tone="ink" aria-labelledby="pc90-pricing-title">
         <div className="pc90-shell pc90-pricing-intro">
           <h2 id="pc90-pricing-title" className="ed90-heading">TWO LEVELS.<br /><span>ONE HONEST CALL.</span></h2>
@@ -56,21 +54,10 @@ export default function PaintCorrectionPage() {
         <PaintStagePricing />
       </section>
 
-      <PaintFiftyFifty />
-
-      <section className="pc90-defects" data-header-tone="ink" aria-labelledby="pc90-defects-title">
-        <div className="pc90-shell pc90-defects-heading">
-          <h2 id="pc90-defects-title" className="ed90-heading">WHAT THE LIGHT<br /><span>GIVES AWAY.</span></h2>
-          <p>Direct light exposes what flat shade hides. These are the kinds of finish problems we assess before choosing a correction level.</p>
-        </div>
-        <PaintDefectFieldGuide />
-      </section>
-
       <section className="pc90-process ed90-halftone-dark" data-header-tone="light" aria-label="Paint correction process">
         <PaintProcessChapters />
       </section>
 
-      <PaintResultBridge />
 
       <section id="paint-quote" className="pc90-quote" data-header-tone="light" aria-labelledby="pc90-quote-title">
         <div className="pc90-shell pc90-quote-inner">

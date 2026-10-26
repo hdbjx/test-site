@@ -88,6 +88,11 @@ export function GiftCardIntro() {
     document.getElementById("gift-builder")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const chooseAmount = (amount: number) => {
+    window.dispatchEvent(new CustomEvent("ed:gift-amount", { detail: amount }));
+    scrollToBuilder();
+  };
+
   return (
     <section className="gift-intro" data-header-tone="light" ref={sectionRef}>
       <div className="gift-intro-bg" aria-hidden="true">
@@ -111,9 +116,15 @@ export function GiftCardIntro() {
         </div>
 
         <button type="button" className="gift-intro-scroll" onClick={scrollToBuilder}>
-          <span>Scroll to build one</span>
+          <span>Choose an amount</span>
           <i aria-hidden="true">↓</i>
         </button>
+        <div className="gift-intro-quick-amounts" aria-label="Popular gift card amounts">
+          <button type="button" onClick={() => chooseAmount(100)}>$100</button>
+          <button type="button" onClick={() => chooseAmount(150)}>$150</button>
+          <button type="button" onClick={() => chooseAmount(250)}>$250</button>
+          <button type="button" onClick={() => chooseAmount(400)}>$400</button>
+        </div>
       </div>
     </section>
   );

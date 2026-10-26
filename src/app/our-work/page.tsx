@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Photo } from "@/components/Photo";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { pageMetadata } from "@/lib/seo";
@@ -16,8 +17,8 @@ const jobs = [
     title: "The reset most cars actually need.",
     body: "A full inside-and-out detail for a daily driver that had moved past maintenance-clean territory. Two technicians worked through the cabin, touch points, wheels, wash, and final finish as one complete service.",
     meta: ["Interior + exterior", "Two-person crew", "Mobile driveway service"],
-    image: "two-tech-interior-detail",
-    detail: "hq-black-suv-finished",
+    image: "hq-interior-team-front-seats",
+    detail: "hq-white-suv-finished",
   },
   {
     n: "02",
@@ -33,7 +34,7 @@ const jobs = [
     tag: "EXTERIOR / FINISH",
     title: "A finish that looks finished.",
     body: "Wheels, tires, bodywork, trim, glass, and the final presentation matter together. The goal is not a fast wash. It is returning the entire exterior in a condition that feels complete.",
-    meta: ["Hand wash", "Wheel + tire detail", "Final finish check"],
+    meta: ["Tesla exterior", "Hand wash", "Wheel + tire detail", "Final finish check"],
     image: "tesla-foam-wash",
     detail: "hq-white-ioniq-wheel",
   },
@@ -62,6 +63,10 @@ export default function OurWorkPage() {
             <div className="work-page-proof"><strong>★★★★★ <LiveReviewCount /> five-star reviews</strong><span>Student-run. Professionally detailed.</span></div>
           </div>
         </div>
+        <figure className="container-ed work-audit-hero-photo">
+          <Photo id="work-finished-0771" priority sizes="100vw" ratio="16/7" />
+          <figcaption><span>REAL CUSTOMER CAR</span><span>DECATUR + ATLANTA</span><span>EVERY DETAIL CREW</span></figcaption>
+        </figure>
       </section>
 
       <section className="work-page-jobs" data-header-tone="light">
@@ -80,6 +85,21 @@ export default function OurWorkPage() {
               </div>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="work-audit-before-after" data-header-tone="ink" aria-labelledby="work-before-after-title">
+        <div className="container-ed work-audit-before-after-grid">
+          <div>
+            <p className="eyebrow">BEFORE / AFTER PROOF</p>
+            <h2 id="work-before-after-title">Same panel.<br/><span>Different finish.</span></h2>
+            <p>This is a real 50/50 paint-correction test spot under an inspection light. The corrected side is on the left; the as-arrived side is on the right.</p>
+            <Link href="/paint-correction" className="btn btn-secondary">See paint correction ↗</Link>
+          </div>
+          <figure>
+            <Image src="/images/paint-5050-single.jpg" alt="Real 50/50 paint correction test spot, corrected on the left and uncorrected on the right" fill sizes="(min-width: 900px) 58vw, 92vw" />
+            <figcaption><span>CORRECTED</span><span>AS ARRIVED</span></figcaption>
+          </figure>
         </div>
       </section>
 

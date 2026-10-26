@@ -29,7 +29,7 @@ export default function AboutPage() {
           <div className="about70-hero-copy">
             <p className="about70-kicker">EVERY DETAIL / DECATUR, GEORGIA</p>
             <h1>BUILT BY<br /><span>STUDENTS.</span><br />RUN FOR REAL.</h1>
-            <p className="about70-lede">Every Detail started in eighth grade with one driveway job. Today, a student team runs mobile detailing across Decatur and Atlanta.</p>
+            <p className="about70-lede"><strong>Every Detail started in eighth grade with one driveway job.</strong> Today, a student team runs mobile detailing across Decatur and Atlanta.</p>
             <div className="about70-actions">
               <TrackedLink href="/book" event="book_click" params={{ location: "about_hero" }} className="about70-primary">BOOK A DETAIL ↗</TrackedLink>
               <a href="#team" className="about70-link">MEET THE TEAM ↓</a>
@@ -72,7 +72,7 @@ export default function AboutPage() {
 
         <div className="about70-shell about70-workstrip">
           <figure><Photo id="about-ops-01" ratio="4/3" sizes="(max-width: 560px) 92vw, 32vw" /></figure>
-          <figure><Photo id="two-tech-interior-detail" ratio="4/3" sizes="(max-width: 560px) 92vw, 32vw" /></figure>
+          <figure><Photo id="hq-interior-front-seat-work" ratio="4/3" sizes="(max-width: 560px) 92vw, 32vw" /></figure>
           <figure><Photo id="about-ops-05" ratio="4/3" sizes="(max-width: 560px) 92vw, 32vw" /></figure>
         </div>
       </section>

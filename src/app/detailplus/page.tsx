@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
 import { DetailPlusForm } from "@/components/forms/DetailPlusForm";
 import { detailPlusBenefits, detailPlusGuarantee, detailPlusSteps } from "@/data/detailplus";
+import { startingPrice } from "@/data/services";
 import { detailPlusFaqs } from "@/data/faqs";
 import { pageMetadata, serviceSchema } from "@/lib/seo";
 
@@ -29,6 +30,10 @@ export default function DetailPlusPage() {
             </div>
             <div className="dp56-proof-row" aria-label="Detail Plus plan highlights">
               <span>NO CONTRACT</span><span>FLAT RATE / VISIT</span><span>WE COME TO YOU</span>
+            </div>
+            <div className="dp-audit-price-context">
+              <strong>PRICE CONTEXT</strong>
+              <span>Regular Maintenance starts at ${startingPrice("maintenance")}. Detail+ uses a custom flat rate based on your vehicle, cadence, and coverage. Build the plan below to request your exact member rate.</span>
             </div>
           </div>
 
@@ -72,7 +77,7 @@ export default function DetailPlusPage() {
         <div className="dp56-shell">
           <div className="dp56-section-head">
             <div><p className="dp56-kicker dark">PICK YOUR RHYTHM</p><h2>Your car.<br/><span>Your clean cycle.</span></h2></div>
-            <p>Bi-weekly, monthly, six weeks, or any 1 to 13 week interval.</p>
+            <p>Choose every 2 weeks, every 4 weeks, every 6 weeks, or a custom rhythm. Choose the vehicle, coverage, and cadence below. We review that plan and send your exact flat per-visit member rate.</p>
           </div>
           <DetailPlusForm />
         </div>

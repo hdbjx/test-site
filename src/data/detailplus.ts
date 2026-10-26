@@ -1,13 +1,13 @@
 /**
  * Detail+ recurring membership.
- * Pricing is a custom flat rate quoted per plan, so no prices are published.
+ * Member rates are custom per vehicle, cadence, and coverage.
  */
 
 export const frequencies = [
-  { id: "biweekly", label: "Bi-weekly", hint: "Every 2 weeks", weeks: 2 },
-  { id: "monthly", label: "Monthly", hint: "About every 4 weeks", weeks: 4 },
-  { id: "6weeks", label: "Six weeks", hint: "Every 6 weeks", weeks: 6 },
-  { id: "custom", label: "Custom", hint: "1 to 13 weeks", weeks: null },
+  { id: "biweekly", label: "Every 2 weeks", hint: "Highest-frequency care", weeks: 2 },
+  { id: "monthly", label: "Every 4 weeks", hint: "Most popular rhythm", weeks: 4 },
+  { id: "6weeks", label: "Every 6 weeks", hint: "Lower-frequency upkeep", weeks: 6 },
+  { id: "custom", label: "Custom rhythm", hint: "Choose 1 to 13 weeks", weeks: null },
 ] as const;
 
 export const coverages = [

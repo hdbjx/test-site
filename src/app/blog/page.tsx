@@ -63,7 +63,7 @@ export default function BlogIndex() {
             {rest.map((post, index) => (
               <Link href={`/post/${post.slug}`} key={post.slug} className="shine84-row shine86-row">
                 <span className="shine84-number">{String(index + 2).padStart(2, "0")}</span>
-                {post.image && <div className="shine86-thumb"><Image src={post.image} alt="" fill sizes="110px" /></div>}
+                {post.image && <div className="shine86-thumb"><Image src={post.image} alt={`Every Detail article: ${post.title}`} fill sizes="110px" /></div>}
                 <div className="shine84-row-copy">
                   <div className="shine84-row-meta"><span>{post.category}</span><span>{formatDate(post.date)}</span><span>{post.readingMinutes} MIN</span></div>
                   <h3>{post.title}</h3>

@@ -17,7 +17,7 @@ export function BookingTopBar({ stage = -1 }: { stage?: number }) {
       <a href="#booking-main" className="bk-skip">Skip to booking</a>
       <div className="bk-top-row">
         <a href="/" className="bk-top-logo" aria-label="Every Detail home" data-no-transition="true">
-          <Image src="/brand/every-detail-logo.png" alt="" width={120} height={120} priority />
+          <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={120} height={120} priority />
         </a>
         <p className="bk-top-title">Book your detail</p>
         <div className="bk-top-actions">

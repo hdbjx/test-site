@@ -91,20 +91,20 @@ function useSchoolHours() {
 /* Copy                                                                */
 /* ------------------------------------------------------------------ */
 
-const PACKAGE_ORDER: ServiceId[] = ["factoryReset", "premium", "maintenance"];
+const PACKAGE_ORDER: ServiceId[] = ["maintenance", "premium", "factoryReset"];
 const PACKAGE_COPY: Record<ServiceId, { label: string; points: string[]; badge?: string }> = {
   factoryReset: {
     label: "The full restart",
-    points: ["Deep interior reset", "Carpet + upholstery extraction", "Paint decontamination + clay", "Our most complete service"],
+    points: services.factoryReset.includes,
   },
   premium: {
     label: "Bring it back",
     badge: "Most popular",
-    points: ["Interior + exterior deep clean", "Seats, mats, dash + doors", "Sealant paint protection", "Right for most first visits"],
+    points: services.premium.includes,
   },
   maintenance: {
     label: "Keep it clean",
-    points: ["Maintenance clean", "Interior + exterior essentials", "For cars already in decent shape"],
+    points: services.maintenance.includes,
   },
 };
 
@@ -940,7 +940,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   function continueLabel(step: StepId) {
     if (sending) return "Booking…";
     switch (step) {
-      case "service": return allServicesChosen ? "Continue →" : "Choose a detail";
+      case "service": return allServicesChosen ? "Continue →" : "Pick a service to continue";
       case "extras": return resolved.some((l) => l.addons.length || l.paint.length) ? "Continue →" : "No thanks, continue →";
       case "info": return "Review booking →";
       case "review": return "Confirm booking";
@@ -1273,9 +1273,11 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       </div>
 
       <form id="booking-main" ref={formRef} noValidate onSubmit={onSubmit} className="bk-layout">
-        <Honeypot />
         <div className="bk-flow">
-          <TurnstileField action="booking" />
+          <div className="bk-security-fields">
+            <Honeypot />
+            <TurnstileField action="booking" />
+          </div>
           {renderStep("service", "01", "What does your car need?", (
             <div className="bk-pkgs" role="radiogroup" aria-label="Choose your detail">
               {PACKAGE_ORDER.map((id, i) => {

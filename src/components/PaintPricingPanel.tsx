@@ -47,7 +47,7 @@ export function PaintPricingPanel({ services, primary, quoteHref, quoteLabel }: 
                   {service.includes.slice(0, 3).map((item) => <li key={item}>{item}</li>)}
                 </ul>
               </div>
-              <strong>{usd(price)}</strong>
+              <strong>{!vehicle ? <small className="paint-audit-from">FROM</small> : null}{usd(price)}</strong>
             </div>
           );
         })}

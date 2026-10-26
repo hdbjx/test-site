@@ -3,7 +3,7 @@ import { site } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Privacy Policy",
+  title: "Privacy Policy | Every Detail",
   description: "How Every Detail collects, uses, stores and shares information when you use our website, request a quote, book a detail or manage your account.",
   path: "/privacy-policy",
 });
@@ -30,17 +30,18 @@ export default function PrivacyPolicyPage() {
             <p>QUICK READ</p>
             <strong>We use customer information to quote, schedule, perform and support detailing services. We do not sell your personal information.</strong>
             <nav aria-label="Privacy policy sections">
+              <a href="#overview">00 / Who this covers</a>
               <a href="#collect">01 / What we collect</a>
               <a href="#use">02 / How we use it</a>
               <a href="#share">03 / How we share it</a>
               <a href="#cookies">04 / Cookies + analytics</a>
-              <a href="#choices">05 / Your choices</a>
-              <a href="#contact">06 / Contact</a>
+              <a href="#choices">07 / Your choices</a>
+              <a href="#contact">10 / Contact</a>
             </nav>
           </aside>
 
           <article className="legal-v1-copy">
-            <section data-header-tone="ink">
+            <section id="overview" data-header-tone="ink">
               <p className="legal-v1-num">00</p>
               <h2>Who this policy covers</h2>
               <p>This Privacy Policy applies to information collected by Every Detail through {site.url.replace("https://", "")}, our booking and quote forms, customer accounts, and communications connected to those services. It does not control the privacy practices of third-party websites or services that we do not operate.</p>

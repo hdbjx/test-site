@@ -81,6 +81,7 @@ export function Header() {
   const { vehicle, hydrated: vehicleHydrated, openPicker } = useVehicle();
   const { serviceIntent, openDrawer } = useJourney();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [headerTone, setHeaderTone] = useState<HeaderTone>(() => routeTone(pathname));
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -89,6 +90,13 @@ export function Header() {
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 48);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   useEffect(() => {
     setHeaderTone(routeTone(pathname));
@@ -182,7 +190,7 @@ export function Header() {
 
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
-  const headerClass = "fixed inset-x-0 top-0 z-40 site-shared-header";
+  const headerClass = `fixed inset-x-0 top-0 z-40 site-shared-header ${scrolled ? "is-scrolled" : ""}`;
 
   // The booking funnel renders its own compact header; keep exits to a minimum there.
   if (pathname === "/book" || pathname === "/get-a-quote") return null;
@@ -202,15 +210,23 @@ export function Header() {
           <span className="sr-only">Every Detail home</span>
         </Link>
 
+        <nav className="site-desktop-nav" aria-label="Primary navigation">
+          <Link href="/our-services" aria-current={isActive("/our-services") ? "page" : undefined}>Services</Link>
+          <Link href="/paint-correction" aria-current={isActive("/paint-correction") ? "page" : undefined}>Paint</Link>
+          <Link href="/detailplus" aria-current={isActive("/detailplus") ? "page" : undefined}>Detail+</Link>
+          <Link href="/our-work" aria-current={isActive("/our-work") ? "page" : undefined}>Our Work</Link>
+          <Link href="/book" className="site-desktop-book">Book</Link>
+        </nav>
+
         <div className="site-shared-nav-actions">
           {vehicleHydrated && (
             <button
               type="button"
-              className={`site-context-pill ${vehicle || serviceIntent ? "is-set" : ""}`}
-              onClick={() => (vehicle || serviceIntent ? openDrawer() : openPicker())}
-              aria-label={vehicle || serviceIntent ? "Open your vehicle and service" : "Add your vehicle"}
+              className={`site-context-pill ${vehicle ? "is-set" : ""}`}
+              onClick={() => (vehicle ? openDrawer() : openPicker())}
+              aria-label={vehicle ? "Open your vehicle and service" : "Add your vehicle"}
             >
-              <span>{vehicle ? siteVehicleLabel(vehicle) : serviceIntent ? catalogService(serviceIntent).name : "+ ADD YOUR VEHICLE"}</span>
+              <span>{vehicle ? siteVehicleLabel(vehicle) : "+ ADD YOUR VEHICLE"}</span>
               {vehicle && serviceIntent ? <small>{catalogService(serviceIntent).name}{catalogPrice(serviceIntent, vehicle.vehicle) != null ? ` · ${usd(catalogPrice(serviceIntent, vehicle.vehicle)!)}` : ""}</small> : vehicle ? <small>{vehicleLabel(vehicle.vehicle)}</small> : null}
               <i aria-hidden="true">⌄</i>
             </button>
@@ -271,9 +287,9 @@ export function Header() {
               </div>
 
               <div className="site-shared-menu-side">
-                <button type="button" className="site-shared-menu-vehicle" onClick={() => { setMenuOpen(false); vehicle || serviceIntent ? openDrawer() : openPicker(); }}>
-                  <span>{serviceIntent ? "YOUR DETAIL" : "YOUR VEHICLE"}</span>
-                  <strong>{vehicle ? siteVehicleLabel(vehicle) : serviceIntent ? catalogService(serviceIntent).name : "Add your vehicle"}</strong>
+                <button type="button" className="site-shared-menu-vehicle" onClick={() => { setMenuOpen(false); vehicle ? openDrawer() : openPicker(); }}>
+                  <span>{vehicle && serviceIntent ? "YOUR DETAIL" : "YOUR VEHICLE"}</span>
+                  <strong>{vehicle ? siteVehicleLabel(vehicle) : "Add your vehicle"}</strong>
                   <small>{vehicle && serviceIntent ? catalogService(serviceIntent).name : vehicle ? vehicleLabel(vehicle.vehicle) : "Exact pricing starts here"}</small>
                   <i aria-hidden="true">↗</i>
                 </button>

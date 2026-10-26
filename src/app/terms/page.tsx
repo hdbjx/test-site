@@ -3,7 +3,7 @@ import { site } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Terms of Service",
+  title: "Terms of Service | Every Detail",
   description: "Terms that apply when you use the Every Detail website, request a quote, book a mobile detailing service or use a customer account.",
   path: "/terms",
 });
@@ -30,17 +30,18 @@ export default function TermsPage() {
             <p>QUICK READ</p>
             <strong>Book the right service, give us safe access to the vehicle, tell us about unusual conditions, and contact us early if plans change. We will communicate before doing work that materially changes the agreed price.</strong>
             <nav aria-label="Terms of service sections">
+              <a href="#overview">00 / Agreement</a>
               <a href="#booking">01 / Booking + pricing</a>
               <a href="#appointment">02 / Your appointment</a>
               <a href="#cancellations">03 / Changes + cancellations</a>
               <a href="#results">04 / Results + vehicle condition</a>
-              <a href="#website">05 / Website + accounts</a>
-              <a href="#contact">06 / Contact</a>
+              <a href="#website">07 / Website + accounts</a>
+              <a href="#contact">12 / Contact</a>
             </nav>
           </aside>
 
           <article className="legal-v1-copy">
-            <section data-header-tone="ink">
+            <section id="overview" data-header-tone="ink">
               <p className="legal-v1-num">00</p>
               <h2>Agreement to these terms</h2>
               <p>These Terms of Service apply when you use the Every Detail website, request a quote, book a detailing appointment, use a customer account, or purchase services from Every Detail. By doing so, you agree to these terms. If you are booking for someone else or for a vehicle you do not own, you represent that you have permission to authorize the service.</p>

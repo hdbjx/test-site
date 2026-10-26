@@ -587,7 +587,12 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
             <div className="q51-step-body">
               <p className="q51-step-label">01 / YOUR VEHICLE</p>
               <h2>What are you driving?</h2>
-              <p className="q51-step-help">Search the make or model.</p>
+              <p className="q51-step-help">Four quick steps, about a minute. Search the make or model.</p>
+              <div className="q-audit-quick-vehicles" aria-label="Popular vehicle searches">
+                {["Honda Civic", "Toyota RAV4", "Ford F-150", "Tesla Model 3"].map((label) => (
+                  <button key={label} type="button" onClick={() => { setSearch(label); start(); }}>{label}</button>
+                ))}
+              </div>
               <div className="quote-rec-search-wrap q51-search-wrap">
                 <input className="field quote-rec-search q51-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Try RAV4, Ram 2500, Model Y..." autoComplete="off" aria-label="Search vehicle make or model" autoFocus />
                 {search.trim().length >= 2 && (

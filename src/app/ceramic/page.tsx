@@ -49,6 +49,7 @@ export default function CeramicPage() {
             <p>The coating goes on after the finish is cleaned, decontaminated and corrected so we are protecting paint worth keeping.</p>
           </div>
           <PaintPricingPanel services={["ceramic2yr"]} primary="ceramic2yr" quoteHref="#coating-quote" quoteLabel="GET MY COATING PLAN" />
+          <p className="cer-audit-value-note"><strong>FULL CORRECTION STARTS AT $695.</strong> The 2-year ceramic package starts at $895 and already includes paint correction, the coating, and the complimentary follow-up detail.</p>
         </div>
       </section>
 

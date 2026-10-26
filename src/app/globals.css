@@ -12591,3 +12591,214 @@ form[data-turnstile-verifying="true"] button[type="submit"]{opacity:.72;pointer-
     margin-right:0;
   }
 }
+
+/* V111 AUDIT CORRECTIVE PASS ------------------------------------------------ */
+/* Security fields remain inside the form but never participate in the booking grid. */
+.bk-security-fields{display:contents}
+.bk-layout{position:relative}
+
+/* Booking cards should stay readable through the two-column desktop band. */
+@media(min-width:1180px){.bk-pkgs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1000px) and (max-width:1179px){.bk-pkgs{grid-template-columns:1fr 1fr}.bk-pkg:last-child{grid-column:1/-1}}
+.bk-btn:disabled{opacity:1;background:#ead9d3!important;border-color:#c5ada6!important;color:#655650!important}
+
+/* Shared header: protect content after scrolling and expose real desktop navigation. */
+.site-shared-header{pointer-events:none}
+.site-shared-header.is-scrolled .site-shared-nav-shell,
+.site-shared-header[data-menu-open="true"] .site-shared-nav-shell{
+  background:rgba(244,240,231,.94)!important;
+  border-bottom:1px solid rgba(17,16,14,.12);
+  box-shadow:0 10px 30px rgba(17,16,14,.08);
+  backdrop-filter:blur(18px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(125%)!important;
+}
+.site-shared-header.is-scrolled[data-tone="light"] .site-shared-nav-shell,
+.site-shared-header[data-menu-open="true"] .site-shared-nav-shell{
+  background:rgba(12,11,10,.92)!important;
+  border-bottom-color:rgba(244,240,231,.14);
+}
+.site-desktop-nav{
+  position:fixed;left:max(3.6vw,28px);top:24px;z-index:48;display:flex;align-items:center;gap:1.15rem;
+  pointer-events:auto;font:800 .7rem/1 var(--font-display);letter-spacing:.08em;text-transform:uppercase
+}
+.site-desktop-nav a{color:var(--ed-header-fg);text-decoration:none;padding:.7rem .15rem;border-bottom:1px solid transparent;white-space:nowrap}
+.site-desktop-nav a:hover,.site-desktop-nav a[aria-current="page"]{border-bottom-color:currentColor}
+.site-desktop-nav .site-desktop-book{padding:.72rem .9rem;border:1px solid currentColor}
+.site-shared-nav-actions{pointer-events:auto}
+@media(min-width:1001px){
+  .site-context-pill{top:59px!important;left:max(3.6vw,28px)!important;max-width:270px!important}
+}
+@media(max-width:1180px){.site-desktop-nav{display:none}}
+@media(max-width:900px){
+  .site-shared-header.is-scrolled .site-shared-nav-shell{height:72px!important;background:rgba(244,240,231,.95)!important}
+  .site-shared-header.is-scrolled[data-tone="light"] .site-shared-nav-shell{background:rgba(12,11,10,.93)!important}
+}
+
+/* Never make primary hero/media content wait for JavaScript or long entrance animations. */
+.v90-hero-word{opacity:1!important;filter:none!important;transform:none!important;animation:none!important;will-change:auto!important}
+.about70-hero-collage,.about70-photo,.about70-photo>div,
+.work-page-hero figure,.work-case figure,.work-case-inset,
+.gift-intro-card-wrap,.gift-card-preview-intro,.gift-points-grid>div,
+.areas84-photo,.area90-hero-photo,.shine86-lead-image,
+.paint85-hero-media,.cer68-hero-media{opacity:1!important;visibility:visible!important}
+
+/* Services: prevent header overlap and make the dominant CTA hierarchy obvious. */
+.sv90-hero{padding-top:clamp(8rem,11vw,10rem)!important}
+.sv90-hero-actions .ed90-button:first-child{background:var(--v29-red)!important;border-color:var(--v29-red)!important;color:#fff!important}
+.sv90-hero-actions .ed90-button:nth-child(2){background:transparent!important;border:0!important;text-decoration:underline;text-underline-offset:5px;box-shadow:none!important}
+
+/* Detail+ should answer the price question near the first CTA. */
+.dp-audit-price-context{max-width:590px;margin-top:1.2rem;padding:.9rem 1rem;border:1px solid rgba(242,236,223,.26);display:grid;gap:.35rem}
+.dp-audit-price-context strong{font:800 .64rem/1 var(--font-display);letter-spacing:.13em;color:#df645e}
+.dp-audit-price-context span{font-size:.86rem;line-height:1.45;color:rgba(242,236,223,.82)}
+.dp56-page :is(h1,h2,h3,.dp56-btn,.dp56-kicker){font-family:var(--font-display)!important}
+
+/* Ceramic: keep the photograph visible and state the pricing relationship clearly. */
+.paint85-hero-shade,.cer68-hero-shade{background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.22) 65%,rgba(0,0,0,.12))!important}
+
+/* Gift cards: put a decision in the first viewport and remove delayed-looking muted cards. */
+.gift-intro{min-height:min(92svh,780px)!important}
+.gift-intro-shell{align-content:center!important}
+.gift-intro-quick-amounts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:min(520px,100%);margin:0 auto 1.2rem}
+.gift-intro-quick-amounts button{min-height:44px;border:1px solid rgba(255,255,255,.55);background:rgba(0,0,0,.12);color:#fff;font:800 .78rem/1 var(--font-display);cursor:pointer}
+.gift-points-grid>div{background:#fff!important;color:#111!important;opacity:1!important;filter:none!important;transform:none!important}
+@media(max-width:560px){.gift-intro-quick-amounts{grid-template-columns:1fr 1fr}}
+
+/* Service areas, blog, and gift cards now share the sharper site geometry. */
+.areas84-photo,.gift-card-preview,.gift-card-preview-intro,.gift-form-shell,.gift-points-grid>div{border-radius:0!important}
+.areas84 h1,.areas84 h2,.areas84 h3,.shine84 h1,.shine84 h2,.shine84 h3,.gift-page h1,.gift-page h2,.gift-page h3{text-transform:uppercase}
+.areas84 .btn,.gift-page .btn{border-radius:0!important}
+
+/* Work should open with photography, not an empty dark field. */
+.work-page-hero{position:relative;overflow:hidden}
+.work-page-hero::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,rgba(0,0,0,.86),rgba(0,0,0,.2));pointer-events:none}
+.work-page-hero>*{position:relative;z-index:1}
+.work-case-tags span{border:1px solid currentColor!important;padding:.3rem .45rem!important;background:rgba(255,255,255,.04)!important}
+
+/* Legal navigation numbering and footer collisions. */
+.site-footer{position:relative;z-index:2}
+body:has(.site-footer) .site-context-pill{z-index:48}
+@media(max-width:900px){.site-footer-bottom{padding-bottom:5.5rem}}
+
+/* Blog thumbnail text and mobile metadata stay together. */
+@media(max-width:640px){.shine84-row-meta{display:grid!important;grid-template-columns:max-content max-content;column-gap:.5rem;row-gap:.2rem}.shine84-row-meta span+span:before{content:none!important}}
+
+/* Global responsive hardening. */
+html,body{max-width:100%;overflow-x:clip}
+img{max-width:100%}
+@media(max-width:420px){
+  .about70-hero-copy h1,.areas84-copy h1,.shine84-masthead h1{overflow-wrap:normal;word-break:normal;hyphens:none}
+}
+
+
+/* V111.1 / AUDIT COMPLETION ----------------------------------------------- */
+.funnel-footer{border-top:1px solid rgba(11,10,9,.16);background:var(--v29-paper,#f2ecdf);color:var(--v29-ink,#0b0a09);padding:1rem 0 1.25rem}
+.funnel-footer-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.funnel-footer nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:1rem}
+.funnel-footer a{text-decoration:underline;text-underline-offset:.2em}
+.sv90-hero-actions .svc-audit-quiz-link{display:inline-flex;align-items:center;gap:.45rem;padding:.85rem 0;border-bottom:1px solid currentColor;font-weight:900;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:inherit}
+.work-audit-hero-photo{margin-top:clamp(2rem,4vw,4rem);position:relative;overflow:hidden;background:#111}
+.work-audit-hero-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.work-audit-hero-photo figcaption{display:flex;justify-content:space-between;gap:1rem;padding:.62rem .75rem;border:1px solid rgba(0,0,0,.22);border-top:0;font-size:.62rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+.q-audit-quick-vehicles{display:flex;flex-wrap:wrap;gap:.45rem;margin:.8rem 0 0}
+.q-audit-quick-vehicles button{border:1px solid currentColor;background:transparent;padding:.5rem .65rem;font:inherit;font-size:.72rem;font-weight:800;cursor:pointer}
+.q-audit-quick-vehicles button:hover,.q-audit-quick-vehicles button:focus-visible{background:var(--v29-ink,#0b0a09);color:var(--v29-paper,#f2ecdf)}
+.areas-audit-map{position:relative;min-height:clamp(340px,42vw,520px);margin-top:clamp(2rem,5vw,4rem);overflow:hidden;border:1px solid rgba(11,10,9,.28);background:radial-gradient(circle at 56% 55%,rgba(213,104,101,.18),transparent 0 24%,rgba(11,10,9,.035) 24% 25%,transparent 25% 44%,rgba(11,10,9,.035) 44% 45%,transparent 45%),linear-gradient(90deg,transparent 49.8%,rgba(11,10,9,.08) 50%,transparent 50.2%),linear-gradient(transparent 49.8%,rgba(11,10,9,.08) 50%,transparent 50.2%),#f3eee4}
+.areas-audit-map:before,.areas-audit-map:after{content:"";position:absolute;background:rgba(11,10,9,.07)}
+.areas-audit-map:before{left:0;right:0;top:31%;height:1px;transform:rotate(-8deg)}
+.areas-audit-map:after{top:0;bottom:0;left:40%;width:1px;transform:rotate(14deg)}
+.areas-audit-map-home{position:absolute;left:56%;top:55%;transform:translate(-50%,-50%);display:grid;place-items:center;width:112px;height:112px;border:2px solid var(--v29-red,#d56865);border-radius:50%;background:var(--v29-red,#d56865);color:#fff;text-align:center;font-size:.72rem;font-weight:900;letter-spacing:.08em;line-height:1.15}
+.areas-audit-map-home b{font-size:.55rem}
+.areas-audit-map-label{position:absolute;padding:.35rem .45rem;border:1px solid rgba(11,10,9,.42);background:#f3eee4;font-size:.62rem;font-weight:900;letter-spacing:.08em}
+.areas-audit-map-label.is-atlanta{left:18%;top:61%}.areas-audit-map-label.is-brookhaven{left:34%;top:28%}.areas-audit-map-label.is-chamblee{left:56%;top:16%}.areas-audit-map-label.is-north-druid{left:48%;top:39%}.areas-audit-map-label.is-avondale{right:15%;top:66%}.areas-audit-map-label.is-buckhead{left:20%;top:18%}
+.areas-audit-map>small{position:absolute;left:.7rem;bottom:.65rem;font-size:.55rem;font-weight:900;letter-spacing:.08em}
+@media(max-width:760px){
+  .funnel-footer-inner{align-items:flex-start;flex-direction:column}.funnel-footer nav{justify-content:flex-start}
+  .work-audit-hero-photo{padding:0;margin-top:1.5rem}.work-audit-hero-photo figcaption{font-size:.52rem;gap:.5rem;overflow-x:auto}
+  .q-audit-quick-vehicles{display:grid;grid-template-columns:1fr 1fr}.q-audit-quick-vehicles button{text-align:left}
+  .areas-audit-map{min-height:380px}.areas-audit-map-label.is-atlanta{left:7%}.areas-audit-map-label.is-buckhead{left:7%}.areas-audit-map-label.is-avondale{right:4%}.areas-audit-map-home{width:94px;height:94px}
+}
+
+
+/* V111.2 / AUDIT DETAIL PASS ---------------------------------------------- */
+.v29-hero-photo img{opacity:1!important;animation:none!important}
+.about70-lede strong{display:block;margin-bottom:.42rem;color:#f6f0e6;font:800 clamp(1.35rem,2vw,2rem)/1.05 var(--font-display);letter-spacing:-.025em}
+.about70-origin-title h2{margin:0;font-size:clamp(3.6rem,6vw,7rem);line-height:.86;letter-spacing:-.045em}
+.work-case-meta span{border-radius:0!important;background:rgba(17,16,14,.035)}
+.work-audit-before-after{padding:clamp(4rem,7vw,7rem) 0;background:#11100e;color:#f3eddf}
+.work-audit-before-after-grid{display:grid;grid-template-columns:minmax(280px,.65fr) minmax(0,1.35fr);gap:clamp(2rem,5vw,5rem);align-items:center}
+.work-audit-before-after h2{margin:.5rem 0 1rem;font-size:clamp(3.2rem,5vw,6rem);line-height:.88;letter-spacing:-.045em;text-transform:uppercase}
+.work-audit-before-after h2 span{color:var(--v29-red,#d56865)}
+.work-audit-before-after p:not(.eyebrow){max-width:520px;color:rgba(243,237,223,.75);line-height:1.6}
+.work-audit-before-after figure{position:relative;min-height:clamp(430px,58vw,720px);margin:0;overflow:hidden;background:#050505}
+.work-audit-before-after figure img{object-fit:cover}
+.work-audit-before-after figcaption{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:.65rem .8rem;background:rgba(0,0,0,.72);font-size:.64rem;font-weight:900;letter-spacing:.1em}
+.paint85-price-option>strong{display:flex!important;align-items:baseline!important;gap:.5rem!important}
+.paint-audit-from{font:900 .58rem/1 var(--font-display);letter-spacing:.12em}
+.cer-audit-value-note{margin:1rem 0 0;padding:1rem 1.1rem;border:1px solid rgba(11,10,9,.2);font-size:.9rem;line-height:1.55}
+.cer-audit-value-note strong{display:block;margin-bottom:.25rem;font:900 .76rem/1 var(--font-display);letter-spacing:.08em}
+.pc90-fifty{padding:clamp(4rem,6vw,6rem) 0!important}
+.pc90-fifty-heading{margin-bottom:1.6rem!important}
+.pc90-fifty-stage{width:min(100%,980px)!important;height:min(64vw,650px)!important;min-height:390px!important;margin-inline:auto}
+.site-footer-contact p{display:flex;align-items:baseline;gap:.32rem;flex-wrap:wrap}
+.site-footer-contact .google-maps-attribution{font-family:inherit!important;line-height:inherit!important;vertical-align:baseline!important}
+@media(max-width:760px){
+  .work-audit-before-after-grid{grid-template-columns:1fr}.work-audit-before-after figure{min-height:110vw}.work-audit-before-after h2{font-size:clamp(3.3rem,15vw,5rem)}
+  .about70-origin-title h2{font-size:clamp(3.4rem,14vw,5.5rem)}
+  .pc90-fifty-stage{height:118vw!important;min-height:380px!important}
+}
+
+
+/* V111.3 / PAINT PRICING CLEANUP ------------------------------------------ */
+.pc90-stage{min-height:auto!important}
+.pc90-stage-price-line{align-items:baseline!important;min-height:auto!important;gap:.55rem!important;margin-top:1rem!important}
+.pc90-from{padding-bottom:0!important}
+.pc90-price-roll{width:auto!important;font-size:clamp(4.5rem,7.5vw,7.8rem)!important;letter-spacing:-.045em!important}
+.pc90-stage-stamp{top:2.3rem!important;transform:translate(-50%,-50%) rotate(-7deg) scale(.92)!important}
+.pc90-stage-stamp.is-in-view{animation:none!important;opacity:.88!important}
+@media(max-width:899px){.pc90-stage-stamp{display:none!important}}
+.paint85-ceramic .paint85-hero-shade{background:linear-gradient(90deg,rgba(0,0,0,.58),rgba(0,0,0,.12) 62%,rgba(0,0,0,.05))!important}
+
+/* V111.4 / SERVICES CORE COMPOSITION -------------------------------------- */
+/* Keep the condition selector dramatic without letting it collide with the fixed header. */
+@media(min-width:901px){
+  .sv90-core{padding-top:clamp(7.25rem,8vw,8.75rem)!important}
+  .sv90-core-heading{grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:2rem;margin-bottom:2rem}
+  .sv90-core-heading .ed90-heading{max-width:9ch;font-size:clamp(4rem,6.4vw,6.9rem);line-height:.82;letter-spacing:-.045em}
+  .sv90-core-heading>a{align-self:end;margin-bottom:.35rem}
+  .sv90-gauge{margin-top:.2rem;margin-bottom:2.35rem}
+}
+@media(min-width:901px) and (max-width:1180px){
+  .sv90-core-heading .ed90-heading{font-size:clamp(4rem,7.4vw,5.5rem)}
+}
+
+/* V111.5 / FINAL VISUAL CONSISTENCY ---------------------------------------- */
+/* The audit's strongest paint asset is now the paint-correction hero itself. */
+.pc90-inspection-visual--fifty .pc90-inspection-photo img{object-position:50% 48%}
+.pc90-inspection-visual--fifty .pc90-inspection-darkness{
+  background:linear-gradient(90deg,rgba(5,5,4,.78) 0%,rgba(5,5,4,.46) 34%,rgba(5,5,4,.08) 68%,rgba(5,5,4,.16) 100%)!important
+}
+.pc90-hero-fifty-key{position:absolute;right:clamp(18px,4vw,58px);bottom:clamp(24px,5vw,58px);z-index:2;display:flex;gap:1.2rem;color:var(--v29-paper);font:800 .62rem/1 var(--font-display);letter-spacing:.11em;text-transform:uppercase}
+.pc90-hero-fifty-key span{padding:.45rem .55rem;border:1px solid rgba(242,236,223,.55);background:rgba(5,5,4,.36)}
+@media(max-width:760px){.pc90-hero-fifty-key{display:none}.pc90-inspection-visual--fifty .pc90-inspection-photo img{object-position:58% 50%}}
+
+/* Make the two conversion funnels feel like one system. */
+.bk-top,.q51-top{background:rgba(243,237,223,.97)!important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1.5px solid var(--v29-ink,#0b0a09)!important}
+.bk-top-row,.q51-top-row{max-width:1440px;margin-inline:auto;padding:10px clamp(16px,4vw,48px)!important}
+.bk-top-logo,.q51-top-logo{width:46px;height:46px}
+.bk-top-title,.q51-top-row>p{font-size:.78rem!important;font-weight:900!important;letter-spacing:.2em!important}
+.q53-page .q51-top{position:sticky!important;top:0!important}
+@media(max-width:760px){.bk-top-row,.q51-top-row{padding-block:8px!important}.bk-top-logo,.q51-top-logo{width:38px!important;height:38px!important}}
+
+/* Location pages now use the same square, uppercase visual language as the core site. */
+.areas84,.area-v2,.shine84,.gift-page{--color-red:var(--v29-red,#d56865);--site-red:var(--v29-red,#d56865)}
+.area-v2 h1,.area-v2 h2,.area-v2 h3{text-transform:uppercase}
+.area90-hero-photo,.area86-local-photo,.area-v2 .btn,.area-v2-service-card{border-radius:0!important}
+
+/* V111.6 / FOOTER HEADER CLEARANCE ---------------------------------------- */
+/* Keep the fixed vehicle/header controls from sitting on top of the first footer CTA at wide widths. */
+@media(min-width:901px){.site-footer-grid{padding-top:clamp(8rem,9vw,9rem)!important}}
+
+/* V111.1: the current paint 50/50 is one genuine split photograph, not two images. */
+.pc90-fifty-static{cursor:default}
+.pc90-fifty-static .pc90-fifty-layer{inset:0}

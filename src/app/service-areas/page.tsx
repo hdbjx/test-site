@@ -24,7 +24,7 @@ export default function ServiceAreas() {
             <p>Every Detail is based in Decatur and serves nearby Atlanta neighborhoods with fully equipped mobile detailing rigs.</p>
             <div className="areas84-actions">
               <Link href="/book" className="btn btn-primary">Check availability ↗</Link>
-              <Link href="/get-a-quote" className="areas84-link">Check another address</Link>
+              <a href={site.phone.sms} className="areas84-link">Not listed? Text your address ↗</a>
             </div>
           </div>
           <figure className="areas84-photo">
@@ -53,6 +53,18 @@ export default function ServiceAreas() {
               </Link>
             ))}
           </div>
+          <div className="areas-audit-map" role="img" aria-label="Coverage overview centered on Decatur and nearby Atlanta neighborhoods">
+            <div className="areas-audit-map-ring areas-audit-map-ring-one" />
+            <div className="areas-audit-map-ring areas-audit-map-ring-two" />
+            <span className="areas-audit-map-home">DECATUR<br/><b>HOME BASE</b></span>
+            <span className="areas-audit-map-label is-atlanta">ATLANTA</span>
+            <span className="areas-audit-map-label is-brookhaven">BROOKHAVEN</span>
+            <span className="areas-audit-map-label is-chamblee">CHAMBLEE</span>
+            <span className="areas-audit-map-label is-north-druid">N. DRUID HILLS</span>
+            <span className="areas-audit-map-label is-avondale">AVONDALE</span>
+            <span className="areas-audit-map-label is-buckhead">N. BUCKHEAD</span>
+            <small>COVERAGE OVERVIEW / NOT TO SCALE</small>
+          </div>
         </div>
       </section>
 
@@ -73,7 +85,7 @@ export default function ServiceAreas() {
           </div>
           <div className="areas84-setup-copy">
             <p>We need safe working room around the vehicle and access to it at the appointment time. Our rigs bring the water, power, products, and equipment.</p>
-            <p>Outside the regular area? Call <a href={site.phone.href}>{site.phone.display}</a> or use the quote form and send us the address.</p>
+            <p>Outside the regular area? Call <a href={site.phone.href}>{site.phone.display}</a> or text us the address and we will confirm whether the route can support it.</p>
           </div>
         </div>
       </section>

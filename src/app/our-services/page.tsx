@@ -17,7 +17,7 @@ import { pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Car Detailing Services & Pricing | Every Detail Decatur",
-  description: "Compare Every Detail services, see pricing for your vehicle, and choose Maintenance, Premium, Factory Reset, Paint Care, or Detail+.",
+  description: "Compare Every Detail services, see pricing for your vehicle, and choose Maintenance, Premium, Factory Reset, paint correction, ceramic coating, or Detail+.",
   path: "/our-services",
   image: "two-tech-interior-detail",
 });
@@ -53,8 +53,8 @@ export default function ServicesPage() {
               <div>
                 <p>Pick by condition. See the exact price for your vehicle. Book the time that works.</p>
                 <div className="sv90-hero-actions">
-                  <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_hero" }} className="ed90-button ed90-button-ink">FIND MY DETAIL <span>↗</span></TrackedLink>
-                  <TrackedLink href="/book" event="book_click" params={{ location: "services_hero" }} className="ed90-button ed90-button-outline">BOOK DIRECTLY <span>↗</span></TrackedLink>
+                  <TrackedLink href="/book" event="book_click" params={{ location: "services_hero" }} className="ed90-button ed90-button-ink">BOOK DIRECTLY <span>↗</span></TrackedLink>
+                  <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_hero" }} className="svc-audit-quiz-link">NOT SURE? FIND MY DETAIL <span>↗</span></TrackedLink>
                 </div>
               </div>
               <div className="sv90-hero-facts" aria-label="Every Detail service facts">

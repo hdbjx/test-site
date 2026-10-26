@@ -13,9 +13,9 @@ export function QuoteTopBar() {
       </a>
       <div className="q51-top-row">
         <a href="/" className="q51-top-logo" aria-label="Every Detail home" data-no-transition="true">
-          <Image src="/brand/every-detail-logo.png" alt="" width={120} height={120} priority />
+          <Image src="/brand/every-detail-logo.png" alt="Every Detail" width={120} height={120} priority />
         </a>
-        <p>Find your detail</p>
+        <p>Find My Detail</p>
         <div className="q51-top-actions">
           <button type="button" className="q51-top-vehicle" onClick={openPicker}>{vehicle ? siteVehicleLabel(vehicle) : "+ Vehicle"}</button>
           <Link href="/book" className="q51-top-book">Know what you need? <span>Book now ↗</span></Link>

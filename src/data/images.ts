@@ -361,8 +361,8 @@ export const images: SiteImage[] = [
     id: "paint-5050-single",
     file: "/images/paint-5050-single.jpg",
     alt: "Paint correction 50-50 test spot on black paint under an inspection light, with the corrected side on the left and the uncorrected side on the right",
-    w: 774,
-    h: 1014,
+    w: 1548,
+    h: 2028,
     category: "paint",
   },
 ];

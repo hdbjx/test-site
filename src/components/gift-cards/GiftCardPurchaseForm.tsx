@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Honeypot } from "@/components/forms/parts";
 import { TurnstileField } from "@/components/forms/TurnstileField";
 
@@ -16,6 +16,15 @@ export function GiftCardPurchaseForm() {
   const [result, setResult] = useState<Result | null>(null);
   const [deliveryMode, setDeliveryMode] = useState<"purchaser" | "recipient">("purchaser");
   const amount = useMemo(() => (preset === "custom" ? custom : preset), [preset, custom]);
+
+  useEffect(() => {
+    const onAmount = (event: Event) => {
+      const amount = Number((event as CustomEvent<number>).detail);
+      if (PRESETS.includes(amount)) setPreset(amount);
+    };
+    window.addEventListener("ed:gift-amount", onAmount);
+    return () => window.removeEventListener("ed:gift-amount", onAmount);
+  }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -55,7 +64,7 @@ export function GiftCardPurchaseForm() {
         <p>
           Send <strong>${result.amount}</strong> by {result.paymentMethod === "venmo" ? "Venmo" : "Zelle"}
           {result.paymentTarget ? <> to <strong>{result.paymentTarget}</strong></> : " using the Every Detail payment details you already have"} and include <strong>{result.reference}</strong> in the note.
-          Once the team confirms payment, the gift card becomes active.
+          Once the team confirms payment, the gift card becomes active. We normally review gift-card payments the same day during business hours.
         </p>
 
         <div className="gift-success-meta">
@@ -146,7 +155,7 @@ export function GiftCardPurchaseForm() {
         <div>
           <span>Total</span>
           <strong>${Number.isFinite(amount) ? amount : 0}</strong>
-          <small>Activation happens after we confirm payment.</small>
+          <small>Activation happens after we confirm payment, normally the same day during business hours.</small>
         </div>
         <button className="btn btn-primary" disabled={busy || amount < 25 || amount > 2000}>
           {busy ? "Creating…" : "Continue to payment ↗"}
