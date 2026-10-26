@@ -1,15 +1,18 @@
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
+import { CurvedTape } from "@/components/CurvedTape";
 import { FaqList } from "@/components/FaqList";
-import { JsonLd } from "@/components/JsonLd";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
+import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
-import { ServicesCatalogCompare } from "@/components/ServicesCatalogCompare";
+import { ServiceConditionGauge } from "@/components/services/ServiceConditionGauge";
+import { ServicesCompareSheet } from "@/components/services/ServicesCompareSheet";
+import { ServicesHeroMedia } from "@/components/services/ServicesHeroMedia";
+import { ServicesMenuBoard } from "@/components/services/ServicesMenuBoard";
 import { TrackedLink } from "@/components/TrackedLink";
 import { homeFaqs } from "@/data/faqs";
-import { PRICING, serviceList, startingPrice, vehicles } from "@/data/services";
 import { PAINT_PRICING, paintServices } from "@/data/paint";
-import { usd } from "@/lib/format";
+import { PRICING, serviceList, vehicles } from "@/data/services";
 import { pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -19,11 +22,13 @@ export const metadata = pageMetadata({
   image: "two-tech-interior-detail",
 });
 
-const core = [
-  { id: "maintenance", anchor: "maintenance-detail", number: "01", condition: "ALREADY PRETTY CLEAN", name: "Maintenance Detail", body: "Routine inside-and-out care for a car that is already in good shape.", fit: "Best for regularly detailed vehicles and returning clients.", href: "/book?service=maintenance", image: "tesla-foam-wash", featured: false },
-  { id: "premium", anchor: "premium-detail", number: "02", condition: "NORMAL DAILY BUILDUP", name: "Premium Detail", body: "Our most booked inside-and-out detail for normal wear, buildup, and first-time clients.", fit: "Best for most daily drivers that have fallen behind.", href: "/book?service=premium", image: "two-tech-interior-detail", featured: true },
-  { id: "factoryReset", anchor: "factory-reset", number: "03", condition: "HEAVY BUILDUP OR NEGLECT", name: "Factory Reset", body: "Our deepest clean for stains, pet hair, spills, odor concerns, and long-term buildup.", fit: "Best when the car needs restoration-level cleaning.", href: "/book?service=factoryReset", image: "interior-detail-team", featured: false },
-] as const;
+
+const serviceAnchors = {
+  menu: { anchor: "all-services" },
+  maintenance: { anchor: "maintenance-detail" },
+  premium: { anchor: "premium-detail" },
+  factoryReset: { anchor: "factory-reset" },
+} as const;
 
 export default function ServicesPage() {
   const schemas = [
@@ -39,81 +44,63 @@ export default function ServicesPage() {
 
   return (
     <>
-      <main className="services-v61 info80-page service85" data-header-tone="ink">
-        <section className="svc61-hero info80-hero" data-header-tone="ink">
-          <div className="svc61-shell">
-            <div className="svc61-crumbs"><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
-            <div className="svc61-hero-grid">
-              <div className="svc61-hero-copy">
-                <p className="svc61-kicker">MOBILE DETAILING / DECATUR, GA</p>
-                <h1>THE RIGHT DETAIL.<br /><span>WITHOUT THE GUESSWORK.</span></h1>
-                <p className="svc61-lede">Choose by condition, see the exact price for your vehicle, then book the time that works.</p>
-                <div className="svc61-hero-actions">
-                  <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_hero" }} className="svc61-btn svc61-btn-primary">Find my detail <span>↗</span></TrackedLink>
-                  <TrackedLink href="/book" event="book_click" params={{ location: "services_hero" }} className="svc61-btn svc61-btn-secondary">Book directly <span>↗</span></TrackedLink>
-                </div>
-                <div className="info80-facts" aria-label="Every Detail service facts">
-                  <span><strong><LiveReviewCount /></strong> five-star reviews</span>
-                  <span>Power + water included</span>
-                  <span>Mobile to your driveway</span>
+      <main className="sv90-page">
+        <section className="sv90-hero" data-header-tone="ink" aria-labelledby="sv90-hero-title">
+          <div className="sv90-shell sv90-hero-inner">
+            <div className="sv90-hero-crumbs"><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
+            <h1 id="sv90-hero-title">THE RIGHT DETAIL.<br /><span>NO GUESSWORK.</span></h1>
+            <div className="sv90-hero-lower">
+              <div>
+                <p>Pick by condition. See the exact price for your vehicle. Book the time that works.</p>
+                <div className="sv90-hero-actions">
+                  <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_hero" }} className="ed90-button ed90-button-ink">FIND MY DETAIL <span>↗</span></TrackedLink>
+                  <TrackedLink href="/book" event="book_click" params={{ location: "services_hero" }} className="ed90-button ed90-button-outline">BOOK DIRECTLY <span>↗</span></TrackedLink>
                 </div>
               </div>
-              <div className="svc61-hero-media" aria-label="Every Detail technicians at work">
-                <div className="svc61-photo-main"><Photo id="two-tech-interior-detail" sizes="(max-width: 900px) 100vw, 45vw" fill priority /></div>
-                <div className="svc61-photo-small"><Photo id="hq-branded-van-side" sizes="(max-width: 900px) 44vw, 18vw" fill /></div>
+              <div className="sv90-hero-facts" aria-label="Every Detail service facts">
+                <span><strong><LiveReviewCount /></strong> five-star reviews</span>
+                <span>Power + water included</span>
+                <span>Mobile to your driveway</span>
               </div>
             </div>
           </div>
+          <ServicesHeroMedia />
         </section>
 
-        <section className="svc61-core info80-section" data-header-tone="ink" aria-labelledby="svc61-core-title">
-          <div className="svc61-shell">
-            <div className="info80-heading-row">
-              <div><p className="svc61-kicker">START WITH THE CAR</p><h2 id="svc61-core-title">WHAT SHAPE IS IT IN?</h2></div>
-              <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_core_unsure" }} className="info80-text-link">Not sure? Find my detail ↗</TrackedLink>
+        <CurvedTape text="PRICED BY VEHICLE • POWER + WATER INCLUDED • WE COME TO YOU • REAL CREW • " label="Every Detail service promise" />
+
+        <section className="sv90-core" data-header-tone="ink" aria-labelledby="sv90-core-title">
+          <div className="sv90-shell">
+            <div className="sv90-core-heading">
+              <h2 id="sv90-core-title" className="ed90-heading">WHAT SHAPE<br /><span>IS IT IN?</span></h2>
+              <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_core_unsure" }}>Not sure? Find my detail ↗</TrackedLink>
             </div>
-            <div className="svc61-core-grid info80-service-cards">
-              {core.map((service) => (
-                <article key={service.id} id={service.anchor} className={`svc61-core-card ${service.featured ? "is-featured" : ""}`}>
-                  <div className="svc61-core-image"><Photo id={service.image} sizes="(max-width: 760px) 100vw, 33vw" fill /></div>
-                  <div className="svc61-core-body">
-                    <div className="svc61-card-top"><span>{service.number}</span>{service.featured ? <b>MOST BOOKED</b> : null}</div>
-                    <p className="svc61-condition">{service.condition}</p>
-                    <h3>{service.name}</h3>
-                    <p>{service.body}</p>
-                    <p className="svc61-fit">{service.fit}</p>
-                    <div className="svc61-card-bottom"><span>from <b>{usd(startingPrice(service.id))}</b></span><TrackedLink href={service.href} event="book_click" params={{ location: "services_core", service: service.id }} className="svc61-card-link">Book <span>↗</span></TrackedLink></div>
-                  </div>
-                </article>
-              ))}
-            </div>
+            <ServiceConditionGauge anchors={serviceAnchors} />
           </div>
         </section>
 
-        <section className="svc62-catalog info80-section" data-header-tone="ink" id="all-services" aria-labelledby="svc62-catalog-title">
-          <div className="svc61-shell">
-            <div className="info80-heading-row">
-              <div><p className="svc61-kicker">ALL SERVICES</p><h2 id="svc62-catalog-title">SEE THE FULL LINEUP.</h2></div>
-              <p>Exact pricing follows the vehicle you selected.</p>
+        <ServicesMenuBoard anchorId={serviceAnchors.menu.anchor} />
+        <ServicesCompareSheet />
+
+        <section className="sv90-mobile" data-header-tone="light" aria-labelledby="sv90-mobile-title">
+          <div className="sv90-mobile-photo ed90-photo-grade"><Photo id="mobile-rig-open-driveway" sizes="100vw" fill /></div>
+          <div className="sv90-mobile-shade" />
+          <div className="sv90-shell sv90-mobile-copy">
+            <h2 id="sv90-mobile-title" className="ed90-heading">YOUR DRIVEWAY.<br /><span>OUR DETAIL SHOP.</span></h2>
+            <div className="sv90-mobile-checks" aria-label="What Every Detail brings">
+              <span>POWER ✓</span>
+              <span>WATER ✓</span>
+              <span>PRODUCTS + EQUIPMENT ✓</span>
             </div>
-            <ServicesCatalogCompare />
+            <TrackedLink href="/book" event="book_click" params={{ location: "services_mobile_strip" }} className="ed90-button ed90-button-paper">CHOOSE A TIME <span>↗</span></TrackedLink>
           </div>
         </section>
 
-        <section className="svc86-mobile-section" data-header-tone="light">
-          <div className="svc61-shell svc86-mobile-grid">
-            <figure><Photo id="mobile-rig-open-driveway" ratio="4/3" sizes="(min-width: 900px) 46vw, 92vw" /></figure>
-            <div>
-              <p className="svc61-kicker">MOBILE BY DESIGN</p>
-              <h2>WE COME TO YOU.</h2>
-              <p>Power, water, products, and equipment arrive with the crew. You provide the vehicle and a safe place for us to work around it.</p>
-              <TrackedLink href="/book" event="book_click" params={{ location: "services_mobile_strip" }} className="svc61-btn svc61-btn-primary">Choose a time <span>↗</span></TrackedLink>
-            </div>
+        <section className="sv90-faq" data-header-tone="ink" aria-labelledby="sv90-faq-title">
+          <div className="sv90-shell sv90-faq-grid">
+            <div className="sv90-faq-heading"><h2 id="sv90-faq-title" className="ed90-heading">BEFORE<br /><span>YOU BOOK.</span></h2></div>
+            <FaqList faqs={homeFaqs.slice(0, 5)} />
           </div>
-        </section>
-
-        <section className="svc61-faq info80-section" data-header-tone="ink">
-          <div className="svc61-shell svc61-faq-grid"><div><p className="svc61-kicker">QUICK ANSWERS</p><h2>BEFORE YOU BOOK.</h2></div><FaqList faqs={homeFaqs.slice(0, 5)} /></div>
         </section>
       </main>
       <CtaBand location="services_final" title="Ready when you are." body="Choose the service, vehicle, and time." quoteLabel="Find my detail" />
