@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Photo } from "@/components/Photo";
 import { RubberStamp } from "@/components/ed/RubberStamp";
 import { TrackedLink } from "@/components/TrackedLink";
@@ -8,6 +8,8 @@ import { NextOpeningNote } from "@/components/journey/NextOpeningNote";
 import { useJourney } from "@/components/journey/JourneyContext";
 import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
 import { PRICING, serviceIds, services, vehicles, type ServiceId, type VehicleId } from "@/data/services";
+import { ADDON_LABELS, ADDON_PRICES, addonIds, isAddonIncludedInService, purchasableAddonIds } from "@/data/quoteExtras";
+import { serviceDetails } from "@/data/serviceDetails";
 import { track } from "@/lib/analytics";
 import { durationShort, usd } from "@/lib/format";
 import styles from "./ServicesBoard.module.css";
@@ -41,6 +43,7 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
   const [fallbackVehicle, setFallbackVehicle] = useState<VehicleId>(siteVehicle?.vehicle ?? "sedan");
   // Phone shows one tier at a time; desktop shows all three side by side.
   const [active, setActive] = useState<ServiceId>("premium");
+  const [detailsFor, setDetailsFor] = useState<ServiceId | null>(null);
   const selected = siteVehicle?.vehicle ?? fallbackVehicle;
   const sizeLabel = vehicles.find((item) => item.id === selected)?.label ?? "Sedan";
 
@@ -155,15 +158,11 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
                   <span className={styles.priceSize}>{sizeLabel}</span>
                 </div>
 
-                <p className={styles.cellMeta}>
-                  About {durationShort(quote.minutes)} · {service.crew === 1 ? "1 technician" : `${service.crew} technicians`}
-                </p>
+                <p className={styles.cellMeta}>About {durationShort(quote.minutes)} in your driveway</p>
 
                 <div className={styles.cellNext}>
                   <NextOpeningNote service={id} vehicle={siteVehicle ? selected : null} location="services_board" />
                 </div>
-
-                <p className={styles.cellFor}><span>Best for</span>{service.whoFor}</p>
 
                 <div className={styles.cellMeters} aria-label={`Coverage: ${METERS.map((m) => `${m.label.toLowerCase()} ${m.levels[id]} of ${METER_STEPS}`).join(", ")}`}>
                   {METERS.map((meter) => (
@@ -191,9 +190,17 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
                       {service.includes.map((item) => <li key={item}>{item}</li>)}
                     </ul>
                   )}
+                  <button
+                    type="button"
+                    className={styles.detailsButton}
+                    onClick={() => {
+                      setDetailsFor(id);
+                      track("service_select", { service: id, location: "services_board_details" });
+                    }}
+                  >
+                    See everything included <span aria-hidden="true">+</span>
+                  </button>
                 </div>
-
-                <p className={styles.cellCadence}>{service.cadence}</p>
 
                 <div className={styles.cellCta}>
                   <TrackedLink
@@ -213,7 +220,132 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
 
         <p className={styles.footnote}>Exact price follows the vehicle size · Power and water included on every job</p>
       </div>
+
+      <ServiceDetailsDialog
+        id={detailsFor}
+        vehicle={selected}
+        sizeLabel={sizeLabel}
+        bookHref={detailsFor ? bookHref(detailsFor) : "/book"}
+        onBook={(id) => setServiceIntent(id)}
+        onClose={() => setDetailsFor(null)}
+      />
     </section>
   );
 }
 
+
+/** Full checklist for one service, opened from "See everything included". */
+function ServiceDetailsDialog({
+  id,
+  vehicle,
+  sizeLabel,
+  bookHref,
+  onBook,
+  onClose,
+}: {
+  id: ServiceId | null;
+  vehicle: VehicleId;
+  sizeLabel: string;
+  bookHref: string;
+  onBook: (id: ServiceId) => void;
+  onClose: () => void;
+}) {
+  const ref = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = ref.current;
+    if (!dialog) return;
+    if (id && !dialog.open) dialog.showModal();
+    if (!id && dialog.open) dialog.close();
+  }, [id]);
+
+  const service = id ? services[id] : null;
+  const detail = id ? serviceDetails[id] : null;
+  const quote = id ? PRICING[vehicle][id] : null;
+  const included = id ? addonIds.filter((addon) => isAddonIncludedInService(id, addon)) : [];
+  const includedValue = included.reduce((sum, addon) => sum + (ADDON_PRICES[addon] ?? 0), 0);
+  const extras = id ? purchasableAddonIds(id) : [];
+
+  return (
+    <dialog
+      ref={ref}
+      className={styles.dialog}
+      aria-labelledby="svc-details-title"
+      onClose={onClose}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      {id && service && detail && quote && (
+        <div className={styles.sheet}>
+          <header className={styles.sheetHead}>
+            <div>
+              <p className={styles.sheetKicker}>{TIER[id].number} / Everything included</p>
+              <h3 id="svc-details-title" className={styles.sheetTitle}>{service.name}</h3>
+            </div>
+            <button type="button" className={styles.sheetClose} onClick={onClose} aria-label="Close">×</button>
+          </header>
+
+          <div className={styles.sheetBody}>
+            <div className={styles.sheetFacts}>
+              <p><strong>{usd(quote.price)}</strong><span>{sizeLabel}</span></p>
+              <p><strong>{durationShort(quote.minutes)}</strong><span>On site</span></p>
+              <p><strong>{service.crew}</strong><span>{service.crew === 1 ? "Technician" : "Technicians"}</span></p>
+            </div>
+
+            <p className={styles.sheetIntro}>{detail.intro}</p>
+            <p className={styles.sheetFor}><span>Best for</span>{service.whoFor} {service.cadence}.</p>
+
+            <div className={styles.sheetLists}>
+              <section>
+                <h4>Exterior</h4>
+                <ul>{detail.exterior.map((item) => <li key={item}>{item}</li>)}</ul>
+              </section>
+              <section>
+                <h4>Interior</h4>
+                <ul>{detail.interior.map((item) => <li key={item}>{item}</li>)}</ul>
+              </section>
+            </div>
+
+            {included.length > 0 && (
+              <section className={styles.sheetIncluded}>
+                <h4>
+                  Add-ons already included
+                  {includedValue > 0 && <span>{usd(includedValue)} if booked separately</span>}
+                </h4>
+                <ul>{included.map((addon) => <li key={addon}>{ADDON_LABELS[addon]}</li>)}</ul>
+              </section>
+            )}
+
+            {extras.length > 0 && (
+              <section className={styles.sheetExtras}>
+                <h4>Add when you book</h4>
+                <ul>
+                  {extras.map((addon) => (
+                    <li key={addon}>
+                      <span>{ADDON_LABELS[addon]}</span>
+                      <i aria-hidden="true" />
+                      <strong>{ADDON_PRICES[addon] == null ? "Quote" : `+${usd(ADDON_PRICES[addon])}`}</strong>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
+
+          <footer className={styles.sheetFoot}>
+            <TrackedLink
+              href={bookHref}
+              event="book_click"
+              params={{ location: "services_board_details", service: id, vehicle }}
+              className={styles.bookPrimary}
+              onClick={() => onBook(id)}
+            >
+              Book {service.name.replace(" Detail", "")} · {usd(quote.price)} <span aria-hidden="true">↗</span>
+            </TrackedLink>
+          </footer>
+        </div>
+      )}
+    </dialog>
+  );
+}
