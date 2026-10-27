@@ -876,7 +876,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           <section className="bk-done-addon bk-done-next">
             <p className="bk-done-addon-kicker">After today</p>
             <h2>Keep it this clean.</h2>
-            <p>Detail+ brings the crew back every 2, 4 or 6 weeks at a flat member rate, so the car never slides back into a reset.</p>
+            <p>Detail+ brings the crew back as often as every week, or as rarely as every 3 months, at a flat member rate, so the car never slides back into a reset.</p>
             <div className="bk-done-actions">
               <Link className="bk-btn bk-btn-ink" href="/detailplus#club-builder" onClick={() => track("detailplus_start", { location: "booking_confirmation" })}>Build my Detail+ plan ↗</Link>
               <Link className="bk-btn bk-btn-line" href="/gift-cards">Give a detail as a gift ↗</Link>

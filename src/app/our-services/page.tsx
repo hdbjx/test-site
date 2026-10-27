@@ -31,7 +31,7 @@ const serviceAnchors = {
 
 
 const DETAIL_PLUS_TERMS = [
-  ["Rhythm", "Every 2, 4 or 6 wks"],
+  ["Rhythm", "Weekly to quarterly"],
   ["Rate", "Flat per visit"],
   ["Contract", "None"],
 ] as const;

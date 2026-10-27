@@ -4,7 +4,7 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Join Detail+ | Every Detail",
-  description: "Build your Detail+ plan and get a flat per-visit rate for recurring mobile detailing.",
+  description: "Build your Detail+ plan, pick exactly what gets cleaned, and see your flat per-visit rate for recurring mobile detailing.",
   path: "/detailplus/join",
   noindex: true,
 });
@@ -18,7 +18,7 @@ export default function JoinDetailPlus() {
           { name: "Join", path: "/detailplus/join" },
         ]}
         title="Build your Detail+ plan"
-        lede={<p>Choose your schedule, coverage and vehicle. We&rsquo;ll send your flat rate.</p>}
+        lede={<p>Pick your vehicle, what gets cleaned, and how often. Your flat rate shows as you build.</p>}
       />
       <section className="container-ed max-w-4xl pb-24" data-header-tone="ink">
         <DetailPlusForm />

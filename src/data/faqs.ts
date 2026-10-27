@@ -150,12 +150,12 @@ export const ceramicFaqs: Faq[] = [
 export const detailPlusFaqs: Faq[] = [
   {
     q: "How much does Detail+ cost?",
-    a: "Every plan is quoted as a flat rate based on your vehicle, how often we come, and what gets cleaned. Build your plan and we'll send your price.",
+    a: "You build the plan and see the price right away. Each task is priced for your vehicle, tighter schedules get a discount, and every visit has a $100 minimum. The price is flat every visit.",
     confirmed: true,
   },
   {
     q: "How often can visits be?",
-    a: "Bi-weekly, monthly, every 6 weeks, or a custom interval from weekly to quarterly in one-week steps.",
+    a: "Every week, every 2, 3, 4 or 6 weeks, every 2 months, or every 3 months.",
     confirmed: true,
   },
   {

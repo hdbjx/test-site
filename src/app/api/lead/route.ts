@@ -1,3 +1,4 @@
+import { quoteDetailPlus } from "@/lib/detailPlusPricing";
 import { NextResponse } from "next/server";
 import { sendLeadEmails } from "@/lib/email";
 import { upsertWebsiteContact } from "@/lib/website-contact";
@@ -149,6 +150,19 @@ export async function POST(req: Request) {
       { ok: false, error: "Please enter the full service address, including street, city, state and ZIP code.", missing: ["address"] },
       { status: 422 },
     );
+  }
+
+  if (type === "detailplus") {
+    // Never trust the price the browser shows. Rebuild it from the price sheet.
+    const quote = quoteDetailPlus(fields.vehicleId as never, fields.frequencyId ?? "", (fields.taskIds ?? "").split(",").filter(Boolean));
+    if (!quote) {
+      return NextResponse.json(
+        { ok: false, error: "Please pick at least one thing to have cleaned.", missing: ["taskIds"] },
+        { status: 422 },
+      );
+    }
+    fields.quotedPerVisit = String(quote.perVisit);
+    fields.quoteDisplay = `$${quote.perVisit} per visit (${quote.discountPct}% rhythm discount${quote.minimumApplied ? ", $100 minimum applied" : ""}; tasks total $${quote.subtotal})`;
   }
 
   if ((fields.phone.match(/\d/g) ?? []).length < 10) {

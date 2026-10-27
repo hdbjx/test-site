@@ -33,7 +33,7 @@ export default function DetailPlusPage() {
             </div>
             <div className="dp-audit-price-context">
               <strong>PRICE CONTEXT</strong>
-              <span>Regular Maintenance starts at ${startingPrice("maintenance")}. Detail+ uses a custom flat rate based on your vehicle, cadence, and coverage. Build the plan below to request your exact member rate.</span>
+              <span>Regular Maintenance starts at ${startingPrice("maintenance")}. Detail+ is priced task by task, with a discount for tighter schedules and a $100 minimum per visit. Build your plan below and see your flat rate right away.</span>
             </div>
           </div>
 
@@ -76,8 +76,8 @@ export default function DetailPlusPage() {
       <section id="club-builder" className="dp56-builder" data-header-tone="ink">
         <div className="dp56-shell">
           <div className="dp56-section-head">
-            <div><p className="dp56-kicker dark">PICK YOUR RHYTHM</p><h2>Your car.<br/><span>Your clean cycle.</span></h2></div>
-            <p>Choose every 2 weeks, every 4 weeks, every 6 weeks, or a custom rhythm. Choose the vehicle, coverage, and cadence below. We review that plan and send your exact flat per-visit member rate.</p>
+            <div><p className="dp56-kicker dark">BUILD YOUR PLAN</p><h2>Your car.<br/><span>Your clean cycle.</span></h2></div>
+            <p>Pick your vehicle, choose exactly what gets cleaned, and set a rhythm anywhere from every week to every 3 months. Your flat per-visit price updates as you build.</p>
           </div>
           <DetailPlusForm />
         </div>

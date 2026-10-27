@@ -36,7 +36,7 @@ if (!css.includes('.v29-hero-photo img{opacity:1!important;animation:none!import
 if (!nav.includes('Ceramic Coating')) failures.push('ceramic naming consistency');
 if (!servicesPage.includes('BOOK DIRECTLY') || !servicesPage.includes('svc-audit-quiz-link')) failures.push('services primary/secondary CTA hierarchy');
 if (!css.includes('V111.4 / SERVICES CORE COMPOSITION')) failures.push('services desktop condition composition');
-if (!detailPlus.includes('custom flat rate') || !detailPlus.includes('exact member rate')) failures.push('Detail+ pricing disclosure');
+if (!detailPlus.includes('priced task by task') || !detailPlus.includes('$100 minimum')) failures.push('Detail+ pricing disclosure');
 if (!giftIntro.includes('ed:gift-amount') || !giftForm.includes('ed:gift-amount')) failures.push('gift-card first-screen amount selection');
 if (!workPage.includes('work-audit-before-after')) failures.push('Our Work before/after proof');
 if (!paintHero.includes('/images/paint-5050-single.jpg') || paintPage.includes('<PaintFiftyFifty />')) failures.push('paint 50/50 proof must be the hero without duplicate section');

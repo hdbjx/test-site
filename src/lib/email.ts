@@ -639,7 +639,11 @@ function fieldLabel(key: string) {
     internalNotes: "Build details",
     source: "Source",
     frequency: "Frequency",
-    coverage: "Coverage",
+    coverage: "Tasks",
+    frequencyId: "Frequency id",
+    taskIds: "Task ids",
+    vehicleId: "Vehicle size",
+    quotedPerVisit: "Quoted per visit",
     address: "Address",
     preferredDays: "Preferred days",
     notes: "Notes",
@@ -715,21 +719,22 @@ export async function sendLeadEmails({ type, fields }: LeadEmail) {
       const planRows = [
         detailRow("Vehicle", vehicle),
         detailRow("Rhythm", fields.frequency || "Your selected schedule"),
-        detailRow("Coverage", fields.coverage || "Your selected coverage"),
+        detailRow("What gets cleaned", fields.coverage || "Your selected tasks"),
+        fields.quotedPerVisit ? detailRow("Your rate", `$${fields.quotedPerVisit} per visit, flat`) : "",
       ].join("");
 
       customerHtml = shell(
         `
           ${eyebrow("Detail+ / plan received")}
           ${headline(`${firstName ? `${escapeHtml(firstName)}, your` : "Your"} routine is with us.`)}
-          ${lede("You picked the rhythm. We’ll price the exact plan for your vehicle and make sure the coverage makes sense before the first visit.")}
+          ${lede("You built the plan and saw the price. We’ll confirm the details and set up your first visit.")}
 
           <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 24px;background:${BRAND.oxblood};color:#ffffff;">
             <tr><td style="padding:24px 24px 12px;font-size:10px;line-height:1.2;letter-spacing:1.8px;color:${BRAND.beige};font-weight:900;">DETAIL+ / PLAN PREVIEW</td></tr>
             <tr><td style="padding:0 24px 22px;"><table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="color:#ffffff;">${planRows.replaceAll(`color:${BRAND.black}`, "color:#ffffff").replaceAll(`color:${BRAND.gray}`, `color:${BRAND.beige}`).replaceAll("rgba(17,17,17,.12)", "rgba(255,255,255,.18)")}</table></td></tr>
           </table>
 
-          ${noteBlock("Next up", "We’ll send your flat per-visit rate and help set the first visit. There’s no contract. If you need to change the vehicle, coverage, or rhythm, reply here.")}
+          ${noteBlock("Next up", "We’ll confirm your plan and help set the first visit. There’s no contract. If you need to change the vehicle, tasks, or rhythm, reply here.")}
         `,
         `Your Detail+ plan: ${fields.frequency || "maintenance"} · ${vehicle}`,
       );
