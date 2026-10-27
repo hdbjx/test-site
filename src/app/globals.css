@@ -8842,3 +8842,7 @@ img{max-width:100%}
   /* "YOUR BRONCO." etc: size the first hero line to the vehicle name so it never runs off-screen. */
   .v29-hero-title>span:first-child>.v90-hero-word{font-size:min(15vw,calc((100vw - 32px) / (var(--hero-fit-chars, 10) * .56)))!important}
 }
+
+/* Booking + Find My Detail top bars: solid, and covering the notch area so the
+   page never shows scrolling above or behind them on phones. */
+.bk-top,.q51-top{background:#f3eddf!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding-top:env(safe-area-inset-top,0px)}

@@ -950,7 +950,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   function continueLabel(step: StepId) {
     if (sending) return "Booking…";
     switch (step) {
-      case "service": return allServicesChosen ? "Continue →" : "Pick a service to continue";
+      case "service": return allServicesChosen ? "Continue →" : "Pick a detail";
       case "extras": return resolved.some((l) => l.addons.length || l.paint.length) ? "Continue →" : "No thanks, continue →";
       case "info": return "Review booking →";
       case "review": return "Confirm booking";

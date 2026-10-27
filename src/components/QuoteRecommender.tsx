@@ -590,7 +590,12 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
               <p className="q51-step-help">Four quick steps, about a minute. Search the make or model.</p>
               <div className="q-audit-quick-vehicles" aria-label="Popular vehicle searches">
                 {["Honda Civic", "Toyota RAV4", "Ford F-150", "Tesla Model 3"].map((label) => (
-                  <button key={label} type="button" onClick={() => { setSearch(label); start(); }}>{label}</button>
+                  <button key={label} type="button" onClick={() => {
+                    // A quick chip is a full answer: select the exact base model instead of making them pick it again.
+                    const exact = recommenderVehicles.find((item) => `${item.make} ${item.model}` === label);
+                    if (exact) selectVehicle(exact);
+                    else { setSearch(label); start(); }
+                  }}>{label}</button>
                 ))}
               </div>
               <div className="quote-rec-search-wrap q51-search-wrap">
