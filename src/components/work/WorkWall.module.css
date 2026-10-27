@@ -355,6 +355,13 @@
   }
 }
 
+@media (max-width: 900px) {
+  /* Sit below the solid mobile header bar (80px + notch). */
+  .chips {
+    top: calc(max(12px, env(safe-area-inset-top, 0px)) + 80px);
+  }
+}
+
 @media (max-width: 640px) {
   .grid {
     columns: 2;

@@ -654,6 +654,16 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .closeTitle span {
+    font-size: clamp(2.3rem, 11.6vw, 3.4rem);
+    white-space: normal;
+  }
+
+  /* "Real responsibility." is one long word: keep it inside the screen. */
+  .sectionTitle span {
+    font-size: clamp(2.3rem, 11.2vw, 3.2rem);
+  }
+
   .storyPhoto {
     width: 72%;
   }

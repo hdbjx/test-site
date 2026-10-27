@@ -611,6 +611,8 @@
 
   .galleryTrack {
     grid-auto-columns: 66%;
+    padding-inline: 20px;
+    scroll-padding-inline: 20px;
   }
 }
 

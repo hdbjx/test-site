@@ -36,7 +36,7 @@ export function PersonalizedHeroTitle() {
   const canUseModel = hydrated && model && model.length <= 8 && !/[\/]/.test(model);
   const personalized = canUseModel ? `YOUR ${model.toUpperCase()}.` : hydrated && vehicle ? `YOUR ${categoryWord}.` : "YOUR CAR.";
   return (
-    <h1 id="v29-hero-title" className="v29-hero-title v43-hero-title v90-hero-build" data-v29-hero-type>
+    <h1 id="v29-hero-title" className="v29-hero-title v43-hero-title v90-hero-build" data-v29-hero-type style={{ "--hero-fit-chars": personalized.length } as CSSProperties}>
       <AnimatedLine text={personalized} line={0} />
       <AnimatedLine text="BACK TO ITS BEST." line={1} />
     </h1>

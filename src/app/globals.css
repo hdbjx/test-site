@@ -12545,3 +12545,71 @@ img{max-width:100%}
 @media(min-width:901px){
   .sv90-faq{padding:clamp(4.75rem,6vw,6.5rem) 0!important}
 }
+
+/* ============================================================
+   MOBILE HEADER BAR (Oct 27 2026)
+   The bar must cover the status-bar / notch area and reach below the
+   logo, with a solid colour (Safari tints its top chrome from it and
+   otherwise shows page content scrolling behind). The fade lives in
+   ::after so the bar itself stays opaque.
+   ============================================================ */
+@media(max-width:900px){
+  .site-shared-nav-shell{
+    height:calc(max(12px, env(safe-area-inset-top)) + 80px)!important;
+    background:#f3f1ec!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+  .site-shared-header[data-tone="light"] .site-shared-nav-shell,
+  .site-shared-header[data-menu-open="true"] .site-shared-nav-shell{
+    background:#0a0a09!important;
+  }
+  .site-shared-nav-shell::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    top:100%;
+    height:18px;
+    background:linear-gradient(to bottom,#f3f1ec,rgba(243,241,236,0));
+    pointer-events:none;
+  }
+  .site-shared-header[data-tone="light"] .site-shared-nav-shell::after,
+  .site-shared-header[data-menu-open="true"] .site-shared-nav-shell::after{
+    background:linear-gradient(to bottom,#0a0a09,rgba(10,10,9,0));
+  }
+}
+
+
+/* ============================================================
+   MOBILE AUDIT FIXES (Oct 27 2026)
+   ============================================================ */
+@media(max-width:900px){
+  /* Vehicle pill never crowds the centred logo. */
+  .site-context-pill,
+  .site-context-pill.is-set,
+  body:has(.v29-hero) .site-context-pill,
+  body:has(.v29-hero) .site-context-pill.is-set{max-width:calc(50% - 62px)!important}
+  .site-context-pill>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* Home showed a second "Small SUV" line that pushed the pill into the logo. Match the other pages. */
+  body:has(.v29-hero) .site-context-pill>small,
+  body:has(.v29-hero) .site-context-pill.is-set>small{display:none!important}
+  body:has(.v29-hero) .site-context-pill>span,
+  body:has(.v29-hero) .site-context-pill.is-set>span{max-width:none!important}
+
+  /* Detail+ hero: photo fills its polaroid, card overlaps the lower third,
+     and the art takes real height so it no longer spills into the next section. */
+  .dp56-hero-art{min-height:0!important;padding-bottom:150px}
+  .dp56-polaroid{position:relative!important;top:auto!important;right:auto!important;width:84%!important;margin-left:auto}
+  .dp56-polaroid figcaption{display:none}
+  .dp56-polaroid{padding-bottom:12px!important}
+  .dp56-club-card{left:0!important;bottom:0!important;width:84%!important;min-height:0!important}
+}
+/* Photo wrapper sets its own ratio; the old fixed image height left an empty band. */
+.dp56-polaroid>div{aspect-ratio:4/5!important}
+.dp56-polaroid :is(img,picture){height:100%!important}
+
+@media(max-width:600px){
+  /* "YOUR BRONCO." etc: size the first hero line to the vehicle name so it never runs off-screen. */
+  .v29-hero-title>span:first-child>.v90-hero-word{font-size:min(15vw,calc((100vw - 32px) / (var(--hero-fit-chars, 10) * .56)))!important}
+}
