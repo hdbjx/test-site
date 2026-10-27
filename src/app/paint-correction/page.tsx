@@ -12,7 +12,7 @@ import { paintCorrectionFaqs } from "@/data/faqs";
 import { PAINT_PRICING, paintDefects, paintProcess, paintServices } from "@/data/paint";
 import { usd } from "@/lib/format";
 import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
-import styles from "./paint.module.css";
+import styles from "@/styles/servicePage.module.css";
 
 export const metadata = pageMetadata({
   title: "Paint Correction in Decatur & Atlanta, GA | Every Detail",

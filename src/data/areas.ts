@@ -14,6 +14,24 @@ export type AreaPage = {
 
 export type Area = { name: string; slug: string; primary?: boolean; indexable?: boolean; page?: AreaPage };
 
+/**
+ * Hero photo per area page so the pages don't all look identical. These are real
+ * Every Detail job photos, not photos taken in that specific neighborhood, so the
+ * page never captions them with the area name.
+ */
+export const areaPhotos: Record<string, string> = {
+  decatur: "hq-decatur-summer-sky",
+  brookhaven: "mobile-rig-open-driveway",
+  "avondale-estates": "technician-branded-van",
+  chamblee: "mobile-rig-open-job",
+  "north-buckhead": "work-06",
+  "north-druid-hills": "tesla-foam-wash",
+  "sandy-springs": "work-02",
+  dunwoody: "hq-white-ioniq-front",
+  briarcliff: "work-rex-0467",
+  atlanta: "branded-rig-driveway",
+};
+
 const page = (name: string, intro: string, notes: string[]): AreaPage => ({
   title: `Mobile Car Detailing in ${name}, GA`,
   description: `Mobile car detailing in ${name}, GA from Every Detail. We bring our own power, water, equipment and trained crew to your driveway or approved parking area.`,

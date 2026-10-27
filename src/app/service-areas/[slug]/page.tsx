@@ -1,15 +1,20 @@
 import Link from "next/link";
-import { TrackedLink } from "@/components/TrackedLink";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
-import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
+import { CurvedTape } from "@/components/CurvedTape";
+import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
-import { ReviewGrid } from "@/components/ReviewGrid";
-import { ServicePicker } from "@/components/ServicePicker";
-import { areasWithPages } from "@/data/areas";
+import { ServicesBoard } from "@/components/services/ServicesBoard";
+import { TrackedLink } from "@/components/TrackedLink";
+import { areaPhotos, areas, areasWithPages } from "@/data/areas";
+import { startingPrice } from "@/data/services";
+import { workWall, type WorkReview } from "@/data/work";
+import { usd } from "@/lib/format";
 import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
+import styles from "@/styles/servicePage.module.css";
+import areaStyles from "../areas.module.css";
 
 type Params = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
@@ -27,40 +32,91 @@ export default async function AreaPage({ params }: Params) {
   const area = areasWithPages.find((a) => a.slug === slug);
   if (!area) notFound();
   const { page } = area;
+  const nearby = areas.filter((other) => other.slug !== slug);
+  // Three real Google reviews, rotated per page so each area page reads differently.
+  // These are not tied to the neighborhood, so the page never claims they are local.
+  const pool = workWall.filter((item): item is WorkReview => item.kind === "review");
+  const start = (areas.findIndex((a) => a.slug === slug) * 3) % pool.length;
+  const areaReviews = [0, 1, 2].map((i) => pool[(start + i) % pool.length]);
 
   return (
-    <div className="area-v2">
-      <section className="area-v2-hero area90-hero" data-header-tone="ink">
-        <div className="area-v2-shell area90-hero-shell">
-          <div className="area90-breadcrumbs"><Breadcrumbs items={[{ name: "Service Areas", path: "/service-areas" }, { name: area.name, path: `/service-areas/${slug}` }]} /></div>
-          <div className="area90-hero-grid">
-            <div className="area90-hero-copy">
-              <p className="area-v2-kicker">MOBILE DETAILING / {area.name.toUpperCase()}</p>
-              <h1><span>Car detailing</span><strong>{area.name}.</strong></h1>
-              <p className="area90-intro">{page.intro}</p>
-              <div className="area90-actions">
-                <TrackedLink href="/book" event="book_click" params={{ location: `area_${slug}_hero` }} className="btn btn-primary">Book your detail ↗</TrackedLink>
-                <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: `area_${slug}_hero` }} className="area-v2-inline">Get a recommendation</TrackedLink>
-              </div>
-            </div>
-            <figure className="area90-hero-photo">
-              <Photo id="branded-rig-driveway" sizes="(max-width: 760px) 92vw, 43vw" fill priority />
-              <figcaption><span>WE COME TO YOU</span><strong>POWER + WATER ON BOARD</strong></figcaption>
-            </figure>
+    <main className={styles.page}>
+      <section className={styles.hero} data-header-tone="light" aria-labelledby="ar-hero-title">
+        <div className={styles.heroPhoto}><Photo id={areaPhotos[slug] ?? "branded-rig-driveway"} sizes="(max-width: 900px) 100vw, 50vw" fill priority /></div>
+        <div className={styles.heroShade} aria-hidden="true" />
+        <div className={styles.heroInner}>
+          <div className={styles.crumbs}><Breadcrumbs items={[{ name: "Service Areas", path: "/service-areas" }, { name: area.name, path: `/service-areas/${slug}` }]} /></div>
+          <p className={styles.kicker}>Mobile detailing / {area.name}</p>
+          <h1 id="ar-hero-title" className={styles.heroTitle}>
+            <span>Car detailing</span>
+            <span>{area.name}.</span>
+          </h1>
+          <p className={styles.heroLede}>{page.intro}</p>
+          <div className={styles.heroActions}>
+            <TrackedLink href="/book" event="book_click" params={{ location: `area_${slug}_hero` }} className={styles.heroCta}>BOOK YOUR DETAIL <span aria-hidden="true">↗</span></TrackedLink>
+            <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: `area_${slug}_hero` }} className={styles.heroLink}>FIND MY DETAIL <span aria-hidden="true">↗</span></TrackedLink>
           </div>
+          <dl className={styles.heroFacts}>
+            <div><dt>Details from</dt><dd>{usd(startingPrice("maintenance"))}</dd></div>
+            <div><dt>Five-star reviews</dt><dd><LiveReviewCount /></dd></div>
+            <div><dt>Power + water</dt><dd>Included</dd></div>
+          </dl>
         </div>
       </section>
 
-      <section className="area-v2-proof" data-header-tone="light"><div className="area-v2-shell"><span><LiveReviewCount /> FIVE-STAR REVIEWS · <GoogleMapsAttribution /></span><span>POWER + WATER INCLUDED</span><span>TRAINED CREW</span><span>ONLINE PRICING</span></div></section>
+      <CurvedTape text={`${area.name.toUpperCase()} • WE COME TO YOU • POWER + WATER INCLUDED • REAL CREW • `} label={`Every Detail in ${area.name}`} surface="ink" />
 
-      <section className="area-v2-local" data-header-tone="ink"><div className="area-v2-shell area-v2-local-grid"><div className="area86-local-intro"><p className="area-v2-kicker">LOCAL SERVICE</p><h2>Your parking spot.<br/><span>Our setup.</span></h2><figure className="area86-local-photo"><Photo id="hq-mobile-rig-fleet" ratio="4/3" sizes="(min-width: 900px) 32vw, 92vw" /></figure></div><div className="area-v2-notes">{page.localNotes.map((n,i)=><article key={n}><b>{String(i+1).padStart(2,"0")}</b><p>{n}</p></article>)}</div></div></section>
+      <section className={`${areaStyles.list} ${areaStyles.dark}`} data-header-tone="light" aria-labelledby="ar-local-title">
+        <div className={`${styles.shell} ${areaStyles.localGrid}`}>
+          <div>
+            <p className={styles.kickerLight}>Detailing in {area.name}</p>
+            <h2 id="ar-local-title" className={styles.sectionTitle}>
+              <span>Your parking spot.</span>
+              <span>Our setup.</span>
+            </h2>
+          </div>
+          <ol className={areaStyles.notes}>
+            {page.localNotes.map((note, index) => (
+              <li key={note}><span>{String(index + 1).padStart(2, "0")}</span><p>{note}</p></li>
+            ))}
+          </ol>
+        </div>
+      </section>
 
-      <section className="area-v2-pricing" data-header-tone="ink"><div className="area-v2-shell"><div className="area-v2-pricing-head"><div><p className="area-v2-kicker">PRICING</p><h2>Pick your vehicle.<br/><span>See the real price.</span></h2></div><p>Choose your vehicle to see exact pricing for Maintenance, Premium and Factory Reset.</p></div><ServicePicker location={`area_${slug}`} headingId="area-pricing" /></div></section>
+      <ServicesBoard anchorId="area-pricing" />
 
-      <section className="area-v2-reviews" data-header-tone="ink"><div className="area-v2-shell"><p className="area-v2-kicker">WHAT CLIENTS SAY</p><ReviewGrid /></div></section>
-      <section className="area-v2-back" data-header-tone="ink"><div className="area-v2-shell"><Link href="/service-areas">← See every service area</Link></div></section>
+      <section className={areaStyles.reviews} data-header-tone="ink" aria-labelledby="ar-reviews-title">
+        <div className={styles.shell}>
+          <div className={areaStyles.reviewsHead}>
+            <p className={styles.kickerDark}>What customers say</p>
+            <h2 id="ar-reviews-title" className={areaStyles.reviewsTitle}><LiveReviewCount /> five-star Google reviews</h2>
+          </div>
+          <ul className={areaStyles.reviewCards}>
+            {areaReviews.map((review) => (
+              <li key={review.author}>
+                <p className={areaStyles.stars} aria-label="5 out of 5 stars">★★★★★</p>
+                <blockquote>“{review.quote}”</blockquote>
+                <p className={areaStyles.reviewer}>{review.author}<span>Google review</span></p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className={areaStyles.nearby} data-header-tone="light" aria-labelledby="ar-nearby-title">
+        <div className={styles.shell}>
+          <h2 id="ar-nearby-title" className={areaStyles.nearbyTitle}>Also serving</h2>
+          <ul className={areaStyles.nearbyList}>
+            {nearby.map((other) => (
+              <li key={other.slug}><Link href={`/service-areas/${other.slug}`}>{other.name} <span aria-hidden="true">↗</span></Link></li>
+            ))}
+            <li><Link href="/service-areas">All service areas <span aria-hidden="true">↗</span></Link></li>
+          </ul>
+        </div>
+      </section>
+
       <CtaBand location={`area_${slug}_final`} />
       <JsonLd data={[serviceSchema({ name: `Mobile Car Detailing in ${area.name}, GA`, description: page.description, path: `/service-areas/${slug}`, areaServed: [`${area.name}, GA`] }), breadcrumbSchema([{ name: "Service Areas", path: "/service-areas" }, { name: area.name, path: `/service-areas/${slug}` }])]} />
-    </div>
+    </main>
   );
 }

@@ -44,7 +44,8 @@ if (!ceramicPage.includes('FULL CORRECTION STARTS AT $695')) failures.push('cera
 if (!blogPage.includes('alt={`Every Detail article: ${post.title}`}')) failures.push('blog thumbnail alt text');
 if (!quote.includes('Four quick steps, about a minute') || !quote.includes('Honda Civic') || !quote.includes('Toyota RAV4')) failures.push('Find My Detail first-step guidance and quick vehicle chips');
 if (!css.includes('.q53-page .q51-top{position:sticky!important')) failures.push('quote and booking funnel header consistency');
-if (!css.includes('.area-v2 h1,.area-v2 h2,.area-v2 h3{text-transform:uppercase}')) failures.push('location page visual-system consistency');
+// Location pages share the service-page module (uppercase display titles) with paint + ceramic.
+if (!read('src/app/service-areas/[slug]/page.tsx').includes('@/styles/servicePage.module.css')) failures.push('location page visual-system consistency');
 if (!terms.includes('Terms of Service | Every Detail') || !terms.includes('00 / Agreement')) failures.push('terms title/TOC');
 if (!privacy.includes('Privacy Policy | Every Detail') || !privacy.includes('07 / Your choices') || !privacy.includes('10 / Contact')) failures.push('privacy title/TOC');
 

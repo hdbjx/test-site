@@ -11,14 +11,14 @@ function ticketNumber() {
   }).format(new Date()).replace("/", "");
 }
 
-export function PaintAssessmentTicket() {
+export function PaintAssessmentTicket({ kind = "paint-correction" }: { kind?: "paint-correction" | "ceramic" }) {
   return (
     <div className={`pc90-ticket ${styles.ticket}`}>
       <div className="pc90-ticket-head">
-        <span>EVERY DETAIL · PAINT ASSESSMENT</span>
+        <span>{kind === "ceramic" ? "EVERY DETAIL · COATING PLAN" : "EVERY DETAIL · PAINT ASSESSMENT"}</span>
         <strong suppressHydrationWarning>Nº {ticketNumber()}</strong>
       </div>
-      <PaintLeadForm kind="paint-correction" hideIntro />
+      <PaintLeadForm kind={kind} hideIntro />
     </div>
   );
 }
