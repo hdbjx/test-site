@@ -3,7 +3,8 @@ import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
 import { site } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
-import { roleLabels, team as publicTeam } from "@/data/team";
+import { roleLabels, team as fallbackTeam } from "@/data/team";
+import { getPublicTeamRoster } from "@/lib/team-roster";
 
 export const metadata = pageMetadata({
   title: "About Every Detail | Student-Run Detailing in Decatur",
@@ -17,10 +18,15 @@ const standards = [
   ["CHECK THE WORK", "Every car gets a final quality check before the team leaves the driveway."],
 ] as const;
 
-export const revalidate = 86400;
+// Roster comes from active staff in the app database (public.profiles); refreshed every 5 minutes.
+export const revalidate = 300;
 
-export default function AboutPage() {
-  const team = publicTeam.map((member, index) => ({ id: `${member.name}-${index}`, name: member.name, title: roleLabels[member.role] }));
+export default async function AboutPage() {
+  const live = await getPublicTeamRoster();
+  // If the database is unreachable, show the last hand-kept roster instead of an empty section.
+  const team = live.length
+    ? live.map((member) => ({ id: member.id, name: member.name, title: member.title }))
+    : fallbackTeam.map((member, index) => ({ id: `${member.name}-${index}`, name: member.name, title: roleLabels[member.role] }));
 
   return (
     <div className="about70">
