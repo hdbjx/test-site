@@ -63,13 +63,13 @@ export const detailPlusMinimum = 100;
  * cars visited more often arrive cleaner, so the visit takes less work.
  */
 export const frequencies = [
-  { id: "weekly", label: "Every week", short: "Weekly", weeks: 1, discount: 0.2, hint: "Always fresh" },
-  { id: "biweekly", label: "Every 2 weeks", short: "2 weeks", weeks: 2, discount: 0.15, hint: "Highest-frequency care" },
-  { id: "3weeks", label: "Every 3 weeks", short: "3 weeks", weeks: 3, discount: 0.12, hint: "Steady upkeep" },
-  { id: "monthly", label: "Every 4 weeks", short: "Monthly", weeks: 4, discount: 0.1, hint: "Most popular rhythm" },
-  { id: "6weeks", label: "Every 6 weeks", short: "6 weeks", weeks: 6, discount: 0.07, hint: "Lower-frequency upkeep" },
-  { id: "2months", label: "Every 2 months", short: "2 months", weeks: 8, discount: 0.05, hint: "Seasonal reset" },
-  { id: "quarterly", label: "Every 3 months", short: "3 months", weeks: 13, discount: 0.03, hint: "Quarterly refresh" },
+  { id: "weekly", teamLabel: "Weekly", label: "Every week", short: "Weekly", weeks: 1, discount: 0.2, hint: "Always fresh" },
+  { id: "biweekly", teamLabel: "Biweekly", label: "Every 2 weeks", short: "2 weeks", weeks: 2, discount: 0.15, hint: "Highest-frequency care" },
+  { id: "3weeks", teamLabel: "Every 3 Weeks", label: "Every 3 weeks", short: "3 weeks", weeks: 3, discount: 0.12, hint: "Steady upkeep" },
+  { id: "monthly", teamLabel: "Monthly", label: "Every 4 weeks", short: "Monthly", weeks: 4, discount: 0.1, hint: "Most popular rhythm" },
+  { id: "6weeks", teamLabel: "Every 6 Weeks", label: "Every 6 weeks", short: "6 weeks", weeks: 6, discount: 0.07, hint: "Lower-frequency upkeep" },
+  { id: "2months", teamLabel: "Every 2 Months", label: "Every 2 months", short: "2 months", weeks: 8, discount: 0.05, hint: "Seasonal reset" },
+  { id: "quarterly", teamLabel: "Quarterly", label: "Every 3 months", short: "3 months", weeks: 13, discount: 0.03, hint: "Quarterly refresh" },
 ] as const;
 
 export type DetailPlusFrequencyId = (typeof frequencies)[number]["id"];

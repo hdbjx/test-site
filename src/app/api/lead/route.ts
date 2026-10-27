@@ -1,4 +1,5 @@
-import { quoteDetailPlus } from "@/lib/detailPlusPricing";
+import { quoteDetailPlus, type DetailPlusQuote } from "@/lib/detailPlusPricing";
+import { saveDetailPlusMembership } from "@/lib/detailPlusMembership";
 import { NextResponse } from "next/server";
 import { sendLeadEmails } from "@/lib/email";
 import { upsertWebsiteContact } from "@/lib/website-contact";
@@ -152,6 +153,7 @@ export async function POST(req: Request) {
     );
   }
 
+  let detailPlusQuote: DetailPlusQuote | null = null;
   if (type === "detailplus") {
     // Never trust the price the browser shows. Rebuild it from the price sheet.
     const quote = quoteDetailPlus(fields.vehicleId as never, fields.frequencyId ?? "", (fields.taskIds ?? "").split(",").filter(Boolean));
@@ -161,6 +163,7 @@ export async function POST(req: Request) {
         { status: 422 },
       );
     }
+    detailPlusQuote = quote;
     fields.quotedPerVisit = String(quote.perVisit);
     fields.quoteDisplay = `$${quote.perVisit} per visit (${quote.discountPct}% rhythm discount${quote.minimumApplied ? ", $100 minimum applied" : ""}; tasks total $${quote.subtotal})`;
   }
@@ -202,6 +205,23 @@ export async function POST(req: Request) {
       { ok: false, error: "We couldn't save that request right now. Please try again." },
       { status: 502 },
     );
+  }
+
+  // Detail+ plans become a membership row so they show up in the team app's Detail+ HQ.
+  if (type === "detailplus" && detailPlusQuote && clientId) {
+    try {
+      await saveDetailPlusMembership({
+        clientId,
+        frequencyId: fields.frequencyId ?? "",
+        vehicleLabel: fields.vehicle ?? "",
+        quote: detailPlusQuote,
+        customerNotes: fields.notes,
+      });
+      console.info("[lead] Detail+ membership saved");
+    } catch (membershipError) {
+      // The owner email still has the full plan, so do not make the customer retry.
+      console.error("[lead] Detail+ membership save failed", membershipError);
+    }
   }
 
   // Quote requests also enter the Supabase CRM immediately.
