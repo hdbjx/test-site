@@ -23,16 +23,16 @@ export type DetailPlusTask = {
 export const detailPlusVehicleOrder: VehicleId[] = ["sedan", "smallSUV", "smallTruck", "largeSUV", "minivan", "largeTruck"];
 
 export const detailPlusTasks: DetailPlusTask[] = [
-  { id: "wash", label: "Hand wash and dry", note: "Full exterior wash, hand dried.", group: "exterior", prices: [50, 57, 60, 63, 67, 70] },
+  { id: "wash", label: "Hand wash and dry", note: "Full exterior wash, hand dried.", group: "exterior", prices: [45, 51, 54, 57, 60, 63] },
   { id: "wheels", label: "Wheels and tires", note: "Wheels, tires and wheel wells cleaned.", group: "exterior", prices: [25, 28, 30, 32, 33, 35] },
   { id: "windows", label: "Windows", note: "Inside and outside glass.", group: "exterior", prices: [20, 23, 24, 25, 27, 28] },
-  { id: "sealant", label: "Spray sealant protection", note: "Paint protection that keeps the shine and makes the next wash easier.", group: "exterior", prices: [40, 39, 39, 40, 44, 44] },
+  { id: "sealant", label: "Spray sealant protection", note: "Paint protection that keeps the shine and makes the next wash easier.", group: "exterior", prices: [40, 38, 38, 40, 43, 43] },
   { id: "jambs", label: "Door jambs", note: "Jambs and sills wiped clean. Extra: confirm price.", group: "extras", prices: [15, 15, 20, 20, 20, 20] },
   { id: "vacuum", label: "Interior vacuum", note: "Seats, carpets and floors.", group: "interior", prices: [30, 34, 36, 38, 40, 42] },
-  { id: "wipe", label: "Interior wipe-down", note: "Dash, console and door panels wiped.", group: "interior", prices: [25, 28, 30, 32, 33, 35] },
-  { id: "seats", label: "Seat and upholstery clean", note: "Deeper clean of seats and upholstery.", group: "interior", prices: [35, 33, 33, 35, 38, 38] },
-  { id: "mats", label: "Floor mats", note: "Mats pulled out and cleaned.", group: "interior", prices: [15, 14, 14, 15, 16, 16] },
-  { id: "deepdash", label: "Dash, console and cupholder detail", note: "Detail brushwork on dash, console, doors and cupholders.", group: "interior", prices: [20, 19, 19, 20, 22, 22] },
+  { id: "dash", label: "Dash, console, doors and cupholders", note: "Wiped and cleaned.", group: "interior", prices: [20, 23, 24, 25, 27, 28] },
+  { id: "mats", label: "Floor mats", note: "Mats pulled out and cleaned.", group: "interior", prices: [10, 11, 12, 13, 13, 14] },
+  { id: "seats", label: "Seat and upholstery clean", note: "Deeper clean of seats and upholstery.", group: "interior", prices: [40, 38, 38, 40, 44, 44] },
+  { id: "interior", label: "Full interior deep clean", note: "Extra time and detail brushwork throughout the cabin.", group: "interior", prices: [30, 29, 29, 30, 33, 33] },
   { id: "trunk", label: "Trunk and cargo area", note: "Vacuumed and wiped. Extra: confirm price.", group: "extras", prices: [15, 15, 20, 20, 20, 20] },
   { id: "petHair", label: "Pet hair removal", note: "Extra time on embedded hair. Extra: confirm price.", group: "extras", prices: [30, 35, 35, 40, 40, 40] },
   { id: "extract", label: "Carpet and upholstery extraction", note: "Hot-water extraction for stains and buildup.", group: "reset", prices: [60, 64, 66, 73, 73, 73] },
@@ -49,9 +49,9 @@ export const detailPlusGroups: { id: DetailPlusTaskGroup; label: string }[] = [
 
 /** One-tap starting points for the task checklist. */
 export const detailPlusPresets = [
-  { id: "maintenance", label: "Maintenance set", tasks: ["wash", "wheels", "windows", "vacuum", "wipe"] },
-  { id: "premium", label: "Premium set", tasks: ["wash", "wheels", "windows", "vacuum", "wipe", "seats", "mats", "deepdash", "sealant"] },
-  { id: "inside", label: "Inside only", tasks: ["vacuum", "wipe", "seats", "mats", "deepdash", "windows"] },
+  { id: "maintenance", label: "Maintenance set", tasks: ["wash", "wheels", "windows", "vacuum", "dash", "mats"] },
+  { id: "premium", label: "Premium set", tasks: ["wash", "wheels", "windows", "vacuum", "dash", "mats", "seats", "interior", "sealant"] },
+  { id: "inside", label: "Inside only", tasks: ["vacuum", "dash", "mats", "windows", "seats", "interior"] },
   { id: "outside", label: "Outside only", tasks: ["wash", "wheels", "windows", "sealant"] },
 ] as const;
 
