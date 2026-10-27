@@ -175,7 +175,9 @@ if (!/dynamicParams\s*=\s*false/.test(postPageSource) || !/generateStaticParams/
 // Interaction-layer guards. The decorative homepage cursor must never intercept clicks,
 // while the three logo/home controls must remain explicitly interactive.
 const css = fs.readFileSync(path.join(ROOT, 'src/app/globals.css'), 'utf8');
-if (!/\.v28-cursor\{[^}]*pointer-events:none/.test(css)) problems.push('custom cursor can intercept pointer events');
+// Only enforced while the cursor element is still rendered somewhere.
+const cursorRendered = fs.readdirSync(path.join(ROOT, 'src'), { recursive: true }).some((f) => /\.(tsx|ts)$/.test(String(f)) && fs.readFileSync(path.join(ROOT, 'src', String(f)), 'utf8').includes('v28-cursor"'));
+if (cursorRendered && !/\.v28-cursor\{[^}]*pointer-events:none/.test(css)) problems.push('custom cursor can intercept pointer events');
 const hardening = css.slice(css.lastIndexOf('/* V95 link interaction hardening */'));
 for (const selector of ['.bk-top-logo', '.q51-top-logo', '.site-shared-logo-control']) {
   if (!hardening.includes(selector)) problems.push(`${selector} is missing from final link interaction hardening`);
