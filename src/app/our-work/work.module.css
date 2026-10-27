@@ -1,0 +1,342 @@
+/* /our-work: homepage-style hero, then the wall, proof spot and crew band. */
+
+.page {
+  --sv-ink: var(--v29-ink, #0b0a09);
+  --sv-paper: var(--v29-paper, #f2ecdf);
+  --sv-red: var(--v29-red, #d56865);
+  --sv-oxblood: var(--ed90-oxblood, #590d07);
+  --sv-line: rgba(16, 14, 12, 0.16);
+  background: var(--sv-paper);
+  color: var(--sv-ink);
+}
+
+.shell,
+.heroInner {
+  width: min(1240px, 100%);
+  margin-inline: auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+.kicker,
+.kickerLight {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.kickerLight {
+  color: var(--sv-red);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.sectionTitle span {
+  display: block;
+  font-size: clamp(3.2rem, 7vw, 7rem);
+}
+
+.sectionTitle span:last-child {
+  color: var(--sv-red);
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  position: relative;
+  min-height: clamp(620px, 92svh, 900px);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--sv-ink);
+  color: var(--sv-paper);
+}
+
+.heroPhoto {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.heroPhoto img {
+  object-position: 62% 58%;
+}
+
+.heroShade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(5, 5, 5, 0.82) 0%, rgba(5, 5, 5, 0.5) 46%, rgba(5, 5, 5, 0.15) 100%),
+    linear-gradient(0deg, rgba(5, 5, 5, 0.7) 0%, rgba(5, 5, 5, 0) 55%);
+}
+
+.heroInner {
+  position: relative;
+  padding-top: clamp(7.5rem, 14vw, 10rem);
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.crumbs {
+  margin-bottom: clamp(2rem, 6vw, 4.5rem);
+  color: rgba(242, 236, 223, 0.75);
+}
+
+.crumbs :global(a),
+.crumbs :global(span),
+.crumbs :global(li) {
+  color: inherit;
+}
+
+.hero .kicker {
+  color: var(--sv-red);
+}
+
+.heroTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 0.78;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.heroTitle span {
+  display: block;
+  font-size: clamp(3.6rem, 10vw, 9.8rem);
+}
+
+.heroTitle span:last-child {
+  color: var(--sv-red);
+}
+
+.heroLede {
+  max-width: 34rem;
+  margin: 1.6rem 0 0;
+  color: rgba(242, 236, 223, 0.8);
+  font-size: clamp(1rem, 1.4vw, 1.12rem);
+  line-height: 1.55;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 2rem;
+}
+
+.heroCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2rem;
+  min-height: 56px;
+  padding: 0 1.45rem;
+  background: var(--sv-paper);
+  color: var(--sv-ink);
+  border: 1px solid var(--sv-paper);
+  font-family: var(--font-display);
+  font-size: 0.84rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-decoration: none;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.heroCta:hover {
+  background: var(--sv-red);
+  border-color: var(--sv-red);
+  color: #fff;
+}
+
+.heroLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid currentColor;
+  color: var(--sv-paper);
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.heroCta:focus-visible,
+.heroLink:focus-visible {
+  outline: 2px solid var(--sv-red);
+  outline-offset: 4px;
+}
+
+.heroFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem clamp(1.5rem, 4vw, 3.5rem);
+  margin: clamp(2.5rem, 6vw, 4rem) 0 0;
+  padding-top: 1.3rem;
+  border-top: 1px solid rgba(242, 236, 223, 0.22);
+}
+
+.heroFacts div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.heroFacts dt {
+  order: 2;
+  color: rgba(242, 236, 223, 0.6);
+  font-family: var(--font-display);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.heroFacts dd {
+  order: 1;
+  margin: 0;
+  font-family: var(--font-numeral);
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  line-height: 1;
+}
+
+
+/* ---------- proof spot (global .work-audit-before-after carries the layout) ---------- */
+
+.proofCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 52px;
+  margin-top: 1.2rem;
+  padding: 0 1.3rem;
+  background: var(--sv-paper);
+  color: var(--sv-ink);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.proofCta:hover {
+  background: var(--sv-red);
+  color: #fff;
+}
+
+.proofCta:focus-visible,
+.inkLink:focus-visible {
+  outline: 2px solid var(--sv-red);
+  outline-offset: 4px;
+}
+
+/* ---------- crew band ---------- */
+
+.crew {
+  padding-block: clamp(4.5rem, 8vw, 8rem);
+  background: var(--sv-paper);
+}
+
+.crewGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.crewPhoto {
+  box-shadow: 10px 10px 0 var(--sv-oxblood);
+}
+
+.crew .kicker {
+  color: var(--sv-oxblood);
+}
+
+.crew .sectionTitle span {
+  font-size: clamp(2.8rem, 5.4vw, 5.4rem);
+}
+
+.body {
+  max-width: 30rem;
+  margin: 1.4rem 0 0;
+  color: rgba(11, 10, 9, 0.74);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.inkLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.6rem;
+  padding: 0.7rem 0;
+  border-bottom: 2px solid currentColor;
+  color: var(--sv-ink);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.inkLink:hover {
+  color: var(--sv-oxblood);
+}
+
+@media (max-width: 860px) {
+  .crewGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .crewPhoto {
+    box-shadow: 6px 6px 0 var(--sv-oxblood);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    min-height: clamp(560px, 88svh, 760px);
+  }
+
+  .heroShade {
+    background:
+      linear-gradient(0deg, rgba(5, 5, 5, 0.88) 0%, rgba(5, 5, 5, 0.55) 55%, rgba(5, 5, 5, 0.35) 100%);
+  }
+
+  .heroActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .heroCta {
+    justify-content: space-between;
+  }
+
+  .heroLink {
+    align-self: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroCta,
+  .proofCta {
+    transition: none;
+  }
+}
