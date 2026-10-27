@@ -5,15 +5,14 @@ import { FaqList } from "@/components/FaqList";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
-import { ServiceConditionGauge } from "@/components/services/ServiceConditionGauge";
-import { ServicesCompareSheet } from "@/components/services/ServicesCompareSheet";
-import { ServicesHeroMedia } from "@/components/services/ServicesHeroMedia";
-import { ServicesMenuBoard } from "@/components/services/ServicesMenuBoard";
+import { ServicesBoard } from "@/components/services/ServicesBoard";
 import { TrackedLink } from "@/components/TrackedLink";
 import { homeFaqs } from "@/data/faqs";
 import { PAINT_PRICING, paintServices } from "@/data/paint";
-import { PRICING, serviceList, vehicles } from "@/data/services";
+import { PRICING, serviceList, startingPrice, vehicles } from "@/data/services";
+import { usd } from "@/lib/format";
 import { pageMetadata, serviceSchema } from "@/lib/seo";
+import styles from "./services.module.css";
 
 export const metadata = pageMetadata({
   title: "Car Detailing Services & Pricing | Every Detail Decatur",
@@ -22,13 +21,25 @@ export const metadata = pageMetadata({
   image: "two-tech-interior-detail",
 });
 
-
+// Anchors other pages link to (nav, journey drawer). The board renders each tier with its service slug.
 const serviceAnchors = {
   menu: { anchor: "all-services" },
   maintenance: { anchor: "maintenance-detail" },
   premium: { anchor: "premium-detail" },
   factoryReset: { anchor: "factory-reset" },
 } as const;
+
+const STEPS = [
+  { title: "Pick the detail", body: "Choose the level and your vehicle size. You see your exact price before you book." },
+  { title: "Choose an open time", body: "The calendar shows real open times for your service and vehicle." },
+  { title: "We bring the shop", body: "The crew arrives with power, water and every product. You just need the car parked with room around it." },
+] as const;
+
+const DETAIL_PLUS_TERMS = [
+  ["Rhythm", "Every 2, 4 or 6 wks"],
+  ["Rate", "Flat per visit"],
+  ["Contract", "None"],
+] as const;
 
 export default function ServicesPage() {
   const schemas = [
@@ -44,51 +55,111 @@ export default function ServicesPage() {
 
   return (
     <>
-      <main className="sv90-page">
-        <section className="sv90-hero" data-header-tone="ink" aria-labelledby="sv90-hero-title">
-          <div className="sv90-shell sv90-hero-inner">
-            <div className="sv90-hero-crumbs"><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
-            <h1 id="sv90-hero-title">THE RIGHT DETAIL.<br /><span>NO GUESSWORK.</span></h1>
-            <div className="sv90-hero-lower">
-              <div>
-                <p>Pick by condition. See the exact price for your vehicle. Book the time that works.</p>
-                <div className="sv90-hero-actions">
-                  <TrackedLink href="/book" event="book_click" params={{ location: "services_hero" }} className="ed90-button ed90-button-ink">BOOK DIRECTLY <span>↗</span></TrackedLink>
-                  <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_hero" }} className="svc-audit-quiz-link">NOT SURE? FIND MY DETAIL <span>↗</span></TrackedLink>
-                </div>
-              </div>
-              <div className="sv90-hero-facts" aria-label="Every Detail service facts">
-                <span><strong><LiveReviewCount /></strong> five-star reviews</span>
-                <span>Power + water included</span>
-                <span>Mobile to your driveway</span>
-              </div>
+      <main className={styles.page}>
+        {/* Hero: homepage-style full-bleed photo, one headline, one decision. */}
+        <section className={styles.hero} data-header-tone="light" aria-labelledby="sv-hero-title">
+          <div className={styles.heroPhoto}><Photo id="classic-car-cockpit" sizes="100vw" fill priority /></div>
+          <div className={styles.heroShade} aria-hidden="true" />
+          <div className={styles.heroInner}>
+            <div className={styles.crumbs}><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
+            <p className={styles.kicker}>Every Detail / Service menu</p>
+            <h1 id="sv-hero-title" className={styles.heroTitle}>
+              <span>Pick your detail.</span>
+              <span>See your price.</span>
+            </h1>
+            <p className={styles.heroLede}>Three levels of clean, priced by vehicle and done in your driveway. We bring the power and the water.</p>
+            <div className={styles.heroActions}>
+              <TrackedLink href="/book" event="book_click" params={{ location: "services_hero" }} className={styles.heroCta}>BOOK DIRECTLY <span aria-hidden="true">↗</span></TrackedLink>
+              <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_hero" }} className={`${styles.heroLink} svc-audit-quiz-link`}>NOT SURE? FIND MY DETAIL <span aria-hidden="true">↗</span></TrackedLink>
             </div>
+            <dl className={styles.heroFacts}>
+              <div><dt>Details from</dt><dd>{usd(startingPrice("maintenance"))}</dd></div>
+              <div><dt>Five-star reviews</dt><dd><LiveReviewCount /></dd></div>
+              <div><dt>Power + water</dt><dd>Included</dd></div>
+            </dl>
           </div>
-          <ServicesHeroMedia />
         </section>
 
         <CurvedTape text="PRICED BY VEHICLE • POWER + WATER INCLUDED • WE COME TO YOU • REAL CREW • " label="Every Detail service promise" />
 
-        <section className="sv90-core" data-header-tone="ink" aria-labelledby="sv90-core-title">
-          <div className="sv90-shell">
-            <ServiceConditionGauge anchors={serviceAnchors} />
+        <ServicesBoard anchorId={serviceAnchors.menu.anchor} />
+
+        {/* Beyond the core details: paint care and the recurring club, priced like the board. */}
+        <section className={styles.beyond} data-header-tone="light" aria-labelledby="sv-beyond-title">
+          <div className={styles.shell}>
+            <div className={styles.sectionHead}>
+              <p className={styles.kickerLight}>After the detail</p>
+              <h2 id="sv-beyond-title" className={styles.sectionTitle}>
+                <span>Protect the paint.</span>
+                <span>Keep it clean.</span>
+              </h2>
+            </div>
+
+            <div className={styles.beyondGrid}>
+              <article className={styles.card}>
+                <div className={styles.cardPhoto}><Photo id="classic-red-wheel" sizes="(max-width: 900px) 92vw, 46vw" fill /></div>
+                <div className={styles.cardBody}>
+                  <p className={styles.cardLabel}>01 / Paint care</p>
+                  <h3 className={styles.cardTitle}>Bring back the gloss.</h3>
+                  <ul className={styles.priceList}>
+                    {paintServices.map((service) => (
+                      <li key={service.id}>
+                        <span>{service.name}</span>
+                        <i aria-hidden="true" />
+                        <strong><small>from</small> {usd(service.startingAt)}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className={styles.cardActions}>
+                    <TrackedLink href="/paint-correction" event="paint_inquiry" params={{ location: "services_beyond" }} className={styles.cardCta}>Paint correction <span aria-hidden="true">↗</span></TrackedLink>
+                    <TrackedLink href="/ceramic" event="paint_inquiry" params={{ location: "services_beyond" }} className={styles.cardLink}>Ceramic coating ↗</TrackedLink>
+                  </div>
+                </div>
+              </article>
+
+              <article className={`${styles.card} ${styles.cardPlus}`}>
+                <div className={styles.cardPhoto}><Photo id="crew-shirt-van" sizes="(max-width: 900px) 92vw, 46vw" fill /></div>
+                <div className={styles.cardBody}>
+                  <p className={styles.cardLabel}>02 / Detail+ service club</p>
+                  <h3 className={styles.cardTitle}>Stay clean. Skip the reset.</h3>
+                  <ul className={styles.priceList}>
+                    {DETAIL_PLUS_TERMS.map(([term, value]) => (
+                      <li key={term}>
+                        <span>{term}</span>
+                        <i aria-hidden="true" />
+                        <strong>{value}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className={styles.cardActions}>
+                    <TrackedLink href="/detailplus#club-builder" event="detailplus_start" params={{ location: "services_beyond" }} className={styles.cardCta}>Build my plan <span aria-hidden="true">↗</span></TrackedLink>
+                    <TrackedLink href="/detailplus" event="detailplus_start" params={{ location: "services_beyond_learn" }} className={styles.cardLink}>How Detail+ works ↗</TrackedLink>
+                  </div>
+                </div>
+              </article>
+            </div>
           </div>
         </section>
 
-        <ServicesMenuBoard anchorId={serviceAnchors.menu.anchor} />
-        <ServicesCompareSheet />
-
-        <section className="sv90-mobile" data-header-tone="light" aria-labelledby="sv90-mobile-title">
-          <div className="sv90-mobile-photo ed90-photo-grade"><Photo id="mobile-rig-open-driveway" sizes="100vw" fill /></div>
-          <div className="sv90-mobile-shade" />
-          <div className="sv90-shell sv90-mobile-copy">
-            <h2 id="sv90-mobile-title" className="ed90-heading">YOUR DRIVEWAY.<br /><span>OUR DETAIL SHOP.</span></h2>
-            <div className="sv90-mobile-checks" aria-label="What Every Detail brings">
-              <span>POWER ✓</span>
-              <span>WATER ✓</span>
-              <span>PRODUCTS + EQUIPMENT ✓</span>
+        {/* How booking works: a real sequence, so it is numbered. */}
+        <section className={styles.steps} data-header-tone="ink" aria-labelledby="sv-steps-title">
+          <div className={styles.shell}>
+            <div className={styles.stepsHead}>
+              <h2 id="sv-steps-title" className={styles.sectionTitle}>
+                <span>Booked in</span>
+                <span>three steps.</span>
+              </h2>
+              <TrackedLink href="/book" event="book_click" params={{ location: "services_steps" }} className={styles.stepsCta}>Choose a time <span aria-hidden="true">↗</span></TrackedLink>
             </div>
-            <TrackedLink href="/book" event="book_click" params={{ location: "services_mobile_strip" }} className="ed90-button ed90-button-paper">CHOOSE A TIME <span>↗</span></TrackedLink>
+            <ol className={styles.stepList}>
+              {STEPS.map((step, index) => (
+                <li key={step.title} className={styles.step}>
+                  <span className={styles.stepNumber}>0{index + 1}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
