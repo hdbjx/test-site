@@ -6,7 +6,6 @@ import { RubberStamp } from "@/components/ed/RubberStamp";
 import { TrackedLink } from "@/components/TrackedLink";
 import { NextOpeningNote } from "@/components/journey/NextOpeningNote";
 import { useJourney } from "@/components/journey/JourneyContext";
-import { SplitFlapPrice } from "@/components/services/SplitFlapPrice";
 import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
 import { PRICING, serviceIds, services, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { track } from "@/lib/analytics";
@@ -15,7 +14,7 @@ import styles from "./ServicesBoard.module.css";
 
 /**
  * The services menu board: one place to compare the three details. Prices follow the
- * vehicle size, and every column lists the same checklist in the same order so the
+ * vehicle size; coverage meters and a "builds on" list show what each tier adds so the
  * differences line up across the board.
  */
 
@@ -127,7 +126,7 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
         </div>
 
         <div className={styles.board}>
-          {serviceIds.map((id, column) => {
+          {serviceIds.map((id) => {
             const service = services[id];
             const tier = TIER[id];
             const quote = PRICING[selected][id];
@@ -152,8 +151,8 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
                 </div>
 
                 <div className={styles.cellPrice}>
+                  <span key={`${id}-${quote.price}`} className={styles.price}>{usd(quote.price)}</span>
                   <span className={styles.priceSize}>{sizeLabel}</span>
-                  <SplitFlapPrice value={usd(quote.price)} rowIndex={column} />
                 </div>
 
                 <p className={styles.cellMeta}>
