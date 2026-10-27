@@ -1,14 +1,18 @@
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { CurvedTape } from "@/components/CurvedTape";
 import { FaqList } from "@/components/FaqList";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
+import { Photo } from "@/components/Photo";
+import { TrackedLink } from "@/components/TrackedLink";
 import { PaintAssessmentTicket } from "@/components/paint/PaintAssessmentTicket";
 import { PaintInspectionLight } from "@/components/paint/PaintInspectionLight";
-import { PaintProcessChapters } from "@/components/paint/PaintProcessChapters";
 import { PaintStagePricing } from "@/components/paint/PaintStagePricing";
 import { paintCorrectionFaqs } from "@/data/faqs";
-import { PAINT_PRICING, paintServices } from "@/data/paint";
+import { PAINT_PRICING, paintDefects, paintProcess, paintServices } from "@/data/paint";
+import { usd } from "@/lib/format";
 import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
+import styles from "./paint.module.css";
 
 export const metadata = pageMetadata({
   title: "Paint Correction in Decatur & Atlanta, GA | Every Detail",
@@ -17,63 +21,162 @@ export const metadata = pageMetadata({
   image: "paint-02",
 });
 
+// Anchors other pages link to: id="paint-options" (pricing) and id="paint-quote" (assessment form).
+const ANCHORS = { pricing: "paint-options", quote: "paint-quote" } as const;
+
 const enhancement = paintServices.find((service) => service.id === "enhancement")!;
 const correction = paintServices.find((service) => service.id === "correction")!;
 const maxEnhancement = Math.max(...Object.values(PAINT_PRICING).map((price) => price.enhancement));
 const maxCorrection = Math.max(...Object.values(PAINT_PRICING).map((price) => price.correction));
 
+const limits = [
+  { name: "Deep scratches", detail: "Scratches through the clear coat can be improved, not always removed. We'll tell you up front." },
+  { name: "Rock chips + dings", detail: "Missing paint and dents aren't a polishing problem. That's touch-up, PPF or body work." },
+  { name: "Future swirls", detail: "Correction is a real change to the clear coat, but poor washing can put swirls back. Careful washing keeps it." },
+];
+
+const steps = paintProcess.filter((step) => step.title !== "Cure and follow up");
+const stepPhotos = ["hq-black-suv-grille", "black-car-pressure-wash", "ceramic-02", "paint-01"];
+const gallery = ["paint-02", "hq-black-suv-finished", "paint-03", "hq-white-ioniq-front", "classic-red-wheel"];
+
 export default function PaintCorrectionPage() {
   return (
-    <main className="pc90-page">
-      <section className="pc90-hero" data-header-tone="light" aria-labelledby="pc90-hero-title">
-        <PaintInspectionLight />
-        <div className="pc90-shell pc90-hero-inner">
-          <div className="pc90-hero-crumbs">
+    <main className={styles.page}>
+      {/* Hero: the real 50/50 test spot is the whole argument. */}
+      <section className={styles.hero} data-header-tone="light" aria-labelledby="pc-hero-title">
+        <PaintInspectionLight className={styles.heroPhoto} />
+        <div className={styles.heroShade} aria-hidden="true" />
+        <div className={styles.heroKey} aria-hidden="true"><span>← Corrected</span><span>As arrived →</span></div>
+        <div className={styles.heroInner}>
+          <div className={styles.crumbs}>
             <Breadcrumbs items={[{ name: "Services", path: "/our-services" }, { name: "Paint Correction", path: "/paint-correction" }]} />
           </div>
-          <p className="pc90-hero-figure">FIG. 01 - REAL 50/50 TEST SPOT · LEFT CORRECTED / RIGHT AS ARRIVED</p>
-          <div className="pc90-hero-copy">
-            <h1 id="pc90-hero-title">BRING THE<br />REFLECTION<br /><span>BACK.</span></h1>
-            <p>Swirls, haze and dull clear coat, corrected to the level your paint actually needs.</p>
-            <a href="#paint-options" className="ed90-button ed90-button-paper">SEE PRICING <span>↓</span></a>
+          <p className={styles.kicker}>Every Detail / Paint correction</p>
+          <h1 id="pc-hero-title" className={styles.heroTitle}>
+            <span>Bring the</span>
+            <span>reflection back.</span>
+          </h1>
+          <p className={styles.heroLede}>Swirls, haze and dull clear coat, polished out in your driveway. We look at the paint in person and tell you which level it actually needs.</p>
+          <div className={styles.heroActions}>
+            <TrackedLink href={`#${ANCHORS.quote}`} event="paint_inquiry" params={{ location: "paint_hero" }} className={styles.heroCta}>GET MY PAINT ASSESSMENT <span aria-hidden="true">↗</span></TrackedLink>
+            <a href={`#${ANCHORS.pricing}`} className={styles.heroLink}>SEE PRICING <span aria-hidden="true">↓</span></a>
           </div>
-          <div className="pc90-hero-proof" aria-label="Every Detail paint care proof">
-            <span><strong><LiveReviewCount /></strong> FIVE-STAR REVIEWS</span>
-            <span>MOBILE PAINT CARE</span>
-            <span>ASSESSED BEFORE WE POLISH</span>
+          <dl className={styles.heroFacts}>
+            <div><dt>Polish from</dt><dd>{usd(enhancement.startingAt)}</dd></div>
+            <div><dt>Five-star reviews</dt><dd><LiveReviewCount /></dd></div>
+            <div><dt>Before we polish</dt><dd>Assessed</dd></div>
+          </dl>
+          <p className={styles.figure}>Fig. 01 / Real 50/50 test spot / left corrected, right as arrived</p>
+        </div>
+      </section>
+
+      <CurvedTape text="ASSESSED IN PERSON • PRICED BY VEHICLE • WE COME TO YOU • REAL 50/50 • " label="Every Detail paint promise" />
+
+      {/* What correction fixes, and what it honestly can't. */}
+      <section className={styles.fixes} data-header-tone="light" aria-labelledby="pc-fixes-title">
+        <div className={styles.shell}>
+          <div className={styles.sectionHead}>
+            <p className={styles.kickerLight}>What it fixes</p>
+            <h2 id="pc-fixes-title" className={styles.sectionTitle}>
+              <span>Remove defects.</span>
+              <span>Don&apos;t cover them.</span>
+            </h2>
+          </div>
+          <div className={styles.fixesGrid}>
+            <div>
+              <p className={styles.listLabel}>Correction takes out</p>
+              <ul className={styles.defects}>
+                {paintDefects.map((defect, index) => (
+                  <li key={defect.name}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <div><strong>{defect.name}</strong><p>{defect.detail}</p></div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className={styles.limitsCol}>
+              <p className={styles.listLabel}>Straight answers</p>
+              <ul className={styles.limits}>
+                {limits.map((limit) => (
+                  <li key={limit.name}><strong>{limit.name}</strong><p>{limit.detail}</p></li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
 
-
-      <section id="paint-options" className="pc90-pricing" data-header-tone="ink" aria-labelledby="pc90-pricing-title">
-        <div className="pc90-shell pc90-pricing-intro">
-          <h2 id="pc90-pricing-title" className="ed90-heading">TWO LEVELS.<br /><span>ONE HONEST CALL.</span></h2>
-          <p>You don't need to diagnose your own paint. We confirm the level in person before any polishing starts.</p>
+      <section id={ANCHORS.pricing} className={styles.pricing} data-header-tone="ink" aria-labelledby="pc-pricing-title">
+        <div className={styles.shell}>
+          <div className={styles.pricingHead}>
+            <div>
+              <p className={styles.kickerDark}>Pricing</p>
+              <h2 id="pc-pricing-title" className={styles.sectionTitle}>
+                <span>Two levels.</span>
+                <span>One honest call.</span>
+              </h2>
+            </div>
+            <p className={styles.note}>You don&apos;t need to diagnose your own paint. Pick a size to see the price, and we confirm the level in person before any polishing starts.</p>
+          </div>
+          <PaintStagePricing />
         </div>
-        <PaintStagePricing />
       </section>
 
-      <section className="pc90-process ed90-halftone-dark" data-header-tone="light" aria-label="Paint correction process">
-        <PaintProcessChapters />
+      <section className={styles.process} data-header-tone="light" aria-labelledby="pc-process-title">
+        <div className={styles.shell}>
+          <div className={styles.sectionHead}>
+            <p className={styles.kickerLight}>How it goes</p>
+            <h2 id="pc-process-title" className={styles.sectionTitle}>
+              <span>Inspect. Wash.</span>
+              <span>Correct. Protect.</span>
+            </h2>
+          </div>
+          <ol className={styles.steps}>
+            {steps.map((step, index) => (
+              <li key={step.title} className={styles.step}>
+                <div className={styles.stepPhoto}><Photo id={stepPhotos[index]} fill sizes="(max-width: 900px) 80vw, 24vw" /></div>
+                <span className={styles.stepNum}>{String(index + 1).padStart(2, "0")}</span>
+                <h3>{step.title === "Coat" ? "Protect (optional)" : step.title}</h3>
+                <p>{step.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
 
+      <section className={styles.gallery} data-header-tone="ink" aria-label="Finished paint from Every Detail jobs">
+        <div className={styles.galleryTrack}>
+          {gallery.map((id) => (
+            <div key={id} className={styles.galleryItem}><Photo id={id} fill sizes="(max-width: 640px) 70vw, 26vw" /></div>
+          ))}
+        </div>
+        <p className={styles.galleryNote}>Finished paint, real Every Detail jobs. <TrackedLink href="/our-work#paint" event="paint_inquiry" params={{ location: "paint_gallery" }}>See more work ↗</TrackedLink></p>
+      </section>
 
-      <section id="paint-quote" className="pc90-quote" data-header-tone="light" aria-labelledby="pc90-quote-title">
-        <div className="pc90-shell pc90-quote-inner">
-          <div className="pc90-quote-heading">
-            <h2 id="pc90-quote-title" className="ed90-heading">LET'S SEE WHAT<br /><span>IT ACTUALLY NEEDS.</span></h2>
-            <p>Tell us what you drive and what bothers you most. We review the paint condition and confirm the right path before work starts.</p>
+      <section id={ANCHORS.quote} className={styles.quote} data-header-tone="light" aria-labelledby="pc-quote-title">
+        <div className={`${styles.shell} ${styles.quoteGrid}`}>
+          <div className={styles.quoteAside}>
+            <p className={styles.kickerLight}>Paint assessment</p>
+            <h2 id="pc-quote-title" className={styles.sectionTitle}>
+              <span>Let&apos;s see what</span>
+              <span>it needs.</span>
+            </h2>
+            <ol className={styles.quoteSteps}>
+              <li><span>01</span>Tell us the car and what bothers you about the paint.</li>
+              <li><span>02</span>We review it and reach out with what we&apos;d recommend.</li>
+              <li><span>03</span>We confirm the level in person before any polishing starts.</li>
+            </ol>
           </div>
           <PaintAssessmentTicket />
         </div>
       </section>
 
-      <section className="pc90-faq" data-header-tone="ink" aria-labelledby="pc90-faq-title">
-        <div className="pc90-shell pc90-faq-grid">
-          <div className="pc90-faq-heading">
-            <h2 id="pc90-faq-title" className="ed90-heading">BEFORE<br /><span>WE POLISH.</span></h2>
-          </div>
+      <section className={styles.faq} data-header-tone="ink" aria-labelledby="pc-faq-title">
+        <div className={`${styles.shell} ${styles.faqGrid}`}>
+          <h2 id="pc-faq-title" className={styles.sectionTitle}>
+            <span>Before</span>
+            <span>we polish.</span>
+          </h2>
           <FaqList faqs={paintCorrectionFaqs} />
         </div>
       </section>

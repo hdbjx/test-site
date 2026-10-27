@@ -1,0 +1,336 @@
+/* Paint correction stage cards: same board language as /our-services. */
+
+.wrap {
+  --pp-ink: var(--v29-ink, #0b0a09);
+  --pp-paper: var(--v29-paper, #f2ecdf);
+  --pp-red: var(--v29-red, #d56865);
+  --pp-oxblood: var(--ed90-oxblood, #590d07);
+  --pp-line: rgba(16, 14, 12, 0.16);
+}
+
+.sizeBar {
+  margin-bottom: 1.3rem;
+}
+
+.sizes {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-inline: -20px;
+  padding-inline: 20px;
+}
+
+.sizes::-webkit-scrollbar {
+  display: none;
+}
+
+.size {
+  flex: none;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1.5px solid var(--pp-ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--pp-ink);
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.size[aria-pressed="true"] {
+  background: var(--pp-ink);
+  color: var(--pp-paper);
+}
+
+.size:focus-visible,
+.vehicleNote button:focus-visible,
+.cta:focus-visible,
+.ceramic:focus-visible {
+  outline: 2px solid var(--pp-red);
+  outline-offset: 3px;
+}
+
+.vehicleNote {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.8rem;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vehicleNote button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--pp-oxblood);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(1.4rem, 2.8vw, 2.4rem);
+  background: #fffaf0;
+  border: 1.5px solid var(--pp-ink);
+  box-shadow: 7px 7px 0 var(--pp-ink);
+}
+
+.featured {
+  background: var(--pp-ink);
+  color: var(--pp-paper);
+  box-shadow: 7px 7px 0 var(--pp-oxblood);
+}
+
+.topline {
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid currentColor;
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.name {
+  margin: 1.2rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin: 1rem 0 0;
+}
+
+.price > span {
+  font-family: var(--font-numeral);
+  font-size: clamp(3.4rem, 5vw, 4.6rem);
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+  animation: ppRoll 0.4s cubic-bezier(0.2, 1.2, 0.35, 1);
+}
+
+.featured .price > span {
+  color: var(--pp-red);
+}
+
+@keyframes ppRoll {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+}
+
+.price small {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.summary {
+  margin: 1rem 0 0;
+  max-width: 30rem;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  opacity: 0.85;
+}
+
+.meters {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1.4rem;
+}
+
+.meter {
+  display: grid;
+  grid-template-columns: 7.2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.meter > span:first-child {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.meterBar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 3px;
+  max-width: 11rem;
+}
+
+.meterBar i {
+  height: 0.62rem;
+  border: 1px solid currentColor;
+  opacity: 0.3;
+}
+
+.meterBar .meterOn {
+  background: currentColor;
+  opacity: 1;
+}
+
+.featured .meterBar .meterOn {
+  border-color: var(--pp-red);
+  background: var(--pp-red);
+}
+
+.includes {
+  display: grid;
+  gap: 0;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.includes li {
+  display: grid;
+  grid-template-columns: 1.2rem minmax(0, 1fr);
+  padding: 0.65rem 0;
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  font-size: 0.95rem;
+}
+
+.includes li::before {
+  content: "+";
+  color: var(--pp-red);
+  font-weight: 900;
+}
+
+.bestFor {
+  margin: 1rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+.cta {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 1rem;
+  min-height: 52px;
+  margin-top: auto;
+  padding: 0 1.3rem;
+  background: var(--pp-ink);
+  color: var(--pp-paper);
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 0.18s ease;
+}
+
+.bestFor + .cta {
+  margin-top: 1.6rem;
+}
+
+.featured .cta {
+  background: var(--pp-paper);
+  color: var(--pp-ink);
+}
+
+.cta:hover,
+.featured .cta:hover {
+  background: var(--pp-red);
+  color: #fff;
+}
+
+/* Ceramic upsell as a single ruled line under the cards. */
+.ceramic {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem 1.6rem;
+  margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  padding: 1.2rem 0;
+  border-top: 2px solid var(--pp-ink);
+  border-bottom: 2px solid var(--pp-ink);
+  color: var(--pp-ink);
+  text-decoration: none;
+}
+
+.ceramicLabel {
+  color: var(--pp-oxblood);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.ceramicText {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.ceramicPrice {
+  font-family: var(--font-numeral);
+  font-size: 2rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ceramic:hover .ceramicPrice {
+  color: var(--pp-oxblood);
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ceramic {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .ceramicLabel {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .price > span {
+    animation: none;
+  }
+
+  .cta {
+    transition: none;
+  }
+}

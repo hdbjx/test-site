@@ -20,6 +20,7 @@ export const metadata = pageMetadata({
 });
 
 const WALL_ANCHOR = "the-wall";
+// Filter deep links handled by WorkWall: id="interior" id="exterior" id="paint" id="crew"
 const photoCount = workWall.filter((item) => item.kind === "photo").length;
 
 export default function OurWorkPage() {
