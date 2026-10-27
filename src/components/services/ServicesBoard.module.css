@@ -9,7 +9,7 @@
   --sb-line: rgba(16, 14, 12, 0.16);
   --sb-card: #f7f2e7;
   --sb-feature: #fbf8f1;
-  --sb-rows: 7;
+  --sb-rows: 8;
   background: var(--sb-paper);
   color: var(--sb-ink);
   padding-block: clamp(5.5rem, 9vw, 9rem) clamp(5rem, 8vw, 8rem);
@@ -304,6 +304,7 @@
 .cellNext,
 .cellMeters,
 .cellIncludes,
+.cellReview,
 .cellCta {
   margin: 0;
   padding-inline: clamp(1rem, 1.8vw, 1.5rem);
@@ -539,6 +540,69 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+/* Customer quote from a Google review that names this tier. */
+.cellReview {
+  margin: 0;
+  padding-top: 1.2rem;
+}
+
+.cellReview blockquote {
+  margin: 0;
+  padding: 0.9rem 0 0 0.95rem;
+  border-top: 1px solid var(--sb-line);
+  border-left: 3px solid var(--sb-red);
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.42;
+}
+
+.cellReview figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0.5rem;
+  margin-top: 0.6rem;
+  padding-left: 1.1rem;
+  color: #6b655d;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.reviewStars {
+  color: var(--sb-red);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+}
+
+/* "Not sure?" prompt above the board. */
+.unsure {
+  margin: 0 0 1rem;
+  color: #5f5952;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.unsure a {
+  margin-left: 0.25rem;
+  color: var(--sb-oxblood);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.unsure a:hover {
+  color: var(--sb-red);
+}
+
+.unsure a:focus-visible {
+  outline: 2px solid var(--sb-red);
+  outline-offset: 3px;
 }
 
 /* ---------- full-details popup (work-order sheet) ---------- */

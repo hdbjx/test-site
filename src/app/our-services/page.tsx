@@ -29,11 +29,6 @@ const serviceAnchors = {
   factoryReset: { anchor: "factory-reset" },
 } as const;
 
-const STEPS = [
-  { title: "Pick the detail", body: "Choose the level and your vehicle size. You see your exact price before you book." },
-  { title: "Choose an open time", body: "The calendar shows real open times for your service and vehicle." },
-  { title: "We bring the shop", body: "The crew arrives with power, water and every product. You just need the car parked with room around it." },
-] as const;
 
 const DETAIL_PLUS_TERMS = [
   ["Rhythm", "Every 2, 4 or 6 wks"],
@@ -58,7 +53,7 @@ export default function ServicesPage() {
       <main className={styles.page}>
         {/* Hero: homepage-style full-bleed photo, one headline, one decision. */}
         <section className={styles.hero} data-header-tone="light" aria-labelledby="sv-hero-title">
-          <div className={styles.heroPhoto}><Photo id="classic-car-cockpit" sizes="100vw" fill priority /></div>
+          <div className={styles.heroPhoto}><Photo id="work-01" sizes="100vw" fill priority /></div>
           <div className={styles.heroShade} aria-hidden="true" />
           <div className={styles.heroInner}>
             <div className={styles.crumbs}><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
@@ -138,28 +133,6 @@ export default function ServicesPage() {
                 </div>
               </article>
             </div>
-          </div>
-        </section>
-
-        {/* How booking works: a real sequence, so it is numbered. */}
-        <section className={styles.steps} data-header-tone="ink" aria-labelledby="sv-steps-title">
-          <div className={styles.shell}>
-            <div className={styles.stepsHead}>
-              <h2 id="sv-steps-title" className={styles.sectionTitle}>
-                <span>Booked in</span>
-                <span>three steps.</span>
-              </h2>
-              <TrackedLink href="/book" event="book_click" params={{ location: "services_steps" }} className={styles.stepsCta}>Choose a time <span aria-hidden="true">↗</span></TrackedLink>
-            </div>
-            <ol className={styles.stepList}>
-              {STEPS.map((step, index) => (
-                <li key={step.title} className={styles.step}>
-                  <span className={styles.stepNumber}>0{index + 1}</span>
-                  <h3>{step.title}</h3>
-                  <p>{step.body}</p>
-                </li>
-              ))}
-            </ol>
           </div>
         </section>
 

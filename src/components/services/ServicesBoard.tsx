@@ -10,6 +10,7 @@ import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContex
 import { PRICING, serviceIds, services, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { ADDON_LABELS, ADDON_PRICES, addonIds, isAddonIncludedInService, purchasableAddonIds } from "@/data/quoteExtras";
 import { serviceDetails } from "@/data/serviceDetails";
+import { serviceReviews } from "@/data/reviews";
 import { track } from "@/lib/analytics";
 import { durationShort, usd } from "@/lib/format";
 import styles from "./ServicesBoard.module.css";
@@ -111,6 +112,13 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
           </div>
         </header>
 
+        <p className={styles.unsure}>
+          Not sure which one?{" "}
+          <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "services_board_unsure" }}>
+            Answer 4 quick questions <span aria-hidden="true">↗</span>
+          </TrackedLink>
+        </p>
+
         <div className={styles.tierTabs} role="tablist" aria-label="Choose a detail">
           {serviceIds.map((id) => (
             <button
@@ -201,6 +209,14 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
                     See everything included <span aria-hidden="true">+</span>
                   </button>
                 </div>
+
+                <figure className={styles.cellReview}>
+                  <blockquote>“{serviceReviews[id].quote}”</blockquote>
+                  <figcaption>
+                    <span className={styles.reviewStars} aria-label="5 out of 5 stars">★★★★★</span>
+                    {serviceReviews[id].author} · Google review
+                  </figcaption>
+                </figure>
 
                 <div className={styles.cellCta}>
                   <TrackedLink

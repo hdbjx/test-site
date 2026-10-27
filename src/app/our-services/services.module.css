@@ -71,7 +71,7 @@
 }
 
 .heroPhoto img {
-  object-position: 50% 62%;
+  object-position: 62% 58%;
 }
 
 .heroShade {
@@ -382,112 +382,16 @@
 }
 
 .cardCta:focus-visible,
-.cardLink:focus-visible,
-.stepsCta:focus-visible {
+.cardLink:focus-visible {
   outline: 2px solid var(--sv-red);
   outline-offset: 3px;
-}
-
-/* ---------- booking steps ---------- */
-
-.steps {
-  background: var(--sv-paper);
-  padding-block: clamp(5.5rem, 9vw, 8.5rem) clamp(4rem, 7vw, 6.5rem);
-  border-bottom: 1px solid var(--sv-line);
-}
-
-.stepsHead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1.5rem 2rem;
-  margin-bottom: clamp(2.2rem, 4vw, 3.2rem);
-}
-
-.stepsCta {
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-  min-height: 54px;
-  padding: 0 1.3rem;
-  background: var(--sv-ink);
-  color: var(--sv-paper);
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-decoration: none;
-  text-transform: uppercase;
-  box-shadow: 4px 4px 0 var(--sv-red);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.stepsCta:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 5px 5px 0 var(--sv-red);
-}
-
-.stepList {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border: 1.5px solid var(--sv-ink);
-}
-
-.step {
-  position: relative;
-  min-width: 0;
-  padding: clamp(1.3rem, 2.4vw, 2rem);
-  border-left: 1.5px dashed rgba(16, 14, 12, 0.35);
-}
-
-.step:first-child {
-  border-left: 0;
-}
-
-.stepNumber {
-  display: block;
-  color: var(--sv-red);
-  font-family: var(--font-numeral);
-  font-size: clamp(3rem, 4.4vw, 4.2rem);
-  line-height: 0.9;
-}
-
-.step h3 {
-  margin: 0.9rem 0 0;
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-}
-
-.step p {
-  max-width: 30ch;
-  margin: 0.55rem 0 0;
-  color: #5f5952;
-  font-size: 0.95rem;
-  line-height: 1.5;
 }
 
 /* ---------- phone ---------- */
 
 @media (max-width: 900px) {
-  .beyondGrid,
-  .stepList {
+  .beyondGrid {
     grid-template-columns: 1fr;
-  }
-
-  .step {
-    border-left: 0;
-    border-top: 1.5px dashed rgba(16, 14, 12, 0.35);
-  }
-
-  .step:first-child {
-    border-top: 0;
   }
 }
 
@@ -518,8 +422,7 @@
 @media (prefers-reduced-motion: reduce) {
   .cardPhoto img,
   .heroCta,
-  .cardCta,
-  .stepsCta {
+  .cardCta {
     transition: none;
   }
 

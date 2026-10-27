@@ -23,3 +23,23 @@ export const reviews: Review[] = [
     topics: ["quality", "professional"],
   },
 ];
+
+/**
+ * One review per detail tier on /our-services. Each comes from a customer who named
+ * that service in their Google review; the quote is an exact sentence from it.
+ * Kept separate from `reviews` so ReviewGrid and the homepage are unaffected.
+ */
+export const serviceReviews: Record<"maintenance" | "premium" | "factoryReset", { author: string; quote: string }> = {
+  maintenance: {
+    author: "Caroline O.",
+    quote: "My Mini Cooper looks spotless, and they got all the small areas that usually get missed.",
+  },
+  premium: {
+    author: "Steve W.",
+    quote: "The price was reasonable, and both cars have never looked better since they were new.",
+  },
+  factoryReset: {
+    author: "Andrea B.",
+    quote: "They completed the factory reset package on our 9 year old truck, and the results are impressive. It looks and smells brand new again.",
+  },
+};
