@@ -24,7 +24,8 @@ const privacy = read('src/app/privacy-policy/page.tsx');
 if (!live.includes('const PACKAGE_ORDER: ServiceId[] = ["maintenance", "premium", "factoryReset"]')) failures.push('booking tier order');
 if (!live.includes('<div className="bk-security-fields">')) failures.push('booking security controls must be wrapped');
 if (!css.includes('.bk-security-fields{display:contents}')) failures.push('booking security wrapper must not become a grid item');
-if (!live.includes('Pick a service to continue')) failures.push('booking disabled CTA guidance');
+// Disabled step-1 CTA must tell people what to do (shortened so the price label beside it isn't cut off on phones).
+if (!live.includes('"Pick a detail"') && !live.includes('Pick a service to continue')) failures.push('booking disabled CTA guidance');
 if (!live.includes('services.maintenance.includes') || !home.includes('services.maintenance.includes')) failures.push('detail inclusions must share the canonical service data');
 if (header.includes('site-desktop-nav')) failures.push('unexpected desktop navigation');
 if (header.includes('is-scrolled')) failures.push('unexpected full-width scrolled header surface');
