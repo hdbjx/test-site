@@ -1,6 +1,7 @@
 "use client";
 
 import { PaintLeadForm } from "@/components/PaintLeadForm";
+import styles from "./PaintAssessmentTicket.module.css";
 
 function ticketNumber() {
   return new Intl.DateTimeFormat("en-US", {
@@ -12,7 +13,7 @@ function ticketNumber() {
 
 export function PaintAssessmentTicket() {
   return (
-    <div className="pc90-ticket">
+    <div className={`pc90-ticket ${styles.ticket}`}>
       <div className="pc90-ticket-head">
         <span>EVERY DETAIL · PAINT ASSESSMENT</span>
         <strong suppressHydrationWarning>Nº {ticketNumber()}</strong>

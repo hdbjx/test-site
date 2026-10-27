@@ -349,9 +349,9 @@ export const images: SiteImage[] = [
   },
 
   {
-    id: "paint-03",
-    file: "/images/classic-red-car.webp",
-    alt: "Glossy red classic car paint finish",
+    id: "paint-polisher",
+    file: "/images/paint-correction-polisher.webp",
+    alt: "Every Detail technician machine polishing black paint with a rotary polisher",
     w: 2,
     h: 3,
     category: "paint",

@@ -37,7 +37,7 @@ export const workWall: WorkItem[] = [
   { kind: "photo", id: "hq-white-ioniq-front", caption: "White Hyundai Ioniq, finished", tags: ["exterior"] },
   { kind: "review", author: "leigh P.", quote: "I had no idea how dirty my wheels were until they cleaned them to a shine. All the dog hair is gone!", tags: ["exterior", "interior"] },
   { kind: "photo", id: "classic-car-cockpit", caption: "Classic cockpit, rig outside", tags: ["interior"] },
-  { kind: "photo", id: "paint-03", caption: "Classic red, glossed up", tags: ["paint"] },
+  { kind: "photo", id: "paint-polisher", caption: "Machine polishing black paint", tags: ["paint", "crew"] },
   { kind: "review", author: "Joy F.", quote: "It is a 2017 Tahoe that is used a lot to transport kids, pets, and has made many a long road trip, and Every Detail has restored it to like new condition.", tags: ["interior", "exterior"] },
   { kind: "photo", id: "tesla-foam-wash", caption: "Foam wash, Tesla", tags: ["exterior"] },
   { kind: "photo", id: "work-08", caption: "Clean cabin, front to back", tags: ["interior"] },

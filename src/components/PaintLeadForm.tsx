@@ -200,7 +200,7 @@ export function PaintLeadForm({ kind, hideIntro = false }: Props) {
         <label><span>{kind === "paint-correction" ? "Anything you want us to know?" : "Anything else we should know?"} <em>Optional</em></span><textarea name="notes" rows={4} placeholder={kind === "paint-correction" ? "Tell us where you notice it most, or what you want the paint to look like again." : "Tell us how you use the car, what you want from the coating, or anything else that would help."} /></label>
         {status === "error" && <p className="paint-lead-error" role="alert">{error}</p>}
         <button className="btn btn-primary paint-lead-submit" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : copy.submit}</button>
-        <p className="paint-lead-fine">We’ll review the paint condition and confirm the prep your car needs before coating.</p>
+        <p className="paint-lead-fine">{kind === "paint-correction" ? "We’ll review it and confirm the right level in person before any polishing starts." : "We’ll review the paint condition and confirm the prep your car needs before coating."}</p>
       </form>
     </div>
   );

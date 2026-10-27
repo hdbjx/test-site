@@ -37,16 +37,15 @@ const limits = [
 
 const steps = paintProcess.filter((step) => step.title !== "Cure and follow up");
 const stepPhotos = ["hq-black-suv-grille", "black-car-pressure-wash", "ceramic-02", "paint-01"];
-const gallery = ["paint-02", "hq-black-suv-finished", "paint-03", "hq-white-ioniq-front", "classic-red-wheel"];
+const gallery = ["paint-02", "hq-black-suv-finished", "hq-white-ioniq-front", "classic-red-wheel", "hq-white-suv-finished"];
 
 export default function PaintCorrectionPage() {
   return (
     <main className={styles.page}>
-      {/* Hero: the real 50/50 test spot is the whole argument. */}
+      {/* Hero: a technician machine polishing; the 50/50 proof sits in the next section. */}
       <section className={styles.hero} data-header-tone="light" aria-labelledby="pc-hero-title">
-        <PaintInspectionLight className={styles.heroPhoto} />
+        <div className={styles.heroPhoto}><Photo id="paint-polisher" sizes="(max-width: 900px) 100vw, 50vw" fill priority /></div>
         <div className={styles.heroShade} aria-hidden="true" />
-        <div className={styles.heroKey} aria-hidden="true"><span>← Corrected</span><span>As arrived →</span></div>
         <div className={styles.heroInner}>
           <div className={styles.crumbs}>
             <Breadcrumbs items={[{ name: "Services", path: "/our-services" }, { name: "Paint Correction", path: "/paint-correction" }]} />
@@ -66,7 +65,6 @@ export default function PaintCorrectionPage() {
             <div><dt>Five-star reviews</dt><dd><LiveReviewCount /></dd></div>
             <div><dt>Before we polish</dt><dd>Assessed</dd></div>
           </dl>
-          <p className={styles.figure}>Fig. 01 / Real 50/50 test spot / left corrected, right as arrived</p>
         </div>
       </section>
 
@@ -82,7 +80,11 @@ export default function PaintCorrectionPage() {
               <span>Don&apos;t cover them.</span>
             </h2>
           </div>
-          <div className={styles.fixesGrid}>
+          <div className={styles.proofGrid}>
+            <figure className={styles.proof}>
+              <PaintInspectionLight className={styles.proofPhoto} />
+              <figcaption><span>← Corrected</span><span>As arrived →</span></figcaption>
+            </figure>
             <div>
               <p className={styles.listLabel}>Correction takes out</p>
               <ul className={styles.defects}>
@@ -94,14 +96,14 @@ export default function PaintCorrectionPage() {
                 ))}
               </ul>
             </div>
-            <div className={styles.limitsCol}>
-              <p className={styles.listLabel}>Straight answers</p>
-              <ul className={styles.limits}>
-                {limits.map((limit) => (
-                  <li key={limit.name}><strong>{limit.name}</strong><p>{limit.detail}</p></li>
-                ))}
-              </ul>
-            </div>
+          </div>
+          <div className={styles.limitsCol}>
+            <p className={styles.listLabel}>Straight answers</p>
+            <ul className={styles.limits}>
+              {limits.map((limit) => (
+                <li key={limit.name}><strong>{limit.name}</strong><p>{limit.detail}</p></li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>

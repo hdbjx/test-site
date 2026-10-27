@@ -1,0 +1,64 @@
+/* Tidies the shared PaintLeadForm inside the paint-correction ticket.
+   Older global rules (margins, card styles) leak in, so this resets them in one place. */
+
+.ticket :global(.paint-lead-form) {
+  gap: 1.4rem;
+  margin-top: 1.4rem;
+}
+
+.ticket :global(.paint-field-grid) {
+  gap: 1.4rem;
+}
+
+.ticket :global(.paint-choice-field legend) {
+  margin-bottom: 0.7rem;
+  padding: 0;
+}
+
+.ticket :global(.paint-choice-grid) {
+  margin-top: 0;
+}
+
+.ticket :global(.paint-site-vehicle) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding: 0.85rem 0;
+  border: 0;
+  border-bottom: 1.5px solid var(--v29-ink, #0b0a09);
+  background: transparent;
+  box-shadow: none;
+}
+
+.ticket :global(.paint-site-vehicle strong) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.ticket :global(.paint-site-vehicle button) {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: baseline;
+  padding: 0;
+}
+
+.ticket :global(.paint-lead-form textarea) {
+  min-height: 84px;
+}
+
+.ticket :global(.paint-lead-submit) {
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 640px) {
+  .ticket :global(.paint-field-grid) {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+
+  .ticket :global(.paint-choice-grid) {
+    grid-template-columns: 1fr;
+  }
+}

@@ -71,7 +71,7 @@
 }
 
 .heroPhoto img {
-  object-position: 60% 50%;
+  object-position: 50% 40%;
 }
 
 .heroShade {
@@ -225,36 +225,8 @@
   text-transform: uppercase;
 }
 
-.heroKey {
-  position: absolute;
-  top: clamp(6.5rem, 12vw, 8.5rem);
-  right: max(20px, calc((100vw - 1240px) / 2 + 20px));
-  display: flex;
-  gap: 0.5rem;
-  z-index: 1;
-}
 
-.heroKey span {
-  padding: 0.4rem 0.65rem;
-  border: 1px solid rgba(242, 236, 223, 0.5);
-  background: rgba(5, 5, 5, 0.55);
-  color: var(--sv-paper);
-  font-family: var(--font-display);
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
 
-.figure {
-  margin: 1rem 0 0;
-  color: rgba(242, 236, 223, 0.5);
-  font-family: var(--font-display);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
 
 .note {
   max-width: 26rem;
@@ -262,6 +234,26 @@
   color: rgba(11, 10, 9, 0.72);
   font-size: 1.02rem;
   line-height: 1.55;
+}
+
+/* Portrait hero photo: right half on desktop, full-bleed on phones. */
+@media (min-width: 901px) {
+  .heroPhoto {
+    left: auto;
+    width: 46%;
+  }
+
+  .heroShade {
+    background: linear-gradient(90deg, var(--sv-ink) 0%, var(--sv-ink) 54%, rgba(11, 10, 9, 0.6) 62%, rgba(11, 10, 9, 0) 78%);
+  }
+
+  .heroInner > *:not(.crumbs) {
+    max-width: 52%;
+  }
+
+  .heroTitle span {
+    font-size: clamp(3.6rem, 7.6vw, 7.6rem);
+  }
 }
 
 /* ---------- fixes ---------- */
@@ -272,10 +264,40 @@
   color: var(--sv-paper);
 }
 
-.fixesGrid {
+.proofGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.proof {
+  position: relative;
+  margin: 0;
+  box-shadow: 10px 10px 0 var(--sv-oxblood);
+}
+
+.proofPhoto {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #050505;
+}
+
+.proof figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.7rem 0.85rem;
+  background: rgba(0, 0, 0, 0.72);
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .listLabel {
@@ -329,17 +351,17 @@
 }
 
 .limitsCol {
-  align-self: start;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
   padding: clamp(1.4rem, 2.6vw, 2rem);
   border: 1px solid rgba(242, 236, 223, 0.2);
   border-top: 4px solid var(--sv-red);
   background: #171513;
 }
 
-.limits li + li {
-  margin-top: 1.3rem;
-  padding-top: 1.3rem;
-  border-top: 1px dashed rgba(242, 236, 223, 0.22);
+.limits {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.3rem 2rem;
 }
 
 .limits strong {
@@ -537,7 +559,8 @@
 }
 
 @media (max-width: 900px) {
-  .fixesGrid,
+  .proofGrid,
+  .limits,
   .pricingHead,
   .quoteGrid,
   .faqGrid {
@@ -559,9 +582,6 @@
       linear-gradient(0deg, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.5) 55%, rgba(5, 5, 5, 0.2) 100%);
   }
 
-  .heroKey {
-    display: none;
-  }
 
   .heroActions {
     align-items: stretch;
