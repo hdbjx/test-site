@@ -11,12 +11,14 @@ type CurvedTapeProps = {
   /** flip direction with scroll direction */
   followScroll?: boolean;
   label?: string;
+  /** colour of the section right below the tape, so the fill under the curve blends into it */
+  surface?: "paper" | "ink";
 };
 
 // One curve drives everything: the paper fill below it, the red ribbon on it, and the text riding it.
 const CURVE = "M -400 172 C 120 214, 520 222, 820 156 S 1340 78, 1840 112";
 
-export function CurvedTape({ text, speed = 70, boost = 0.9, followScroll = true, label }: CurvedTapeProps) {
+export function CurvedTape({ text, speed = 70, boost = 0.9, followScroll = true, label, surface = "paper" }: CurvedTapeProps) {
   const rawId = useId();
   const pathId = `ed-tape-path-${rawId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const svgRef = useRef<SVGSVGElement>(null);
@@ -103,7 +105,7 @@ export function CurvedTape({ text, speed = 70, boost = 0.9, followScroll = true,
         aria-hidden="true"
         focusable="false"
       >
-        <path className="ed-tape-paper" d={`${CURVE} L 1840 400 L -400 400 Z`} />
+        <path className="ed-tape-paper" d={`${CURVE} L 1840 400 L -400 400 Z`} style={surface === "ink" ? { fill: "var(--v29-ink, #0b0a09)" } : undefined} />
         <path id={pathId} className="ed-tape-line" d={CURVE} />
         <text className="ed-tape-text" dy="0.36em">
           <textPath ref={tpRef} href={`#${pathId}`} />

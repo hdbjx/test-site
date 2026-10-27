@@ -68,7 +68,7 @@ export default function PaintCorrectionPage() {
         </div>
       </section>
 
-      <CurvedTape text="ASSESSED IN PERSON • PRICED BY VEHICLE • WE COME TO YOU • REAL 50/50 • " label="Every Detail paint promise" />
+      <CurvedTape text="ASSESSED IN PERSON • PRICED BY VEHICLE • WE COME TO YOU • REAL 50/50 • " label="Every Detail paint promise" surface="ink" />
 
       {/* What correction fixes, and what it honestly can't. */}
       <section className={styles.fixes} data-header-tone="light" aria-labelledby="pc-fixes-title">
