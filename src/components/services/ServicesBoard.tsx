@@ -25,20 +25,16 @@ const TIER: Record<ServiceId, { number: string; condition: string; photo: string
   factoryReset: { number: "03", condition: "Heavy buildup or neglect", photo: "hq-technician-trunk-detail" },
 };
 
-const ALL: ServiceId[] = ["maintenance", "premium", "factoryReset"];
-const DEEP: ServiceId[] = ["premium", "factoryReset"];
-const RESET: ServiceId[] = ["factoryReset"];
-
-const CHECKLIST: { label: string; tiers: ServiceId[] }[] = [
-  { label: "Exterior hand wash and dry", tiers: ALL },
-  { label: "Wheels and windows cleaned", tiers: ALL },
-  { label: "Interior vacuum and wipe-down", tiers: ALL },
-  { label: "Full interior deep clean: seats, mats, dash, console, doors", tiers: DEEP },
-  { label: "Spray sealant paint protection", tiers: DEEP },
-  { label: "Carpet and upholstery extraction", tiers: RESET },
-  { label: "Paint decontamination and clay", tiers: RESET },
-  { label: "Every crevice, seam and vent", tiers: RESET },
+/*
+ * Coverage meters: how deep each detail goes in three areas, out of 5. Paint tops out
+ * at 3 on purpose: correction and ceramic are separate services.
+ */
+const METERS: { label: string; levels: Record<ServiceId, number> }[] = [
+  { label: "Exterior", levels: { maintenance: 3, premium: 4, factoryReset: 5 } },
+  { label: "Interior", levels: { maintenance: 2, premium: 4, factoryReset: 5 } },
+  { label: "Paint", levels: { maintenance: 0, premium: 2, factoryReset: 3 } },
 ];
+const METER_STEPS = 5;
 
 export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string }) {
   const { vehicle: siteVehicle, openPicker, selectVehicle } = useVehicle();
@@ -170,16 +166,33 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
 
                 <p className={styles.cellFor}><span>Best for</span>{service.whoFor}</p>
 
-                {CHECKLIST.map((item) => {
-                  const included = item.tiers.includes(id);
-                  return (
-                    <p key={item.label} className={`${styles.cellCheck} ${included ? styles.yes : styles.no}`}>
-                      <span className={styles.mark} aria-hidden="true">{included ? "✓" : "—"}</span>
-                      <span>{item.label}</span>
-                      <span className="sr-only">{included ? "included" : "not included"}</span>
-                    </p>
-                  );
-                })}
+                <div className={styles.cellMeters} aria-label={`Coverage: ${METERS.map((m) => `${m.label.toLowerCase()} ${m.levels[id]} of ${METER_STEPS}`).join(", ")}`}>
+                  {METERS.map((meter) => (
+                    <div key={meter.label} className={styles.meter} aria-hidden="true">
+                      <span className={styles.meterLabel}>{meter.label}</span>
+                      <span className={styles.meterBar}>
+                        {Array.from({ length: METER_STEPS }, (_, step) => (
+                          <i key={step} className={step < meter.levels[id] ? styles.meterOn : undefined} />
+                        ))}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className={styles.cellIncludes}>
+                  {service.includes[0]?.startsWith("Everything in") ? (
+                    <>
+                      <p className={styles.buildsOn}>{service.includes[0]}, <em>plus</em></p>
+                      <ul className={styles.adds}>
+                        {service.includes.slice(1).map((item) => <li key={item}>{item}</li>)}
+                      </ul>
+                    </>
+                  ) : (
+                    <ul className={styles.basics}>
+                      {service.includes.map((item) => <li key={item}>{item}</li>)}
+                    </ul>
+                  )}
+                </div>
 
                 <p className={styles.cellCadence}>{service.cadence}</p>
 
