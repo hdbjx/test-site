@@ -1,4 +1,5 @@
 import { quoteDetailPlus } from "@/lib/detailPlusPricing";
+import { getDetailPlusCatalog } from "@/lib/detailPlusCatalog";
 import { NextResponse } from "next/server";
 import { sendLeadEmails } from "@/lib/email";
 import { upsertWebsiteContact } from "@/lib/website-contact";
@@ -152,9 +153,13 @@ export async function POST(req: Request) {
     );
   }
 
+  let detailPlusMembershipId: string | null = null;
   if (type === "detailplus") {
-    // Never trust the price the browser shows. Rebuild it from the price sheet.
-    const quote = quoteDetailPlus(fields.vehicleId as never, fields.frequencyId ?? "", (fields.taskIds ?? "").split(",").filter(Boolean));
+    // Never trust the price the browser shows. Rebuild it from the live price sheet
+    // in Supabase (the same one the Team App and Van HQ use); fall back to the copy
+    // in the codebase only if the database can't be reached.
+    const catalog = await getDetailPlusCatalog();
+    const quote = quoteDetailPlus(fields.vehicleId as never, fields.frequencyId ?? "", (fields.taskIds ?? "").split(",").filter(Boolean), catalog);
     if (!quote) {
       return NextResponse.json(
         { ok: false, error: "Please pick at least one thing to have cleaned.", missing: ["taskIds"] },
@@ -204,8 +209,36 @@ export async function POST(req: Request) {
     );
   }
 
+  // Detail+ signups become a Pending plan with the exact tasks and rhythm, so the
+  // team can review, edit and activate it in the Team App. The database
+  // re-prices it; if that fails the request still goes through by email.
+  if (type === "detailplus" && clientId) {
+    try {
+      const { data, error } = await supabaseAdmin().rpc("website_start_detail_plus_plan", {
+        p_client_id: clientId,
+        p_vehicle_size: fields.vehicleId,
+        p_rhythm_id: fields.frequencyId,
+        p_task_ids: (fields.taskIds ?? "").split(",").filter(Boolean),
+        p_vehicle_text: nullable(fields.vehicle),
+        p_notes: nullable(fields.notes),
+        p_vehicle_id: null,
+        p_source: "website",
+      });
+      if (error) throw error;
+      const saved = data as { id?: string; quote?: { perVisit?: number } } | null;
+      detailPlusMembershipId = saved?.id ?? null;
+      const dbPrice = Number(saved?.quote?.perVisit);
+      if (Number.isFinite(dbPrice) && String(dbPrice) !== fields.quotedPerVisit) {
+        console.warn("[lead] Detail+ price differs between site and database", fields.quotedPerVisit, dbPrice);
+        fields.quotedPerVisit = String(dbPrice);
+        fields.quoteDisplay = `$${dbPrice} per visit (confirmed by the price sheet)`;
+      }
+    } catch (planError) {
+      console.error("[lead] Detail+ plan save failed", planError);
+    }
+  }
+
   // Quote requests also enter the Supabase CRM immediately.
-  // Booking and Detail+ behavior remains unchanged in this route.
   if (type === "quote") {
     try {
       console.info("[lead] saving quote to CRM");
@@ -245,5 +278,5 @@ export async function POST(req: Request) {
     );
   }
 
-  return NextResponse.json({ ok: true, crmLeadId, clientId });
+  return NextResponse.json({ ok: true, crmLeadId, clientId, detailPlusMembershipId });
 }

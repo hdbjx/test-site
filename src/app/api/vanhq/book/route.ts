@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PRICING, services, isVehicleId, isServiceId, vehicleLabel, type VehicleId } from "@/data/services";
 import { sendBookingEmails } from "@/lib/email";
+import { quoteDetailPlus } from "@/lib/detailPlusPricing";
+import { getDetailPlusCatalog } from "@/lib/detailPlusCatalog";
 
 export const dynamic = "force-dynamic";
 
@@ -67,12 +69,37 @@ export async function POST(req: Request) {
   let minutes = 0;
   let crew = 0;
   let linePrice = Number.isFinite(requestedPrice) && requestedPrice >= 0 ? requestedPrice : 0;
+  let detailPlusPlan: { rhythmId: string; taskIds: string[] } | null = null;
 
   if (mode === "detailplus") {
     if (!isVehicleId(vehicle)) return json({ ok:false, error:"Choose the Detail+ vehicle size." }, { status:422 });
     serviceName = str(body.serviceName, 160) || "Detail+ Visit";
     minutes = 75;
     crew = 2;
+    // Detail+ v2: Van HQ sends the rhythm and tasks; the price comes from the
+    // shared price sheet, never from the iPad. Older Van HQ builds that only
+    // send a price keep working until every iPad has updated.
+    const rhythmId = str(body.dpRhythm, 40);
+    const taskIds = Array.isArray(body.dpTasks) ? body.dpTasks.filter((t): t is string => typeof t === "string").slice(0, 30) : [];
+    // A member's next visit is charged at the rate on their plan (which may be
+    // a custom price), whatever the iPad sends.
+    const onFile = await admin.from("detail_plus_memberships")
+      .select("vehicle_id,plan,service_price,status")
+      .eq("client_id", source.data.client_id)
+      .in("status", ["Active", "Paused", "active", "paused"])
+      .order("updated_at", { ascending: false });
+    const plans = onFile.error ? [] : onFile.data ?? [];
+    const member = plans.find((m) => vehicleId && m.vehicle_id === vehicleId) ?? plans.find((m) => !m.vehicle_id) ?? null;
+    if (member && member.service_price != null) {
+      linePrice = Number(member.service_price);
+      if (member.plan) serviceName = `Detail+ · ${String(member.plan).slice(0, 140)}`;
+    } else if (rhythmId || taskIds.length) {
+      const catalog = await getDetailPlusCatalog();
+      const quote = quoteDetailPlus(vehicle as VehicleId, rhythmId, taskIds, catalog);
+      if (!quote) return json({ ok:false, error:"Pick a Detail+ rhythm and at least one task." }, { status:422 });
+      linePrice = quote.perVisit;
+      detailPlusPlan = { rhythmId, taskIds: quote.taskIds };
+    }
   } else {
     const service = str(body.service, 40);
     if (!isVehicleId(vehicle) || !isServiceId(service)) return json({ ok:false, error:"Choose a supported vehicle and service." }, { status:422 });
@@ -113,6 +140,22 @@ export async function POST(req: Request) {
     if (booked.error.message.includes("slot_unavailable")) return json({ ok:false, error:"That time was just taken. Pick another.", code:"slot_taken" }, { status:409 });
     console.error("[vanhq/book]", booked.error);
     return json({ ok:false, error:"We couldn't create that appointment." }, { status:500 });
+  }
+
+  if (detailPlusPlan) {
+    // The crew's Detail+ signup becomes a Pending plan on this vehicle for a
+    // manager to confirm in the Team App. Never fails the booking.
+    const plan = await admin.rpc("website_start_detail_plus_plan", {
+      p_client_id: source.data.client_id,
+      p_vehicle_size: vehicle,
+      p_rhythm_id: detailPlusPlan.rhythmId,
+      p_task_ids: detailPlusPlan.taskIds,
+      p_vehicle_text: label,
+      p_notes: null,
+      p_vehicle_id: vehicleId,
+      p_source: "van_hq",
+    });
+    if (plan.error) console.error("[vanhq/book] Detail+ plan", plan.error);
   }
 
   const crmMatch = await admin.rpc("crm_mark_booked_by_identity", {

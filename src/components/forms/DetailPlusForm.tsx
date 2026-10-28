@@ -3,8 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
 import { useJourney } from "@/components/journey/JourneyContext";
-import { detailPlusGroups, detailPlusMinimum, detailPlusPresets, detailPlusTasks, frequencies } from "@/data/detailplus";
-import { quoteDetailPlus, detailPlusTaskPrice } from "@/lib/detailPlusPricing";
+import { quoteDetailPlus, detailPlusTaskPrice, staticDetailPlusCatalog, type DetailPlusCatalog } from "@/lib/detailPlusPricing";
 import { vehicles, type VehicleId } from "@/data/services";
 import { usd } from "@/lib/format";
 import { site } from "@/data/site";
@@ -13,11 +12,10 @@ import { submitLead } from "@/lib/submit";
 import { FormError, formToObject, Honeypot, Success, TextArea, TextField } from "./parts";
 import { TurnstileField } from "./TurnstileField";
 
-const cadenceFor = (id: string) => frequencies.find((frequency) => frequency.id === id) ?? frequencies[3];
-
-const defaultTasks: string[] = [...detailPlusPresets[0].tasks];
-
-export function DetailPlusForm() {
+export function DetailPlusForm({ catalog = staticDetailPlusCatalog }: { catalog?: DetailPlusCatalog }) {
+  const { tasks: detailPlusTasks, groups: detailPlusGroups, presets: detailPlusPresets, rhythms: frequencies, minimum: detailPlusMinimum } = catalog;
+  const cadenceFor = (id: string) => frequencies.find((frequency) => frequency.id === id) ?? frequencies.find((frequency) => frequency.id === "monthly") ?? frequencies[0];
+  const defaultTasks: string[] = [...(detailPlusPresets[0]?.tasks ?? [])];
   const { vehicle: siteVehicle, hydrated: siteVehicleHydrated, openPicker } = useVehicle();
   const { setServiceIntent } = useJourney();
   const [freq, setFreq] = useState<string>("monthly");
@@ -37,7 +35,7 @@ export function DetailPlusForm() {
   const displayFrequency = cadence.label;
   const vehicleTypeLabel = vehicles.find((item) => item.id === vehicle)?.label ?? "";
   const displayVehicle = siteVehicle ? siteVehicleLabel(siteVehicle) : vehicleTypeLabel;
-  const quote = useMemo(() => quoteDetailPlus(vehicle as VehicleId, freq, taskIds), [vehicle, freq, taskIds]);
+  const quote = useMemo(() => quoteDetailPlus(vehicle as VehicleId, freq, taskIds, catalog), [vehicle, freq, taskIds, catalog]);
   const taskLabels = detailPlusTasks.filter((task) => taskIds.includes(task.id)).map((task) => task.label);
   const summary = `${displayFrequency} · ${taskLabels.length} task${taskLabels.length === 1 ? "" : "s"} · ${displayVehicle.toLowerCase()}`;
 
@@ -160,7 +158,7 @@ export function DetailPlusForm() {
                         <button type="button" role="checkbox" aria-checked={on} className={on ? "is-on" : ""} onClick={() => toggleTask(task.id)}>
                           <i aria-hidden="true">{on ? "✓" : ""}</i>
                           <span><b>{task.label}</b><small>{task.note}</small></span>
-                          <em>{usd(detailPlusTaskPrice(task.id, vehicle as VehicleId))}</em>
+                          <em>{usd(detailPlusTaskPrice(task.id, vehicle as VehicleId, catalog))}</em>
                         </button>
                       </li>
                     );
@@ -188,7 +186,7 @@ export function DetailPlusForm() {
                     className={`dp56-cadence-ticket ${selected ? "is-selected" : ""}`}
                     onClick={() => { setFreq(option.id); touch(); }}
                   >
-                    <small>0{index + 1}</small>
+                    <small>{String(index + 1).padStart(2, "0")}</small>
                     <b>{option.label}</b>
                     <span>{option.hint} · save {Math.round(option.discount * 100)}%</span>
                   </button>

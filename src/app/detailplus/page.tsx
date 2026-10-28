@@ -3,6 +3,7 @@ import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
 import { DetailPlusForm } from "@/components/forms/DetailPlusForm";
+import { getDetailPlusCatalog } from "@/lib/detailPlusCatalog";
 import { detailPlusBenefits, detailPlusGuarantee, detailPlusSteps } from "@/data/detailplus";
 import { startingPrice } from "@/data/services";
 import { detailPlusFaqs } from "@/data/faqs";
@@ -15,7 +16,8 @@ export const metadata = pageMetadata({
   image: "hq-black-suv-finished",
 });
 
-export default function DetailPlusPage() {
+export default async function DetailPlusPage() {
+  const catalog = await getDetailPlusCatalog();
   return (
     <div className="dp56-page service85">
       <section className="dp56-hero ed-paper ed-paper--ink ed-paper--crumpled" data-header-tone="light">
@@ -79,7 +81,7 @@ export default function DetailPlusPage() {
             <div><p className="dp56-kicker dark">BUILD YOUR PLAN</p><h2>Your car.<br/><span>Your clean cycle.</span></h2></div>
             <p>Pick your vehicle, choose exactly what gets cleaned, and set a rhythm anywhere from every week to every 3 months. Your flat per-visit price updates as you build.</p>
           </div>
-          <DetailPlusForm />
+          <DetailPlusForm catalog={catalog} />
         </div>
       </section>
 

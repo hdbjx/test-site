@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/PageHeader";
 import { DetailPlusForm } from "@/components/forms/DetailPlusForm";
+import { getDetailPlusCatalog } from "@/lib/detailPlusCatalog";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -9,7 +10,8 @@ export const metadata = pageMetadata({
   noindex: true,
 });
 
-export default function JoinDetailPlus() {
+export default async function JoinDetailPlus() {
+  const catalog = await getDetailPlusCatalog();
   return (
     <div className="service85 service85-join detailplus-join86">
       <PageHeader
@@ -21,7 +23,7 @@ export default function JoinDetailPlus() {
         lede={<p>Pick your vehicle, what gets cleaned, and how often. Your flat rate shows as you build.</p>}
       />
       <section className="container-ed max-w-4xl pb-24" data-header-tone="ink">
-        <DetailPlusForm />
+        <DetailPlusForm catalog={catalog} />
       </section>
     </div>
   );
