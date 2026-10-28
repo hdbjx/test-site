@@ -1,10 +1,9 @@
-import Link from "next/link";
 import { CtaBand } from "@/components/CtaBand";
+import { CoverageBoard } from "@/components/coverage/CoverageBoard";
 import { CurvedTape } from "@/components/CurvedTape";
 import { GoogleMapsAttribution, LiveReviewCount } from "@/components/GoogleReviewStats";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
-import { areas } from "@/data/areas";
 import { site } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
 import styles from "@/styles/servicePage.module.css";
@@ -60,36 +59,10 @@ export default function ServiceAreas() {
                 <span>usually working.</span>
               </h2>
             </div>
-            <p className={styles.note}>Pick your area for the local details. Nearby but not listed? Send us the address and we&apos;ll tell you if the schedule can support it.</p>
+            <p className={styles.note}>Pick your area for the local details, or drop in your address to see exactly where you land on our route.</p>
           </div>
 
-          <div className={areaStyles.board}>
-            <ol className={areaStyles.areas}>
-              {areas.map((area, index) => (
-                <li key={area.slug}>
-                  <Link href={`/service-areas/${area.slug}`}>
-                    <span className={areaStyles.num}>{String(index + 1).padStart(2, "0")}</span>
-                    <strong>{area.name}</strong>
-                    <em>{area.primary ? "Home base" : "Mobile service"}</em>
-                    <i aria-hidden="true">↗</i>
-                  </Link>
-                </li>
-              ))}
-            </ol>
-
-            <div className={areaStyles.map} role="img" aria-label="Coverage overview centered on Decatur and nearby Atlanta neighborhoods, not to scale">
-              <span className={areaStyles.ring} />
-              <span className={`${areaStyles.ring} ${areaStyles.ringTwo}`} />
-              <span className={areaStyles.home}>Decatur<b>Home base</b></span>
-              <span className={areaStyles.pin} style={{ left: "24%", top: "54%" }}>Atlanta</span>
-              <span className={areaStyles.pin} style={{ left: "38%", top: "18%" }}>Brookhaven</span>
-              <span className={areaStyles.pin} style={{ left: "58%", top: "12%" }}>Chamblee</span>
-              <span className={areaStyles.pin} style={{ left: "40%", top: "36%" }}>N. Druid Hills</span>
-              <span className={areaStyles.pin} style={{ left: "72%", top: "62%" }}>Avondale</span>
-              <span className={areaStyles.pin} style={{ left: "16%", top: "26%" }}>N. Buckhead</span>
-              <small>Coverage overview / not to scale</small>
-            </div>
-          </div>
+          <CoverageBoard className={areaStyles.board} list={{ areas: areaStyles.areas, num: areaStyles.num, on: areaStyles.on }} />
         </div>
       </section>
 

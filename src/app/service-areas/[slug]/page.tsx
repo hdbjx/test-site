@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
+import { CoveragePanel } from "@/components/coverage/CoverageBoard";
 import { CurvedTape } from "@/components/CurvedTape";
 import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
@@ -9,6 +10,7 @@ import { Photo } from "@/components/Photo";
 import { ServicesBoard } from "@/components/services/ServicesBoard";
 import { TrackedLink } from "@/components/TrackedLink";
 import { areaPhotos, areas, areasWithPages } from "@/data/areas";
+import { HOME, ROUTE_MILES, areaGeo, milesBetween } from "@/data/coverage";
 import { startingPrice } from "@/data/services";
 import { workWall, type WorkReview } from "@/data/work";
 import { usd } from "@/lib/format";
@@ -38,6 +40,8 @@ export default async function AreaPage({ params }: Params) {
   const pool = workWall.filter((item): item is WorkReview => item.kind === "review");
   const start = (areas.findIndex((a) => a.slug === slug) * 3) % pool.length;
   const areaReviews = [0, 1, 2].map((i) => pool[(start + i) % pool.length]);
+  const geo = areaGeo[slug];
+  const milesOut = geo && !area.primary ? Math.round(milesBetween(HOME, geo)) : null;
 
   return (
     <main className={styles.page}>
@@ -80,6 +84,27 @@ export default async function AreaPage({ params }: Params) {
               <li key={note}><span>{String(index + 1).padStart(2, "0")}</span><p>{note}</p></li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      <section className={areaStyles.coverage} data-header-tone="ink" aria-labelledby="ar-coverage-title">
+        <div className={`${styles.shell} ${areaStyles.coverageGrid}`}>
+          <div className={areaStyles.coverageCopy}>
+            <p className={styles.kickerDark}>Coverage</p>
+            <h2 id="ar-coverage-title" className={styles.sectionTitle}>
+              <span>Is your street</span>
+              <span>on the route?</span>
+            </h2>
+            <p className={areaStyles.coverageLede}>
+              {slug === "atlanta"
+                ? `Downtown sits about ${milesOut} miles from our Decatur home base, and the in-town neighborhoods closest to Decatur are on our regular route.`
+                : milesOut !== null
+                ? `${area.name} sits about ${milesOut} miles from our Decatur home base, inside our regular ${ROUTE_MILES}-mile route.`
+                : `${area.name} is home base. Everything within about ${ROUTE_MILES} miles is on our regular route.`}{" "}
+              Check your exact address to see where you land and book it in one step.
+            </p>
+          </div>
+          <CoveragePanel location={`area_${slug}`} focus={slug} />
         </div>
       </section>
 

@@ -40,7 +40,8 @@
   transition: background 0.16s ease, padding 0.2s ease;
 }
 
-.areas a:hover {
+.areas a:hover,
+.areas .on a {
   padding-left: 0.8rem;
   background: rgba(11, 10, 9, 0.05);
 }
@@ -84,90 +85,6 @@
   font-style: normal;
 }
 
-/* Not-to-scale coverage sketch. */
-.map {
-  position: sticky;
-  top: 110px;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(213, 104, 101, 0.16) 0 14%, transparent 14.5%),
-    repeating-linear-gradient(0deg, rgba(11, 10, 9, 0.06) 0 1px, transparent 1px 32px),
-    repeating-linear-gradient(90deg, rgba(11, 10, 9, 0.06) 0 1px, transparent 1px 32px),
-    #fffaf0;
-  border: 1.5px solid var(--v29-ink, #0b0a09);
-  box-shadow: 8px 8px 0 var(--v29-ink, #0b0a09);
-}
-
-.ring {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 56%;
-  aspect-ratio: 1;
-  border: 2px dashed rgba(89, 13, 7, 0.45);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.ringTwo {
-  width: 92%;
-  border-color: rgba(89, 13, 7, 0.22);
-}
-
-.home {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  display: grid;
-  justify-items: center;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-display);
-  font-size: clamp(1rem, 1.8vw, 1.3rem);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-}
-
-.home b {
-  color: var(--v29-red, #d56865);
-  font-size: 0.58rem;
-  letter-spacing: 0.16em;
-}
-
-.pin {
-  position: absolute;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-display);
-  font-size: clamp(0.56rem, 1vw, 0.68rem);
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.pin::before {
-  content: "";
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--v29-ink, #0b0a09);
-}
-
-.map small {
-  position: absolute;
-  left: 0.9rem;
-  bottom: 0.7rem;
-  color: rgba(11, 10, 9, 0.5);
-  font-family: var(--font-display);
-  font-size: 0.56rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 .threeSteps {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -195,6 +112,32 @@
 }
 
 /* ---------- area page ---------- */
+
+.coverage {
+  padding-block: clamp(5rem, 9vw, 8rem);
+  background: var(--v29-paper, #f2ecdf);
+  color: var(--v29-ink, #0b0a09);
+}
+
+.coverageGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.coverageCopy {
+  position: sticky;
+  top: 110px;
+}
+
+.coverageLede {
+  max-width: 30rem;
+  margin: 1.4rem 0 0;
+  color: rgba(11, 10, 9, 0.72);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
 
 .localGrid {
   display: grid;
@@ -306,14 +249,19 @@
 
 @media (max-width: 900px) {
   .board,
-  .localGrid {
+  .localGrid,
+  .coverageGrid {
     grid-template-columns: 1fr;
   }
 
-  .map {
-    position: relative;
-    top: auto;
-    width: min(420px, 100%);
+  .coverageCopy {
+    position: static;
+  }
+
+  /* Checker + map first on small screens: it's the faster answer. */
+  .board > :last-child {
+    order: -1;
+    width: min(560px, 100%);
   }
 
   .threeSteps {

@@ -216,6 +216,7 @@ const STEPS: StepId[] = ["service", "car", "extras", "schedule", "info", "review
 const STAGE_OF: Record<StepId, number> = { service: 0, car: 1, extras: 1, schedule: 2, info: 3, review: 3 };
 const STEP_LABEL: Record<StepId, string> = { service: "Detail", car: "Vehicle", extras: "Extras", schedule: "Place + time", info: "Your info", review: "Review" };
 const BOOKING_DRAFT_KEY = "ed_booking_draft_v2";
+const AREA_CHECK_KEY = "ed_area_check_v1"; // written by components/coverage/AddressCheck
 
 const nationalPhone = (value: string) => {
   let digits = value.replace(/\D/g, "");
@@ -275,6 +276,17 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     try {
       const saved = JSON.parse(sessionStorage.getItem(BOOKING_DRAFT_KEY) || "null") as { address?: AddressParts } | null;
       if (saved?.address && !addressProblem(saved.address)) setAddress(saved.address);
+    } catch {}
+  }, [fromResume, account?.address]);
+  // Address checked on a service-area page: prefill it when nothing else is set.
+  useEffect(() => {
+    if (account?.address || fromResume) return;
+    try {
+      const checked = JSON.parse(sessionStorage.getItem(AREA_CHECK_KEY) || "null") as { address?: Partial<AddressParts>; at?: number } | null;
+      if (!checked?.address || Date.now() - Number(checked.at || 0) > 6 * 60 * 60 * 1000) return;
+      const next: AddressParts = { street: "", unit: "", city: "", state: "GA", zip: "", ...checked.address } as AddressParts;
+      if (addressProblem(next)) return;
+      setAddress((current) => (current.street || current.zip ? current : next));
     } catch {}
   }, [fromResume, account?.address]);
 

@@ -17,6 +17,7 @@ export type EventName =
   | "quote_price_reveal" // personalized quote price revealed after lead capture
   | "phone_click" // { location }
   | "text_click" // { location }
+  | "area_check" // service-area address checked: { location, zone, miles, nearest }
   | "detailplus_start" // plan builder interaction
   | "detailplus_submit" // Detail+ request sent
   | "paint_inquiry" // any paint/ceramic quote click or submit
