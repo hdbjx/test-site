@@ -114,7 +114,8 @@
 /* ---------- area page ---------- */
 
 .coverage {
-  padding-block: clamp(5rem, 9vw, 8rem);
+  /* Services board below is also paper and brings its own top padding. */
+  padding-block: clamp(5rem, 9vw, 8rem) clamp(1.5rem, 3vw, 2.5rem);
   background: var(--v29-paper, #f2ecdf);
   color: var(--v29-ink, #0b0a09);
 }
