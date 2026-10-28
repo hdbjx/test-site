@@ -7,6 +7,8 @@ import { VehicleManager } from "@/components/account/VehicleManager";
 import { getMyGiftCards, getMyJobs, getMyPortalJobs, getMyRewardBalance, getSession, type ClientGiftCard, type ClientJob } from "@/lib/supabase/account";
 import { supabaseConfigured } from "@/lib/supabase/config";
 import { pageMetadata } from "@/lib/seo";
+import { supabaseAdmin } from "@/lib/supabase/admin";
+import { conditionReportJobIds } from "@/lib/condition-report";
 
 /** Past jobs store the service as a display name; match it back to a bookable service. */
 function bookAgainHref(serviceName: string | null | undefined) {
@@ -65,6 +67,9 @@ export default async function AccountPage() {
 
   const now = Date.now();
   const past = jobs.filter((job) => job.status === "complete" || (job.status !== "cancelled" && Date.parse(job.scheduled_start) <= now)).slice(0, 8);
+  let reportJobs = new Set<string>();
+  try { reportJobs = await conditionReportJobIds(supabaseAdmin(), past.map((job) => job.id)); }
+  catch (error) { console.error("Condition reports failed to load", error); }
   const first = account.full_name.split(" ")[0];
   const giftBalance = giftCards.reduce((sum, card) => sum + card.balance_cents, 0);
   const totalCredit = rewards.balance_cents + giftBalance;
@@ -108,7 +113,7 @@ export default async function AccountPage() {
                 <div className="account68-section-title"><div><p className="account68-kicker">HISTORY</p><h2>PAST DETAILS</h2></div></div>
                 <div className="account68-history">
                   {past.map((job) => (
-                    <article key={job.id}><div><strong>{job.service_name}</strong><span>{job.vehicle}</span></div><div style={{ justifyItems: "end", textAlign: "right" }}><time dateTime={job.scheduled_start}>{when(job.scheduled_start)}</time><Link href={bookAgainHref(job.service_name)} style={bookAgainStyle}>Book again ↗</Link></div></article>
+                    <article key={job.id}><div><strong>{job.service_name}</strong><span>{job.vehicle}</span></div><div style={{ justifyItems: "end", textAlign: "right" }}><time dateTime={job.scheduled_start}>{when(job.scheduled_start)}</time><span style={{ display: "flex", gap: "1rem", justifyContent: "flex-end", flexWrap: "wrap" }}>{reportJobs.has(job.id) && <a href={`/api/condition-report/${job.id}`} target="_blank" rel="noopener" style={bookAgainStyle}>Condition report ↗</a>}<Link href={bookAgainHref(job.service_name)} style={bookAgainStyle}>Book again ↗</Link></span></div></article>
                   ))}
                 </div>
               </section>

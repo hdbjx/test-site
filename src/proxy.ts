@@ -53,6 +53,7 @@ export const config = {
     "/book",
     "/api/book",
     "/api/availability",
+    "/api/condition-report/:path*",
     "/auth/:path*",
   ],
 };
