@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { track as trackEvent } from "@/lib/analytics";
 import { site } from "@/data/site";
-import type { CoverageZone } from "@/data/coverage";
+import { bookable, type CoverageZone } from "@/data/coverage";
 import styles from "./coverage.module.css";
 
 export type AddressParts = { street: string; unit: string; city: string; state: string; zip: string };
@@ -15,6 +15,8 @@ export type CheckResult = {
   lat: number;
   lng: number;
   miles: number;
+  minutes: number;
+  timed: boolean;
   zone: CoverageZone;
   nearest: { name: string; slug: string; miles: number } | null;
 };
@@ -86,8 +88,8 @@ export function AddressCheck({ location, onResult }: { location: string; onResul
       const r = data as CheckResult;
       setResult(r);
       onResult?.(r);
-      trackEvent("area_check", { location, zone: r.zone, miles: Math.round(r.miles), nearest: r.nearest?.slug ?? "" });
-      if (r.zone !== "outside" && r.precise) {
+      trackEvent("area_check", { location, zone: r.zone, minutes: r.minutes, nearest: r.nearest?.slug ?? "" });
+      if (bookable(r.zone) && r.precise) {
         try { sessionStorage.setItem(AREA_CHECK_KEY, JSON.stringify({ address: r.parts, at: Date.now() })); } catch {}
       }
     } catch {
@@ -182,63 +184,83 @@ export function AddressCheck({ location, onResult }: { location: string; onResul
   );
 }
 
+type Tone = "yes" | "maybe" | "no";
+const VERDICT: Record<CoverageZone, { tone: Tone; mark: string; title: string; body: (drive: string, near: string) => string }> = {
+  core: {
+    tone: "yes",
+    mark: "✓",
+    title: "You're in our core area.",
+    body: (drive, near) => `${drive} from our Decatur shop${near}. Pick a time and we'll bring the whole setup.`,
+  },
+  route: {
+    tone: "yes",
+    mark: "✓",
+    title: "You're on our route.",
+    body: (drive, near) => `${drive} from our Decatur shop${near}. Pick a time and we'll bring the whole setup.`,
+  },
+  fee: {
+    tone: "yes",
+    mark: "✓",
+    title: "We come out here.",
+    body: (drive) => `${drive} from our Decatur shop. Bigger details book normally; lighter services may carry a travel fee, and we'll confirm it before your appointment.`,
+  },
+  premium: {
+    tone: "maybe",
+    mark: "~",
+    title: "Edge of our range.",
+    body: (drive) => `${drive} from our Decatur shop. Out here we book our larger services, like a Factory Reset, paint correction or ceramic coating. Text us what you need and we'll confirm.`,
+  },
+  exception: {
+    tone: "no",
+    mark: "×",
+    title: "Outside our usual range.",
+    body: (drive) => `${drive} from our Decatur shop. If we already have jobs nearby, or you have a few cars to do, we can often make it work. Text us the address.`,
+  },
+};
+
 function Verdict({ result, location, sms }: { result: CheckResult; location: string; sms: (text: string) => string }) {
-  const miles = result.miles < 10 ? result.miles.toFixed(1) : Math.round(result.miles);
+  const v = VERDICT[result.zone];
+  const drive = `${result.timed ? "About" : "Roughly"} a ${result.minutes}-minute drive`;
   const near = result.nearest && result.nearest.miles < 4 ? result.nearest : null;
-  const copy = {
-    route: {
-      mark: "✓",
-      title: "You're on our route.",
-      body: `${miles} mi from our Decatur home base${near ? `, near ${near.name}` : ""}. Pick a time and we'll bring the whole setup.`,
-    },
-    edge: {
-      mark: "~",
-      title: "Edge of our route.",
-      body: `${miles} mi from Decatur. We make the trip when the schedule lines up. Text us the address and we'll find a day that works.`,
-    },
-    outside: {
-      mark: "×",
-      title: "Outside our regular route.",
-      body: `${miles} mi from Decatur. Send us the address anyway and we'll tell you honestly if the schedule can support it.`,
-    },
-  }[result.zone];
+  const nearText = near ? `, near ${near.name}` : "";
+  const textHref = sms(`Hi Every Detail! Can you service ${result.address}?`);
 
   return (
-    <div className={`${styles.verdict} ${styles[`verdict_${result.zone}`]}`}>
+    <div className={`${styles.verdict} ${styles[`verdict_${v.tone}`]}`}>
       <div className={styles.verdictTop}>
-        <span className={styles.badge} aria-hidden="true">{copy.mark}</span>
+        <span className={styles.badge} aria-hidden="true">{v.mark}</span>
         <div>
-          <p className={styles.verdictTitle}>{copy.title}</p>
+          <p className={styles.verdictTitle}>{v.title}</p>
           <p className={styles.verdictBody}>
-            {copy.body}
+            {v.body(drive, nearText)}
             <span className={styles.verdictAddress}>{result.precise ? result.address : `Approximate · ${result.address}`}</span>
           </p>
         </div>
       </div>
       <div className={styles.actions}>
-        {result.zone === "route" ? (
+        {bookable(result.zone) ? (
           <>
-            <Link href="/book" className={styles.cta} onClick={() => trackEvent("book_click", { location: `${location}_area_check` })}>
+            <Link href="/book" className={styles.cta} onClick={() => trackEvent("book_click", { location: `${location}_area_check_${result.zone}` })}>
               Book this address <span aria-hidden="true">↗</span>
             </Link>
-            {near && (
+            {result.zone === "fee" ? (
+              <a href={textHref} className={styles.ghost} onClick={() => trackEvent("text_click", { location: `${location}_area_check_fee` })}>
+                Ask about travel <span aria-hidden="true">↗</span>
+              </a>
+            ) : near ? (
               <Link href={`/service-areas/${near.slug}`} className={styles.ghost}>
                 {near.name} details <span aria-hidden="true">↗</span>
               </Link>
-            )}
+            ) : null}
           </>
         ) : (
           <>
-            <a
-              href={sms(`Hi Every Detail! Can you service ${result.address}?`)}
-              className={styles.cta}
-              onClick={() => trackEvent("text_click", { location: `${location}_area_check_${result.zone}` })}
-            >
+            <a href={textHref} className={styles.cta} onClick={() => trackEvent("text_click", { location: `${location}_area_check_${result.zone}` })}>
               Text us this address <span aria-hidden="true">↗</span>
             </a>
-            {result.zone === "edge" && (
-              <Link href="/book" className={styles.ghost} onClick={() => trackEvent("book_click", { location: `${location}_area_check_edge` })}>
-                See open times <span aria-hidden="true">↗</span>
+            {result.zone === "premium" && (
+              <Link href="/get-a-quote" className={styles.ghost} onClick={() => trackEvent("quote_start", { location: `${location}_area_check_premium` })}>
+                Find my detail <span aria-hidden="true">↗</span>
               </Link>
             )}
           </>

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { areas } from "@/data/areas";
-import { EDGE_MILES, HOME, areaGeo, milesBetween, zoneFor, type LatLng } from "@/data/coverage";
+import { areaGeo, estimateMinutes, milesBetween, zoneForMinutes, type LatLng } from "@/data/coverage";
 import { enforceRateLimits, ipLimit } from "@/lib/public-security";
 
 /**
@@ -8,11 +8,14 @@ import { enforceRateLimits, ipLimit } from "@/lib/public-security";
  * GET  ?q=        → address suggestions (Google Places Autocomplete, when a key is configured)
  * POST {placeId}  → resolve a picked suggestion
  * POST {address}  → geocode free text (Google, then the free US Census geocoder / ZIP lookup as fallback)
- * Distance is straight-line miles from the Decatur home base.
+ * Coverage tier comes from one-way drive time from the shop (Google Routes, else an estimate).
  */
 
+/** The shop (223 Coventry Rd, Decatur). Server-only: the public site lists no street address. */
+const BASE: LatLng = { lat: 33.77867, lng: -84.30732 };
+
 const PLACES = "https://places.googleapis.com/v1";
-const BIAS = { circle: { center: { latitude: HOME.lat, longitude: HOME.lng }, radius: 40000 } };
+const BIAS = { circle: { center: { latitude: BASE.lat, longitude: BASE.lng }, radius: 40000 } };
 
 type Parts = { street: string; unit: string; city: string; state: string; zip: string };
 type Geocoded = { formatted: string; parts: Parts; point: LatLng; precise: boolean };
@@ -108,25 +111,58 @@ export async function POST(req: Request) {
   }
 
   const hit = found;
-  const miles = milesBetween(HOME, hit.point);
+  const miles = milesBetween(BASE, hit.point);
   const nearest = areas
     .filter((a) => areaGeo[a.slug])
     .map((a) => ({ name: a.name, slug: a.slug, miles: milesBetween(areaGeo[a.slug], hit.point) }))
     .sort((a, b) => a.miles - b.miles)[0];
-  const outOfState = !!found.parts.state && !/^(ga|georgia)$/i.test(found.parts.state);
+  const outOfState = !!hit.parts.state && !/^(ga|georgia)$/i.test(hit.parts.state);
+
+  const driven = miles < 120 ? await driveMinutes(hit.point).catch(() => null) : null;
+  const minutes = driven ?? estimateMinutes(miles);
+  let zone = outOfState ? "exception" : zoneForMinutes(minutes);
+  // Listed areas never drop below "fee": we already advertise service there.
+  if (nearest && nearest.miles <= 2.5 && (zone === "premium" || zone === "exception") && !outOfState) zone = "fee";
 
   return NextResponse.json({
     ok: true,
-    address: found.formatted,
-    parts: found.parts,
-    precise: found.precise,
-    lat: Number(found.point.lat.toFixed(5)),
-    lng: Number(found.point.lng.toFixed(5)),
+    address: hit.formatted,
+    parts: hit.parts,
+    precise: hit.precise,
+    lat: Number(hit.point.lat.toFixed(5)),
+    lng: Number(hit.point.lng.toFixed(5)),
     miles: Math.round(miles * 10) / 10,
-    // Listed areas are always on the route, even where a ZIP centroid lands past the radius.
-    zone: outOfState ? "outside" : nearest && nearest.miles <= 2.5 && miles <= EDGE_MILES ? "route" : zoneFor(miles),
+    minutes,
+    timed: driven !== null, // true when minutes came from Google Routes
+    zone,
     nearest: nearest ? { ...nearest, miles: Math.round(nearest.miles * 10) / 10 } : null,
   });
+}
+
+/* ---------------- drive time ---------------- */
+
+/** Traffic-free one-way drive time from the shop, in minutes. Needs Routes API on the key. */
+async function driveMinutes(to: LatLng): Promise<number | null> {
+  if (!key()) return null;
+  const res = await fetch("https://routes.googleapis.com/directions/v2:computeRoutes", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Goog-Api-Key": key(), "X-Goog-FieldMask": "routes.duration" },
+    body: JSON.stringify({
+      origin: { location: { latLng: { latitude: BASE.lat, longitude: BASE.lng } } },
+      destination: { location: { latLng: { latitude: to.lat, longitude: to.lng } } },
+      travelMode: "DRIVE",
+      routingPreference: "TRAFFIC_UNAWARE",
+    }),
+    cache: "no-store",
+    signal: AbortSignal.timeout(5000),
+  });
+  if (!res.ok) {
+    console.error("[service-area] routes failed", res.status, await res.text());
+    return null;
+  }
+  const data = (await res.json()) as { routes?: { duration?: string }[] };
+  const seconds = Number.parseFloat(data.routes?.[0]?.duration ?? "");
+  return Number.isFinite(seconds) ? Math.max(1, Math.round(seconds / 60)) : null;
 }
 
 /* ---------------- providers ---------------- */

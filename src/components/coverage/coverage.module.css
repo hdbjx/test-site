@@ -211,8 +211,8 @@
   line-height: 1;
 }
 
-.verdict_edge .badge { background: var(--cv-amber); }
-.verdict_outside .badge { background: var(--cv-ox); }
+.verdict_maybe .badge { background: var(--cv-amber); }
+.verdict_no .badge { background: var(--cv-ox); }
 
 .verdictTitle {
   margin: 0;
@@ -332,8 +332,9 @@
   border-radius: 50%;
 }
 
-.keyRoute { background: rgba(213, 104, 101, 0.22); border: 1.5px solid var(--cv-red); }
-.keyEdge { background: rgba(213, 104, 101, 0.07); border: 1.5px dashed rgba(89, 13, 7, 0.45); }
+.keyCore { background: rgba(213, 104, 101, 0.24); border: 1.5px solid var(--cv-red); }
+.keyRoute { background: rgba(213, 104, 101, 0.1); border: 1.5px solid rgba(213, 104, 101, 0.7); }
+.keyFee { background: transparent; border: 1.5px dashed rgba(89, 13, 7, 0.45); }
 
 .legend small {
   margin-left: auto;
@@ -344,8 +345,14 @@
 .paper { fill: var(--cv-paper, #fffaf0); }
 .gridLine { stroke: rgba(11, 10, 9, 0.055); stroke-width: 1.5; }
 
+.coreZone {
+  fill: rgba(213, 104, 101, 0.1);
+  stroke: var(--cv-red, #d56865);
+  stroke-width: 3;
+}
+
 .edgeZone {
-  fill: rgba(213, 104, 101, 0.05);
+  fill: transparent;
   stroke: rgba(89, 13, 7, 0.32);
   stroke-width: 2.5;
   stroke-dasharray: 3 10;
@@ -354,8 +361,8 @@
 
 .routeZone {
   fill: rgba(213, 104, 101, 0.07);
-  stroke: var(--cv-red, #d56865);
-  stroke-width: 3;
+  stroke: rgba(213, 104, 101, 0.7);
+  stroke-width: 2.5;
 }
 
 .ring {
@@ -563,9 +570,9 @@
   stroke-width: 3;
 }
 
-.you_route path { fill: var(--cv-green, #2f6b45); }
-.you_edge path { fill: #d18b2a; }
-.you_outside path { fill: var(--cv-ox, #590d07); }
+.you_yes path { fill: var(--cv-green, #2f6b45); }
+.you_maybe path { fill: #d18b2a; }
+.you_no path { fill: var(--cv-ox, #590d07); }
 
 .youEye {
   fill: var(--cv-paper, #fffaf0);

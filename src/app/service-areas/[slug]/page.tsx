@@ -10,7 +10,7 @@ import { Photo } from "@/components/Photo";
 import { ServicesBoard } from "@/components/services/ServicesBoard";
 import { TrackedLink } from "@/components/TrackedLink";
 import { areaPhotos, areas, areasWithPages } from "@/data/areas";
-import { HOME, ROUTE_MILES, areaGeo, milesBetween } from "@/data/coverage";
+import { HOME, areaGeo, estimateMinutes, milesBetween } from "@/data/coverage";
 import { startingPrice } from "@/data/services";
 import { workWall, type WorkReview } from "@/data/work";
 import { usd } from "@/lib/format";
@@ -41,7 +41,7 @@ export default async function AreaPage({ params }: Params) {
   const start = (areas.findIndex((a) => a.slug === slug) * 3) % pool.length;
   const areaReviews = [0, 1, 2].map((i) => pool[(start + i) % pool.length]);
   const geo = areaGeo[slug];
-  const milesOut = geo && !area.primary ? Math.round(milesBetween(HOME, geo)) : null;
+  const minutesOut = geo && !area.primary ? estimateMinutes(milesBetween(HOME, geo)) : null;
 
   return (
     <main className={styles.page}>
@@ -97,10 +97,10 @@ export default async function AreaPage({ params }: Params) {
             </h2>
             <p className={areaStyles.coverageLede}>
               {slug === "atlanta"
-                ? `Downtown sits about ${milesOut} miles from our Decatur home base, and the in-town neighborhoods closest to Decatur are on our regular route.`
-                : milesOut !== null
-                ? `${area.name} sits about ${milesOut} miles from our Decatur home base, inside our regular ${ROUTE_MILES}-mile route.`
-                : `${area.name} is home base. Everything within about ${ROUTE_MILES} miles is on our regular route.`}{" "}
+                ? `Downtown is roughly ${minutesOut} minutes from our Decatur shop, and the in-town neighborhoods closest to Decatur are an easy trip.`
+                : minutesOut !== null
+                ? `${area.name} is roughly ${minutesOut} minutes from our Decatur shop.`
+                : `${area.name} is home base, and most of our work is within a 25-minute drive.`}{" "}
               Check your exact address to see where you land and book it in one step.
             </p>
           </div>

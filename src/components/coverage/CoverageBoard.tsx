@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { areas } from "@/data/areas";
-import { EDGE_MILES, HOME, ROUTE_MILES, areaGeo, milesBetween } from "@/data/coverage";
+import { HOME, areaGeo, estimateMinutes, milesBetween } from "@/data/coverage";
 import { AddressCheck, type CheckResult } from "./AddressCheck";
 import { CoverageMap } from "./CoverageMap";
 import styles from "./coverage.module.css";
@@ -30,9 +30,10 @@ export function CoveragePanel({
         <CoverageMap active={active} focus={focus} onActive={onActive} result={result} />
       </div>
       <div className={styles.legend}>
-        <span><i className={styles.keyRoute} />Regular route · {ROUTE_MILES} mi</span>
-        <span><i className={styles.keyEdge} />Edge · up to {EDGE_MILES} mi</span>
-        <small>Miles from Decatur, straight line</small>
+        <span><i className={styles.keyCore} />Core · 15 min</span>
+        <span><i className={styles.keyRoute} />Route · 25 min</span>
+        <span><i className={styles.keyFee} />Extended · 35 min</span>
+        <small>Approx. drive from our Decatur shop</small>
       </div>
     </div>
   );
@@ -48,7 +49,7 @@ export function CoverageBoard({ className, list }: { className: string; list: Li
       <ol className={list.areas}>
         {areas.map((area, index) => {
           const geo = areaGeo[area.slug];
-          const miles = geo ? milesBetween(HOME, geo) : null;
+          const minutes = geo ? estimateMinutes(milesBetween(HOME, geo)) : null;
           return (
             <li key={area.slug} className={active === area.slug ? list.on : undefined}>
               <Link
@@ -60,7 +61,7 @@ export function CoverageBoard({ className, list }: { className: string; list: Li
               >
                 <span className={list.num}>{String(index + 1).padStart(2, "0")}</span>
                 <strong>{area.name}</strong>
-                <em>{area.primary ? "Home base" : miles !== null ? `${miles < 10 ? miles.toFixed(1) : Math.round(miles)} mi out` : "Mobile service"}</em>
+                <em>{area.primary ? "Home base" : minutes !== null ? `~${minutes} min` : "Mobile service"}</em>
                 <i aria-hidden="true">↗</i>
               </Link>
             </li>

@@ -1,19 +1,50 @@
 /**
  * Service-area geometry for the coverage map and address checker.
  *
- * Distances are straight-line miles from the Decatur home base. Road lines are
- * simplified for orientation only; they are not routing data.
+ * Coverage is tiered by one-way drive time from the shop. The checker asks
+ * Google Routes for a real drive time and falls back to `estimateMinutes`.
+ * Road lines are simplified for orientation only; they are not routing data.
  */
 
 export type LatLng = { lat: number; lng: number };
-export type CoverageZone = "route" | "edge" | "outside";
+export type CoverageZone = "core" | "route" | "fee" | "premium" | "exception";
 
+/**
+ * Public map anchor: downtown Decatur. The shop's street address is a
+ * server-only value in the checker API and is never shipped to the browser.
+ */
 export const HOME: LatLng & { name: string } = { name: "Decatur", lat: 33.7748, lng: -84.2963 };
 
-/** Regular route: inside this radius we book normally. */
-export const ROUTE_MILES = 13;
-/** Edge of route: we go when the schedule lines up; confirm by text. */
-export const EDGE_MILES = 18;
+/** One-way drive-time tiers, in minutes (upper bound of each tier). */
+export const TIERS: { zone: CoverageZone; maxMinutes: number }[] = [
+  { zone: "core", maxMinutes: 15 }, // core service area
+  { zone: "route", maxMinutes: 25 }, // accept normally
+  { zone: "fee", maxMinutes: 35 }, // higher-value jobs or travel fee
+  { zone: "premium", maxMinutes: 45 }, // premium bookings only
+  { zone: "exception", maxMinutes: Infinity }, // exception or multiple jobs in the area
+];
+
+export function zoneForMinutes(minutes: number): CoverageZone {
+  return TIERS.find((t) => minutes <= t.maxMinutes)!.zone;
+}
+
+/** Zones customers can book online without a conversation first. */
+export const bookable = (zone: CoverageZone) => zone === "core" || zone === "route" || zone === "fee";
+
+/** Verdict tone for colors: yes / maybe / no. */
+export const zoneTone = (zone: CoverageZone) => (bookable(zone) ? "yes" : zone === "premium" ? "maybe" : "no");
+
+/**
+ * Rough metro-Atlanta drive time from straight-line miles: ~2.1 min/mile on
+ * surface streets for the first 20 miles, highway pace after, plus 4 minutes
+ * to get rolling. Used for map rings, list labels, and when Routes is unavailable.
+ */
+export function estimateMinutes(miles: number) {
+  return Math.round(4 + 2.1 * Math.min(miles, 20) + 1.2 * Math.max(0, miles - 20));
+}
+
+/** Inverse of estimateMinutes inside 20 miles, for drawing approximate drive-time rings. */
+export const milesForMinutes = (minutes: number) => Math.max(0, (minutes - 4) / 2.1);
 
 /** Area centers, keyed by area slug from src/data/areas.ts. `label` controls label placement on the map. */
 export const areaGeo: Record<string, LatLng & { short?: string; label: "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw" }> = {
@@ -77,12 +108,6 @@ export function milesBetween(a: LatLng, b: LatLng) {
   const dLng = rad(b.lng - a.lng);
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
   return 2 * EARTH_MILES * Math.asin(Math.min(1, Math.sqrt(h)));
-}
-
-export function zoneFor(miles: number): CoverageZone {
-  if (miles <= ROUTE_MILES) return "route";
-  if (miles <= EDGE_MILES) return "edge";
-  return "outside";
 }
 
 /**

@@ -4,14 +4,15 @@ import { useId } from "react";
 import { useRouter } from "next/navigation";
 import { areas } from "@/data/areas";
 import {
-  EDGE_MILES,
   HOME,
-  ROUTE_MILES,
   VIEW,
   areaGeo,
   landmarks,
+  estimateMinutes,
   milesBetween,
+  milesForMinutes,
   milesToPx,
+  zoneTone,
   project,
   roads,
   type CoverageZone,
@@ -19,7 +20,7 @@ import {
 } from "@/data/coverage";
 import styles from "./coverage.module.css";
 
-export type MapResult = LatLng & { zone: CoverageZone; miles: number };
+export type MapResult = LatLng & { zone: CoverageZone; minutes: number };
 
 type Props = {
   /** Area being hovered/focused in a linked list. */
@@ -57,7 +58,6 @@ const LABEL: Record<string, { dx: number; dy: number; anchor: "start" | "middle"
   sw: { dx: -14, dy: 26, anchor: "end" },
 };
 
-const fmtMiles = (miles: number) => `${miles < 10 ? miles.toFixed(1) : Math.round(miles)} mi`;
 // The pin body sits above its point, so the top edge needs more room.
 const clampToView = (p: { x: number; y: number }) => ({
   x: Math.max(40, Math.min(VIEW - 40, p.x)),
@@ -95,7 +95,7 @@ export function CoverageMap({ active = null, focus, onActive, result }: Props) {
       onMouseLeave={() => onActive?.(null)}
     >
       <title id={`${uid}-t`}>
-        {`Service map centered on Decatur. Regular route covers about ${ROUTE_MILES} miles: ${pins.map((p) => p.name).join(", ")}.`}
+        {`Service map centered on Decatur with rings at about 15, 25 and 35 minutes' drive. Areas served: ${pins.map((p) => p.name).join(", ")}.`}
       </title>
       <defs>
         <pattern id={`${uid}-grid`} width="50" height="50" patternUnits="userSpaceOnUse">
@@ -111,10 +111,9 @@ export function CoverageMap({ active = null, focus, onActive, result }: Props) {
 
       <g clipPath={`url(#${uid}-clip)`}>
         {/* zones */}
-        <circle cx={home.x} cy={home.y} r={ring(EDGE_MILES)} className={styles.edgeZone} />
-        <circle cx={home.x} cy={home.y} r={ring(ROUTE_MILES)} className={styles.routeZone} />
-        <circle cx={home.x} cy={home.y} r={ring(10)} className={styles.ring} />
-        <circle cx={home.x} cy={home.y} r={ring(5)} className={styles.ring} />
+        <circle cx={home.x} cy={home.y} r={ring(milesForMinutes(35))} className={styles.edgeZone} />
+        <circle cx={home.x} cy={home.y} r={ring(milesForMinutes(25))} className={styles.routeZone} />
+        <circle cx={home.x} cy={home.y} r={ring(milesForMinutes(15))} className={styles.coreZone} />
 
         {/* roads */}
         <g aria-hidden="true">
@@ -153,9 +152,15 @@ export function CoverageMap({ active = null, focus, onActive, result }: Props) {
 
         {/* ring labels */}
         <g aria-hidden="true" className={styles.ringLabel}>
-          <text x={home.x + ring(5) * Math.cos(Math.PI / 5)} y={home.y + ring(5) * Math.sin(Math.PI / 5) + 22}>5 mi</text>
-          <text x={home.x + ring(10) * Math.cos(-Math.PI / 4.6)} y={home.y + ring(10) * Math.sin(-Math.PI / 4.6)} textAnchor="end" dx={-8}>10 mi</text>
-          <text x={home.x + ring(ROUTE_MILES) * Math.cos(-Math.PI / 2.35)} y={home.y + ring(ROUTE_MILES) * Math.sin(-Math.PI / 2.35) + 30} className={styles.routeLabel}>Regular route</text>
+          {[
+            { min: 15, angle: Math.PI / 5, dy: 24, anchor: "start" as const },
+            { min: 25, angle: -Math.PI / 4.6, dy: 0, anchor: "end" as const },
+            { min: 35, angle: -2.36, dy: 34, anchor: "start" as const },
+          ].map(({ min, angle, dy, anchor }) => (
+            <text key={min} x={home.x + ring(milesForMinutes(min)) * Math.cos(angle)} y={home.y + ring(milesForMinutes(min)) * Math.sin(angle) + dy} textAnchor={anchor} dx={anchor === "end" ? -8 : min === 35 ? 16 : 0}>
+              ≈{min} min
+            </text>
+          ))}
         </g>
 
         {/* connector lines */}
@@ -183,13 +188,13 @@ export function CoverageMap({ active = null, focus, onActive, result }: Props) {
               onMouseEnter={() => onActive?.(pin.slug)}
               onFocus={() => onActive?.(pin.slug)}
               onBlur={() => onActive?.(null)}
-              aria-label={`${pin.name}, about ${Math.round(milesBetween(HOME, pin.geo))} miles from Decatur`}
+              aria-label={`${pin.name}, about ${estimateMinutes(milesBetween(HOME, pin.geo))} minutes from Decatur`}
             >
               <circle cx={pin.p.x} cy={pin.p.y} r={26} className={styles.hit} />
               <circle cx={pin.p.x} cy={pin.p.y} r={on ? 13 : 9} className={styles.dot} />
               <text x={pin.p.x + l.dx} y={pin.p.y + l.dy} textAnchor={l.anchor}>
                 {pin.geo.short ?? pin.name}
-                {on && <tspan className={styles.miles}>{` · ${fmtMiles(milesBetween(HOME, pin.geo))}`}</tspan>}
+                {on && <tspan className={styles.miles}>{` · ~${estimateMinutes(milesBetween(HOME, pin.geo))} min`}</tspan>}
               </text>
             </a>
           );
@@ -214,7 +219,7 @@ export function CoverageMap({ active = null, focus, onActive, result }: Props) {
 
         {/* checked address */}
         {resultP && result && (
-          <g key={`pin-${result.lat},${result.lng}`} className={`${styles.you} ${styles[`you_${result.zone}`]}`} transform={`translate(${resultP.x} ${resultP.y})`}>
+          <g key={`pin-${result.lat},${result.lng}`} className={`${styles.you} ${styles[`you_${zoneTone(result.zone)}`]}`} transform={`translate(${resultP.x} ${resultP.y})`}>
             <g className={styles.youDrop}>
               <path d="M0 0c-4-14-22-26-22-44a22 22 0 0 1 44 0c0 18-18 30-22 44z" />
               <circle cy={-44} r={8} className={styles.youEye} />
@@ -222,7 +227,7 @@ export function CoverageMap({ active = null, focus, onActive, result }: Props) {
             {!offMap && (
               <text y={resultP.y < 140 ? 40 : -80} className={styles.youLabel} textAnchor={resultP.x > VIEW - 160 ? "end" : resultP.x < 160 ? "start" : "middle"}>
                 Your address
-                <tspan className={styles.miles}>{` · ${fmtMiles(result.miles)}`}</tspan>
+                <tspan className={styles.miles}>{` · ${result.minutes} min`}</tspan>
               </text>
             )}
           </g>
