@@ -47,6 +47,16 @@ create unique index if not exists customer_job_change_booked_unique
   where event_kind = 'booked' and sent_at is null and discarded_at is null;
 
 -- Weeks between visits for a plan (null = use the free-text frequency).
+-- Short label for job names and customer emails. Never the full task list.
+create or replace function public.detail_plus_work_label(p_plan text)
+returns text language sql immutable set search_path=public as $$
+  select case
+    when lower(trim(coalesce(p_plan,''))) like 'premium set%' then 'Premium set'
+    when lower(trim(coalesce(p_plan,''))) like 'maintenance set%' then 'Maintenance set'
+    else 'Membership visit'
+  end
+$$;
+
 create or replace function public.detail_plus_plan_weeks(m public.detail_plus_memberships)
 returns int language sql stable set search_path=public as $$
   select coalesce(m.custom_weeks, (select r.weeks from public.detail_plus_rhythms r where r.id = m.rhythm_id))
@@ -100,7 +110,7 @@ begin
       'vehicle_id', m.vehicle_id,
       'vehicle_label', coalesce(nullif(trim(v_vehicle_label), ''), m.legacy_vehicle_text, j.vehicle, 'Vehicle'),
       'vehicle_size', coalesce(v_vehicle_size, m.vehicle_size),
-      'service_name', left('Detail+ · ' || coalesce(m.plan, 'Membership visit'), 160),
+      'service_name', 'Detail+ · ' || public.detail_plus_work_label(m.plan),
       'price', coalesce(m.service_price, 0),
       'minutes', 75,
       'crew', 2));
