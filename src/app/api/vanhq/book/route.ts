@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PRICING, services, isVehicleId, isServiceId, vehicleLabel, type VehicleId } from "@/data/services";
 import { sendBookingEmails } from "@/lib/email";
-import { quoteDetailPlus } from "@/lib/detailPlusPricing";
+import { quoteDetailPlus, detailPlusWorkLabel } from "@/lib/detailPlusPricing";
 import { getDetailPlusCatalog } from "@/lib/detailPlusCatalog";
 
 export const dynamic = "force-dynamic";
@@ -92,13 +92,14 @@ export async function POST(req: Request) {
     const member = plans.find((m) => vehicleId && m.vehicle_id === vehicleId) ?? plans.find((m) => !m.vehicle_id) ?? null;
     if (member && member.service_price != null) {
       linePrice = Number(member.service_price);
-      if (member.plan) serviceName = `Detail+ · ${String(member.plan).slice(0, 140)}`;
+      serviceName = `Detail+ · ${detailPlusWorkLabel(member.plan)}`;
     } else if (rhythmId || taskIds.length) {
       const catalog = await getDetailPlusCatalog();
       const quote = quoteDetailPlus(vehicle as VehicleId, rhythmId, taskIds, catalog);
       if (!quote) return json({ ok:false, error:"Pick a Detail+ rhythm and at least one task." }, { status:422 });
       linePrice = quote.perVisit;
       detailPlusPlan = { rhythmId, taskIds: quote.taskIds };
+      serviceName = `Detail+ · ${detailPlusWorkLabel(serviceName)}`;
     }
   } else {
     const service = str(body.service, 40);

@@ -69,3 +69,11 @@ export function quoteDetailPlus(vehicle: VehicleId, frequencyId: string, taskIds
     visitsPer13Weeks: Math.max(1, Math.floor(13 / frequency.weeks)),
   };
 }
+
+/** Short job/email label for a plan. Never the full task list. */
+export function detailPlusWorkLabel(plan?: string | null): string {
+  const p = String(plan ?? "").replace(/^detail\+\s*·\s*/i, "").trim().toLowerCase();
+  if (p.startsWith("premium set")) return "Premium set";
+  if (p.startsWith("maintenance set")) return "Maintenance set";
+  return "Membership visit";
+}

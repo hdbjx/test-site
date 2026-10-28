@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  sendBookingEmails,
   sendDayOfJobConfirmationEmail,
   sendJobCancellationEmail,
   sendJobReminderEmail,
@@ -26,7 +27,7 @@ type ReminderJob = {
 type JobChangeEvent = {
   id: string;
   job_id: string;
-  event_kind: "rescheduled" | "cancelled";
+  event_kind: "rescheduled" | "cancelled" | "booked";
   customer_name: string | null;
   email: string;
   address: string | null;
@@ -166,7 +167,7 @@ async function processJobChangeEmails(admin: ReturnType<typeof supabaseAdmin>): 
       // outdated lifecycle email that was already claimed by this worker.
       const { data: currentJob, error: validationError } = await admin
         .from("jobs")
-        .select("id,status,email,scheduled_start")
+        .select("id,status,email,scheduled_start,phone,price,notes")
         .eq("id", event.job_id)
         .maybeSingle();
       if (validationError) throw validationError;
@@ -196,16 +197,35 @@ async function processJobChangeEmails(admin: ReturnType<typeof supabaseAdmin>): 
         previousStart: event.previous_scheduled_start,
       };
 
-      const result = event.event_kind === "cancelled"
-        ? await sendJobCancellationEmail(input)
-        : await sendJobRescheduledEmail(input);
+      let result: { ok: boolean; id?: string | null };
+      if (event.event_kind === "booked") {
+        // Detail+ auto-booking: the normal booking confirmation (customer + team).
+        const lineRows = await admin.from("job_vehicles").select("vehicle_label,service_name,price").eq("job_id", event.job_id).order("sort_order");
+        const lines = (lineRows.data ?? []).map((line) => ({
+          vehicle: String(line.vehicle_label || input.vehicle),
+          service: String(line.service_name || input.service),
+          price: Number(line.price || 0),
+        }));
+        const booked = await sendBookingEmails({
+          ...input,
+          phone: String(currentJob?.phone || ""),
+          price: Number(currentJob?.price || 0),
+          notes: "Auto-booked from the client's Detail+ plan after their last visit.",
+          lines: lines.length ? lines : undefined,
+        });
+        result = { ok: booked.customerSent };
+      } else {
+        result = event.event_kind === "cancelled"
+          ? await sendJobCancellationEmail(input)
+          : await sendJobRescheduledEmail(input);
+      }
 
       if (!result.ok) throw new Error("Email provider did not confirm customer job change delivery request");
 
       const complete = await admin.rpc("finish_customer_job_change_email", {
         p_event_id: event.id,
         p_sent: true,
-        p_provider_message_id: "id" in result ? result.id || null : null,
+        p_provider_message_id: result.id ?? null,
         p_error: null,
       });
       if (complete.error) throw complete.error;
