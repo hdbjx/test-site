@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { areas } from "@/data/areas";
-import { HOME, areaGeo, milesBetween, zoneFor, type LatLng } from "@/data/coverage";
+import { EDGE_MILES, HOME, areaGeo, milesBetween, zoneFor, type LatLng } from "@/data/coverage";
 import { enforceRateLimits, ipLimit } from "@/lib/public-security";
 
 /**
@@ -96,7 +96,7 @@ export async function POST(req: Request) {
     if (placeId && key()) found = await googleDetails(placeId, cleanToken(body.session));
     if (!found && address) {
       if (/^\d{5}$/.test(address)) found = (key() && (await googleText(address))) || (await zipLookup(address));
-      else found = (key() && (await googleText(address))) || (await censusLookup(address));
+      else found = (key() && (await googleText(address))) || (await censusLookup(address)) || (await looseLookup(address));
     }
   } catch (error) {
     console.error("[service-area] geocode error", error);
@@ -123,7 +123,8 @@ export async function POST(req: Request) {
     lat: Number(found.point.lat.toFixed(5)),
     lng: Number(found.point.lng.toFixed(5)),
     miles: Math.round(miles * 10) / 10,
-    zone: outOfState ? "outside" : zoneFor(miles),
+    // Listed areas are always on the route, even where a ZIP centroid lands past the radius.
+    zone: outOfState ? "outside" : nearest && nearest.miles <= 2.5 && miles <= EDGE_MILES ? "route" : zoneFor(miles),
     nearest: nearest ? { ...nearest, miles: Math.round(nearest.miles * 10) / 10 } : null,
   });
 }
@@ -208,6 +209,26 @@ async function censusLookup(address: string): Promise<Geocoded | null> {
     parts: { street: title(street), unit: "", city: title(city), state: state.toUpperCase(), zip },
     point: { lat: m.coordinates.y, lng: m.coordinates.x },
     precise: true,
+  };
+}
+
+/** Last resort: a ZIP or a listed area named in the text. Approximate, so never used to prefill booking. */
+async function looseLookup(address: string): Promise<Geocoded | null> {
+  const zip = address.match(/\b(\d{5})(?:-\d{4})?\s*$/)?.[1] ?? address.match(/\b(3\d{4})\b/)?.[1];
+  if (zip) {
+    const hit = await zipLookup(zip);
+    if (hit) return hit;
+  }
+  const lower = address.toLowerCase();
+  const area = areas
+    .filter((a) => areaGeo[a.slug] && lower.includes(a.name.toLowerCase()))
+    .sort((a, b) => b.name.length - a.name.length)[0];
+  if (!area) return null;
+  return {
+    formatted: `${area.name}, GA`,
+    parts: { street: "", unit: "", city: area.name, state: "GA", zip: "" },
+    point: { lat: areaGeo[area.slug].lat, lng: areaGeo[area.slug].lng },
+    precise: false,
   };
 }
 

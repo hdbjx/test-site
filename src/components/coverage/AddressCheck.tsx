@@ -211,7 +211,7 @@ function Verdict({ result, location, sms }: { result: CheckResult; location: str
           <p className={styles.verdictTitle}>{copy.title}</p>
           <p className={styles.verdictBody}>
             {copy.body}
-            <span className={styles.verdictAddress}>{result.address}</span>
+            <span className={styles.verdictAddress}>{result.precise ? result.address : `Approximate · ${result.address}`}</span>
           </p>
         </div>
       </div>
