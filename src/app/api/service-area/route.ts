@@ -18,6 +18,16 @@ type Parts = { street: string; unit: string; city: string; state: string; zip: s
 type Geocoded = { formatted: string; parts: Parts; point: LatLng; precise: boolean };
 
 const key = () => process.env.GOOGLE_PLACES_API_KEY?.trim() || "";
+
+/**
+ * Durable rate limit when the database limiter exists (production). Preview and
+ * local builds without the service role skip it instead of 500ing; a configured
+ * limiter that errors still fails closed via enforceRateLimits.
+ */
+async function limit(req: Request, scope: string, windowSeconds: number, maxHits: number) {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return null;
+  return enforceRateLimits(req, [ipLimit(req, scope, windowSeconds, maxHits)]);
+}
 const clean = (v: unknown, max = 200) => (typeof v === "string" ? v.replace(/\s+/g, " ").trim().slice(0, max) : "");
 const cleanToken = (v: unknown) => (typeof v === "string" && /^[A-Za-z0-9-]{8,64}$/.test(v) ? v : undefined);
 
@@ -29,7 +39,7 @@ export async function GET(req: Request) {
   const sessionToken = cleanToken(url.searchParams.get("session"));
   if (q.length < 4 || !key()) return NextResponse.json({ suggestions: [] });
 
-  const limited = await enforceRateLimits(req, [ipLimit(req, "area_suggest_ip", 600, 240)]);
+  const limited = await limit(req, "area_suggest_ip", 600, 240);
   if (limited) return NextResponse.json({ suggestions: [] }, { status: limited.status });
 
   try {
@@ -78,7 +88,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Enter a street address or ZIP code." }, { status: 422 });
   }
 
-  const limited = await enforceRateLimits(req, [ipLimit(req, "area_check_ip", 600, 40)]);
+  const limited = await limit(req, "area_check_ip", 600, 40);
   if (limited) return limited;
 
   let found: Geocoded | null = null;
