@@ -8776,42 +8776,96 @@ img{max-width:100%}
 }
 
 /* ============================================================
-   MOBILE HEADER BAR (Oct 27 2026)
-   The bar must cover the status-bar / notch area and reach below the
-   logo, with a solid colour (Safari tints its top chrome from it and
-   otherwise shows page content scrolling behind). The fade lives in
-   ::after so the bar itself stays opaque.
+   MOBILE HEADER — FLOATING BADGES (Oct 29 2026)
+   No bar: iOS 26 Safari owns the status-bar strip once you scroll, so a
+   bar only ever left a hard seam under it. Instead each control carries
+   its own solid surface — logo becomes a sticker disc, pill + menu go
+   opaque — so they read on any photo or colour.
    ============================================================ */
 @media(max-width:900px){
   html{background-color:#f3f1ec}
   .site-shared-nav-shell{
-    top:0!important;
-    height:calc(max(12px, env(safe-area-inset-top)) + 80px)!important;
-    background:#f3f1ec!important;
-    /* iOS 26 Safari picks the status-bar fill by hit-testing the top edge;
-       pointer-events:none made it skip the bar and show the page behind. */
-    pointer-events:auto!important;
+    background:none!important;
     backdrop-filter:none!important;
     -webkit-backdrop-filter:none!important;
+    pointer-events:none!important;
   }
-  .site-shared-header[data-tone="light"] .site-shared-nav-shell,
-  .site-shared-header[data-menu-open="true"] .site-shared-nav-shell{
-    background:#0a0a09!important;
+  .site-shared-nav-shell::after{content:none!important}
+
+  /* Disc + controls, cream by default ([data-tone] matches the tone providers' weight) */
+  .site-shared-header[data-tone]{
+    --ed-badge-bg:#f4f0e7;
+    --ed-badge-ring:rgba(17,16,14,.10);
+    --ed-badge-shadow:0 1px 1px rgba(17,16,14,.10),0 6px 16px rgba(17,16,14,.18);
+    --ed-header-logo-fg:var(--color-logo-red,#c8605f);
+    --ed-header-logo-filter:none;
+    --ed-header-control-bg:#f4f0e7;
+    --ed-header-control-border:rgba(17,16,14,.14);
+    --ed-header-control-fg:#11100e;
+    --ed-header-control-hover-bg:#11100e;
+    --ed-header-control-hover-border:#11100e;
+    --ed-header-control-hover-fg:#f4f0e7;
   }
-  .site-shared-nav-shell::after{
-    content:"";
-    position:absolute;
-    left:0;
-    right:0;
-    top:100%;
-    height:18px;
-    background:linear-gradient(to bottom,#f3f1ec,rgba(243,241,236,0));
-    pointer-events:none;
+  /* Dark sections + open menu: same badges, inverted */
+  .site-shared-header[data-tone][data-tone="light"],
+  .site-shared-header[data-tone][data-menu-open="true"]{
+    --ed-badge-bg:#11100e;
+    --ed-badge-ring:rgba(244,240,231,.16);
+    --ed-badge-shadow:0 1px 1px rgba(0,0,0,.30),0 6px 18px rgba(0,0,0,.40);
+    --ed-header-logo-fg:#f4f0e7;
+    --ed-header-control-bg:#11100e;
+    --ed-header-control-border:rgba(244,240,231,.22);
+    --ed-header-control-fg:#f4f0e7;
+    --ed-header-control-hover-bg:#f4f0e7;
+    --ed-header-control-hover-border:#f4f0e7;
+    --ed-header-control-hover-fg:#11100e;
   }
-  .site-shared-header[data-tone="light"] .site-shared-nav-shell::after,
-  .site-shared-header[data-menu-open="true"] .site-shared-nav-shell::after{
-    background:linear-gradient(to bottom,#0a0a09,rgba(10,10,9,0));
+
+  .site-shared-logo-control,
+  body:has(.v29-hero) .site-shared-logo-control.home-logo-control{
+    border-radius:50%!important;
+    background:var(--ed-badge-bg)!important;
+    box-shadow:0 0 0 1px var(--ed-badge-ring),var(--ed-badge-shadow)!important;
+    transition:background-color 220ms cubic-bezier(.22,1,.36,1),box-shadow 220ms cubic-bezier(.22,1,.36,1)!important;
   }
+  body .site-shared-header .site-shared-logo-control .site-shared-logo-mark,
+  body:has(.v29-hero) .site-shared-header .site-shared-logo-control .home-logo-mark{
+    width:68px!important;
+    height:68px!important;
+    filter:none!important;
+  }
+
+  html body .site-shared-header[data-tone] .site-shared-menu-button,
+  html body .site-shared-header[data-tone] .site-context-pill,
+  html body .site-shared-header[data-tone] .site-context-pill.is-set{
+    top:calc(max(12px, env(safe-area-inset-top)) + 10px)!important;
+    background:var(--ed-header-control-bg)!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+    box-shadow:var(--ed-badge-shadow)!important;
+  }
+}
+@media(max-width:900px){
+  /* Pill: label and chevron on one line, vertically centred */
+  html body .site-shared-header[data-tone] .site-context-pill{
+    grid-template-columns:minmax(0,1fr) auto!important;
+    grid-template-rows:auto!important;
+    grid-template-areas:none!important;
+    align-items:center!important;
+    column-gap:6px!important;
+  }
+  html body .site-shared-header[data-tone] .site-context-pill>span,
+  html body .site-shared-header[data-tone] .site-context-pill>small{grid-column:1!important;grid-row:auto!important;grid-area:auto / 1!important}
+  html body .site-shared-header[data-tone] .site-context-pill>i{grid-column:2!important;grid-row:1 / -1!important;align-self:center!important;line-height:1!important;transform:translateY(-3px)}
+  html body .site-shared-header[data-tone] .site-shared-menu-button:hover,
+  html body .site-shared-header[data-tone] .site-shared-menu-button[aria-expanded="true"],
+  html body .site-shared-header[data-tone] .site-context-pill:hover{background:var(--ed-header-control-hover-bg)!important}
+}
+@media(max-width:560px){
+  .site-shared-logo-control,
+  body:has(.v29-hero) .site-shared-logo-control.home-logo-control{width:62px!important;height:62px!important}
+  body .site-shared-header .site-shared-logo-control .site-shared-logo-mark,
+  body:has(.v29-hero) .site-shared-header .site-shared-logo-control .home-logo-mark{width:58px!important;height:58px!important}
 }
 
 
