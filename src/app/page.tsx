@@ -2,12 +2,12 @@ import Link from "next/link";
 import { HomeArtMotion } from "@/components/HomeArtMotion";
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
 import { CurvedTape } from "@/components/CurvedTape";
-import { AnimatedReviewCount } from "@/components/GoogleReviewStats";
+import { AnimatedReviewCount, LiveReviewCount } from "@/components/GoogleReviewStats";
+import { MobileBookBar } from "@/components/MobileBookBar";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
 import { PersonalizedHeroTitle } from "@/components/PersonalizedHeroTitle";
 import { reviews } from "@/data/reviews";
-import { reviewCountLabel } from "@/data/site";
 import { paintServices } from "@/data/paint";
 import { usd } from "@/lib/format";
 import { pageMetadata } from "@/lib/seo";
@@ -40,13 +40,18 @@ export default function Home() {
   return (
     <>
       <HomeArtMotion />
+      <MobileBookBar />
 
       <section className="v29-hero" data-header-tone="brand" data-v29-scene="hero" aria-labelledby="v29-hero-title">
-        <div className="v29-hero-photo" data-v29-depth><Photo id="hero" sizes="100vw" fill priority /></div>
+        <div className="v29-hero-photo" data-v29-depth><Photo id="hero" sizes="100vw" fill priority quality={55} /></div>
         <div className="v29-hero-shade" aria-hidden="true" />
         <div className="v30-hero-focus" aria-hidden="true" />
         <div className="v29-shell v29-hero-inner">
           <PersonalizedHeroTitle />
+          <a href="#home-reviews" className="home-hero-proof">
+            <span aria-hidden="true">★★★★★</span>
+            <span><LiveReviewCount /> five-star Google reviews</span>
+          </a>
           <div className="v54-hero-actions" aria-label="Homepage actions">
             <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_hero" }} className="v29-hero-cta" data-v29-magnetic>Book a detail <span>↗</span></TrackedLink>
             <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "home_v29_hero" }} className="v54-hero-quote" data-v29-magnetic>Find my detail <span>↗</span></TrackedLink>
@@ -100,7 +105,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="v38-proof" data-header-tone="light" data-v36-proof data-v29-scene="proof" aria-label="Customer reviews">
+      <section className="v38-proof" id="home-reviews" data-header-tone="light" data-v36-proof data-v29-scene="proof" aria-label="Customer reviews">
         <div className="v38-proof-sticky">
           <div className="v38-proof-stage">
             <div className="v41-proof-rail" data-v41-proof-rail>

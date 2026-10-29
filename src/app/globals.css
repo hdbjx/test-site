@@ -8941,3 +8941,99 @@ img{max-width:100%}
 @media(max-width:440px){.dp56-cadence-grid{grid-template-columns:1fr 1fr}.dp56-cadence-ticket{min-height:110px}.dp56-cadence-ticket b{margin-top:.8rem;font-size:.95rem}}
 /* clip, not hidden: hidden makes the page a scroll container and breaks the sticky price bar and plan card */
 .dp56-page.dp56-page{overflow-x:clip;overflow-y:visible}
+
+
+/* ============================================================
+   HOMEPAGE MOBILE OPTIMIZATION (Oct 29 2026)
+   ============================================================ */
+
+/* Hero review proof — sits between the title and the buttons */
+.home-hero-proof{
+  display:inline-flex;align-items:center;gap:.55rem;
+  margin:1.1rem auto 0;padding:.45rem .85rem;
+  border-radius:999px;background:rgba(8,8,7,.42);
+  border:1px solid rgba(243,237,223,.22);
+  color:#f3eddf;text-decoration:none;
+  font:600 .74rem/1 var(--font-display);letter-spacing:.08em;text-transform:uppercase;
+}
+.home-hero-proof>span:first-child{color:#f2b544;letter-spacing:.06em;font-size:.82rem}
+.home-hero-proof:hover{background:rgba(8,8,7,.6)}
+
+/* Package cards — price under the name */
+.v15-service-price{
+  display:block;margin-top:.4rem;
+  font:700 clamp(1.05rem,1.4vw,1.35rem)/1 var(--font-display);
+  color:#b8363d;letter-spacing:-.01em;
+}
+.v15-service-price small{font-size:.72em;font-weight:600;color:#6d6660;letter-spacing:.02em}
+
+/* Sticky booking bar (homepage, phones only) */
+.home-book-bar{display:none}
+@media(max-width:900px){
+  .home-book-bar{
+    position:fixed;left:10px;right:10px;
+    bottom:calc(10px + env(safe-area-inset-bottom,0px));
+    z-index:40;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:8px 8px 8px 16px;
+    background:#11100e;color:#f4f0e7;
+    border-radius:16px;
+    box-shadow:0 1px 1px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.32);
+    transform:translateY(calc(100% + 24px));
+    opacity:0;pointer-events:none;
+    transition:transform 320ms cubic-bezier(.22,1,.36,1),opacity 220ms ease;
+  }
+  .home-book-bar.is-visible{transform:none;opacity:1;pointer-events:auto}
+  html:has(.site-shared-header[data-menu-open="true"]) .home-book-bar,
+  html.ed-vehicle-modal-open .home-book-bar{opacity:0;pointer-events:none}
+  .home-book-bar-proof{display:grid;gap:3px;min-width:0}
+  .home-book-bar-proof>span{color:#f2b544;font-size:.78rem;letter-spacing:.08em;line-height:1}
+  .home-book-bar-proof small{font:600 .7rem/1.1 var(--font-display);letter-spacing:.06em;text-transform:uppercase;color:rgba(244,240,231,.72);white-space:nowrap}
+  .home-book-bar-cta{
+    display:inline-flex;align-items:center;gap:.5rem;
+    min-height:46px;padding:0 18px;border-radius:11px;
+    background:#d56865;color:#fff8ee;text-decoration:none;
+    font:700 .8rem/1 var(--font-display);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;
+  }
+  .home-book-bar-cta:active{transform:scale(.98)}
+}
+@media(prefers-reduced-motion:reduce){.home-book-bar{transition:opacity 150ms ease}}
+
+@media(max-width:900px){
+  /* Reviews: one swipeable row instead of three stacked screen-tall quotes */
+  .v38-proof .v38-proof-reviews.v41-proof-reviews{
+    display:flex!important;gap:10px!important;
+    overflow-x:auto!important;overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;scroll-padding-inline:16px;
+    padding:0 16px 4px!important;
+    scrollbar-width:none;
+  }
+  .v38-proof .v38-proof-reviews.v41-proof-reviews::-webkit-scrollbar{display:none}
+  .v38-proof .v38-proof-reviews.v41-proof-reviews{margin:0!important}
+  .v38-proof .v38-proof-count.v41-proof-count{min-height:0!important;margin:0 16px 1.75rem!important}
+  .v38-proof .v38-proof-review.v41-proof-review,
+  .v38-proof .v41-proof-review.v38-proof-review-1,
+  .v38-proof .v41-proof-review.v38-proof-review-2,
+  .v38-proof .v41-proof-review.v38-proof-review-3{
+    flex:0 0 84%!important;margin:0!important;
+    padding:2.6rem 1.25rem 1.4rem!important;
+    scroll-snap-align:start;
+    border:1px solid rgba(243,237,223,.16)!important;border-radius:14px;
+    background:rgba(243,237,223,.04);
+    display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .v38-proof .v38-proof-review.v41-proof-review p{font-size:clamp(1.55rem,6.6vw,2rem)!important;line-height:1.08!important}
+  .v38-proof .v41-proof-index{left:1.25rem!important;top:1rem!important}
+  .v38-proof .v38-proof-review.v41-proof-review footer{margin-top:1.2rem}
+
+  /* One closing statement, not two: the van photo + CTA carries the close */
+  .v39-clean-life.v41-clean-life{display:none!important}
+  /* Footer headline repeats the hero on the homepage */
+  body:has(.v29-hero) .site-footer-brand h2{display:none}
+
+  /* Footer links: 44px tap targets */
+  .site-footer-column{gap:0!important}
+  .site-footer-column>a{display:flex;align-items:center;min-height:44px}
+  .site-footer-column h3{margin-bottom:.35rem}
+  .site-footer-bottom a{display:inline-flex;align-items:center;min-height:44px;padding-inline:4px}
+}

@@ -9,10 +9,12 @@ type Props = {
   ratio?: string;
   fill?: boolean;
   alt?: string;
+  /** Lower for photos that sit under a heavy shade (hero). Must be listed in next.config images.qualities. */
+  quality?: number;
 };
 
 /** Shared responsive photo component. Non-fill images receive real dimensions so Next can render them reliably. */
-export function Photo({ id, sizes, priority, className = "", ratio, fill = false, alt }: Props) {
+export function Photo({ id, sizes, priority, className = "", ratio, fill = false, alt, quality }: Props) {
   const img = imageById(id);
 
   if (fill) {
@@ -24,6 +26,7 @@ export function Photo({ id, sizes, priority, className = "", ratio, fill = false
           fill
           sizes={sizes}
           priority={priority}
+          quality={quality}
           className="object-cover"
         />
       </div>

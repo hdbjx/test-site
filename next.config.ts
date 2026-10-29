@@ -51,6 +51,7 @@ const nextConfig: NextConfig = {
     // WebP only: AVIF encoding on the first request for each size made new photos load slowly.
     formats: ["image/webp"],
     deviceSizes: [390, 640, 828, 1080, 1280, 1600, 1920],
+    qualities: [55, 75],
   },
   async redirects() {
     return legacyRedirects().map(({ statusCode, ...r }) => ({ ...r, statusCode }));
