@@ -60,38 +60,49 @@ export function AnimatedReviewCount({ plus = true, duration = 700 }: { plus?: bo
   const target = Number.isFinite(Number(count)) ? Number(count) : site.reviews.count;
   const [display, setDisplay] = useState(() => site.reviews.count);
   const ref = useRef<HTMLSpanElement>(null);
-  const hasRun = useRef(false);
-  const visibleRef = useRef(false);
+  // The observer and rAF loop are set up once, so they read the latest
+  // count through this ref. Capturing `target` directly froze them on the
+  // fallback whenever the live fetch landed after mount (the usual case).
+  const targetRef = useRef(target);
+  targetRef.current = target;
+  const startedRef = useRef(false);
+  const doneRef = useRef(false);
 
   useEffect(() => {
     const node = ref.current;
-    if (!node || hasRun.current) return;
+    if (!node) return;
+    let frame = 0;
     const observer = new IntersectionObserver((entries) => {
-      if (!entries.some((entry) => entry.isIntersecting) || hasRun.current) return;
-      visibleRef.current = true;
-      hasRun.current = true;
+      if (!entries.some((entry) => entry.isIntersecting) || startedRef.current) return;
+      startedRef.current = true;
       observer.disconnect();
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        setDisplay(target);
+        doneRef.current = true;
+        setDisplay(targetRef.current);
         return;
       }
       const start = performance.now();
-      const from = Math.max(0, Math.min(display, target));
+      const from = Math.max(0, Math.min(site.reviews.count, targetRef.current));
       const tick = (now: number) => {
         const p = Math.min(1, (now - start) / Math.max(duration, 1));
         const eased = 1 - Math.pow(1 - p, 3);
-        setDisplay(Math.round(from + (target - from) * eased));
-        if (p < 1) requestAnimationFrame(tick);
+        setDisplay(Math.round(from + (targetRef.current - from) * eased));
+        if (p < 1) frame = requestAnimationFrame(tick);
+        else doneRef.current = true;
       };
-      requestAnimationFrame(tick);
+      frame = requestAnimationFrame(tick);
     }, { threshold: 0.45 });
     observer.observe(node);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+      if (!doneRef.current) startedRef.current = false;
+    };
   }, [duration]);
 
+  // Live count arriving after the count-up finished: snap to it.
   useEffect(() => {
-    if (!hasRun.current || !visibleRef.current) return;
-    setDisplay(target);
+    if (doneRef.current) setDisplay(target);
   }, [target]);
 
   return <span ref={ref}>{reviewCountFormatter.format(display)}{plus ? "+" : ""}</span>;
