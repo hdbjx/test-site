@@ -39,6 +39,8 @@ export function PersonalizedHeroTitle() {
     <h1 id="v29-hero-title" className="v29-hero-title v43-hero-title v90-hero-build" data-v29-hero-type style={{ "--hero-fit-chars": personalized.length } as CSSProperties}>
       <AnimatedLine text={personalized} line={0} />
       <AnimatedLine text="BACK TO ITS BEST." line={1} />
+      {/* Last in the DOM so the existing span:nth-child sizing rules are untouched (no spans inside it); shown first via flex order. */}
+      <small className="v29-hero-kicker">Mobile car detailing in Decatur &amp; Atlanta</small>
     </h1>
   );
 }
