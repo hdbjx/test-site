@@ -8783,9 +8783,14 @@ img{max-width:100%}
    ::after so the bar itself stays opaque.
    ============================================================ */
 @media(max-width:900px){
+  html{background-color:#f3f1ec}
   .site-shared-nav-shell{
+    top:0!important;
     height:calc(max(12px, env(safe-area-inset-top)) + 80px)!important;
     background:#f3f1ec!important;
+    /* iOS 26 Safari picks the status-bar fill by hit-testing the top edge;
+       pointer-events:none made it skip the bar and show the page behind. */
+    pointer-events:auto!important;
     backdrop-filter:none!important;
     -webkit-backdrop-filter:none!important;
   }
