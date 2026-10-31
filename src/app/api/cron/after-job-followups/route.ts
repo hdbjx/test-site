@@ -62,11 +62,13 @@ export async function GET(request: NextRequest) {
       const recipientEmail = String(followup.recipient_override || job.email || "").trim();
       if (!recipientEmail) throw new Error("Completed job has no customer email");
 
-      const [{ data: vehicles, error: vehicleError }, { data: addons, error: addonError }, { data: media, error: mediaError }, { data: checkout }] = await Promise.all([
+      const [{ data: vehicles, error: vehicleError }, { data: addons, error: addonError }, { data: media, error: mediaError }, { data: checkout }, { data: additions }] = await Promise.all([
         admin.from("job_vehicles").select("id,vehicle_label,vehicle_size,service_name,price,sort_order,created_at").eq("job_id", followup.job_id).order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
         admin.from("job_vehicle_addons").select("job_vehicle_id,addon_name,price,status,created_at").eq("job_id", followup.job_id).neq("status", "removed").order("created_at", { ascending: true }),
         admin.from("job_media").select("job_vehicle_id,vehicle_id,media_type,storage_path,created_at").eq("job_id", followup.job_id).in("media_type", ["before", "after"]).order("created_at", { ascending: true }),
         admin.from("van_hq_job_checkout").select("price_override").eq("job_id", followup.job_id).maybeSingle(),
+        // On-site work added by crew in the Team App (team_request_job_addition).
+        admin.from("job_addition_requests").select("label,amount,created_at").eq("job_id", followup.job_id).eq("status", "approved").order("created_at", { ascending: true }),
       ]);
       if (vehicleError) throw vehicleError;
       if (addonError) throw addonError;
@@ -113,6 +115,10 @@ export async function GET(request: NextRequest) {
       const vehicleIds = new Set(vehicleRows.map((v) => String(v.id)));
       for (const addon of addonRows.filter((a) => !vehicleIds.has(String(a.job_vehicle_id || "")))) {
         receiptLines.push({ label: `+ ${addon.addon_name || "Add-on"}`, amount: n(addon.price) });
+      }
+
+      for (const extra of additions ?? []) {
+        receiptLines.push({ label: `+ ${extra.label || "Added work"}`, amount: n(extra.amount) });
       }
 
       const calculatedTotal = receiptLines.reduce((sum, item) => sum + item.amount, 0);
