@@ -82,13 +82,48 @@ export async function GET(request: NextRequest) {
         ? vehicleRows.map((v) => v.service_name).filter(Boolean).join(" + ") || job.service_name || "Detail"
         : firstVehicle?.service_name || job.service_name || "Detail";
 
-      const receiptLines = vehicleRows.length
-        ? vehicleRows.map((v) => ({ label: `${v.vehicle_label || "Vehicle"} - ${v.service_name || "Detail"}`, amount: n(v.price) }))
-        : [{ label: String(job.service_name || "Detail"), amount: n(job.price ?? job.total_price) }];
-      for (const addon of addonRows) receiptLines.push({ label: String(addon.addon_name || "Add-on"), amount: n(addon.price) });
+      // Website bookings (/api/book and /api/book/addon) store job_vehicles.price
+      // as service + add-ons, AND write each add-on to job_vehicle_addons. Strip
+      // the add-ons back out of the vehicle line so they aren't counted twice.
+      const priceIncludesAddons = String(job.source || "").toLowerCase() === "website";
+      const addonSumByVehicle = new Map<string, number>();
+      for (const addon of addonRows) {
+        const key = String(addon.job_vehicle_id || "");
+        addonSumByVehicle.set(key, (addonSumByVehicle.get(key) ?? 0) + n(addon.price));
+      }
+      const basePrice = (v: { id: string; price: unknown }) => {
+        const stored = n(v.price);
+        if (!priceIncludesAddons) return stored;
+        return Math.max(0, stored - (addonSumByVehicle.get(String(v.id)) ?? 0));
+      };
+
+      const unassignedAddonSum = addonSumByVehicle.get("") ?? 0;
+      const receiptLines: Array<{ label: string; amount: number }> = [];
+      if (vehicleRows.length) {
+        for (const v of vehicleRows) {
+          receiptLines.push({ label: `${v.vehicle_label || "Vehicle"} - ${v.service_name || "Detail"}`, amount: basePrice(v) });
+          for (const addon of addonRows.filter((a) => String(a.job_vehicle_id || "") === String(v.id))) {
+            receiptLines.push({ label: `+ ${addon.addon_name || "Add-on"}`, amount: n(addon.price) });
+          }
+        }
+      } else {
+        const jobPrice = n(job.price ?? job.total_price);
+        receiptLines.push({ label: String(job.service_name || "Detail"), amount: priceIncludesAddons ? Math.max(0, jobPrice - unassignedAddonSum) : jobPrice });
+      }
+      const vehicleIds = new Set(vehicleRows.map((v) => String(v.id)));
+      for (const addon of addonRows.filter((a) => !vehicleIds.has(String(a.job_vehicle_id || "")))) {
+        receiptLines.push({ label: `+ ${addon.addon_name || "Add-on"}`, amount: n(addon.price) });
+      }
+
       const calculatedTotal = receiptLines.reduce((sum, item) => sum + item.amount, 0);
       const override = checkout?.price_override == null ? null : n(checkout.price_override);
       const total = override ?? (calculatedTotal || n(job.price ?? job.total_price));
+      // Van HQ checkout override (discounts / price changes) — show it as a line
+      // so the receipt lines add up to the total actually charged.
+      const adjustment = Math.round((total - calculatedTotal) * 100) / 100;
+      if (override != null && adjustment !== 0) {
+        receiptLines.push({ label: adjustment < 0 ? "Discount" : "Adjustment", amount: adjustment });
+      }
 
       const mediaRows = media ?? [];
       const primaryVehicleId = firstVehicle?.id || null;
