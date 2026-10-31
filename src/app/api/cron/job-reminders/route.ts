@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   sendBookingEmails,
   sendDayOfJobConfirmationEmail,
+  sendDetailPlusWeekReminderEmail,
   sendJobCancellationEmail,
   sendJobReminderEmail,
   sendJobRescheduledEmail,
@@ -422,6 +423,42 @@ async function processTomorrowReminders(admin: ReturnType<typeof supabaseAdmin>)
   return { claimed: jobs.length, sent, failed, skipped };
 }
 
+// Detail+ members hear about each visit a week out, with time to move it.
+async function processDetailPlusWeekReminders(admin: ReturnType<typeof supabaseAdmin>): Promise<WorkerResult> {
+  const { data, error } = await admin.rpc("claim_detail_plus_week_reminders", { p_limit: MAX_PER_RUN });
+  if (error) {
+    // Before DEPLOY-DETAIL-PLUS-V3-SCHEDULE.sql runs, this RPC doesn't exist yet.
+    console.warn("[job-reminders] detail+ week reminders unavailable", error.message);
+    return { claimed: 0, sent: 0, failed: 0, skipped: 0 };
+  }
+  const jobs = (data ?? []) as ReminderJob[];
+  let sent = 0;
+  let failed = 0;
+  for (const job of jobs) {
+    let ok = false;
+    try {
+      if (!job.email) throw new Error("Reminder job is missing email");
+      const result = await sendDetailPlusWeekReminderEmail({
+        name: job.customer_name || "there",
+        email: job.email,
+        address: job.address || "Your scheduled service address",
+        service: job.service_name || "Detail+ visit",
+        vehicle: job.vehicle || "Your vehicle",
+        start: job.scheduled_start,
+      });
+      ok = !!result.ok;
+      if (!ok) throw new Error("Email provider did not confirm delivery request");
+      sent += 1;
+    } catch (sendError) {
+      failed += 1;
+      console.error(`[job-reminders] detail+ week ${job.id}`, sendError);
+    }
+    const finish = await admin.rpc("finish_detail_plus_week_reminder", { p_job_id: job.id, p_scheduled_start: job.scheduled_start, p_sent: ok });
+    if (finish.error) console.error("[job-reminders] detail+ week finish", finish.error);
+  }
+  return { claimed: jobs.length, sent, failed, skipped: 0 };
+}
+
 export async function GET(request: NextRequest) {
   if (!authorized(request)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
@@ -528,16 +565,18 @@ export async function GET(request: NextRequest) {
     const lifecycle = await processJobChangeEmails(admin);
     const dayOf = await processDayOfConfirmations(admin);
     const tomorrow = await processTomorrowReminders(admin);
+    const weekOut = await processDetailPlusWeekReminders(admin);
 
     return NextResponse.json({
       ok: true,
       lifecycle,
       dayOf,
       tomorrow,
-      claimed: lifecycle.claimed + dayOf.claimed + tomorrow.claimed,
-      sent: lifecycle.sent + dayOf.sent + tomorrow.sent,
-      failed: lifecycle.failed + dayOf.failed + tomorrow.failed,
-      skipped: lifecycle.skipped + dayOf.skipped + tomorrow.skipped,
+      weekOut,
+      claimed: lifecycle.claimed + dayOf.claimed + tomorrow.claimed + weekOut.claimed,
+      sent: lifecycle.sent + dayOf.sent + tomorrow.sent + weekOut.sent,
+      failed: lifecycle.failed + dayOf.failed + tomorrow.failed + weekOut.failed,
+      skipped: lifecycle.skipped + dayOf.skipped + tomorrow.skipped + weekOut.skipped,
     });
   } catch (error) {
     console.error("[job-reminders] worker", error);

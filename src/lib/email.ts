@@ -1,3 +1,5 @@
+import { site } from "@/data/site";
+
 type EmailAttachment = {
   filename: string;
   content: string; // base64
@@ -924,6 +926,43 @@ export async function sendJobReminderEmail(booking: JobReminderEmail) {
   return sendEmail({
     to: booking.email,
     subject: `We’ll see you tomorrow${firstName ? `, ${firstName}` : ""}`,
+    html,
+    replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
+  });
+}
+
+/** Detail+ visit reminder a week ahead — enough notice to move it if needed. */
+export async function sendDetailPlusWeekReminderEmail(booking: JobReminderEmail) {
+  const appointment = formatAppointment(booking.start);
+  const firstName = firstNameOnly(booking.name);
+  const phone = site.phone.display;
+
+  const html = shell(
+    `
+      ${eyebrow("Detail+ / next week")}
+      ${headline(`Your next visit is a week out${firstName ? `, ${escapeHtml(firstName)}` : ""}.`)}
+      ${lede("Here’s when we’re coming. If that time no longer works, now’s the easy time to move it.")}
+
+      ${appointmentTicket({
+        kicker: "Next Detail+ visit",
+        date: appointment,
+        service: booking.service,
+        vehicle: booking.vehicle,
+        address: booking.address,
+      })}
+
+      <div style="margin:0 0 22px;">
+        <a href="https://www.everydetail.co/account/sign-in?next=/account" style="display:block;padding:13px 16px;background:${BRAND.red};border:1px solid ${BRAND.black};box-shadow:3px 3px 0 ${BRAND.black};color:#ffffff;text-decoration:none;text-align:center;font-size:13px;line-height:1.2;font-weight:900;">View my visit ↗</a>
+      </div>
+
+      ${noteBlock("Need a different day?", `Reply to this email or text ${escapeHtml(phone)} and we’ll move it. Your plan and pricing stay the same.`)}
+    `,
+    `Your next Detail+ visit is ${appointment}`,
+  );
+
+  return sendEmail({
+    to: booking.email,
+    subject: `Your next Detail+ visit: ${appointment}`,
     html,
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
   });
