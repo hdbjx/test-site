@@ -131,6 +131,18 @@ export async function GET(request: NextRequest) {
         receiptLines.push({ label: adjustment < 0 ? "Discount" : "Adjustment", amount: adjustment });
       }
 
+      // Never pitch Detail+ to someone who already has a membership.
+      let alreadyMember = /detail\s*\+|detail\s+plus/i.test(String(job.service_name || ""))
+        || vehicleRows.some((v) => /detail\s*\+|detail\s+plus/i.test(String(v.service_name || "")));
+      if (!alreadyMember && followup.include_detail_plus && job.client_id) {
+        const { data: memberships, error: memberError } = await admin
+          .from("detail_plus_memberships")
+          .select("status")
+          .eq("client_id", job.client_id);
+        if (memberError) throw memberError;
+        alreadyMember = (memberships ?? []).some((m) => ["active", "paused", "pending"].includes(String(m.status || "").toLowerCase()));
+      }
+
       const mediaRows = media ?? [];
       const primaryVehicleId = firstVehicle?.id || null;
       const relevantMedia = primaryVehicleId ? mediaRows.filter((m) => m.job_vehicle_id === primaryVehicleId) : mediaRows;
@@ -169,7 +181,7 @@ export async function GET(request: NextRequest) {
         afterUrl,
         includeReceipt: !!followup.include_receipt,
         includeReview: !!followup.include_review,
-        includeDetailPlus: !!followup.include_detail_plus,
+        includeDetailPlus: !!followup.include_detail_plus && !alreadyMember,
       }, receiptBase64);
       if (!result.ok) throw new Error("Email provider did not confirm delivery request");
 
