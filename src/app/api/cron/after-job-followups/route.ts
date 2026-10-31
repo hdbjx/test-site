@@ -84,10 +84,11 @@ export async function GET(request: NextRequest) {
         ? vehicleRows.map((v) => v.service_name).filter(Boolean).join(" + ") || job.service_name || "Detail"
         : firstVehicle?.service_name || job.service_name || "Detail";
 
-      // Website bookings (/api/book and /api/book/addon) store job_vehicles.price
-      // as service + add-ons, AND write each add-on to job_vehicle_addons. Strip
-      // the add-ons back out of the vehicle line so they aren't counted twice.
-      const priceIncludesAddons = String(job.source || "").toLowerCase() === "website";
+      // Every booking path (website /api/book + /api/book/addon, Team App New Job,
+      // CRM "Book this lead") stores job_vehicles.price as service + add-ons AND
+      // writes each add-on to job_vehicle_addons. Strip the add-ons back out of
+      // the vehicle line so they aren't counted twice.
+      const priceIncludesAddons = true;
       const addonSumByVehicle = new Map<string, number>();
       for (const addon of addonRows) {
         const key = String(addon.job_vehicle_id || "");
