@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { CancelJobButton } from "@/components/account/CancelJobButton";
 import { site } from "@/data/site";
 import { usd } from "@/lib/format";
@@ -54,13 +54,18 @@ function roleLabel(role: string) {
   return role ? role.charAt(0).toUpperCase() + role.slice(1) : "Technician";
 }
 
+// Ladders from the database (public.get_my_portal_stage_ladders), keyed by car
+// id and job id — the same steps the crew sees, including Detail+ plan scope.
+const LaddersContext = createContext<Record<string, string[]>>({});
+
 function StageTracker({ job, vehicle }: { job: PortalJob; vehicle?: PortalVehicle }) {
+  const ladders = useContext(LaddersContext);
   const travel = job.jobProgress.filter((event) => ["on the way", "arrived"].includes(norm(event.stage)));
   const production = vehicle?.progress ?? job.jobProgress.filter((event) => !["on the way", "arrived"].includes(norm(event.stage)));
   const events = [...travel, ...production];
   const reached = new Map(events.map((event) => [norm(event.stage), event]));
   const current = latest(events);
-  const stages = ["Booked", "On the Way", "Arrived", ...productionStages(vehicle?.serviceName ?? job.serviceName)];
+  const stages = ["Booked", "On the Way", "Arrived", ...((vehicle && ladders[vehicle.id]) || ladders[job.id] || productionStages(vehicle?.serviceName ?? job.serviceName))];
   const finished = job.status === "complete" || norm(current?.stage ?? "") === "done";
   const currentKey = finished ? "done" : norm(current?.stage ?? "booked");
 
@@ -187,6 +192,7 @@ function JobCard({ job, primary }: { job: PortalJob; primary: boolean }) {
 export function LiveJobPortal({ initialJobs, initialLoadFailed = false }: { initialJobs: PortalJob[]; initialLoadFailed?: boolean }) {
   const [jobs, setJobs] = useState(initialJobs);
   const [refreshError, setRefreshError] = useState(initialLoadFailed);
+  const [ladders, setLadders] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
     setJobs(initialJobs);
@@ -200,7 +206,11 @@ export function LiveJobPortal({ initialJobs, initialLoadFailed = false }: { init
   useEffect(() => {
     let active = true;
     async function refresh() {
-      const { data, error } = await supabaseBrowser().rpc("get_my_client_portal_jobs");
+      const [{ data, error }, ladderResult] = await Promise.all([
+        supabaseBrowser().rpc("get_my_client_portal_jobs"),
+        supabaseBrowser().rpc("get_my_portal_stage_ladders"),
+      ]);
+      if (active && !ladderResult.error && ladderResult.data) setLadders(ladderResult.data as Record<string, string[]>);
       if (!active) return;
       if (error) {
         setRefreshError(true);
@@ -209,6 +219,7 @@ export function LiveJobPortal({ initialJobs, initialLoadFailed = false }: { init
       setRefreshError(false);
       setJobs((data as PortalJob[]) ?? []);
     }
+    void refresh();
     const timer = window.setInterval(refresh, REFRESH_MS);
     return () => {
       active = false;
@@ -241,9 +252,11 @@ export function LiveJobPortal({ initialJobs, initialLoadFailed = false }: { init
         </div>
         {refreshError && <p className="text-xs text-muted">Live refresh paused. Showing the latest saved status.</p>}
       </div>
-      <div className="mt-6 space-y-5">
-        {sorted.map((job, index) => <JobCard key={job.id} job={job} primary={index === 0} />)}
-      </div>
+      <LaddersContext.Provider value={ladders}>
+        <div className="mt-6 space-y-5">
+          {sorted.map((job, index) => <JobCard key={job.id} job={job} primary={index === 0} />)}
+        </div>
+      </LaddersContext.Provider>
       <p className="mt-4 text-sm text-muted">Need to reschedule? Cancel at least 24 hours ahead, or call or text {site.phone.display}.</p>
     </div>
   );
