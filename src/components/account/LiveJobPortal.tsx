@@ -30,14 +30,16 @@ function norm(value: string) {
   return value.trim().toLowerCase();
 }
 
+// Same rules as public.ed_stage_ladder (Van HQ, Team App, Live Activities).
 function productionStages(serviceName: string) {
   const service = serviceName.toLowerCase();
-  if (/ceramic|coating/.test(service)) return ["Wash", "Decontamination", "Paint Correction", "Panel Prep", "Coating", "Final Inspection", "Done"];
-  if (/paint|polish|correction/.test(service)) return ["Wash", "Decontamination", "Paint Correction", "Final Inspection", "Done"];
   const hasInterior = /interior/.test(service);
-  const hasExterior = /exterior|wash/.test(service);
-  if (hasInterior && !hasExterior) return ["Interior", "Final inspection", "Done"];
-  if (hasExterior && !hasInterior) return ["Exterior", "Final inspection", "Done"];
+  const hasExterior = /exterior/.test(service);
+  if (hasInterior && hasExterior) return ["Interior", "Exterior", "Final inspection", "Done"];
+  if (hasInterior) return ["Interior", "Final inspection", "Done"];
+  if (hasExterior) return ["Exterior", "Final inspection", "Done"];
+  if (/ceramic|coating/.test(service)) return ["Wash", "Decontamination", "Paint Correction", "Panel Prep", "Coating", "Final Inspection", "Done"];
+  if (/enhancement|polish|correction/.test(service)) return ["Wash", "Decontamination", "Paint Correction", "Final Inspection", "Done"];
   return ["Interior", "Exterior", "Final inspection", "Done"];
 }
 
