@@ -40,6 +40,10 @@ type RawBookingItem = {
   vehicleId?: unknown;
   addons?: unknown;
   paint?: unknown;
+  /** What the customer typed for a car that isn't saved on an account. */
+  year?: unknown;
+  make?: unknown;
+  model?: unknown;
 };
 
 type BookingLine = {
@@ -54,6 +58,7 @@ type BookingLine = {
   crew: number;
   addons: AddonId[];
   paint: PaintUpgradeId[];
+  typed: { year: number | null; make: string; model: string } | null;
 };
 
 function rawItems(body: Record<string, unknown>): RawBookingItem[] {
@@ -189,6 +194,12 @@ export async function POST(req: Request) {
     let addons = Array.isArray(item.addons) ? item.addons.filter(isAddonId).slice(0, 8) : [];
     const paint = Array.isArray(item.paint) ? item.paint.filter(isPaintUpgradeId).slice(0, 1) : [];
     let label = "";
+    const typedYear = Number(str(item.year, 4));
+    const typedMake = str(item.make, 40);
+    const typedModel = str(item.model, 60);
+    const typed = !savedVehicleId && (typedMake || typedModel)
+      ? { year: Number.isInteger(typedYear) && typedYear > 1950 && typedYear < 2100 ? typedYear : null, make: typedMake, model: typedModel }
+      : null;
 
     if (!isServiceId(service)) {
       return NextResponse.json({ ok: false, error: `Choose a service for vehicle ${index + 1}.`, field: "vehicle" }, { status: 422 });
@@ -237,6 +248,7 @@ export async function POST(req: Request) {
       crew: serviceInfo.crew,
       addons,
       paint,
+      typed,
     });
   }
 
@@ -246,6 +258,21 @@ export async function POST(req: Request) {
     } catch (contactError) {
       console.error("[book] contact", contactError);
       return NextResponse.json({ ok: false, error: "We couldn't save your contact information. Please try again." }, { status: 502 });
+    }
+  }
+
+  // A car the customer typed in becomes a real vehicle on their profile, so the
+  // job, Van HQ and the Team app show it instead of only a note.
+  if (clientId) {
+    for (const line of lines) {
+      if (!line.typed) continue;
+      const name = [line.typed.year, line.typed.make, line.typed.model].filter(Boolean).join(" ");
+      line.vehicleLabel = name || line.vehicleLabel;
+      try {
+        line.vehicleId = await linkTypedVehicle(clientId, line.typed, line.vehicleSize);
+      } catch (vehicleError) {
+        console.error("[book] typed vehicle", vehicleError);
+      }
     }
   }
 
@@ -440,4 +467,31 @@ export async function POST(req: Request) {
     confirmationEmailSent: emailResult.customerSent,
     giftCardSelected: selectedGiftCard ? { codeLast4: selectedGiftCard.code.slice(-4), balanceCents: selectedGiftCard.balance_cents } : null,
   });
+}
+
+/** Finds this client's matching car or adds it. Returns the vehicle id. */
+async function linkTypedVehicle(clientId: string, typed: { year: number | null; make: string; model: string }, size: string) {
+  const db = supabaseAdmin();
+  const norm = (value: unknown) => String(value ?? "").trim().toLowerCase();
+  const { data: existing, error } = await db
+    .from("vehicles")
+    .select("id, year, make, model")
+    .eq("client_id", clientId);
+  if (error) throw error;
+  const match = (existing ?? []).find((v: { id: string; year: number | null; make: string | null; model: string | null }) =>
+    norm(v.make) === norm(typed.make) && norm(v.model) === norm(typed.model) && (!typed.year || !v.year || Number(v.year) === typed.year));
+  if (match) return match.id as string;
+
+  const id = `web_${crypto.randomUUID().replace(/-/g, "")}`;
+  const { error: insertError } = await db.from("vehicles").insert({
+    id,
+    client_id: clientId,
+    year: typed.year,
+    make: typed.make || null,
+    model: typed.model || null,
+    vehicle_size: size,
+    is_primary: (existing ?? []).length === 0,
+  });
+  if (insertError) throw insertError;
+  return id;
 }

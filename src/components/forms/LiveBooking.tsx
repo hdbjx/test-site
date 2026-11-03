@@ -694,11 +694,8 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     const fd = new FormData(e.currentTarget);
     const get = (k: string) => String(fd.get(k) ?? "").trim();
 
-    // The API takes size + service per vehicle; the make/model the customer typed rides along in the notes.
-    const typedVehicles = resolved
-      .map((line, index) => (!line.saved && line.typed ? `Vehicle ${index + 1}: ${line.typed}` : ""))
-      .filter(Boolean);
-    const notes = [typedVehicles.join("\n"), get("service_notes")].filter(Boolean).join("\n\n");
+    // Typed cars are sent as year/make/model so the job gets a real vehicle.
+    const notes = get("service_notes");
 
     setSending(true);
     setSubmitError(null);
@@ -709,7 +706,14 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        vehicles: resolved.map((line) => ({ service: line.service, vehicle: line.vehicle, vehicleId: line.saved?.id ?? null, addons: line.addons, paint: line.paint })),
+        vehicles: resolved.map((line, index) => ({
+          service: line.service,
+          vehicle: line.vehicle,
+          vehicleId: line.saved?.id ?? null,
+          addons: line.addons,
+          paint: line.paint,
+          ...(line.saved ? {} : { year: lines[index]?.year.trim() ?? "", make: lines[index]?.make.trim() ?? "", model: lines[index]?.model.trim() ?? "" }),
+        })),
         start: start.toISOString(),
         name: name.trim(),
         phone,
