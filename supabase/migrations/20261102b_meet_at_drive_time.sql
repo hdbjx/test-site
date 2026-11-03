@@ -17,7 +17,8 @@ alter table public.jobs
 -- Existing jobs: anything that isn't the 25-minute default was set by hand.
 update public.jobs
 set meet_at_auto = (meet_at_time is null or meet_at_time = scheduled_start - interval '25 minutes')
-where scheduled_start > now() - interval '1 day';
+where scheduled_start > now() - interval '1 day'
+  and status::text not in ('complete', 'cancelled');
 
 create or replace function public.ed_auto_meet_time(p_start timestamptz, p_drive int)
 returns timestamptz language sql immutable as $$
