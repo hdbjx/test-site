@@ -13,6 +13,7 @@ import { PAINT_PRICING, paintDefects, paintProcess, paintServices } from "@/data
 import { usd } from "@/lib/format";
 import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
 import styles from "@/styles/servicePage.module.css";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 export const metadata = pageMetadata({
   title: "Paint Correction in Decatur & Atlanta, GA | Every Detail",
@@ -26,8 +27,6 @@ const ANCHORS = { pricing: "paint-options", quote: "paint-quote" } as const;
 
 const enhancement = paintServices.find((service) => service.id === "enhancement")!;
 const correction = paintServices.find((service) => service.id === "correction")!;
-const maxEnhancement = Math.max(...Object.values(PAINT_PRICING).map((price) => price.enhancement));
-const maxCorrection = Math.max(...Object.values(PAINT_PRICING).map((price) => price.correction));
 
 const limits = [
   { name: "Deep scratches", detail: "Scratches through the clear coat can be improved, not always removed. We'll tell you up front." },
@@ -39,7 +38,10 @@ const steps = paintProcess.filter((step) => step.title !== "Cure and follow up")
 const stepPhotos = ["hq-black-suv-grille", "black-car-pressure-wash", "ceramic-02", "paint-01"];
 const gallery = ["paint-02", "hq-black-suv-finished", "hq-white-ioniq-front", "classic-red-wheel", "hq-white-suv-finished"];
 
-export default function PaintCorrectionPage() {
+export default async function PaintCorrectionPage() {
+  await ensureLiveCatalog();
+  const maxEnhancement = Math.max(...Object.values(PAINT_PRICING).map((price) => price.enhancement));
+  const maxCorrection = Math.max(...Object.values(PAINT_PRICING).map((price) => price.correction));
   return (
     <main className={styles.page}>
       {/* Hero: a technician machine polishing; the 50/50 proof sits in the next section. */}

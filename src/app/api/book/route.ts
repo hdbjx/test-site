@@ -16,6 +16,7 @@ import { sendBookingEmails } from "@/lib/email";
 import { refreshMeetTimes } from "@/lib/meet-times";
 import { upsertWebsiteContact } from "@/lib/website-contact";
 import { enforceRateLimits, ipLimit, normalizedEmail, normalizedPhone, valueLimit, verifyTurnstile } from "@/lib/public-security";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 export const dynamic = "force-dynamic";
 
@@ -78,6 +79,7 @@ function savedVehicleLabel(vehicle: GarageVehicle, size: VehicleId) {
 
 /** POST /api/book - creates one appointment containing one or two vehicle/service lines. */
 export async function POST(req: Request) {
+  await ensureLiveCatalog();
   let body: Record<string, unknown>;
 
   try {

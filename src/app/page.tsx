@@ -11,8 +11,8 @@ import { reviews } from "@/data/reviews";
 import { paintServices } from "@/data/paint";
 import { usd } from "@/lib/format";
 import { pageMetadata } from "@/lib/seo";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
-const paintFrom = Math.min(...paintServices.map((service) => service.startingAt));
 
 export const metadata = pageMetadata({
   title: "Mobile Car Detailing in Decatur & Atlanta | Every Detail",
@@ -36,7 +36,9 @@ const proofReviews = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  await ensureLiveCatalog();
+  const paintFrom = Math.min(...paintServices.map((service) => service.startingAt));
   return (
     <>
       <HomeArtMotion />

@@ -4,6 +4,7 @@ import { PRICING, services, isVehicleId, isServiceId, vehicleLabel, type Vehicle
 import { sendBookingEmails } from "@/lib/email";
 import { quoteDetailPlus, detailPlusWorkLabel } from "@/lib/detailPlusPricing";
 import { getDetailPlusCatalog } from "@/lib/detailPlusCatalog";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ export async function OPTIONS() {
  * advisory-lock + live-capacity check atomically.
  */
 export async function POST(req: Request) {
+  await ensureLiveCatalog();
   const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
   if (!token) return json({ ok:false, error:"Van HQ authorization required." }, { status:401 });
 

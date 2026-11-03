@@ -3,6 +3,7 @@ import { ADDON_LABELS, ADDON_PRICES, isAddonId, isAddonIncludedInService, purcha
 import { isServiceId, services, type ServiceId } from "@/data/services";
 import { getSession } from "@/lib/supabase/account";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,7 @@ function serviceIdFromName(name: string): ServiceId | null {
 
 /** Add one optional extra immediately after a confirmed website booking. */
 export async function POST(req: Request) {
+  await ensureLiveCatalog();
   let body: Record<string, unknown>;
   try {
     body = await req.json();

@@ -8,6 +8,7 @@ import { detailPlusBenefits, detailPlusGuarantee, detailPlusSteps } from "@/data
 import { startingPrice } from "@/data/services";
 import { detailPlusFaqs } from "@/data/faqs";
 import { pageMetadata, serviceSchema } from "@/lib/seo";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 export const metadata = pageMetadata({
   title: "Detail+ Recurring Car Detailing Membership | Every Detail",
@@ -17,6 +18,7 @@ export const metadata = pageMetadata({
 });
 
 export default async function DetailPlusPage() {
+  await ensureLiveCatalog();
   const catalog = await getDetailPlusCatalog();
   return (
     <div className="dp56-page service85">

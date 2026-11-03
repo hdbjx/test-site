@@ -13,6 +13,7 @@ import { PRICING, serviceList, startingPrice, vehicles } from "@/data/services";
 import { usd } from "@/lib/format";
 import { pageMetadata, serviceSchema } from "@/lib/seo";
 import styles from "./services.module.css";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 export const metadata = pageMetadata({
   title: "Car Detailing Services & Pricing | Every Detail Decatur",
@@ -36,7 +37,8 @@ const DETAIL_PLUS_TERMS = [
   ["Contract", "None"],
 ] as const;
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  await ensureLiveCatalog();
   const schemas = [
     ...serviceList.map((service) => {
       const prices = vehicles.map((vehicle) => PRICING[vehicle.id][service.id].price);

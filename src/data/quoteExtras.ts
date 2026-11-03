@@ -37,31 +37,43 @@ export const ADDON_LABELS: Record<AddonId, string> = {
   "Odor Removal": "Odor Removal",
 };
 
-const FACTORY_RESET_INCLUDED_ADDONS = new Set<AddonId>([
-  "Sealant",
-  "Pet Hair Removal",
-  "Clay Bar",
-  "Plastic Restoration",
-  "Carpet Extraction",
-  "Seat Extraction",
-]);
+/**
+ * Which packages already include each add-on, and which can't add it at all.
+ * Defaults match today's menu; the live catalog (Team HQ → Services & pricing)
+ * overwrites these at runtime.
+ */
+export const ADDON_INCLUDED_IN: Record<AddonId, ServiceId[]> = {
+  Sealant: ["premium", "factoryReset"],
+  "Pet Hair Removal": ["factoryReset"],
+  "Clay Bar": ["factoryReset"],
+  "Plastic Restoration": ["factoryReset"],
+  "Headlight Restoration": [],
+  "Engine Bay": [],
+  "Carpet Extraction": ["factoryReset"],
+  "Seat Extraction": ["factoryReset"],
+  "Odor Removal": [],
+};
 
-const FACTORY_RESET_PURCHASABLE_ADDONS = new Set<AddonId>([
-  "Odor Removal",
-  "Engine Bay",
-]);
+export const ADDON_NOT_OFFERED_WITH: Record<AddonId, ServiceId[]> = {
+  Sealant: [],
+  "Pet Hair Removal": [],
+  "Clay Bar": [],
+  "Plastic Restoration": [],
+  "Headlight Restoration": ["factoryReset"],
+  "Engine Bay": [],
+  "Carpet Extraction": [],
+  "Seat Extraction": [],
+  "Odor Removal": [],
+};
 
 export function isAddonIncludedInService(service: ServiceId, addon: AddonId) {
-  if (service === "factoryReset") return FACTORY_RESET_INCLUDED_ADDONS.has(addon);
-  if (service === "premium") return addon === "Sealant";
-  return false;
+  return ADDON_INCLUDED_IN[addon]?.includes(service) ?? false;
 }
 
 export function purchasableAddonIds(service: ServiceId) {
-  if (service === "factoryReset") {
-    return addonIds.filter((addon) => FACTORY_RESET_PURCHASABLE_ADDONS.has(addon));
-  }
-  return addonIds.filter((addon) => !isAddonIncludedInService(service, addon));
+  return addonIds.filter((addon) =>
+    !isAddonIncludedInService(service, addon) &&
+    !(ADDON_NOT_OFFERED_WITH[addon]?.includes(service) ?? false));
 }
 
 export const paintUpgradeIds = ["polish", "ceramic"] as const;

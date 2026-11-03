@@ -13,6 +13,7 @@ import { PAINT_PRICING, ceramicDoes, ceramicDoesNot, paintProcess, paintServices
 import { usd } from "@/lib/format";
 import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
 import styles from "@/styles/servicePage.module.css";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 export const metadata = pageMetadata({
   title: "2-Year Ceramic Coating in Decatur & Atlanta | Every Detail",
@@ -25,9 +26,11 @@ export const metadata = pageMetadata({
 const ANCHORS = { pricing: "ceramic-price", quote: "coating-quote" } as const;
 
 const ceramic = paintServices.find((service) => service.id === "ceramic2yr")!;
-const maxCeramic = Math.max(...Object.values(PAINT_PRICING).map((price) => price.ceramic2yr));
 
-export default function CeramicPage() {
+export default async function CeramicPage() {
+  await ensureLiveCatalog();
+  const maxCeramic = Math.max(...Object.values(PAINT_PRICING).map((price) => price.ceramic2yr));
+  const correctionFrom = Math.min(...Object.values(PAINT_PRICING).map((price) => price.correction));
   return (
     <main className={styles.page}>
       <section className={styles.hero} data-header-tone="light" aria-labelledby="cc-hero-title">
@@ -110,7 +113,7 @@ export default function CeramicPage() {
           <CeramicPricing />
           {/* The QA audit checks for this exact correction-price sentence. */}
           <p className={styles.valueNote}>
-            <strong>FULL CORRECTION STARTS AT $695.</strong> The 2-year ceramic package starts at {usd(ceramic.startingAt)} and already includes the correction, the coating and the follow-up detail. <Link href="/paint-correction">Just want correction? ↗</Link>
+            <strong>FULL CORRECTION STARTS AT {usd(correctionFrom)}.</strong> The 2-year ceramic package starts at {usd(ceramic.startingAt)} and already includes the correction, the coating and the follow-up detail. <Link href="/paint-correction">Just want correction? ↗</Link>
           </p>
         </div>
       </section>

@@ -11,6 +11,11 @@ import { JourneyProvider } from "@/components/journey/JourneyContext";
 import { JourneyGlobalUI } from "@/components/journey/JourneyGlobalUI";
 import { site } from "@/data/site";
 import { localBusinessSchema } from "@/lib/seo";
+import { CatalogSync } from "@/components/CatalogSync";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
+
+// Prices come from the live catalog (Team HQ); pages refresh at most once a minute.
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -29,10 +34,12 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const catalog = await ensureLiveCatalog();
   return (
     <html lang="en">
       <body className="min-h-dvh">
+        <CatalogSync data={catalog} />
         <a href="#main" className="site-skip-link">Skip to content</a>
         <GoogleReviewStatsProvider>
         <VehicleProvider>

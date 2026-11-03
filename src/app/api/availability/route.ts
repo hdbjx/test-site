@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isServiceId, isVehicleId, PRICING, services, type ServiceId, type VehicleId } from "@/data/services";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +57,7 @@ function parseItems(q: URLSearchParams): AvailabilityItem[] | null {
  * selected service determines the appointment length.
  */
 export async function GET(req: Request) {
+  await ensureLiveCatalog();
   const q = new URL(req.url).searchParams;
   const preset = q.get("preset");
   const detailPlus = preset === "detailplus";

@@ -1,3 +1,4 @@
+import type { VehicleId } from "./services";
 /**
  * Paint correction + ceramic coating. Prices from the current Every Detail
  * Wix Bookings catalog (Oct 22, 2026). Starting prices remain useful in summaries;
@@ -59,14 +60,14 @@ export const paintServices: PaintService[] = [
  * Truck for these services, so those site vehicle classes intentionally share
  * the same price here.
  */
-export const PAINT_PRICING = {
+export const PAINT_PRICING: Record<VehicleId, Record<PaintServiceId, number>> = {
   sedan: { enhancement: 395, correction: 695, ceramic2yr: 895 },
   smallSUV: { enhancement: 445, correction: 795, ceramic2yr: 995 },
   smallTruck: { enhancement: 445, correction: 795, ceramic2yr: 995 },
   minivan: { enhancement: 495, correction: 895, ceramic2yr: 1020 },
   largeSUV: { enhancement: 525, correction: 945, ceramic2yr: 1095 },
   largeTruck: { enhancement: 525, correction: 945, ceramic2yr: 1095 },
-} as const;
+};
 
 export const paintDefects = [
   { name: "Swirl marks", detail: "The spider-web pattern you see around a light source, usually from washing and drying." },

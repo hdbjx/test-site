@@ -11,6 +11,7 @@ import { site } from "@/data/site";
 import { workWall } from "@/data/work";
 import { pageMetadata } from "@/lib/seo";
 import styles from "./work.module.css";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 export const metadata = pageMetadata({
   title: "Our Work | Mobile Detailing Results | Every Detail",
@@ -23,7 +24,8 @@ const WALL_ANCHOR = "the-wall";
 // Filter deep links handled by WorkWall: id="interior" id="exterior" id="paint" id="crew"
 const photoCount = workWall.filter((item) => item.kind === "photo").length;
 
-export default function OurWorkPage() {
+export default async function OurWorkPage() {
+  await ensureLiveCatalog();
   return (
     <>
       <main className={styles.page}>

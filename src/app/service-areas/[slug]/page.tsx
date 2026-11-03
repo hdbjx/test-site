@@ -17,6 +17,7 @@ import { usd } from "@/lib/format";
 import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
 import styles from "@/styles/servicePage.module.css";
 import areaStyles from "../areas.module.css";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 type Params = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
@@ -30,6 +31,7 @@ export async function generateMetadata({ params }: Params) {
 }
 
 export default async function AreaPage({ params }: Params) {
+  await ensureLiveCatalog();
   const { slug } = await params;
   const area = areasWithPages.find((a) => a.slug === slug);
   if (!area) notFound();
