@@ -13,6 +13,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, isAddonId, isAddonIncludedInService, isPaintUpgradeId, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { getSession, vehicleName, type GarageVehicle } from "@/lib/supabase/account";
 import { sendBookingEmails } from "@/lib/email";
+import { refreshMeetTimes } from "@/lib/meet-times";
 import { upsertWebsiteContact } from "@/lib/website-contact";
 import { enforceRateLimits, ipLimit, normalizedEmail, normalizedPhone, valueLimit, verifyTurnstile } from "@/lib/public-security";
 
@@ -397,6 +398,10 @@ export async function POST(req: Request) {
     .update({ lead_source: leadSource, lead_source_detail: leadSourceDetail || null })
     .eq("id", data);
   if (attribution.error) console.error("[book] attribution", attribution.error);
+
+  // Meet at van from the real drive to this address. Never blocks the booking:
+  // if Google is slow, the 15-minute job fills it in.
+  await refreshMeetTimes([data], 1).catch((meetError) => console.error("[book] meet time", meetError));
 
   // A confirmed website booking closes any open CRM opportunity for the same
   // person. Booking remains valid even if CRM cleanup fails.
