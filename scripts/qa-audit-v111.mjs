@@ -41,7 +41,7 @@ if (!giftIntro.includes('ed:gift-amount') || !giftForm.includes('ed:gift-amount'
 if (!workPage.includes('work-audit-before-after')) failures.push('Our Work before/after proof');
 if (!paintHero.includes('/images/paint-5050-single.jpg') || paintPage.includes('<PaintFiftyFifty />')) failures.push('paint 50/50 proof must be the hero without duplicate section');
 if (paintPage.includes('PaintDefectFieldGuide') || paintPage.includes('PaintResultBridge')) failures.push('paint page still contains removed long-form sections');
-if (!ceramicPage.includes('FULL CORRECTION STARTS AT $695')) failures.push('ceramic value relationship');
+if (!ceramicPage.includes('FULL CORRECTION STARTS AT {usd(correctionFrom)}')) failures.push('ceramic value relationship'); // price comes from the live catalog
 if (!blogPage.includes('alt={`Every Detail article: ${post.title}`}')) failures.push('blog thumbnail alt text');
 if (!quote.includes('Four quick steps, about a minute') || !quote.includes('Honda Civic') || !quote.includes('Toyota RAV4')) failures.push('Find My Detail first-step guidance and quick vehicle chips');
 if (!css.includes('.q53-page .q51-top{position:sticky!important')) failures.push('quote and booking funnel header consistency');
