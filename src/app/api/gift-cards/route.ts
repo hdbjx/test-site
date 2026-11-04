@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { buildGiftCardRequestEmail, sendEmail } from "@/lib/email";
 import { enforceRateLimits, ipLimit, normalizedEmail, normalizedPhone, valueLimit, verifyTurnstile } from "@/lib/public-security";
@@ -13,6 +14,7 @@ function validEmail(value: string) {
 
 
 export async function POST(req: Request) {
+  await ensureLiveCatalog(); // email wording + contact info from Team HQ settings
   let body: Record<string, unknown>;
   try { body = await req.json(); } catch {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });

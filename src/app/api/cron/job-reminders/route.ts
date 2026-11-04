@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 import {
   sendBookingEmails,
   sendDayOfJobConfirmationEmail,
@@ -460,6 +461,7 @@ async function processDetailPlusWeekReminders(admin: ReturnType<typeof supabaseA
 }
 
 export async function GET(request: NextRequest) {
+  await ensureLiveCatalog(); // email wording + contact info from Team HQ settings
   if (!authorized(request)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }

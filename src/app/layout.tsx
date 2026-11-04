@@ -13,6 +13,7 @@ import { site } from "@/data/site";
 import { localBusinessSchema } from "@/lib/seo";
 import { CatalogSync } from "@/components/CatalogSync";
 import { ensureLiveCatalog } from "@/lib/live-catalog-server";
+import { AnnouncementBar } from "@/components/announcement/AnnouncementBar";
 
 // Prices come from the live catalog (Team HQ); pages refresh at most once a minute.
 export const revalidate = 60;
@@ -36,6 +37,9 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const catalog = await ensureLiveCatalog();
+  // Hide the notice after its end date (Eastern time).
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
+  const notice = site.announcement && (!site.announcement.endsOn || site.announcement.endsOn >= today) ? site.announcement : null;
   return (
     <html lang="en">
       <body className="min-h-dvh">
@@ -51,6 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {children}
         </main>
         <Footer />
+        {notice ? <AnnouncementBar text={notice.text} linkText={notice.linkText} linkUrl={notice.linkUrl} /> : null}
         <JsonLd data={localBusinessSchema()} />
         <Analytics />
         </JourneyProvider>

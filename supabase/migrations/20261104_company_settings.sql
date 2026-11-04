@@ -1,8 +1,10 @@
 -- Every Detail: company settings managers edit in Team HQ → Settings.
--- Contact info, payment methods, service-area drive times, meet-at-van timing
--- and the rebooking discount. The website, Van HQ and the meet-at-van
--- automation read these. Seeded with today's values, so nothing changes until
--- someone edits. Safe to re-run (never overwrites an edited value).
+-- Contact info + review link, payment methods, service-area drive times,
+-- meet-at-van timing, rebooking discount, website announcement, gift card
+-- amounts and customer email wording. The website, Van HQ, customer emails
+-- and the meet-at-van automation read these. Seeded with today's values, so
+-- nothing changes until someone edits. Safe to re-run (never overwrites an
+-- edited value).
 
 begin;
 
@@ -14,13 +16,18 @@ create table if not exists public.company_settings (
 );
 
 insert into public.company_settings (key, value) values
-  ('contact',         '{"phone": "(404) 855-0672", "email": "hello@everydetail.co"}'),
+  ('contact',         '{"phone": "(404) 855-0672", "email": "hello@everydetail.co", "reviewUrl": "https://www.google.com/search?q=Every+Detail+Mobile+Detailing#lrd=0x8e30f21fe0cce555:0x394893f8064359ae,1,,,,"}'),
   ('payment_methods', '["Cash", "Check", "Venmo", "Zelle"]'),
   -- Upper limit of each tier, in one-way drive minutes from the shop.
   ('service_area',    '{"core": 15, "route": 25, "fee": 35, "premium": 45}'),
   -- Meet at van = start − (drive + bufferMinutes); fallbackMinutes until the drive is known.
   ('meet_at',         '{"bufferMinutes": 20, "fallbackMinutes": 25}'),
-  ('rebooking',       '{"nextVisitDiscountPct": 10}')
+  ('rebooking',       '{"nextVisitDiscountPct": 10}'),
+  -- Site-wide notice on everydetail.co (off until someone writes one).
+  ('announcement',    '{"enabled": false, "text": "", "linkText": "", "linkUrl": "", "endsOn": ""}'),
+  ('gift_cards',      '{"presets": [100, 150, 250, 400]}'),
+  -- Customer email wording. Empty = the built-in wording; enabled false = don't send.
+  ('emails',          '{}')
 on conflict (key) do nothing;
 
 alter table public.company_settings enable row level security;

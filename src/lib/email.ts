@@ -1,5 +1,6 @@
 import { teamEmailPhoto } from "@/data/team";
 import { site } from "@/data/site";
+import { emailOverride, liveReviewUrl, type EmailKind } from "@/lib/email-copy";
 
 type EmailAttachment = {
   filename: string;
@@ -340,6 +341,31 @@ export function buildGiftCardSentConfirmationEmail(input: {
   `, `Your ${amount} gift card for ${input.recipientName} has been sent.`);
 }
 
+/* ---------------- editable customer email copy (Team HQ → Settings) ---------------- */
+
+/**
+ * Subject / headline / intro for a customer email: Team HQ's wording when set,
+ * otherwise the built-in copy. Custom text can use {first_name}, {date},
+ * {time}, {service} and {vehicle}. Built-in headline/intro are already HTML.
+ */
+function emailCopy(kind: EmailKind, builtIn: { subject: string; headline: string; intro: string }, vars: Record<string, string>) {
+  const o = emailOverride(kind);
+  const fill = (text: string) => text.replace(/\{(\w+)\}/g, (match, key: string) => (key in vars ? vars[key] : match));
+  const custom = (value?: string) => (typeof value === "string" && value.trim() ? fill(value.trim()) : null);
+  const subject = custom(o.subject);
+  const head = custom(o.headline);
+  const intro = custom(o.intro);
+  return {
+    enabled: o.enabled !== false,
+    subject: subject ?? builtIn.subject,
+    headline: head ? escapeHtml(head) : builtIn.headline,
+    intro: intro ? escapeHtml(intro).replace(/\n/g, "<br>") : builtIn.intro,
+  };
+}
+
+/** Same result shape as sendEmail, for an email switched off in Team HQ. */
+const switchedOff = () => ({ ok: true as const, skipped: true as const, id: null as string | null, reason: "disabled" });
+
 export async function sendEmail(message: EmailMessage) {
   const apiKey = process.env.RESEND_API_KEY;
 
@@ -461,7 +487,17 @@ function afterJobShell(content: string, preheader = "") {
 export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: string) {
   const firstName = input.name.trim().split(/\s+/)[0] || input.name || "there";
   const completed = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", month: "long", day: "numeric", year: "numeric" }).format(new Date(input.completedAt));
-  const reviewUrl = process.env.GOOGLE_REVIEW_URL || "https://www.google.com/search?q=Every+Detail+Mobile+Detailing#lrd=0x8e30f21fe0cce555:0x394893f8064359ae,1,,,,";
+  const reviewUrl = liveReviewUrl() || process.env.GOOGLE_REVIEW_URL || site.reviews.googleUrl;
+  const copy = emailCopy(
+    "after_job",
+    {
+      subject: `Your ${input.vehicle} is all set`,
+      headline: `${escapeHtml(firstName)}, your car.<br>Back to its best.`,
+      intro: "Thanks for trusting us with it. The detail is finished, the vehicle is ready, and we’ve attached the receipt if one was requested.",
+    },
+    { first_name: firstName, vehicle: input.vehicle, service: input.service, date: completed, time: "" },
+  );
+  if (!copy.enabled) return switchedOff();
   const detailPlusUrl = process.env.DETAIL_PLUS_URL || "https://www.everydetail.co/detailplus";
   const bookUrl = process.env.BOOKING_URL || "https://www.everydetail.co/book";
 
@@ -502,14 +538,14 @@ export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: st
   const html = afterJobShell(`
     <tr><td style="background:#590d07;border-radius:16px;padding:36px 30px 34px;">
       <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#dbc7b3;font-weight:800;">DETAIL COMPLETE / ${escapeHtml(completed)}</div>
-      <div style="margin-top:16px;font-size:38px;line-height:1.02;font-weight:700;letter-spacing:-1.6px;color:#ffffff;">${escapeHtml(firstName)}, your car.<br>Back to its best.</div>
+      <div style="margin-top:16px;font-size:38px;line-height:1.02;font-weight:700;letter-spacing:-1.6px;color:#ffffff;">${copy.headline}</div>
       <div style="margin-top:17px;font-size:14px;line-height:1.5;color:#f3f1ec;">${escapeHtml(input.vehicle)} · ${escapeHtml(input.service)}</div>
     </td></tr>
 
     <tr><td style="padding:30px 4px 14px;">${afterJobPhotoSplit(input.beforeUrl, input.afterUrl)}
       <div style="margin-top:22px;font-size:20px;font-weight:700;letter-spacing:-.3px;">${escapeHtml(input.vehicle)}</div>
       <div style="margin-top:4px;font-size:13px;color:#666666;">${escapeHtml(input.service)} · completed ${escapeHtml(completed)}</div>
-      <p style="margin:14px 0 0;font-size:15px;line-height:1.65;color:#4f4c49;">Thanks for trusting us with it. The detail is finished, the vehicle is ready, and we’ve attached the receipt if one was requested.</p>
+      <p style="margin:14px 0 0;font-size:15px;line-height:1.65;color:#4f4c49;">${copy.intro}</p>
     </td></tr>
 
     <tr><td style="padding:0 4px 14px;">
@@ -529,7 +565,7 @@ export async function sendAfterJobEmail(input: AfterJobEmail, receiptBase64?: st
 
   return sendEmail({
     to: input.email,
-    subject: `Your ${input.vehicle} is all set`,
+    subject: copy.subject,
     html,
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
     attachments: input.includeReceipt && receiptBase64 ? [{ filename: `${input.receiptNumber}.pdf`, content: receiptBase64 }] : undefined,
@@ -545,12 +581,21 @@ export async function sendBookingEmails(booking: BookingEmail) {
     : [{ vehicle: booking.vehicle, service: booking.service, price: booking.price }];
   const vehicleSummary = lines.map((line) => `${line.vehicle} · ${line.service}`).join(" / ");
   const lineRows = lines.map((line, index) => detailRow(lines.length > 1 ? `Vehicle ${index + 1}` : "Vehicle", `${line.vehicle} · ${line.service} · ${formatMoney(line.price)}`)).join("");
+  const copy = emailCopy(
+    "booking",
+    {
+      subject: "You’re booked with Every Detail",
+      headline: `${firstName ? `${escapeHtml(firstName)}, you’re` : "You’re"} on the schedule.`,
+      intro: "Your appointment is locked in. We’ll bring the setup and take it from there.",
+    },
+    { first_name: firstName || "there", date: appointment, time: formatAppointmentTime(booking.start), service: booking.service, vehicle: vehicleSummary },
+  );
 
   const customerHtml = shell(
     `
       ${eyebrow("Confirmed / Every Detail")}
-      ${headline(`${firstName ? `${escapeHtml(firstName)}, you’re` : "You’re"} on the schedule.`)}
-      ${lede("Your appointment is locked in. We’ll bring the setup and take it from there.")}
+      ${headline(copy.headline)}
+      ${lede(copy.intro)}
 
       ${appointmentTicket({
         kicker: "Your appointment",
@@ -592,12 +637,14 @@ export async function sendBookingEmails(booking: BookingEmail) {
   );
 
   const [customer, internal] = await Promise.allSettled([
-    sendEmail({
-      to: booking.email,
-      subject: `You’re booked with Every Detail`,
-      html: customerHtml,
-      replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
-    }),
+    copy.enabled
+      ? sendEmail({
+          to: booking.email,
+          subject: copy.subject,
+          html: customerHtml,
+          replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
+        })
+      : Promise.resolve(switchedOff()),
     sendEmail({
       to: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
       subject: `New booking · ${booking.service} · ${booking.name}`,
@@ -848,12 +895,22 @@ export async function sendDayOfJobConfirmationEmail(booking: DayOfJobConfirmatio
   const team = booking.team.filter((member) => member.name.trim());
   const teamRows = team.map(teamMemberCard).join("");
   const teamLabel = team.length === 1 ? "Your detailer today" : "Your team today";
+  const copy = emailCopy(
+    "day_of",
+    {
+      subject: `We’ll see you today${firstName ? `, ${firstName}` : ""}`,
+      headline: `We’ll see you today${firstName ? `, ${escapeHtml(firstName)}` : ""}.`,
+      intro: `Your car’s on our board and your team is ready. We’ll be there around <strong style="color:${BRAND.black};">${escapeHtml(appointmentTime)}</strong>.`,
+    },
+    { first_name: firstName || "there", date: appointment, time: appointmentTime, service: booking.service, vehicle: booking.vehicle },
+  );
+  if (!copy.enabled) return switchedOff();
 
   const html = shell(
     `
       ${eyebrow("Today with Every Detail")}
-      ${headline(`We’ll see you today${firstName ? `, ${escapeHtml(firstName)}` : ""}.`)}
-      ${lede(`Your car’s on our board and your team is ready. We’ll be there around <strong style="color:${BRAND.black};">${escapeHtml(appointmentTime)}</strong>.`)}
+      ${headline(copy.headline)}
+      ${lede(copy.intro)}
 
       ${teamRows ? `
         <div style="margin:0 0 10px;font-size:10px;line-height:1.2;letter-spacing:1.7px;text-transform:uppercase;color:${BRAND.oxblood};font-weight:900;">${teamLabel}</div>
@@ -890,7 +947,7 @@ export async function sendDayOfJobConfirmationEmail(booking: DayOfJobConfirmatio
 
   return sendEmail({
     to: booking.email,
-    subject: `We’ll see you today${firstName ? `, ${firstName}` : ""}`,
+    subject: copy.subject,
     html,
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
   });
@@ -900,12 +957,22 @@ export async function sendDayOfJobConfirmationEmail(booking: DayOfJobConfirmatio
 export async function sendJobReminderEmail(booking: JobReminderEmail) {
   const appointment = formatAppointment(booking.start);
   const firstName = firstNameOnly(booking.name);
+  const copy = emailCopy(
+    "reminder",
+    {
+      subject: `We’ll see you tomorrow${firstName ? `, ${firstName}` : ""}`,
+      headline: `We’re coming tomorrow${firstName ? `, ${escapeHtml(firstName)}` : ""}.`,
+      intro: "Your appointment is set. There’s very little you need to do before we arrive.",
+    },
+    { first_name: firstName || "there", date: appointment, time: formatAppointmentTime(booking.start), service: booking.service, vehicle: booking.vehicle },
+  );
+  if (!copy.enabled) return switchedOff();
 
   const html = shell(
     `
       ${eyebrow("Tomorrow / quick prep")}
-      ${headline(`We’re coming tomorrow${firstName ? `, ${escapeHtml(firstName)}` : ""}.`)}
-      ${lede("Your appointment is set. There’s very little you need to do before we arrive.")}
+      ${headline(copy.headline)}
+      ${lede(copy.intro)}
 
       ${appointmentTicket({
         kicker: "Tomorrow’s appointment",
@@ -929,7 +996,7 @@ export async function sendJobReminderEmail(booking: JobReminderEmail) {
 
   return sendEmail({
     to: booking.email,
-    subject: `We’ll see you tomorrow${firstName ? `, ${firstName}` : ""}`,
+    subject: copy.subject,
     html,
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
   });
@@ -940,12 +1007,22 @@ export async function sendDetailPlusWeekReminderEmail(booking: JobReminderEmail)
   const appointment = formatAppointment(booking.start);
   const firstName = firstNameOnly(booking.name);
   const phone = site.phone.display;
+  const copy = emailCopy(
+    "detail_plus_week",
+    {
+      subject: `Your next Detail+ visit: ${appointment}`,
+      headline: `Your next visit is a week out${firstName ? `, ${escapeHtml(firstName)}` : ""}.`,
+      intro: "Here’s when we’re coming. If that time no longer works, now’s the easy time to move it.",
+    },
+    { first_name: firstName || "there", date: appointment, time: formatAppointmentTime(booking.start), service: booking.service, vehicle: booking.vehicle },
+  );
+  if (!copy.enabled) return switchedOff();
 
   const html = shell(
     `
       ${eyebrow("Detail+ / next week")}
-      ${headline(`Your next visit is a week out${firstName ? `, ${escapeHtml(firstName)}` : ""}.`)}
-      ${lede("Here’s when we’re coming. If that time no longer works, now’s the easy time to move it.")}
+      ${headline(copy.headline)}
+      ${lede(copy.intro)}
 
       ${appointmentTicket({
         kicker: "Next Detail+ visit",
@@ -966,7 +1043,7 @@ export async function sendDetailPlusWeekReminderEmail(booking: JobReminderEmail)
 
   return sendEmail({
     to: booking.email,
-    subject: `Your next Detail+ visit: ${appointment}`,
+    subject: copy.subject,
     html,
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
   });
@@ -980,12 +1057,22 @@ export async function sendJobRescheduledEmail(booking: JobChangeEmail) {
   const firstName = firstNameOnly(booking.name);
   const newAppointment = formatAppointment(booking.start);
   const oldAppointment = booking.previousStart ? formatAppointment(booking.previousStart) : "Your previous appointment time";
+  const copy = emailCopy(
+    "rescheduled",
+    {
+      subject: "Your Every Detail appointment has been moved",
+      headline: `${firstName ? `${escapeHtml(firstName)}, your` : "Your"} new time is set.`,
+      intro: "Your Every Detail appointment has been moved. This email is your confirmation of the updated schedule.",
+    },
+    { first_name: firstName || "there", date: newAppointment, time: formatAppointmentTime(booking.start), service: booking.service, vehicle: booking.vehicle },
+  );
+  if (!copy.enabled) return switchedOff();
 
   const html = shell(
     `
       ${eyebrow("Appointment updated")}
-      ${headline(`${firstName ? `${escapeHtml(firstName)}, your` : "Your"} new time is set.`)}
-      ${lede("Your Every Detail appointment has been moved. This email is your confirmation of the updated schedule.")}
+      ${headline(copy.headline)}
+      ${lede(copy.intro)}
 
       <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 24px;border-top:2px solid ${BRAND.black};border-bottom:1px solid rgba(17,17,17,.2);">
         ${detailRow("Was", oldAppointment)}
@@ -1002,7 +1089,7 @@ export async function sendJobRescheduledEmail(booking: JobChangeEmail) {
 
   return sendEmail({
     to: booking.email,
-    subject: `Your Every Detail appointment has been moved`,
+    subject: copy.subject,
     html,
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
   });
@@ -1011,12 +1098,22 @@ export async function sendJobRescheduledEmail(booking: JobChangeEmail) {
 export async function sendJobCancellationEmail(booking: JobChangeEmail) {
   const firstName = firstNameOnly(booking.name);
   const appointment = formatAppointment(booking.start);
+  const copy = emailCopy(
+    "cancelled",
+    {
+      subject: "Your Every Detail appointment is cancelled",
+      headline: `${firstName ? `${escapeHtml(firstName)}, your` : "Your"} appointment is cancelled.`,
+      intro: "This is just a confirmation so there’s no uncertainty. The appointment below is no longer on the schedule.",
+    },
+    { first_name: firstName || "there", date: appointment, time: formatAppointmentTime(booking.start), service: booking.service, vehicle: booking.vehicle },
+  );
+  if (!copy.enabled) return switchedOff();
 
   const html = shell(
     `
       ${eyebrow("Appointment cancelled")}
-      ${headline(`${firstName ? `${escapeHtml(firstName)}, your` : "Your"} appointment is cancelled.`)}
-      ${lede("This is just a confirmation so there’s no uncertainty. The appointment below is no longer on the schedule.")}
+      ${headline(copy.headline)}
+      ${lede(copy.intro)}
 
       <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 24px;border-top:2px solid ${BRAND.black};border-bottom:1px solid rgba(17,17,17,.2);">
         ${detailRow("Appointment", appointment)}
@@ -1033,7 +1130,7 @@ export async function sendJobCancellationEmail(booking: JobChangeEmail) {
 
   return sendEmail({
     to: booking.email,
-    subject: `Your Every Detail appointment is cancelled`,
+    subject: copy.subject,
     html,
     replyTo: process.env.INTERNAL_NOTIFY_EMAIL || "hello@everydetail.co",
   });

@@ -38,6 +38,9 @@ export const site = {
 
   paymentMethods: ["Cash", "Check", "Venmo", "Zelle"] as string[],
 
+  // Site-wide notice (holiday closure, booked-out week). Set in Team HQ → Settings.
+  announcement: null as null | { text: string; linkText?: string; linkUrl?: string; endsOn?: string },
+
   // Links to tools that live outside this site. null = hidden from nav/footer.
   external: {
     clientPortal: null as string | null, // e.g. "https://portal.everydetail.co"

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 import { sendAfterJobEmail } from "@/lib/email";
 import { buildReceiptPdfBase64 } from "@/lib/receipt-pdf";
 import { supabaseAdmin } from "@/lib/supabase/admin";
@@ -29,6 +30,7 @@ function n(value: unknown) {
 }
 
 export async function GET(request: NextRequest) {
+  await ensureLiveCatalog(); // email wording + contact info from Team HQ settings
   if (!authorized(request)) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const admin = supabaseAdmin();

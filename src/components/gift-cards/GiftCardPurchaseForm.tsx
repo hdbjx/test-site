@@ -5,10 +5,11 @@ import { Honeypot } from "@/components/forms/parts";
 import { TurnstileField } from "@/components/forms/TurnstileField";
 import { track } from "@/lib/analytics";
 import { site } from "@/data/site";
+import { GIFT_CARD_PRESETS } from "@/data/giftCards";
 import { GiftCardFace } from "./GiftCardFace";
 import styles from "./gift.module.css";
 
-const PRESETS = [100, 150, 250, 400];
+const PRESETS = GIFT_CARD_PRESETS;
 
 type Result = { reference: string; amount: number; paymentMethod: "venmo" | "zelle"; paymentTarget?: string; paymentUrl?: string };
 

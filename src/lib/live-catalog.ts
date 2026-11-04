@@ -3,6 +3,8 @@ import { ADDON_INCLUDED_IN, ADDON_LABELS, ADDON_NOT_OFFERED_WITH, ADDON_PRICES, 
 import { PAINT_PRICING, paintServices, type PaintServiceId } from "@/data/paint";
 import { site } from "@/data/site";
 import { TIERS } from "@/data/coverage";
+import { GIFT_CARD_PRESETS } from "@/data/giftCards";
+import { setEmailCopy, setReviewUrl, type EmailCopyOverride, type EmailKind } from "@/lib/email-copy";
 
 /**
  * The price catalog managers edit in Team HQ (Supabase: catalog_public()).
@@ -19,7 +21,10 @@ export type LiveCatalog = {
 };
 
 export type CompanySettings = {
-  contact?: { phone?: string; email?: string };
+  contact?: { phone?: string; email?: string; reviewUrl?: string };
+  announcement?: { enabled?: boolean; text?: string; linkText?: string; linkUrl?: string; endsOn?: string };
+  gift_cards?: { presets?: number[] };
+  emails?: Partial<Record<EmailKind, EmailCopyOverride>>;
   payment_methods?: string[];
   service_area?: { core?: number; route?: number; fee?: number; premium?: number };
   updatedAt?: string | null;
@@ -45,6 +50,20 @@ export function applySettings(settings: CompanySettings | null | undefined) {
 
   const methods = (settings.payment_methods ?? []).map((m) => String(m).trim()).filter(Boolean);
   if (methods.length) site.paymentMethods.splice(0, site.paymentMethods.length, ...methods);
+
+  const reviewUrl = settings.contact?.reviewUrl?.trim();
+  if (reviewUrl && /^https:\/\//.test(reviewUrl)) site.reviews.googleUrl = reviewUrl;
+  setReviewUrl(reviewUrl);
+
+  const a = settings.announcement;
+  site.announcement = a?.enabled && a.text?.trim()
+    ? { text: a.text.trim(), linkText: a.linkText?.trim() || undefined, linkUrl: a.linkUrl?.trim() || undefined, endsOn: a.endsOn || undefined }
+    : null;
+
+  const presets = (settings.gift_cards?.presets ?? []).map(Number).filter((n) => Number.isInteger(n) && n >= 25 && n <= 2000);
+  if (presets.length) GIFT_CARD_PRESETS.splice(0, GIFT_CARD_PRESETS.length, ...presets);
+
+  setEmailCopy(settings.emails);
 
   for (const tier of TIERS) {
     if (tier.zone === "exception") continue;

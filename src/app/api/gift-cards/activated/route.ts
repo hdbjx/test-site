@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import {
   buildGiftCardActivatedEmail,
@@ -12,6 +13,7 @@ function bearerToken(req: Request) {
 }
 
 export async function POST(req: Request) {
+  await ensureLiveCatalog(); // email wording + contact info from Team HQ settings
   const token = bearerToken(req);
   if (!token) return NextResponse.json({ ok: false, error: "Sign in required." }, { status: 401 });
 

@@ -1,4 +1,5 @@
 import { quoteDetailPlus } from "@/lib/detailPlusPricing";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 import { getDetailPlusCatalog } from "@/lib/detailPlusCatalog";
 import { NextResponse } from "next/server";
 import { sendLeadEmails } from "@/lib/email";
@@ -85,6 +86,7 @@ async function saveQuoteToCrm(fields: Record<string, string>, clientId: string) 
 }
 
 export async function POST(req: Request) {
+  await ensureLiveCatalog(); // email wording + contact info from Team HQ settings
   console.info("[lead] request received");
 
   let body: Record<string, unknown>;

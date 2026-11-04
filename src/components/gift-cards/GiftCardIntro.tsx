@@ -1,9 +1,10 @@
 "use client";
 
 import styles from "./gift.module.css";
+import { GIFT_CARD_PRESETS } from "@/data/giftCards";
 import { GiftCardFace } from "./GiftCardFace";
 
-const QUICK = [100, 150, 250, 400];
+const QUICK = GIFT_CARD_PRESETS;
 
 /** Hero for /gift-cards. Quick amounts preselect the builder below via the "ed:gift-amount" event. */
 export function GiftCardIntro() {
