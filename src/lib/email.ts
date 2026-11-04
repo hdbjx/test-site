@@ -1,3 +1,4 @@
+import { teamEmailPhoto } from "@/data/team";
 import { site } from "@/data/site";
 
 type EmailAttachment = {
@@ -816,16 +817,19 @@ function initials(value: string) {
 function teamMemberCard(member: DayOfTeamMember) {
   const name = firstNameOnly(member.name) || "Every Detail";
   const role = member.isLead ? "Lead detailer" : "Detailer";
+  const photo = teamEmailPhoto(member.name);
 
   return `
     <tr>
       <td style="padding:0 0 9px;">
         <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;border:1px solid rgba(17,17,17,.14);">
           <tr>
-            <td width="66" style="padding:13px 0 13px 14px;vertical-align:middle;">
-              <div style="width:46px;height:46px;border-radius:999px;background:${BRAND.oxblood};color:${BRAND.cream};text-align:center;line-height:46px;font-size:13px;font-weight:900;letter-spacing:.8px;">${escapeHtml(initials(member.name))}</div>
+            <td width="66" style="width:66px;padding:12px 0 12px 14px;vertical-align:middle;">
+              ${photo
+                ? `<img src="${photo}" width="52" height="52" alt="${escapeHtml(name)}" style="display:block;width:52px;height:52px;border-radius:999px;border:0;object-fit:cover;background:${BRAND.oxblood};" />`
+                : `<div style="width:52px;height:52px;border-radius:999px;background:${BRAND.oxblood};color:${BRAND.cream};text-align:center;line-height:52px;font-size:13px;font-weight:900;letter-spacing:.8px;">${escapeHtml(initials(member.name))}</div>`}
             </td>
-            <td style="padding:13px 16px;vertical-align:middle;">
+            <td style="padding:12px 16px 12px 4px;vertical-align:middle;">
               <div style="font-size:16px;line-height:1.2;color:${BRAND.black};font-weight:900;">${escapeHtml(name)}</div>
               <div style="margin-top:3px;font-size:11px;line-height:1.3;letter-spacing:.7px;text-transform:uppercase;color:${BRAND.gray};font-weight:700;">${role}</div>
             </td>

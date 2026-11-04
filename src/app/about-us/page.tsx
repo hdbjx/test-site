@@ -4,7 +4,8 @@ import { CurvedTape } from "@/components/CurvedTape";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
 import { site } from "@/data/site";
-import { roleLabels, team as fallbackTeam } from "@/data/team";
+import { roleLabels, team as fallbackTeam, teamPhoto } from "@/data/team";
+import Image from "next/image";
 import { getPublicTeamRoster } from "@/lib/team-roster";
 import { pageMetadata } from "@/lib/seo";
 import styles from "./about.module.css";
@@ -162,7 +163,7 @@ export default async function AboutPage() {
                   <p className={styles.groupLabel}>Running the business</p>
                   <ul className={`${styles.roster} ${styles.rosterLead}`}>
                     {leads.map((member) => (
-                      <li key={member.id}><strong>{member.name}</strong><span>{member.title}</span></li>
+                      <li key={member.id}><MemberPhoto name={member.name} /><strong>{member.name}</strong><span>{member.title}</span></li>
                     ))}
                   </ul>
                 </div>
@@ -172,7 +173,7 @@ export default async function AboutPage() {
                   <p className={styles.groupLabel}>In the driveway</p>
                   <ul className={styles.roster}>
                     {crew.map((member) => (
-                      <li key={member.id}><strong>{member.name}</strong><span>{member.title}</span></li>
+                      <li key={member.id}><MemberPhoto name={member.name} /><strong>{member.name}</strong><span>{member.title}</span></li>
                     ))}
                   </ul>
                 </div>
@@ -237,5 +238,18 @@ export default async function AboutPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function MemberPhoto({ name }: { name: string }) {
+  const src = teamPhoto(name);
+  return (
+    <div className={styles.rosterPhoto}>
+      {src ? (
+        <Image src={src} alt={`${name}, Every Detail`} fill sizes="(max-width: 700px) 46vw, 240px" />
+      ) : (
+        <span className={styles.rosterInitial} aria-hidden="true">{name.slice(0, 1)}</span>
+      )}
+    </div>
   );
 }

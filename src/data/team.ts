@@ -31,5 +31,12 @@ export const team: TeamMember[] = [
   { name: "Rex", role: "tier1" },
 ];
 
+/** Headshots in /public/team (site, 4:5) and /public/team/email (email, square). */
+const PHOTOS = new Set(["wiley", "davis", "grady", "mateo", "will", "nathan", "thomas", "rex"]);
+const photoKey = (name: string) => (name.trim().split(/\s+/)[0] || "").toLowerCase();
+export const teamPhoto = (name: string) => (PHOTOS.has(photoKey(name)) ? `/team/${photoKey(name)}.webp` : null);
+export const teamEmailPhoto = (name: string) =>
+  PHOTOS.has(photoKey(name)) ? `https://www.everydetail.co/team/email/${photoKey(name)}.jpg` : null;
+
 export const leadership = team.filter((m) => ["owner", "manager", "marketing"].includes(m.role));
 export const technicians = team.filter((m) => m.role.startsWith("tier"));
