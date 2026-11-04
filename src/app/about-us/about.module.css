@@ -409,6 +409,7 @@
 
 .roster li {
   display: grid;
+  align-content: end;
   gap: 0.45rem;
   padding: clamp(1.1rem, 2vw, 1.5rem);
   border-right: 1px solid rgba(242, 236, 223, 0.16);
@@ -437,15 +438,6 @@
   transform: scale(1.03);
 }
 
-.rosterInitial {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  color: rgba(242, 236, 223, 0.22) !important;
-  font-size: clamp(3rem, 6vw, 4.5rem) !important;
-  letter-spacing: 0 !important;
-}
 
 .roster strong {
   font-family: var(--font-display);

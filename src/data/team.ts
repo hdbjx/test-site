@@ -24,10 +24,8 @@ export const team: TeamMember[] = [
   { name: "Grady", role: "tier3" },
   { name: "Mateo", role: "tier3" },
   { name: "Will", role: "tier2" },
-  { name: "Aidan", role: "tier2" },
   { name: "Nathan", role: "tier1" },
   { name: "Thomas", role: "tier1" },
-  { name: "Hayes", role: "tier1" },
   { name: "Rex", role: "tier1" },
 ];
 

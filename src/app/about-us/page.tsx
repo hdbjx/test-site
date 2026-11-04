@@ -243,13 +243,11 @@ export default async function AboutPage() {
 
 function MemberPhoto({ name }: { name: string }) {
   const src = teamPhoto(name);
+  // No photo yet: just the name, bottom-aligned with the cards beside it.
+  if (!src) return null;
   return (
     <div className={styles.rosterPhoto}>
-      {src ? (
-        <Image src={src} alt={`${name}, Every Detail`} fill sizes="(max-width: 700px) 46vw, 240px" />
-      ) : (
-        <span className={styles.rosterInitial} aria-hidden="true">{name.slice(0, 1)}</span>
-      )}
+      <Image src={src} alt={`${name}, Every Detail`} fill sizes="(max-width: 700px) 46vw, 240px" />
     </div>
   );
 }
