@@ -15,13 +15,13 @@ async function fetchCatalog(): Promise<LiveCatalog | null> {
   if (!SUPABASE_URL || !key) return null;
   try {
     const db = createClient(SUPABASE_URL, key, { auth: { persistSession: false, autoRefreshToken: false } });
-    const { data, error } = await db.rpc("catalog_public");
-    if (error) {
-      // Before the catalog SQL is run this just means "use the built-in prices".
-      if (!/catalog_public/.test(error.message)) console.error("[catalog]", error.message);
-      return null;
-    }
-    return data as LiveCatalog;
+    const [catalog, settings] = await Promise.all([db.rpc("catalog_public"), db.rpc("company_settings_public")]);
+    // Before the SQL is run these just mean "use the built-in values".
+    if (catalog.error && !/catalog_public/.test(catalog.error.message)) console.error("[catalog]", catalog.error.message);
+    if (settings.error && !/company_settings_public/.test(settings.error.message)) console.error("[settings]", settings.error.message);
+    if (catalog.error && settings.error) return null;
+    const base = (catalog.error ? { services: [], addons: [], updatedAt: null } : catalog.data) as LiveCatalog;
+    return { ...base, settings: settings.error ? null : (settings.data as LiveCatalog["settings"]) };
   } catch (error) {
     console.error("[catalog]", error);
     return null;

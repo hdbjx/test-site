@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Honeypot } from "@/components/forms/parts";
 import { TurnstileField } from "@/components/forms/TurnstileField";
 import { track } from "@/lib/analytics";
+import { site } from "@/data/site";
 import { GiftCardFace } from "./GiftCardFace";
 import styles from "./gift.module.css";
 
@@ -102,7 +103,7 @@ export function GiftCardPurchaseForm() {
 
         {!result.paymentTarget && (
           <p className={styles.help}>
-            Need payment details? Text <a href="sms:+14048550672">(404) 855-0672</a> and we’ll send them.
+            Need payment details? Text <a href={site.phone.sms}>{site.phone.display}</a> and we’ll send them.
           </p>
         )}
       </div>

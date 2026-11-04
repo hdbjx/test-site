@@ -49,7 +49,7 @@ export function localBusinessSchema() {
     name: site.name,
     description: site.description,
     url: site.url,
-    telephone: "+1-404-855-0672",
+    telephone: site.phone.href.replace("tel:", ""),
     email: site.email,
     image: abs(imageById("og-default").file),
     logo: abs("/brand/every-detail-logo.png"),

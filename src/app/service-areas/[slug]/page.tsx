@@ -10,7 +10,7 @@ import { Photo } from "@/components/Photo";
 import { ServicesBoard } from "@/components/services/ServicesBoard";
 import { TrackedLink } from "@/components/TrackedLink";
 import { areaPhotos, areas, areasWithPages } from "@/data/areas";
-import { HOME, areaGeo, estimateMinutes, milesBetween } from "@/data/coverage";
+import { HOME, areaGeo, estimateMinutes, milesBetween, tierMinutes } from "@/data/coverage";
 import { startingPrice } from "@/data/services";
 import { workWall, type WorkReview } from "@/data/work";
 import { usd } from "@/lib/format";
@@ -102,7 +102,7 @@ export default async function AreaPage({ params }: Params) {
                 ? `Downtown is roughly ${minutesOut} minutes from our Decatur shop, and the in-town neighborhoods closest to Decatur are an easy trip.`
                 : minutesOut !== null
                 ? `${area.name} is roughly ${minutesOut} minutes from our Decatur shop.`
-                : `${area.name} is home base, and most of our work is within a 25-minute drive.`}{" "}
+                : `${area.name} is home base, and most of our work is within a ${tierMinutes("route")}-minute drive.`}{" "}
               Check your exact address to see where you land and book it in one step.
             </p>
           </div>

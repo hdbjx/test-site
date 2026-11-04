@@ -24,6 +24,9 @@ export const TIERS: { zone: CoverageZone; maxMinutes: number }[] = [
   { zone: "exception", maxMinutes: Infinity }, // exception or multiple jobs in the area
 ];
 
+/** Upper drive-time limit of a tier (set in Team HQ → Settings). */
+export const tierMinutes = (zone: CoverageZone) => TIERS.find((t) => t.zone === zone)!.maxMinutes;
+
 export function zoneForMinutes(minutes: number): CoverageZone {
   return TIERS.find((t) => minutes <= t.maxMinutes)!.zone;
 }

@@ -36,7 +36,7 @@ export const site = {
     year: 2025,
   },
 
-  paymentMethods: ["Cash", "Check", "Venmo", "Zelle"],
+  paymentMethods: ["Cash", "Check", "Venmo", "Zelle"] as string[],
 
   // Links to tools that live outside this site. null = hidden from nav/footer.
   external: {

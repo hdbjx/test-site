@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { areas } from "@/data/areas";
 import { areaGeo, estimateMinutes, milesBetween, zoneForMinutes, type LatLng } from "@/data/coverage";
 import { enforceRateLimits, ipLimit } from "@/lib/public-security";
+import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 /**
  * Service-area address checker.
@@ -78,6 +79,7 @@ export async function GET(req: Request) {
 /* ---------------- check ---------------- */
 
 export async function POST(req: Request) {
+  await ensureLiveCatalog(); // drive-time tiers come from Team HQ settings
   let body: Record<string, unknown>;
   try {
     body = await req.json();

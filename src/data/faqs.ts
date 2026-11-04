@@ -7,7 +7,8 @@ import { site } from "./site";
 
 export type Faq = { q: string; a: string; confirmed: boolean };
 
-const payments = site.paymentMethods.slice(0, -1).join(", ") + " or " + site.paymentMethods.at(-1);
+// A function so the answer follows the payment methods set in Team HQ.
+const payments = () => (site.paymentMethods.length > 1 ? site.paymentMethods.slice(0, -1).join(", ") + " or " + site.paymentMethods.at(-1) : site.paymentMethods[0] ?? "");
 
 export const homeFaqs: Faq[] = [
   {
@@ -52,7 +53,9 @@ export const homeFaqs: Faq[] = [
   },
   {
     q: "What forms of payment do you accept?",
-    a: `${payments}.`,
+    get a() {
+      return `${payments()}.`;
+    },
     confirmed: true,
   },
   {

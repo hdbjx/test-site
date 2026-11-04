@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { areas } from "@/data/areas";
-import { HOME, areaGeo, estimateMinutes, milesBetween } from "@/data/coverage";
+import { HOME, areaGeo, estimateMinutes, milesBetween, tierMinutes } from "@/data/coverage";
 import { AddressCheck, type CheckResult } from "./AddressCheck";
 import { CoverageMap } from "./CoverageMap";
 import styles from "./coverage.module.css";
@@ -30,9 +30,9 @@ export function CoveragePanel({
         <CoverageMap active={active} focus={focus} onActive={onActive} result={result} />
       </div>
       <div className={styles.legend}>
-        <span><i className={styles.keyCore} />Core · 15 min</span>
-        <span><i className={styles.keyRoute} />Route · 25 min</span>
-        <span><i className={styles.keyFee} />Extended · 35 min</span>
+        <span><i className={styles.keyCore} />Core · {tierMinutes("core")} min</span>
+        <span><i className={styles.keyRoute} />Route · {tierMinutes("route")} min</span>
+        <span><i className={styles.keyFee} />Extended · {tierMinutes("fee")} min</span>
         <small>Approx. drive from our Decatur shop</small>
       </div>
     </div>

@@ -11,6 +11,7 @@ import {
   estimateMinutes,
   milesBetween,
   milesForMinutes,
+  tierMinutes,
   milesToPx,
   zoneTone,
   project,
@@ -95,7 +96,7 @@ export function CoverageMap({ active = null, focus, onActive, result }: Props) {
       onMouseLeave={() => onActive?.(null)}
     >
       <title id={`${uid}-t`}>
-        {`Service map centered on Decatur with rings at about 15, 25 and 35 minutes' drive. Areas served: ${pins.map((p) => p.name).join(", ")}.`}
+        {`Service map centered on Decatur with rings at about ${tierMinutes("core")}, ${tierMinutes("route")} and ${tierMinutes("fee")} minutes' drive. Areas served: ${pins.map((p) => p.name).join(", ")}.`}
       </title>
       <defs>
         <pattern id={`${uid}-grid`} width="50" height="50" patternUnits="userSpaceOnUse">
@@ -111,9 +112,9 @@ export function CoverageMap({ active = null, focus, onActive, result }: Props) {
 
       <g clipPath={`url(#${uid}-clip)`}>
         {/* zones */}
-        <circle cx={home.x} cy={home.y} r={ring(milesForMinutes(35))} className={styles.edgeZone} />
-        <circle cx={home.x} cy={home.y} r={ring(milesForMinutes(25))} className={styles.routeZone} />
-        <circle cx={home.x} cy={home.y} r={ring(milesForMinutes(15))} className={styles.coreZone} />
+        <circle cx={home.x} cy={home.y} r={ring(milesForMinutes(tierMinutes("fee")))} className={styles.edgeZone} />
+        <circle cx={home.x} cy={home.y} r={ring(milesForMinutes(tierMinutes("route")))} className={styles.routeZone} />
+        <circle cx={home.x} cy={home.y} r={ring(milesForMinutes(tierMinutes("core")))} className={styles.coreZone} />
 
         {/* roads */}
         <g aria-hidden="true">
@@ -153,11 +154,11 @@ export function CoverageMap({ active = null, focus, onActive, result }: Props) {
         {/* ring labels */}
         <g aria-hidden="true" className={styles.ringLabel}>
           {[
-            { min: 15, angle: Math.PI / 5, dy: 24, anchor: "start" as const },
-            { min: 25, angle: -Math.PI / 4.6, dy: 0, anchor: "end" as const },
-            { min: 35, angle: -2.36, dy: 34, anchor: "start" as const },
+            { min: tierMinutes("core"), angle: Math.PI / 5, dy: 24, anchor: "start" as const },
+            { min: tierMinutes("route"), angle: -Math.PI / 4.6, dy: 0, anchor: "end" as const },
+            { min: tierMinutes("fee"), angle: -2.36, dy: 34, anchor: "start" as const },
           ].map(({ min, angle, dy, anchor }) => (
-            <text key={min} x={home.x + ring(milesForMinutes(min)) * Math.cos(angle)} y={home.y + ring(milesForMinutes(min)) * Math.sin(angle) + dy} textAnchor={anchor} dx={anchor === "end" ? -8 : min === 35 ? 16 : 0}>
+            <text key={min} x={home.x + ring(milesForMinutes(min)) * Math.cos(angle)} y={home.y + ring(milesForMinutes(min)) * Math.sin(angle) + dy} textAnchor={anchor} dx={anchor === "end" ? -8 : min === tierMinutes("fee") ? 16 : 0}>
               ≈{min} min
             </text>
           ))}

@@ -1,6 +1,8 @@
 import { PRICING, services, serviceIds, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { ADDON_INCLUDED_IN, ADDON_LABELS, ADDON_NOT_OFFERED_WITH, ADDON_PRICES, PAINT_UPGRADES, addonIds, type AddonId } from "@/data/quoteExtras";
 import { PAINT_PRICING, paintServices, type PaintServiceId } from "@/data/paint";
+import { site } from "@/data/site";
+import { TIERS } from "@/data/coverage";
 
 /**
  * The price catalog managers edit in Team HQ (Supabase: catalog_public()).
@@ -12,7 +14,45 @@ export type LiveCatalog = {
   services: { id: string; name: string; crew: number; active: boolean; prices: Record<string, { price: number | null; minutes: number }> }[];
   addons: { id: string; key: string; name: string; price: number | null; includedIn: string[]; notOfferedWith: string[]; active: boolean }[];
   updatedAt: string | null;
+  /** Company settings from Team HQ → Settings (company_settings_public()). */
+  settings?: CompanySettings | null;
 };
+
+export type CompanySettings = {
+  contact?: { phone?: string; email?: string };
+  payment_methods?: string[];
+  service_area?: { core?: number; route?: number; fee?: number; premium?: number };
+  updatedAt?: string | null;
+};
+
+let settingsAppliedAt: string | null = null;
+
+/** Copy live company settings over src/data/site.ts and the service-area tiers. */
+export function applySettings(settings: CompanySettings | null | undefined) {
+  if (!settings) return;
+  if (settings.updatedAt && settings.updatedAt === settingsAppliedAt) return;
+
+  const phone = settings.contact?.phone?.trim();
+  const digits = phone?.replace(/\D/g, "") ?? "";
+  if (phone && (digits.length === 10 || (digits.length === 11 && digits.startsWith("1")))) {
+    const e164 = `+1${digits.slice(-10)}`;
+    site.phone.display = phone;
+    site.phone.href = `tel:${e164}`;
+    site.phone.sms = `sms:${e164}`;
+  }
+  const email = settings.contact?.email?.trim();
+  if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) site.email = email;
+
+  const methods = (settings.payment_methods ?? []).map((m) => String(m).trim()).filter(Boolean);
+  if (methods.length) site.paymentMethods.splice(0, site.paymentMethods.length, ...methods);
+
+  for (const tier of TIERS) {
+    if (tier.zone === "exception") continue;
+    const minutes = Number(settings.service_area?.[tier.zone]);
+    if (Number.isFinite(minutes) && minutes > 0) tier.maxMinutes = minutes;
+  }
+  settingsAppliedAt = settings.updatedAt ?? new Date().toISOString();
+}
 
 const PAINT_IDS: PaintServiceId[] = ["enhancement", "correction", "ceramic2yr"];
 const isVehicle = (v: string): v is VehicleId => vehicles.some((x) => x.id === v);
@@ -23,6 +63,7 @@ let appliedAt: string | null = null;
 
 /** Copy live values over the site's catalog. Safe to call repeatedly. */
 export function applyCatalog(data: LiveCatalog | null | undefined) {
+  applySettings(data?.settings);
   if (!data?.services?.length) return;
   if (data.updatedAt && data.updatedAt === appliedAt) return;
 
