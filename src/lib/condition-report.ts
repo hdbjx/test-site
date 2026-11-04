@@ -1,5 +1,6 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFImage, type PDFPage } from "pdf-lib";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { DAMAGE_AREAS, DAMAGE_SEVERITIES, damageSpotTitle } from "./damage-areas";
 
 /**
  * Pre-service condition report: what each vehicle looked like before any work
@@ -9,6 +10,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  */
 
 type Photo = { label: string; path: string; bucket: string; note?: string | null; at?: string | null; by?: string | null };
+/** One damage spot from vehicle_damage (DEPLOY-DAMAGE-V2.sql), as it stood on this visit. */
+type Spot = { n: number; id: string; title: string; area: string; detail: string; result: "new" | "present" | "repaired"; foundAt: string | null; foundBy: string | null; photos: Photo[] };
 type VehicleSection = {
   label: string
   detail: string
@@ -18,6 +21,7 @@ type VehicleSection = {
   arrival: Photo[]
   damage: Photo[]
   notes: { text: string; by: string; stamp: string }[]
+  spots: Spot[]
 };
 export type ConditionReport = {
   jobId: string
@@ -42,17 +46,46 @@ function damageNotes(raw: string | null | undefined, jobDay: string) {
     .filter((n) => n.text && n.stamp.startsWith(jobDay));
 }
 
+/** Damage v2 spots seen on this visit: found on it, or re-checked on it. Null until the v2 SQL is run. */
+async function loadSpots(admin: SupabaseClient, jobId: string, vehicleIds: string[]) {
+  if (!vehicleIds.length) return null;
+  const [rows, checks] = await Promise.all([
+    admin.from("vehicle_damage").select("*").in("vehicle_id", vehicleIds).order("found_at"),
+    admin.from("vehicle_damage_checks").select("damage_id,result,checked_by,checked_at").eq("job_id", jobId),
+  ]);
+  if (rows.error || checks.error) return null;
+  const checkOf = new Map(((checks.data || []) as any[]).map((c) => [String(c.damage_id), c]));
+  const seen = ((rows.data || []) as any[]).filter((d) => d.found_job_id === jobId || d.repaired_job_id === jobId || checkOf.has(String(d.id)));
+  const ids = seen.map((d) => d.id);
+  const media = ids.length ? (((await admin.from("job_media").select("damage_id,storage_path,operator_name,created_at").in("damage_id", ids).order("created_at")).data || []) as any[]) : [];
+  return seen.map((d) => {
+    const c = checkOf.get(String(d.id));
+    const result: Spot["result"] = d.found_job_id === jobId ? "new" : c?.result === "repaired" || d.repaired_job_id === jobId ? "repaired" : "present";
+    return {
+      vehicleId: String(d.vehicle_id), jobVehicleId: d.job_vehicle_id ? String(d.job_vehicle_id) : null, note: String(d.note || "").trim(),
+      spot: {
+        n: 0, id: String(d.id), title: damageSpotTitle(d), area: String(d.area || "other"),
+        detail: [d.source === "legacy_note" ? "" : DAMAGE_SEVERITIES[d.severity] || "", String(d.note || "").trim()].filter(Boolean).join(" - "),
+        result, foundAt: d.found_at || null, foundBy: d.found_by || null,
+        photos: media.filter((m) => String(m.damage_id) === String(d.id)).map((m) => ({ label: "", path: m.storage_path, bucket: "job-media", at: m.created_at, by: m.operator_name })),
+      } as Spot,
+    };
+  });
+}
+
 /** Everything the report needs for one job. Uses the service role; callers authorize first. */
 export async function loadConditionReport(admin: SupabaseClient, jobId: string): Promise<ConditionReport | null> {
   const job = await admin.from("jobs").select("id,client_id,customer_name,address,service_name,vehicle,scheduled_start").eq("id", jobId).maybeSingle();
   if (job.error || !job.data) return null;
   const j = job.data as any;
-  const [lines, arrival, media, reports] = await Promise.all([
+  const [lines, arrival, mediaTry, reports] = await Promise.all([
     admin.from("job_vehicles").select("id,vehicle_id,vehicle_label,sort_order").eq("job_id", jobId).order("sort_order"),
     admin.from("van_hq_arrival_condition").select("*").eq("job_id", jobId),
-    admin.from("job_media").select("id,job_vehicle_id,vehicle_id,storage_path,operator_name,created_at").eq("job_id", jobId).eq("media_type", "damage").order("created_at"),
+    admin.from("job_media").select("id,job_vehicle_id,vehicle_id,storage_path,operator_name,created_at,damage_id").eq("job_id", jobId).eq("media_type", "damage").order("created_at"),
     admin.from("job_condition_reports").select("*").eq("job_id", jobId),
   ]);
+  // damage_id only exists once the v2 SQL is run.
+  const media = mediaTry.error ? await admin.from("job_media").select("id,job_vehicle_id,vehicle_id,storage_path,operator_name,created_at").eq("job_id", jobId).eq("media_type", "damage").order("created_at") : mediaTry;
   const jvs = ((lines.data || []) as any[]).length ? (lines.data as any[]) : [{ id: null, vehicle_id: null, vehicle_label: j.vehicle || "Vehicle" }];
   const vehicleIds = jvs.map((x) => x.vehicle_id).filter(Boolean);
   const vehicles = vehicleIds.length ? ((await admin.from("vehicles").select("id,year,make,model,color,plate,tech_notes").in("id", vehicleIds)).data || []) as any[] : [];
@@ -64,6 +97,7 @@ export async function loadConditionReport(admin: SupabaseClient, jobId: string):
     try { const p = JSON.parse(String((cn.data as any)?.notes || "{}")); clientTech = typeof p?.techNotes === "string" ? p.techNotes : ""; } catch { clientTech = String((cn.data as any)?.notes || ""); }
   }
   const jobDay = dayET(j.scheduled_start);
+  const allSpots = (await loadSpots(admin, jobId, vehicleIds)) || [];
 
   const sections: VehicleSection[] = jvs.map((jv, index) => {
     const v = vehicles.find((x) => x.id === jv.vehicle_id);
@@ -76,17 +110,20 @@ export async function loadConditionReport(admin: SupabaseClient, jobId: string):
     if (a?.driver_storage_path) arrivalPhotos.push({ label: "Driver area", path: a.driver_storage_path, bucket: "job-media", at: a.completed_at });
     if (a?.front34_storage_path) arrivalPhotos.push({ label: "Front 3/4", path: a.front34_storage_path, bucket: "job-media", at: a.completed_at });
     for (const m of condMedia.filter(mine)) arrivalPhotos.push({ label: String(m.angle || "Arrival").replace(/_/g, " "), path: m.storage_path, bucket: "job-completions", note: m.note, at: m.created_at });
-    const damagePhotos: Photo[] = ((media.data || []) as any[]).filter(mine).map((m) => ({ label: "Pre-existing damage", path: m.storage_path, bucket: "job-media", at: m.created_at, by: m.operator_name }));
-    const notes = [...damageNotes(v?.tech_notes, jobDay), ...(index === 0 && !v ? damageNotes(clientTech, jobDay) : [])];
+    const spotRows = allSpots.filter((x) => x.jobVehicleId ? x.jobVehicleId === jv.id : x.vehicleId === jv.vehicle_id);
+    const spots = spotRows.map((x, i) => ({ ...x.spot, n: i + 1, photos: x.spot.photos.map((p) => ({ ...p, label: `#${i + 1} ${x.spot.title}`, ...(p.at && dayET(p.at) !== jobDay ? { at: null, label: `#${i + 1} ${x.spot.title} (${dayET(p.at)})` } : {}) })) }));
+    const spotNotes = new Set(spotRows.map((x) => x.note.toLowerCase()).filter(Boolean));
+    const damagePhotos: Photo[] = ((media.data || []) as any[]).filter((m) => mine(m) && !m.damage_id).map((m) => ({ label: "Pre-existing damage", path: m.storage_path, bucket: "job-media", at: m.created_at, by: m.operator_name }));
+    const notes = [...damageNotes(v?.tech_notes, jobDay), ...(index === 0 && !v ? damageNotes(clientTech, jobDay) : [])].filter((n) => !spotNotes.has(n.text.toLowerCase()));
     const teamReport = reportRows[0];
     const statusRaw = String(a?.damage_status || "").toLowerCase();
-    const status: VehicleSection["status"] = statusRaw === "damage" || damagePhotos.length || notes.length || teamReport?.status === "noted" ? "damage" : statusRaw === "none" || teamReport?.status === "clear" ? "none" : "unchecked";
+    const status: VehicleSection["status"] = statusRaw === "damage" || spots.some((x) => x.result !== "repaired") || damagePhotos.length || notes.length || teamReport?.status === "noted" ? "damage" : statusRaw === "none" || teamReport?.status === "clear" ? "none" : "unchecked";
     if (teamReport?.note && index === 0) notes.push({ text: String(teamReport.note), by: "Team App", stamp: teamReport.created_at ? timeET(teamReport.created_at) : "" });
     return {
       label, detail, status,
       checkedBy: a?.damage_checked_by || a?.operator_name || damagePhotos[0]?.by || null,
       checkedAt: a?.damage_checked_at || a?.completed_at || teamReport?.created_at || null,
-      arrival: arrivalPhotos, damage: damagePhotos, notes,
+      arrival: arrivalPhotos, damage: damagePhotos, notes, spots,
     };
   });
 
@@ -159,6 +196,42 @@ export async function buildConditionReportPdf(admin: SupabaseClient, r: Conditio
     for (const line of wrap(s, font, size, width)) { need(size * lead); page.drawText(line, { x, y: y - size, size, font, color }); y -= size * lead; }
   };
 
+  /** Top-down outline with numbered pins on the left, the numbered list on the right. */
+  const drawSpots = (spots: Spot[]) => {
+    const s = 0.6, mapW = 220 * s, mapH = 360 * s, listX = M + mapW + 24, listW = W - M - listX;
+    need(mapH + 44);
+    text("DAMAGE MAP", 8, bold, OX); y -= 4;
+    const top = y - 10, ox = M;
+    const rr = (x: number, yy: number, w: number, h: number, r: number) => `M${x + r},${yy} H${x + w - r} Q${x + w},${yy} ${x + w},${yy + r} V${yy + h - r} Q${x + w},${yy + h} ${x + w - r},${yy + h} H${x + r} Q${x},${yy + h} ${x},${yy + h - r} V${yy + r} Q${x},${yy} ${x + r},${yy} Z`;
+    page.drawSvgPath(rr(44, 18, 132, 324, 44), { x: ox, y: top, scale: s, color: rgb(0.93, 0.91, 0.88), borderColor: LINE, borderWidth: 1 });
+    for (const a of Object.values(DAMAGE_AREAS)) if (a.box) page.drawSvgPath(rr(a.box[0], a.box[1], a.box[2], a.box[3], 5), { x: ox, y: top, scale: s, color: rgb(1, 1, 1), borderColor: LINE, borderWidth: 0.8 });
+    page.drawText("FRONT", { x: ox + mapW / 2 - bold.widthOfTextAtSize("FRONT", 6) / 2, y: top + 2, size: 6, font: bold, color: MUTED });
+    page.drawText("REAR", { x: ox + mapW / 2 - bold.widthOfTextAtSize("REAR", 6) / 2, y: top - mapH - 8, size: 6, font: bold, color: MUTED });
+    const used: Record<string, number> = {};
+    const pinColor = (x: Spot) => x.result === "new" ? WARN : x.result === "repaired" ? rgb(0.6, 0.62, 0.6) : INK;
+    const pin = (cx: number, cy: number, n: number, color: ReturnType<typeof rgb>, r = 7) => {
+      page.drawCircle({ x: cx, y: cy, size: r, color, borderColor: rgb(1, 1, 1), borderWidth: 1.2 });
+      const t = String(n); page.drawText(t, { x: cx - bold.widthOfTextAtSize(t, 7.5) / 2, y: cy - 2.7, size: 7.5, font: bold, color: rgb(1, 1, 1) });
+    };
+    for (const x of spots) {
+      const box = DAMAGE_AREAS[x.area]?.box; if (!box) continue;
+      const k = used[x.area] = (used[x.area] || 0) + 1;
+      pin(ox + (box[0] + box[2] / 2) * s + (k - 1) * 9, top - (box[1] + box[3] / 2) * s - (k - 1) * 9, x.n, pinColor(x));
+    }
+    let ly = top - 2;
+    for (const x of spots) {
+      pin(listX + 7, ly - 7, x.n, pinColor(x));
+      let ty = ly;
+      for (const line of wrap(x.title, bold, 10.5, listW - 22)) { page.drawText(line, { x: listX + 22, y: ty - 10.5, size: 10.5, font: bold, color: INK }); ty -= 14; }
+      if (x.detail) for (const line of wrap(x.detail, reg, 9.5, listW - 22)) { page.drawText(line, { x: listX + 22, y: ty - 9.5, size: 9.5, font: reg, color: INK }); ty -= 12.5; }
+      const st = x.result === "new" ? `New this visit${x.foundBy ? ` - logged by ${x.foundBy}` : ""}` : x.result === "repaired" ? "On file before - no longer present" : `On file since ${x.foundAt ? dayET(x.foundAt) : "an earlier visit"} - still there`;
+      page.drawText(clean(st).slice(0, 80), { x: listX + 22, y: ty - 8.5, size: 8.5, font: bold, color: x.result === "new" ? WARN : x.result === "repaired" ? GOOD : MUTED });
+      ly = ty - 20;
+      if (ly < 90) break;
+    }
+    y = Math.min(top - mapH - 14, ly) - 8;
+  };
+
   newPage(true);
   text("This report shows each vehicle as it arrived, recorded by the Every Detail crew before any work started.", 10, reg, MUTED);
   y -= 8;
@@ -176,6 +249,8 @@ export async function buildConditionReportPdf(admin: SupabaseClient, r: Conditio
     const meta = [v.detail, v.checkedAt ? `Checked ${whenET(v.checkedAt)}${v.checkedBy ? ` by ${v.checkedBy}` : ""}` : ""].filter(Boolean).join("  ·  ");
     if (meta) text(meta, 9, reg, MUTED);
     y -= 6;
+
+    if (v.spots.length) drawSpots(v.spots);
 
     if (v.notes.length) {
       text("DAMAGE NOTES", 8, bold, OX); y -= 2;
@@ -204,9 +279,9 @@ export async function buildConditionReportPdf(admin: SupabaseClient, r: Conditio
         y -= boxH + 26;
       }
     };
-    await grid("DAMAGE PHOTOS", v.damage);
+    await grid("DAMAGE PHOTOS", [...v.spots.flatMap((x) => x.photos), ...v.damage]);
     await grid("ARRIVAL PHOTOS", v.arrival);
-    if (!v.damage.length && !v.arrival.length && !v.notes.length) { text(v.status === "none" ? "The crew checked this vehicle and found no visible pre-existing damage." : "No arrival check was recorded for this vehicle.", 10, reg, MUTED); }
+    if (!v.damage.length && !v.arrival.length && !v.notes.length && !v.spots.length) { text(v.status === "none" ? "The crew checked this vehicle and found no visible pre-existing damage." : "No arrival check was recorded for this vehicle.", 10, reg, MUTED); }
     y -= 10;
   }
 
@@ -222,13 +297,14 @@ export async function buildConditionReportPdf(admin: SupabaseClient, r: Conditio
 /** Which of these jobs have an arrival check, so the portal only links real reports. */
 export async function conditionReportJobIds(admin: SupabaseClient, jobIds: string[]): Promise<Set<string>> {
   if (!jobIds.length) return new Set();
-  const [a, c, m] = await Promise.all([
+  const [a, c, m, d] = await Promise.all([
     admin.from("van_hq_arrival_condition").select("job_id,damage_status,completed_at,driver_storage_path").in("job_id", jobIds),
     admin.from("job_condition_reports").select("job_id").in("job_id", jobIds),
     admin.from("job_media").select("job_id").in("job_id", jobIds).eq("media_type", "damage"),
+    admin.from("vehicle_damage_checks").select("job_id").in("job_id", jobIds),
   ]);
   const ids = new Set<string>();
   for (const r of (a.data || []) as any[]) if (r.damage_status || r.completed_at || r.driver_storage_path) ids.add(String(r.job_id));
-  for (const r of [...((c.data || []) as any[]), ...((m.data || []) as any[])]) ids.add(String(r.job_id));
+  for (const r of [...((c.data || []) as any[]), ...((m.data || []) as any[]), ...(d.error ? [] : (d.data || []) as any[])]) ids.add(String(r.job_id));
   return ids;
 }
