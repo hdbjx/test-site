@@ -40,7 +40,7 @@ export async function getPublicTeamRoster(): Promise<PublicTeamMember[]> {
     const db = supabaseAdmin();
     const { data, error } = await db
       .from("profiles")
-      .select("id,full_name,role,active,can_lead_jobs")
+      .select("id,full_name,role,active,can_lead_jobs,counts_for_capacity")
       .eq("active", true)
       .order("full_name", { ascending: true });
 
@@ -56,8 +56,13 @@ export async function getPublicTeamRoster(): Promise<PublicTeamMember[]> {
           name,
           title,
           leadership: isLeadership(title),
+          countsAsCrew: row.counts_for_capacity !== false,
         };
-      });
+      })
+      // Technicians only show if they're switched on as crew ("Counts as crew"
+      // in the Team App). Leadership always shows.
+      .filter((member) => member.leadership || member.countsAsCrew)
+      .map(({ countsAsCrew: _countsAsCrew, ...member }) => member);
 
     return roster.sort((a, b) => {
       if (a.leadership !== b.leadership) return a.leadership ? -1 : 1;
