@@ -1,11 +1,14 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { siteVehicleLabel, useVehicle, type SiteVehicle } from "@/components/vehicle/VehicleContext";
+import { useVehicle, type SiteVehicle } from "@/components/vehicle/VehicleContext";
 import { VehicleSearch } from "@/components/vehicle/VehicleSearch";
 import { vehicleClassForYear, vehicleMatches, yearFromVehicleQuery } from "@/lib/vehicle-search";
 import { track } from "@/lib/analytics";
 import styles from "./hero-vehicle.module.css";
+
+const THIS_YEAR = new Date().getFullYear();
+const YEARS = Array.from({ length: THIS_YEAR + 2 - 1990 }, (_, i) => String(THIS_YEAR + 1 - i));
 
 /** Smooth-scroll to the homepage packages (now priced for the car), clearing the fixed header. */
 function goToPricing() {
@@ -24,6 +27,7 @@ export function HeroVehicleField() {
   const { vehicle, hydrated, selectVehicle } = useVehicle();
   const [editing, setEditing] = useState(false);
   const [query, setQuery] = useState("");
+  const [year, setYear] = useState("");
   const rootRef = useRef<HTMLDivElement>(null);
 
   const set = hydrated && !!vehicle && !editing;
@@ -34,8 +38,11 @@ export function HeroVehicleField() {
     void selectVehicle(next, false);
     setEditing(false);
     setQuery("");
+    setYear("");
     track("vehicle_select", { vehicle: next.vehicle, location: `home_hero_${via}` });
-    window.setTimeout(goToPricing, 120);
+    // Close the phone keyboard first; scrolling while it animates away lands in the wrong place.
+    (document.activeElement as HTMLElement | null)?.blur();
+    window.setTimeout(goToPricing, window.matchMedia("(pointer: coarse)").matches ? 350 : 120);
   };
 
   const primary = () => {
@@ -47,8 +54,8 @@ export function HeroVehicleField() {
     // Typed something: take the best match. Otherwise point them at the field.
     const first = vehicleMatches(query)[0];
     if (first) {
-      const year = yearFromVehicleQuery(query);
-      choose({ make: first.make, model: first.model, year: year || undefined, vehicle: vehicleClassForYear(first, year) }, "button");
+      const y = yearFromVehicleQuery(query) || year;
+      choose({ make: first.make, model: first.model, year: y || undefined, vehicle: vehicleClassForYear(first, y) }, "button");
       return;
     }
     focusInput();
@@ -80,21 +87,31 @@ export function HeroVehicleField() {
           <div className={styles.current}>
             <span className={styles.label}>Priced for</span>
             <span className={styles.currentRow}>
-              <strong>{siteVehicleLabel(vehicle)}</strong>
+              <strong>{vehicle ? vehicle.customLabel || [vehicle.make, vehicle.model].filter(Boolean).join(" ") : ""}</strong>
               <button type="button" className={styles.change} onClick={change}>Change</button>
             </span>
           </div>
         ) : (
-          <div className={styles.search}>
-            <span className={styles.label} aria-hidden="true">What do you drive?</span>
-            <VehicleSearch
-              key={editing ? "edit" : "new"}
-              className={styles.vs}
-              placeholder="Year, make or model"
-              onQueryChange={setQuery}
-              onSelect={(next) => choose(next, "search")}
-            />
-          </div>
+          <>
+            <label className={styles.year}>
+              <span className={styles.label}>Year</span>
+              <select value={year} onChange={(event) => { setYear(event.target.value); focusInput(); }} aria-label="Vehicle year">
+                <option value="">Year</option>
+                {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
+              </select>
+            </label>
+            <div className={styles.search}>
+              <span className={styles.label} aria-hidden="true">Make and model</span>
+              <VehicleSearch
+                key={editing ? "edit" : "new"}
+                className={styles.vs}
+                placeholder="e.g. Toyota RAV4"
+                year={year}
+                onQueryChange={setQuery}
+                onSelect={(next) => choose(next, "search")}
+              />
+            </div>
+          </>
         )}
       </div>
 

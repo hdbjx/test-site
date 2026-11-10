@@ -210,7 +210,7 @@ export function HomeBookingFlow() {
                   {/* Price for the site vehicle (set from the hero), otherwise the starting price. */}
                   <span className="v15-service-price">
                     {siteVehicleHydrated && siteVehicle ? (
-                      <><b>{usd(PRICING[siteVehicle.vehicle][s.id].price)}</b> for your {siteVehicleLabel(siteVehicle)}</>
+                      <><b>{usd(PRICING[siteVehicle.vehicle][s.id].price)}</b> for your {siteVehicle.customLabel || [siteVehicle.make, siteVehicle.model].filter(Boolean).join(" ")}</>
                     ) : (
                       <>From <b>{usd(fromPrice(s.id))}</b></>
                     )}

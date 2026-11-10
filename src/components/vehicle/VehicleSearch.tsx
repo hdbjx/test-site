@@ -13,6 +13,7 @@ export function VehicleSearch({
   className,
   placeholder = "Search make or model…",
   onQueryChange,
+  year: yearOverride,
 }: {
   onSelect: (vehicle: SiteVehicle) => void;
   autoFocus?: boolean;
@@ -21,6 +22,8 @@ export function VehicleSearch({
   className?: string;
   placeholder?: string;
   onQueryChange?: (query: string) => void;
+  /** Year chosen outside the search (e.g. a year select). A year typed in the query wins. */
+  year?: string;
 }) {
   const [query, setQuery] = useState(initialQuery);
   const [listOpen, setListOpen] = useState(true);
@@ -28,7 +31,7 @@ export function VehicleSearch({
   const inputRef = useRef<HTMLInputElement>(null);
   const listId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const matches = useMemo(() => vehicleMatches(query), [query]);
-  const year = yearFromVehicleQuery(query);
+  const year = yearFromVehicleQuery(query) || yearOverride || "";
   const hasQuery = query.trim().length >= 2;
   const showMatches = listOpen && hasQuery && matches.length > 0;
   const showEmpty = listOpen && hasQuery && matches.length === 0;
