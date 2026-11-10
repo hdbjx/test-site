@@ -49,9 +49,11 @@ export function VehicleGlobalUI() {
   const [finePointer, setFinePointer] = useState(false);
   const panelRef = useRef<HTMLElement>(null);
 
-  // The automatic first-visit prompt is a homepage experience. SEO/service
-  // landing pages keep the vehicle pill but never get a forced interstitial.
-  const eligible = pathname === "/";
+  // No automatic first-visit popup anywhere: the homepage hero has an inline
+  // "What do you drive?" field (HeroVehicleField) that opens this picker on
+  // request. Flip to `pathname === "/"` to bring the welcome interstitial back.
+  const AUTO_PROMPT = false;
+  const eligible = AUTO_PROMPT && pathname === "/";
   const onboarding = hydrated && eligible && !vehicle && !promptDismissed && !pickerOpen;
   const visible = onboarding || pickerOpen;
 
@@ -199,7 +201,7 @@ export function VehicleGlobalUI() {
       ) : (
         <>
           <p className="veh-modal-kicker">YOUR VEHICLE</p>
-          <h2 id="veh-modal-title">Change vehicle.</h2>
+          <h2 id="veh-modal-title">{vehicle ? "Change vehicle." : "What do you drive?"}</h2>
 
           {vehicle && (
             <div className="veh-current-card">
@@ -221,7 +223,7 @@ export function VehicleGlobalUI() {
             <span><b>Keep this car for next time</b></span>
           </label>
 
-          {!vehicle && <button type="button" className="veh-skip" onClick={dismissPrompt}>Just browsing for now</button>}
+          {!vehicle && <button type="button" className="veh-skip" onClick={() => { dismissPrompt(); close(); }}>Just browsing for now</button>}
         </>
       )}
     </section>
