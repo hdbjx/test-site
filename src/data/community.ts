@@ -8,16 +8,16 @@ export type CommunityEntry = {
   name: string;
   note?: string;
   href?: string;
-  /** Optional logo in /public/community (SVG or transparent PNG). Shown in one cream tone on the dark band; the name stays as alt text. */
+  /** Optional logo in /public/community: cream (#f3eddf) on transparent, cropped tight. The name still shows under it. */
   logo?: string;
 };
 
 export const clients: CommunityEntry[] = [
-  { name: "Emory University" },
-  { name: "Cliff Valley School" },
+  { name: "Emory University", logo: "/community/emory.png" },
+  { name: "Cliff Valley School", logo: "/community/cliff-valley-school.png" },
 ];
 
 export const sponsorships: CommunityEntry[] = [
-  { name: "Love Run 5K", note: "Benefiting the Women's Resource Center" },
-  { name: "Decatur Performs" },
+  { name: "Love Run 5K", note: "Benefiting the Women's Resource Center", logo: "/community/love-run-5k.png" },
+  { name: "Decatur Performs", logo: "/community/decatur-performs.png" },
 ];

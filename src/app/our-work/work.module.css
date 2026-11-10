@@ -348,7 +348,7 @@
   align-content: center;
   gap: 0.35rem;
   /* Same row height in both columns, with or without a note, so the rules line up. */
-  min-height: clamp(6.25rem, 8.6vw, 7.5rem);
+  min-height: clamp(8rem, 11vw, 9.5rem);
   padding-block: clamp(1.1rem, 2vw, 1.5rem);
   border-bottom: 1px solid rgba(242, 236, 223, 0.18);
 }
@@ -366,15 +366,24 @@
   text-decoration: none;
 }
 
-/* Logos render in one cream tone so mixed brand colors sit quietly on the dark band. */
+/* Logos are pre-toned cream on transparent (public/community), so mixed brand colors sit quietly. */
 .communityLogo {
   display: block;
   width: auto;
-  max-width: min(260px, 100%);
-  height: clamp(36px, 4vw, 52px);
+  max-width: min(240px, 100%);
+  height: auto;
+  max-height: 64px;
+  margin-bottom: 0.5rem;
   object-fit: contain;
   object-position: left center;
-  filter: brightness(0) invert(94%) sepia(8%) saturate(300%);
+}
+
+.communityName {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .communityList span {

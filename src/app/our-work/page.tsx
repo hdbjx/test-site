@@ -119,8 +119,11 @@ function CommunityList({ label, entries }: { label: string; entries: CommunityEn
         {entries.map((entry) => (
           <li key={entry.name}>
             {entry.logo ? (
-              // eslint-disable-next-line @next/next/no-img-element -- small static logos, any aspect ratio
-              <img src={entry.logo} alt={entry.name} className={styles.communityLogo} loading="lazy" />
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element -- small static logos, mixed aspect ratios */}
+                <img src={entry.logo} alt="" className={styles.communityLogo} loading="lazy" />
+                <b className={styles.communityName}>{entry.name}</b>
+              </>
             ) : (
               <strong>{entry.href ? <a href={entry.href} target="_blank" rel="noopener noreferrer">{entry.name}</a> : entry.name}</strong>
             )}
