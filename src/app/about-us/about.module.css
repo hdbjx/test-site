@@ -569,124 +569,6 @@
   text-transform: uppercase;
 }
 
-/* ---------- join ---------- */
-
-.join {
-  padding-block: clamp(5rem, 9vw, 9rem);
-  background: var(--sv-ink);
-  color: var(--sv-paper);
-  scroll-margin-top: 70px;
-}
-
-.join .kicker {
-  color: var(--sv-red);
-}
-
-.joinPath {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid rgba(242, 236, 223, 0.16);
-  border-left: 1px solid rgba(242, 236, 223, 0.16);
-}
-
-.joinPath li {
-  display: grid;
-  align-content: start;
-  gap: 0.6rem;
-  padding: clamp(1.2rem, 2.2vw, 1.7rem);
-  border-right: 1px solid rgba(242, 236, 223, 0.16);
-  border-bottom: 1px solid rgba(242, 236, 223, 0.16);
-}
-
-.joinTier {
-  color: var(--sv-red);
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.joinPath h3 {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2vw, 1.7rem);
-  font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -0.035em;
-  text-transform: uppercase;
-}
-
-.joinPath p {
-  margin: 0;
-  color: rgba(242, 236, 223, 0.7);
-  line-height: 1.55;
-}
-
-.joinGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-  gap: 2rem clamp(2rem, 5vw, 4rem);
-  margin-top: clamp(2.5rem, 5vw, 4rem);
-}
-
-.joinList ul,
-.joinApply ul {
-  display: grid;
-  gap: 0.7rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.joinList li,
-.joinApply li {
-  position: relative;
-  padding-left: 1.4rem;
-  color: rgba(242, 236, 223, 0.86);
-  font-size: 1.02rem;
-  line-height: 1.45;
-}
-
-.joinList li::before,
-.joinApply li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.6em;
-  width: 0.6rem;
-  height: 2px;
-  background: var(--sv-red);
-}
-
-/* Line "Who fits" up with "How to apply" inside the card (5px rule + padding). */
-.joinList {
-  padding-top: calc(5px + clamp(1.4rem, 3vw, 2.2rem));
-}
-
-.joinApply {
-  padding: clamp(1.4rem, 3vw, 2.2rem);
-  background: rgba(242, 236, 223, 0.05);
-  border-top: 5px solid var(--sv-red);
-}
-
-.joinApplyLede {
-  margin: 0 0 1rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-}
-
-.joinApply .heroLink {
-  overflow-wrap: anywhere;
-  text-transform: lowercase;
-}
-
 /* ---------- close ---------- */
 
 .close {
@@ -750,17 +632,8 @@
     position: static;
   }
 
-  .processGrid,
-  .joinGrid {
+  .processGrid {
     grid-template-columns: 1fr;
-  }
-
-  .joinPath {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .joinList {
-    padding-top: 0;
   }
 
   .honest {
@@ -798,10 +671,6 @@
 
   .roster {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .joinPath {
-    grid-template-columns: 1fr;
   }
 
   .closeTitle span {

@@ -9,6 +9,8 @@ import Image from "next/image";
 import { getPublicTeamRoster } from "@/lib/team-roster";
 import { pageMetadata } from "@/lib/seo";
 import styles from "./about.module.css";
+import join from "./join.module.css";
+import { JoinFitCheck } from "./JoinFitCheck";
 
 export const metadata = pageMetadata({
   title: "About Every Detail | Student-Run Detailing in Decatur",
@@ -23,42 +25,12 @@ export const revalidate = 300;
 const TEAM_ANCHOR = "team"; // id="team": linked from /our-work
 const JOIN_ANCHOR = "join";
 
-// Prefilled so applicants send everything Davis needs in one email.
-const joinMailto = `mailto:${site.teamEmail}?subject=${encodeURIComponent("Joining the Every Detail team")}&body=${encodeURIComponent(
-  "Name:\nSchool + grade:\nPhone:\nAvailability (days / times):\nAny detailing or work experience:\nWhy I want to join:\n",
-)}`;
-
-const path = [
-  {
-    tier: "Tier 1",
-    title: "Learn the process",
-    body: "Start on real jobs alongside senior techs. Interiors, washes, the checklist on the van iPad, and how we leave a driveway.",
-  },
-  {
-    tier: "Tier 2",
-    title: "Own more of the car",
-    body: "As your work gets consistent, you take on more of each job and more of the service menu.",
-  },
-  {
-    tier: "Tier 3",
-    title: "Lead the job",
-    body: "Run the rig, the customer walk-around and the crew on site. Nobody leads before they've earned it.",
-  },
-  {
-    tier: "Beyond",
-    title: "Run the business",
-    body: "Scheduling, training and marketing are student roles too. Responsibility grows with the work.",
-  },
+const ladder = [
+  { n: "01", title: "Tier 1", body: "Learn the process on real jobs, alongside senior techs." },
+  { n: "02", title: "Tier 2", body: "Own more of each car and more of the service menu." },
+  { n: "03", title: "Tier 3", body: "Lead the job: the rig, the crew and the customer walk-around." },
+  { n: "04", title: "Leadership", body: "Scheduling, training and marketing are student roles too." },
 ] as const;
-
-const lookFor = [
-  "You show up when you say you will",
-  "You take coaching and fix things the first time",
-  "You don't mind hard, hands-on work in any weather",
-  "You notice the small stuff",
-] as const;
-
-const sendList = ["Name, school and grade", "Your phone number", "Days and times you can work", "Why you want in"] as const;
 
 const story = [
   {
@@ -259,48 +231,39 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* Joining the crew: the tier path, who fits, and how to reach Davis. */}
-      <section id={JOIN_ANCHOR} className={styles.join} data-header-tone="light" aria-labelledby="ab-join-title">
-        <div className={styles.shell}>
-          <div className={styles.teamHead}>
-            <div>
-              <p className={styles.kicker}>Join the crew</p>
-              <h2 id="ab-join-title" className={styles.sectionTitle}>
-                <span>Start at Tier 1.</span>
-                <span>Earn the rest.</span>
-              </h2>
-            </div>
-            <p className={styles.teamNote}>No experience needed. Everyone learns the same process in-house through hands-on training and our 83-module program, then moves up as their work proves it.</p>
+      {/* Joining the crew: the tier ladder on the left, a short fit check that always ends on the application email. */}
+      <section id={JOIN_ANCHOR} className={join.section} data-header-tone="light" aria-labelledby="ab-join-title">
+        <div className={`${styles.shell} ${join.grid}`}>
+          <div className={join.intro}>
+            <p className={join.kicker}>Careers / Join the crew</p>
+            <h2 id="ab-join-title" className={join.title}>
+              <span>Start at Tier 1.</span>
+              <span>Earn the rest.</span>
+            </h2>
+            <p className={join.lede}>No experience needed. Everyone learns the same process in-house through hands-on training and our 83-module program, then moves up as their work proves it.</p>
           </div>
 
-          <ol className={styles.joinPath}>
-            {path.map((item) => (
-              <li key={item.tier}>
-                <span className={styles.joinTier}>{item.tier}</span>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-              </li>
-            ))}
-          </ol>
+          <div className={join.details}>
+            <ol className={join.ladder} aria-label="How you move up">
+              {ladder.map((item) => (
+                <li key={item.n}>
+                  <span className={join.ladderNum}>{item.n}</span>
+                  <div>
+                    <strong>{item.title}</strong>
+                    <p>{item.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
 
-          <div className={styles.joinGrid}>
-            <div className={styles.joinList}>
-              <p className={styles.groupLabel}>Who fits</p>
-              <ul>
-                {lookFor.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-            </div>
-            <div className={styles.joinApply}>
-              <p className={styles.groupLabel}>How to apply</p>
-              <p className={styles.joinApplyLede}>Email Davis, our business manager. Include:</p>
-              <ul>
-                {sendList.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-              <div className={styles.closeActions}>
-                <TrackedLink href={joinMailto} event="hiring_click" params={{ location: "about_join" }} className={styles.heroCta}>EMAIL DAVIS <span aria-hidden="true">↗</span></TrackedLink>
-                <a href={`mailto:${site.teamEmail}`} className={styles.heroLink}>{site.teamEmail}</a>
-              </div>
-            </div>
+            <dl className={join.reqs}>
+              <div><dt>To apply</dt><dd>Resume required</dd></div>
+              <div><dt>Send to</dt><dd><a href={`mailto:${site.teamEmail}`}>{site.teamEmail}</a></dd></div>
+            </dl>
+          </div>
+
+          <div className={join.check}>
+            <JoinFitCheck email={site.teamEmail} />
           </div>
         </div>
       </section>
