@@ -172,21 +172,11 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="v39-clean-life v41-clean-life" data-header-tone="brand" data-v39-life aria-labelledby="v39-clean-life-title">
-        <div className="v39-clean-life-grain" aria-hidden="true" />
-        <div className="v39-clean-life-inner v41-clean-life-inner">
-          <h2 id="v39-clean-life-title" className="v39-clean-life-title v41-clean-life-title">
-            <span className="v41-life-line v41-life-line-one">LIFE’S GOOD</span>
-            <span className="v41-life-line v41-life-line-two">IN A CLEAN CAR.</span>
-          </h2>
-        </div>
-      </section>
-
       <section className="v29-close" data-header-tone="light" data-v29-scene="close" aria-labelledby="v29-close-title">
         <div className="v29-close-photo"><Photo id="hq-van-through-flowers" sizes="100vw" fill /></div>
         <div className="v29-close-shade" />
         <div className="v29-shell v29-close-inner">
-          <h2 id="v29-close-title">YOUR DRIVEWAY.<br /><span>OUR DETAIL SHOP.</span></h2>
+          <h2 id="v29-close-title">LIFE’S GOOD<br /><span>IN A CLEAN CAR.</span></h2>
           <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_close" }} className="v29-close-cta" data-v29-magnetic>Book a detail <span>↗</span></TrackedLink>
         </div>
       </section>
