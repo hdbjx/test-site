@@ -25,7 +25,7 @@
 
 .lead {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: 0.9rem;
   min-width: 0;
@@ -65,41 +65,6 @@
 .search,
 .current {
   min-width: 0;
-}
-
-/* ---- year select (left of make/model) ---- */
-
-.year {
-  display: block;
-  padding-right: 0.9rem;
-  border-right: 1px solid rgba(11, 10, 9, 0.16);
-  cursor: pointer;
-}
-
-.year select {
-  appearance: none;
-  -webkit-appearance: none;
-  min-width: 4.6rem;
-  padding: 0 1.2rem 0 0;
-  background: transparent
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%230b0a09' stroke-width='1.6'/%3E%3C/svg%3E")
-    right 0.1rem center / 10px 6px no-repeat;
-  border: 0;
-  color: var(--hv-ink);
-  font: 600 1.12rem/1.3 var(--font-display);
-  letter-spacing: -0.01em;
-  cursor: pointer;
-  outline: none;
-}
-
-.year select:invalid,
-.year select:has(option[value=""]:checked) {
-  color: rgba(11, 10, 9, 0.42);
-}
-
-.year select:focus-visible {
-  outline: 2px solid var(--hv-red);
-  outline-offset: 4px;
 }
 
 /* ---- inline VehicleSearch, restyled for the bar ---- */
@@ -273,15 +238,6 @@
     min-height: 68px;
     padding: 0.6rem 0.85rem;
     gap: 0.75rem;
-  }
-
-  .year {
-    padding-right: 0.7rem;
-  }
-
-  .year select {
-    min-width: 4rem;
-    font-size: 16px; /* no iOS zoom on focus */
   }
 
   .icon {

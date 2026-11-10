@@ -7,9 +7,6 @@ import { vehicleClassForYear, vehicleMatches, yearFromVehicleQuery } from "@/lib
 import { track } from "@/lib/analytics";
 import styles from "./hero-vehicle.module.css";
 
-const THIS_YEAR = new Date().getFullYear();
-const YEARS = Array.from({ length: THIS_YEAR + 2 - 1990 }, (_, i) => String(THIS_YEAR + 1 - i));
-
 /** Smooth-scroll to the homepage packages (now priced for the car), clearing the fixed header. */
 function goToPricing() {
   const target = document.getElementById("v29-choice-title") ?? document.getElementById("pricing");
@@ -27,7 +24,6 @@ export function HeroVehicleField() {
   const { vehicle, hydrated, selectVehicle } = useVehicle();
   const [editing, setEditing] = useState(false);
   const [query, setQuery] = useState("");
-  const [year, setYear] = useState("");
   const rootRef = useRef<HTMLDivElement>(null);
 
   const set = hydrated && !!vehicle && !editing;
@@ -38,7 +34,6 @@ export function HeroVehicleField() {
     void selectVehicle(next, false);
     setEditing(false);
     setQuery("");
-    setYear("");
     track("vehicle_select", { vehicle: next.vehicle, location: `home_hero_${via}` });
     // Close the phone keyboard first; scrolling while it animates away lands in the wrong place.
     (document.activeElement as HTMLElement | null)?.blur();
@@ -54,7 +49,7 @@ export function HeroVehicleField() {
     // Typed something: take the best match. Otherwise point them at the field.
     const first = vehicleMatches(query)[0];
     if (first) {
-      const y = yearFromVehicleQuery(query) || year;
+      const y = yearFromVehicleQuery(query);
       choose({ make: first.make, model: first.model, year: y || undefined, vehicle: vehicleClassForYear(first, y) }, "button");
       return;
     }
@@ -92,26 +87,16 @@ export function HeroVehicleField() {
             </span>
           </div>
         ) : (
-          <>
-            <label className={styles.year}>
-              <span className={styles.label}>Year</span>
-              <select value={year} onChange={(event) => { setYear(event.target.value); focusInput(); }} aria-label="Vehicle year">
-                <option value="">Year</option>
-                {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
-              </select>
-            </label>
-            <div className={styles.search}>
-              <span className={styles.label} aria-hidden="true">Make and model</span>
-              <VehicleSearch
-                key={editing ? "edit" : "new"}
-                className={styles.vs}
-                placeholder="e.g. Toyota RAV4"
-                year={year}
-                onQueryChange={setQuery}
-                onSelect={(next) => choose(next, "search")}
-              />
-            </div>
-          </>
+          <div className={styles.search}>
+            <span className={styles.label} aria-hidden="true">What do you drive?</span>
+            <VehicleSearch
+              key={editing ? "edit" : "new"}
+              className={styles.vs}
+              placeholder="Make or model"
+              onQueryChange={setQuery}
+              onSelect={(next) => choose(next, "search")}
+            />
+          </div>
         )}
       </div>
 
