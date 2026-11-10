@@ -8950,7 +8950,7 @@ img{max-width:100%}
 /* Hero secondary actions — quiet text links under the vehicle bar (HeroVehicleField) */
 .home-hero-alt{
   display:flex;flex-wrap:wrap;align-items:baseline;justify-content:center;gap:.35rem .5rem;
-  margin:1.05rem auto 0;
+  margin:1.5rem auto 0;
   color:rgba(243,237,223,.72);
   font:500 .95rem/1.4 var(--font-body);
   text-shadow:0 1px 12px rgba(0,0,0,.5);

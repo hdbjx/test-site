@@ -74,7 +74,7 @@ export function HeroVehicleField() {
           {set ? (
             <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="square" /></svg>
           ) : (
-            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 16.5h14M6.2 16.5l-1.1-.1A1.6 1.6 0 0 1 3.6 14.8v-2.3c0-.8.5-1.4 1.2-1.6l1.9-.5 1.8-3.2c.3-.6.9-.9 1.5-.9h4.6c.6 0 1.2.3 1.5.8l2.1 3.3 1.5.4c.7.2 1.2.8 1.2 1.6v2.4c0 .8-.6 1.5-1.4 1.6l-1.2.1M6.7 10.4h10.8" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /><circle cx="8" cy="16.6" r="1.7" fill="none" stroke="currentColor" strokeWidth="1.7" /><circle cx="16" cy="16.6" r="1.7" fill="none" stroke="currentColor" strokeWidth="1.7" /></svg>
+            <svg viewBox="0 0 24 24" width="30" height="30"><path d="M5 16.5h14M6.2 16.5l-1.1-.1A1.6 1.6 0 0 1 3.6 14.8v-2.3c0-.8.5-1.4 1.2-1.6l1.9-.5 1.8-3.2c.3-.6.9-.9 1.5-.9h4.6c.6 0 1.2.3 1.5.8l2.1 3.3 1.5.4c.7.2 1.2.8 1.2 1.6v2.4c0 .8-.6 1.5-1.4 1.6l-1.2.1M6.7 10.4h10.8" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /><circle cx="8" cy="16.6" r="1.7" fill="none" stroke="currentColor" strokeWidth="1.7" /><circle cx="16" cy="16.6" r="1.7" fill="none" stroke="currentColor" strokeWidth="1.7" /></svg>
           )}
         </span>
 
@@ -92,7 +92,7 @@ export function HeroVehicleField() {
             <VehicleSearch
               key={editing ? "edit" : "new"}
               className={styles.vs}
-              placeholder="Year, make or model"
+              placeholder="e.g. 2021 Toyota RAV4"
               onQueryChange={setQuery}
               onSelect={(next) => choose(next, "search")}
             />
