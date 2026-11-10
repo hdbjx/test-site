@@ -9,6 +9,7 @@ import { TrackedLink } from "@/components/TrackedLink";
 import { WorkWall } from "@/components/work/WorkWall";
 import { site } from "@/data/site";
 import { workWall } from "@/data/work";
+import { clients, sponsorships, type CommunityEntry } from "@/data/community";
 import { pageMetadata } from "@/lib/seo";
 import styles from "./work.module.css";
 import { ensureLiveCatalog } from "@/lib/live-catalog-server";
@@ -87,8 +88,46 @@ export default async function OurWorkPage() {
             </div>
           </div>
         </section>
+
+        {/* Organizations we've worked with and sponsored (data/community.ts). */}
+        <section className={styles.community} data-header-tone="light" aria-labelledby="wk-community-title">
+          <div className={styles.shell}>
+            <div className={styles.communityHead}>
+              <p className={styles.kicker}>In the community</p>
+              <h2 id="wk-community-title" className={styles.sectionTitle}>
+                <span>Trusted locally.</span>
+                <span>Invested locally.</span>
+              </h2>
+            </div>
+            <div className={styles.communityGrid}>
+              <CommunityList label="Worked with" entries={clients} />
+              <CommunityList label="Sponsored" entries={sponsorships} />
+            </div>
+          </div>
+        </section>
       </main>
       <CtaBand location="work_final" title="Your car is next." body="Pick your vehicle and service. We bring the power, the water and the crew." quoteLabel="Find my detail" />
     </>
+  );
+}
+
+function CommunityList({ label, entries }: { label: string; entries: CommunityEntry[] }) {
+  return (
+    <div>
+      <p className={styles.communityLabel}>{label}</p>
+      <ul className={styles.communityList}>
+        {entries.map((entry) => (
+          <li key={entry.name}>
+            {entry.logo ? (
+              // eslint-disable-next-line @next/next/no-img-element -- small static logos, any aspect ratio
+              <img src={entry.logo} alt={entry.name} className={styles.communityLogo} loading="lazy" />
+            ) : (
+              <strong>{entry.href ? <a href={entry.href} target="_blank" rel="noopener noreferrer">{entry.name}</a> : entry.name}</strong>
+            )}
+            {entry.note ? <span>{entry.note}</span> : null}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

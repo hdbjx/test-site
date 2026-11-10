@@ -300,7 +300,94 @@
   color: var(--sv-oxblood);
 }
 
+/* ---------- community ---------- */
+
+.community {
+  padding-block: clamp(4.5rem, 8vw, 8rem);
+  background: var(--sv-ink);
+  color: var(--sv-paper);
+}
+
+.community .kicker {
+  color: var(--sv-red);
+}
+
+.community .sectionTitle span {
+  font-size: clamp(2.8rem, 5.4vw, 5.4rem);
+}
+
+.communityHead {
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.communityGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.5rem clamp(2rem, 5vw, 5rem);
+}
+
+.communityLabel {
+  margin: 0 0 0.9rem;
+  color: rgba(242, 236, 223, 0.6);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.communityList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(242, 236, 223, 0.18);
+}
+
+.communityList li {
+  display: grid;
+  align-content: center;
+  gap: 0.35rem;
+  /* Same row height in both columns, with or without a note, so the rules line up. */
+  min-height: clamp(6.25rem, 8.6vw, 7.5rem);
+  padding-block: clamp(1.1rem, 2vw, 1.5rem);
+  border-bottom: 1px solid rgba(242, 236, 223, 0.18);
+}
+
+.communityList strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.communityList strong a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Logos render in one cream tone so mixed brand colors sit quietly on the dark band. */
+.communityLogo {
+  display: block;
+  width: auto;
+  max-width: min(260px, 100%);
+  height: clamp(36px, 4vw, 52px);
+  object-fit: contain;
+  object-position: left center;
+  filter: brightness(0) invert(94%) sepia(8%) saturate(300%);
+}
+
+.communityList span {
+  color: rgba(242, 236, 223, 0.66);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
 @media (max-width: 860px) {
+  .communityGrid {
+    grid-template-columns: 1fr;
+  }
+
   .crewGrid {
     grid-template-columns: 1fr;
   }
