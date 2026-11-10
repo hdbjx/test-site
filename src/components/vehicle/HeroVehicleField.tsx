@@ -1,61 +1,108 @@
 "use client";
 
-import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
+import { useRef, useState } from "react";
+import { siteVehicleLabel, useVehicle, type SiteVehicle } from "@/components/vehicle/VehicleContext";
+import { VehicleSearch } from "@/components/vehicle/VehicleSearch";
+import { vehicleClassForYear, vehicleMatches, yearFromVehicleQuery } from "@/lib/vehicle-search";
 import { track } from "@/lib/analytics";
 import styles from "./hero-vehicle.module.css";
 
+/** Smooth-scroll to the homepage packages (now priced for the car), clearing the fixed header. */
+function goToPricing() {
+  const target = document.getElementById("v29-choice-title") ?? document.getElementById("pricing");
+  if (!target) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const top = target.getBoundingClientRect().top + window.scrollY - (window.innerWidth <= 640 ? 96 : 130);
+  window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+}
+
 /**
- * Homepage hero entry point for the vehicle picker. Replaces the automatic
- * first-visit popup: looks like a search field so the job is obvious, and
- * opens the same picker only when the visitor asks for it.
+ * Homepage hero primary action: type your car inline (no popup), then
+ * "See my price" takes you to the packages already priced for it.
  */
 export function HeroVehicleField() {
-  const { vehicle, hydrated, openPicker } = useVehicle();
-  const label = siteVehicleLabel(vehicle);
-  const set = hydrated && !!vehicle;
+  const { vehicle, hydrated, selectVehicle } = useVehicle();
+  const [editing, setEditing] = useState(false);
+  const [query, setQuery] = useState("");
+  const rootRef = useRef<HTMLDivElement>(null);
 
-  const open = () => {
-    track("vehicle_select", { location: set ? "home_hero_change" : "home_hero_field" });
-    openPicker();
+  const set = hydrated && !!vehicle && !editing;
+
+  const focusInput = () => rootRef.current?.querySelector<HTMLInputElement>("input")?.focus();
+
+  const choose = (next: SiteVehicle, via: string) => {
+    void selectVehicle(next, false);
+    setEditing(false);
+    setQuery("");
+    track("vehicle_select", { vehicle: next.vehicle, location: `home_hero_${via}` });
+    window.setTimeout(goToPricing, 120);
+  };
+
+  const primary = () => {
+    if (set) {
+      track("book_click", { location: "home_hero_see_price", vehicle: vehicle?.vehicle });
+      goToPricing();
+      return;
+    }
+    // Typed something: take the best match. Otherwise point them at the field.
+    const first = vehicleMatches(query)[0];
+    if (first) {
+      const year = yearFromVehicleQuery(query);
+      choose({ make: first.make, model: first.model, year: year || undefined, vehicle: vehicleClassForYear(first, year) }, "button");
+      return;
+    }
+    focusInput();
+  };
+
+  // Leaving "Change" without picking anything goes back to the current car.
+  const onBlur = () => {
+    window.setTimeout(() => {
+      const root = rootRef.current;
+      if (editing && !query.trim() && root && !root.contains(document.activeElement)) setEditing(false);
+    }, 0);
+  };
+
+  const change = () => {
+    setEditing(true);
+    window.requestAnimationFrame(focusInput);
   };
 
   return (
-    <div className={styles.wrap}>
-      <button
-        type="button"
-        className={styles.field}
-        data-set={set ? "" : undefined}
-        data-hero-vehicle
-        onClick={open}
-        aria-label={set ? `Pricing for ${label}. Change vehicle` : "Enter your vehicle to see your prices"}
-      >
+    <div ref={rootRef} className={styles.bar} data-set={set ? "" : undefined} data-hero-vehicle onBlur={onBlur}>
+      <div className={styles.lead}>
         <span className={styles.icon} aria-hidden="true">
           {set ? (
-            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="square" /></svg>
           ) : (
             <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 16.5h14M6.2 16.5l-1.1-.1A1.6 1.6 0 0 1 3.6 14.8v-2.3c0-.8.5-1.4 1.2-1.6l1.9-.5 1.8-3.2c.3-.6.9-.9 1.5-.9h4.6c.6 0 1.2.3 1.5.8l2.1 3.3 1.5.4c.7.2 1.2.8 1.2 1.6v2.4c0 .8-.6 1.5-1.4 1.6l-1.2.1M6.7 10.4h10.8" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /><circle cx="8" cy="16.6" r="1.7" fill="none" stroke="currentColor" strokeWidth="1.7" /><circle cx="16" cy="16.6" r="1.7" fill="none" stroke="currentColor" strokeWidth="1.7" /></svg>
           )}
         </span>
-        <span className={styles.text}>
-          {set ? (
-            <>
-              <small>Pricing for</small>
-              <strong>{label}</strong>
-            </>
-          ) : (
-            <>
-              <strong>What do you drive?</strong>
-              <small>Search year, make or model</small>
-            </>
-          )}
-        </span>
-        <span className={styles.action} aria-hidden="true">{set ? "Change" : <><b className={styles.actionLabel}>See my price</b> <i>→</i></>}</span>
+
+        {set ? (
+          <div className={styles.current}>
+            <span className={styles.label}>Priced for</span>
+            <span className={styles.currentRow}>
+              <strong>{siteVehicleLabel(vehicle)}</strong>
+              <button type="button" className={styles.change} onClick={change}>Change</button>
+            </span>
+          </div>
+        ) : (
+          <div className={styles.search}>
+            <span className={styles.label} aria-hidden="true">What do you drive?</span>
+            <VehicleSearch
+              key={editing ? "edit" : "new"}
+              className={styles.vs}
+              placeholder="Year, make or model"
+              onQueryChange={setQuery}
+              onSelect={(next) => choose(next, "search")}
+            />
+          </div>
+        )}
+      </div>
+
+      <button type="button" className={styles.primary} onClick={primary}>
+        See my price <span aria-hidden="true">↗</span>
       </button>
-      <p className={styles.note}>
-        {set
-          ? "Prices across the site are set for this vehicle."
-          : "Prices across the site update to your vehicle."}
-      </p>
     </div>
   );
 }

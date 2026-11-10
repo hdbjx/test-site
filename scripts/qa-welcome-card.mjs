@@ -7,7 +7,7 @@ const css = fs.readFileSync("src/app/globals.css", "utf8");
 
 const checks = [
   [ui.includes('const eligible = AUTO_PROMPT && pathname === "/";'), "Automatic vehicle welcome must only run on the homepage (and only when AUTO_PROMPT is on)."],
-  [/const AUTO_PROMPT = false;/.test(ui), "Automatic vehicle welcome is off; the homepage hero field (HeroVehicleField) opens the picker on request."],
+  [/const AUTO_PROMPT = false;/.test(ui), "Automatic vehicle welcome is off; the homepage hero bar (HeroVehicleField) searches inline instead."],
   [!ui.includes('"/mobile-car-detailing"'), "Mobile-detailing landing pages must not force the welcome interstitial."],
   [ui.includes('preserveAspectRatio="xMidYMid meet"'), "Welcome ribbons must preserve SVG aspect ratio."],
   [!ui.includes('preserveAspectRatio="none"'), "Welcome ribbon SVG text must never be stretched with preserveAspectRatio=none."],

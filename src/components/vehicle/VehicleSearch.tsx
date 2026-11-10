@@ -6,7 +6,22 @@ import { vehicleClassForYear, vehicleMatches, yearFromVehicleQuery } from "@/lib
 import { vehicleLabel, vehicles, type VehicleId } from "@/data/services";
 import type { SiteVehicle } from "./VehicleContext";
 
-export function VehicleSearch({ onSelect, autoFocus = false, initialQuery = "" }: { onSelect: (vehicle: SiteVehicle) => void; autoFocus?: boolean; initialQuery?: string }) {
+export function VehicleSearch({
+  onSelect,
+  autoFocus = false,
+  initialQuery = "",
+  className,
+  placeholder = "Search make or model…",
+  onQueryChange,
+}: {
+  onSelect: (vehicle: SiteVehicle) => void;
+  autoFocus?: boolean;
+  initialQuery?: string;
+  /** Extra class on the root, for contexts (e.g. the homepage hero) that restyle the search. */
+  className?: string;
+  placeholder?: string;
+  onQueryChange?: (query: string) => void;
+}) {
   const [query, setQuery] = useState(initialQuery);
   const [listOpen, setListOpen] = useState(true);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -73,7 +88,7 @@ export function VehicleSearch({ onSelect, autoFocus = false, initialQuery = "" }
   };
 
   return (
-    <div className="veh-search">
+    <div className={className ? `veh-search ${className}` : "veh-search"}>
       <label>
         <span className="sr-only">Search your vehicle make or model</span>
         <input
@@ -87,12 +102,13 @@ export function VehicleSearch({ onSelect, autoFocus = false, initialQuery = "" }
           value={query}
           onChange={(event) => {
             setQuery(event.target.value);
+            onQueryChange?.(event.target.value);
             setListOpen(true);
             setActiveIndex(-1);
           }}
           onFocus={() => { if (hasQuery) setListOpen(true); }}
           onKeyDown={onKeyDown}
-          placeholder="Search make or model…"
+          placeholder={placeholder}
           autoComplete="off"
           spellCheck={false}
         />

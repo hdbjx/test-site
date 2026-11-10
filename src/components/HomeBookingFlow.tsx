@@ -34,6 +34,8 @@ const serviceMeta: Record<ServiceId, { number: string; cue: string; subline: str
   },
 };
 
+const fromPrice = (id: ServiceId) => Math.min(...vehicles.map((v) => PRICING[v.id as VehicleId][id].price));
+
 export function HomeBookingFlow() {
   const { vehicle: siteVehicle, hydrated: siteVehicleHydrated, openPicker } = useVehicle();
   const { serviceIntent, setServiceIntent } = useJourney();
@@ -205,6 +207,14 @@ export function HomeBookingFlow() {
                 <span className="v15-service-cue">{meta.cue}</span>
                 <span className="v15-service-main">
                   <strong>{s.name.replace(" Detail", "")}</strong>
+                  {/* Price for the site vehicle (set from the hero), otherwise the starting price. */}
+                  <span className="v15-service-price">
+                    {siteVehicleHydrated && siteVehicle ? (
+                      <><b>{usd(PRICING[siteVehicle.vehicle][s.id].price)}</b> for your {siteVehicleLabel(siteVehicle)}</>
+                    ) : (
+                      <>From <b>{usd(fromPrice(s.id))}</b></>
+                    )}
+                  </span>
                   <span className="v15-service-subline">{meta.subline}</span>
                   <span className="v15-service-includes">{meta.includes}</span>
                 </span>

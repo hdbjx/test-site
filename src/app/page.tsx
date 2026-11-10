@@ -51,15 +51,18 @@ export default async function Home() {
         <div className="v30-hero-focus" aria-hidden="true" />
         <div className="v29-shell v29-hero-inner">
           <PersonalizedHeroTitle />
+          <HeroVehicleField />
+          <p className="home-hero-alt">
+            <span>or</span>{" "}
+            <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_hero" }}>Book a detail <span aria-hidden="true">↗</span></TrackedLink>
+            <span className="home-hero-alt-sep" aria-hidden="true">·</span>
+            <span className="home-hero-alt-q">Not sure what you need?</span>{" "}
+            <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "home_v29_hero" }}>Find my detail <span aria-hidden="true">↗</span></TrackedLink>
+          </p>
           <a href="#home-reviews" className="home-hero-proof">
             <span aria-hidden="true">★★★★★</span>
             <span><LiveReviewCount /> five-star Google reviews</span>
           </a>
-          <HeroVehicleField />
-          <div className="v54-hero-actions" aria-label="Homepage actions">
-            <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_hero" }} className="v29-hero-cta" data-v29-magnetic>Book a detail <span>↗</span></TrackedLink>
-            <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "home_v29_hero" }} className="v54-hero-quote" data-v29-magnetic>Find my detail <span>↗</span></TrackedLink>
-          </div>
         </div>
         <div className="v29-sweep" aria-hidden="true" />
       </section>
