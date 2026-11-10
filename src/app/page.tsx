@@ -2,7 +2,7 @@ import Link from "next/link";
 import { HomeArtMotion } from "@/components/HomeArtMotion";
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
 import { CurvedTape } from "@/components/CurvedTape";
-import { AnimatedReviewCount, LiveReviewCount } from "@/components/GoogleReviewStats";
+import { AnimatedReviewCount, LiveReviewCount, LiveReviewRating } from "@/components/GoogleReviewStats";
 import { MobileBookBar } from "@/components/MobileBookBar";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
@@ -52,17 +52,18 @@ export default async function Home() {
         <div className="v29-shell v29-hero-inner">
           <PersonalizedHeroTitle />
           <HeroVehicleField />
-          <p className="home-hero-alt">
-            <span>or</span>{" "}
-            <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_hero" }}>Book a detail <span aria-hidden="true">↗</span></TrackedLink>
-            <span className="home-hero-alt-sep" aria-hidden="true">·</span>
-            <span className="home-hero-alt-q">Not sure what you need?</span>{" "}
-            <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "home_v29_hero" }}>Find my detail <span aria-hidden="true">↗</span></TrackedLink>
+          {/* Proof: one condensed line. Rating links down to the reviews. */}
+          <p className="home-hero-proof">
+            <a href="#home-reviews" className="home-hero-proof-rating">
+              <span className="home-hero-proof-stars" aria-hidden="true">★★★★★</span>
+              <b><LiveReviewRating /></b>
+              <span>· <b><LiveReviewCount /></b> Google reviews</span>
+            </a>
+            <span className="home-hero-proof-sep" aria-hidden="true" />
+            <span>Best of Decaturish 2025</span>
+            <span className="home-hero-proof-sep" aria-hidden="true" />
+            <span>Trusted by Emory University &amp; Cliff Valley School</span>
           </p>
-          <a href="#home-reviews" className="home-hero-proof">
-            <span aria-hidden="true">★★★★★</span>
-            <span><LiveReviewCount /> five-star Google reviews</span>
-          </a>
         </div>
         <div className="v29-sweep" aria-hidden="true" />
       </section>

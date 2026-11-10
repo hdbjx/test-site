@@ -1,20 +1,26 @@
-/* Homepage hero primary action: inline vehicle search + "See my price".
-   Square, cream and ink to match the site's CTA language (.v29-hero-cta). */
+/* Homepage hero actions (HeroVehicleField): the vehicle bar with the one filled button,
+   then Book / Find as outline buttons. Square, cream and ink like .v29-hero-cta. */
 
-.bar {
+.actions {
   --hv-paper: #f3eddf;
   --hv-ink: #0b0a09;
   --hv-red: #d56865;
+  display: grid;
+  gap: 8px;
+  width: min(100%, 600px);
+  margin: 2.1rem auto 0;
+}
+
+.bar {
   position: relative;
   z-index: 3;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  width: min(100%, 600px);
   min-height: 74px;
-  margin: 2.1rem auto 0;
+  /* Cream frame around the filled button so its edge never disappears into the photo. */
+  padding: 6px;
   background: var(--hv-paper);
   color: var(--hv-ink);
-  border: 1px solid var(--hv-ink);
   box-shadow: 0 22px 54px rgba(0, 0, 0, 0.32);
   text-align: left;
 }
@@ -29,7 +35,7 @@
   align-items: center;
   gap: 0.9rem;
   min-width: 0;
-  padding: 0.65rem 1rem 0.65rem 1.4rem;
+  padding: 0.4rem 1rem 0.4rem 0.95rem;
 }
 
 .icon {
@@ -82,28 +88,29 @@
   border: 0 !important;
   box-shadow: none !important;
   color: var(--hv-ink);
-  font: 600 1.12rem/1.3 var(--font-display) !important;
+  font: 600 1.15rem/1.3 var(--font-display) !important;
   letter-spacing: -0.01em;
   outline: none;
 }
 
 .vs :global(input)::placeholder {
-  color: rgba(11, 10, 9, 0.42);
+  color: rgba(11, 10, 9, 0.55);
 }
 
 .vs :global(.veh-search-results),
 .vs :global(.veh-search-empty) {
   position: absolute;
   top: 100%;
-  left: -1px;
-  right: -1px;
+  left: 0;
+  right: 0;
   z-index: 5;
   max-height: min(30vh, 218px) !important; /* ~4 rows: stays clear of the tape under the hero */
   overflow: auto;
   margin: 0;
   background: #fff;
-  border: 1px solid var(--hv-ink) !important;
-  border-top: 0 !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(11, 10, 9, 0.14) !important;
+  overscroll-behavior: contain; /* scrolling the list never scrolls the page */
   box-shadow: 0 26px 60px rgba(0, 0, 0, 0.36);
 }
 
@@ -179,7 +186,8 @@
 }
 
 .change:focus-visible,
-.primary:focus-visible {
+.primary:focus-visible,
+.ghost:focus-visible {
   outline: 2px solid var(--hv-red);
   outline-offset: 3px;
 }
@@ -191,8 +199,7 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  margin: -1px -1px -1px 0;
-  padding: 0 1.6rem;
+  padding: 0 1.5rem;
   background: var(--hv-ink);
   border: 0;
   color: var(--hv-paper);
@@ -201,6 +208,7 @@
   font-weight: 900;
   letter-spacing: 0.13em;
   text-transform: uppercase;
+  text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
   transition: background 0.18s ease;
@@ -223,20 +231,85 @@
   .change:hover {
     color: var(--hv-ink);
   }
+
+  .ghost:hover {
+    background: var(--hv-paper);
+    border-color: var(--hv-paper);
+    color: var(--hv-ink);
+  }
+}
+
+/* ---- Book / Find: real buttons, outlined, one step below the filled one ---- */
+
+.secondary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  transition: opacity 0.2s ease;
+}
+
+/* While someone is typing a car, Book / Find step back so nothing pulls focus. */
+.actions[data-typing] .secondary {
+  opacity: 0.35;
+}
+
+.ghost {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  min-height: 54px;
+  padding: 0 1.2rem;
+  background: rgba(8, 8, 7, 0.32);
+  border: 1px solid rgba(243, 237, 223, 0.72);
+  color: var(--hv-paper);
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.ghost > span:last-child {
+  font-size: 1rem;
+}
+
+.ghostPre {
+  opacity: 0.7;
 }
 
 /* ---- phones: input row on top, button attached below as one block ---- */
 
 @media (max-width: 560px) {
-  .bar {
-    grid-template-columns: 1fr;
+  .actions {
     width: min(100%, 340px);
     margin-top: 1.6rem;
   }
 
+  .bar {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .ghost {
+    min-height: 48px;
+    padding: 0 0.85rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+  }
+
+  .ghostPre {
+    display: none;
+  }
+
   .lead {
-    min-height: 68px;
-    padding: 0.6rem 0.85rem;
+    min-height: 56px;
+    padding: 0.3rem 0.6rem;
     gap: 0.75rem;
   }
 
@@ -252,14 +325,11 @@
   .primary {
     justify-content: space-between;
     min-height: 52px;
-    margin: 0 -1px -1px;
     padding: 0 1.1rem;
     font-size: 0.76rem;
-    /* Keeps the button's edge visible against the dark hero photo. */
-    box-shadow: inset 0 0 0 1px rgba(243, 237, 223, 0.3);
   }
 
-  /* Results drop below the whole block, not between the input and the button. */
+  /* Results drop below the whole bar, over the Book / Find row. */
   .vs :global(.veh-search-results),
   .vs :global(.veh-search-empty) {
     max-height: min(30dvh, 218px) !important;
@@ -267,6 +337,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .secondary,
+  .ghost,
   .primary,
   .primary span {
     transition: none;

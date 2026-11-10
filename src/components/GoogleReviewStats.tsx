@@ -55,6 +55,13 @@ export function LiveReviewCount({ plus = true }: { plus?: boolean }) {
   return <>{reviewCountFormatter.format(safeCount)}{plus ? "+" : ""}</>;
 }
 
+/** Live Google star rating, one decimal (e.g. "5.0"). */
+export function LiveReviewRating() {
+  const { rating } = useContext(ReviewStatsContext);
+  const value = Number.isFinite(Number(rating)) ? Number(rating) : site.reviews.rating;
+  return <>{value.toFixed(1)}</>;
+}
+
 export function AnimatedReviewCount({ plus = true, duration = 700 }: { plus?: boolean; duration?: number }) {
   const { count } = useContext(ReviewStatsContext);
   const target = Number.isFinite(Number(count)) ? Number(count) : site.reviews.count;

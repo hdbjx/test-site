@@ -26,6 +26,9 @@ export function VehicleSearch({
   const [listOpen, setListOpen] = useState(true);
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Only arrow-key moves should scroll the list. Hover also sets the active row, and
+  // snapping a hovered row into view fights the person's own wheel/trackpad scroll.
+  const keyboardNav = useRef(false);
   const listId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const matches = useMemo(() => vehicleMatches(query), [query]);
   const year = yearFromVehicleQuery(query);
@@ -40,7 +43,7 @@ export function VehicleSearch({
   }, [autoFocus]);
 
   useEffect(() => {
-    if (activeIndex < 0 || !showMatches) return;
+    if (activeIndex < 0 || !showMatches || !keyboardNav.current) return;
     document.getElementById(`${listId}-option-${activeIndex}`)?.scrollIntoView({ block: "nearest" });
   }, [activeIndex, listId, showMatches]);
 
@@ -70,12 +73,14 @@ export function VehicleSearch({
 
     if (event.key === "ArrowDown") {
       event.preventDefault();
+      keyboardNav.current = true;
       setListOpen(true);
       setActiveIndex((current) => current < matches.length - 1 ? current + 1 : 0);
       return;
     }
     if (event.key === "ArrowUp") {
       event.preventDefault();
+      keyboardNav.current = true;
       setListOpen(true);
       setActiveIndex((current) => current > 0 ? current - 1 : matches.length - 1);
       return;
@@ -128,7 +133,7 @@ export function VehicleSearch({
               role="option"
               aria-selected={activeIndex === index}
               tabIndex={-1}
-              onMouseEnter={() => setActiveIndex(index)}
+              onMouseEnter={() => { keyboardNav.current = false; setActiveIndex(index); }}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => choose(item)}
             >
