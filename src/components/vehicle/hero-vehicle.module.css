@@ -200,9 +200,9 @@
   justify-content: center;
   gap: 1rem;
   padding: 0 1.5rem;
-  background: var(--hv-ink);
+  background: var(--hv-red); /* Every Detail red */
   border: 0;
-  color: var(--hv-paper);
+  color: #fff;
   font-family: var(--font-display);
   font-size: 13px; /* Footnote */
   font-weight: 900;
@@ -211,21 +211,37 @@
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 0.18s ease;
+  /* --mag-x/--mag-y come from HomeArtMotion's magnetic hover ([data-v29-magnetic]). */
+  transform: translate3d(var(--mag-x, 0px), var(--mag-y, 0px), 0);
+  transition: background 0.18s ease, color 0.18s ease, transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.22s ease;
 }
 
 .primary span {
   font-size: 1.1rem;
-  transition: transform 0.18s ease;
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.primary:active,
+.ghost:active {
+  transform: translate3d(var(--mag-x, 0px), var(--mag-y, 0px), 0) scale(0.97);
+  transition-duration: 0.08s;
 }
 
 @media (hover: hover) {
   .primary:hover {
-    background: var(--hv-red);
+    background: var(--hv-ink);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
   }
 
-  .primary:hover span {
-    transform: translate(2px, -2px);
+  /* Arrow moves the way the button goes: down for scrolling, up-right for a new page. */
+  .primary:hover span,
+  .ghost:hover > span:last-child {
+    transform: translateY(3px);
+  }
+
+  .primary[href]:hover span,
+  .ghost[href]:hover > span:last-child {
+    transform: translate(3px, -3px);
   }
 
   .change:hover {
@@ -236,6 +252,7 @@
     background: var(--hv-paper);
     border-color: var(--hv-paper);
     color: var(--hv-ink);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
   }
 }
 
@@ -272,15 +289,23 @@
   text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  transform: translate3d(var(--mag-x, 0px), var(--mag-y, 0px), 0);
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.22s ease;
 }
 
 .ghost > span:last-child {
   font-size: 1rem;
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .ghostPre {
   opacity: 0.7;
+}
+
+.ghost > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ---- phones: input row on top, button attached below as one block ---- */

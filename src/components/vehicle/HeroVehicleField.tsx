@@ -32,9 +32,9 @@ function shortName(v: SiteVehicle) {
 
 /**
  * Homepage hero actions. One filled button at a time, chosen by state:
- *  - no car:            [What do you drive? | See my price]    Book a detail · Find my detail
- *  - car just picked:   [Priced for X      | See X prices]    Book my X · Find my detail
- *  - car already saved: [Priced for X      | Book my X]       See X prices · Find my detail
+ *  - no car:            [What do you drive?]  (button appears once they type)  Book a detail · Find my detail
+ *  - car just picked:   [Priced for X      | See X packages]    Book my X · Find my detail
+ *  - car already saved: [Priced for X      | Book my X]         See X packages · Find my detail
  * Book and Find fade back while someone is typing a car.
  */
 export function HeroVehicleField() {
@@ -81,19 +81,20 @@ export function HeroVehicleField() {
   };
 
   const seePrices = () => {
-    track("book_click", { location: "home_hero_see_price", vehicle: vehicle?.vehicle });
+    track("book_click", { location: "home_hero_packages", vehicle: vehicle?.vehicle });
     goToPricing();
   };
 
-  const searchSubmit = () => {
-    // Typed something: take the best match. Otherwise point them at the field.
+  const explore = () => {
+    // Typed a car: take the best match and go to its packages. Nothing typed: just keep exploring.
     const first = vehicleMatches(query)[0];
     if (first) {
       const year = yearFromVehicleQuery(query);
       choose({ make: first.make, model: first.model, year: year || undefined, vehicle: vehicleClassForYear(first, year) }, "button");
       return;
     }
-    focusInput();
+    track("book_click", { location: "home_hero_explore" });
+    goToPricing();
   };
 
   // Leaving "Change" without picking anything goes back to the current car.
@@ -142,31 +143,34 @@ export function HeroVehicleField() {
         </div>
 
         {!set ? (
-          <button type="button" className={styles.primary} onClick={searchSubmit}>
-            See my price <span aria-hidden="true">↗</span>
-          </button>
+          // Hidden until they start typing a car; then it takes the best match to its packages.
+          typing ? (
+            <button type="button" className={styles.primary} onClick={explore} data-v29-magnetic>
+              See packages <span aria-hidden="true">↓</span>
+            </button>
+          ) : null
         ) : returning ? (
-          <TrackedLink href="/book" event="book_click" params={bookParams} className={styles.primary}>
+          <TrackedLink href="/book" event="book_click" params={bookParams} className={styles.primary} data-v29-magnetic>
             Book my {name} <span aria-hidden="true">↗</span>
           </TrackedLink>
         ) : (
-          <button type="button" className={styles.primary} onClick={seePrices}>
-            See {name} prices <span aria-hidden="true">↗</span>
+          <button type="button" className={styles.primary} onClick={seePrices} data-v29-magnetic>
+            See {name} packages <span aria-hidden="true">↓</span>
           </button>
         )}
       </div>
 
       <div className={styles.secondary}>
         {set && returning ? (
-          <button type="button" className={styles.ghost} onClick={seePrices}>
-            See {name} prices <span aria-hidden="true">↗</span>
+          <button type="button" className={styles.ghost} onClick={seePrices} data-v29-magnetic>
+            <span><span className={styles.ghostPre}>See {name} </span>packages</span> <span aria-hidden="true">↓</span>
           </button>
         ) : (
-          <TrackedLink href="/book" event="book_click" params={bookParams} className={styles.ghost}>
+          <TrackedLink href="/book" event="book_click" params={bookParams} className={styles.ghost} data-v29-magnetic>
             {set ? <>Book my {name}</> : "Book a detail"} <span aria-hidden="true">↗</span>
           </TrackedLink>
         )}
-        <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "home_v29_hero" }} className={styles.ghost}>
+        <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "home_v29_hero" }} className={styles.ghost} data-v29-magnetic>
           <span>{!set ? <span className={styles.ghostPre}>Not sure? </span> : null}Find my detail</span> <span aria-hidden="true">↗</span>
         </TrackedLink>
       </div>

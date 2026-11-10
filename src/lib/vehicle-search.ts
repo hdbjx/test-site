@@ -49,6 +49,8 @@ export function vehicleMatches(query: string, limit = 12): RecommenderVehicle[] 
   const q = normalizeVehicleQuery(withoutYear);
   if (q.length < 2) return [];
   const tokens = q.split(" ").filter(Boolean);
+  // Punctuation-blind form so "crv", "cr v" and "CR-V" all match ("f150" → "F-150").
+  const compact = q.replace(/ /g, "");
 
   return recommenderVehicles
     .map((item) => {
@@ -62,6 +64,15 @@ export function vehicleMatches(query: string, limit = 12): RecommenderVehicle[] 
       if (model.startsWith(q)) score += 35;
       if (make === q) score += 25;
       if (tokens.every((token) => full.includes(token))) score += 20;
+      const fullC = full.replace(/ /g, "");
+      const modelC = model.replace(/ /g, "");
+      if (compact.length >= 2) {
+        if (modelC === compact) score += 50;
+        else if (modelC.startsWith(compact)) score += 35;
+        if (fullC === compact) score += 120;
+        else if (fullC.startsWith(compact)) score += 60;
+        else if (score === 0 && fullC.includes(compact)) score += 15;
+      }
       return { item, score };
     })
     .filter((entry) => entry.score > 0)
