@@ -1,48 +1,48 @@
 /* Homepage hero primary action: inline vehicle search + "See my price".
-   Square cream card with a hard offset shadow (package-card language) and a red action. */
+   Square, cream and ink to match the site's CTA language (.v29-hero-cta). */
 
 .bar {
   --hv-paper: #f3eddf;
   --hv-ink: #0b0a09;
   --hv-red: #d56865;
-  --hv-action: #b8363d; /* darker brand red: white label passes AA contrast */
   position: relative;
   z-index: 3;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  width: min(100%, 640px);
-  min-height: 84px;
-  margin: 2.3rem auto 0;
+  width: min(100%, 600px);
+  min-height: 74px;
+  margin: 2.1rem auto 0;
   background: var(--hv-paper);
   color: var(--hv-ink);
-  /* Hard offset shadow: same "printed card" language as the package cards below. */
-  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.55), 0 26px 64px rgba(0, 0, 0, 0.36);
+  border: 1px solid var(--hv-ink);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.32);
   text-align: left;
 }
 
-/* Red underline grows across the input area on focus (background, so .lead stays unpositioned
-   and the results dropdown anchors to the whole bar). */
 .bar:focus-within .lead {
-  background-size: 100% 3px;
+  box-shadow: inset 0 -3px 0 var(--hv-red);
 }
 
 .lead {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
-  gap: 1rem;
+  gap: 0.9rem;
   min-width: 0;
-  padding: 0.8rem 1.2rem 0.8rem 1.3rem;
-  background: linear-gradient(var(--hv-red), var(--hv-red)) left bottom / 0 3px no-repeat;
-  transition: background-size 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  padding: 0.65rem 1rem 0.65rem 1.4rem;
 }
 
 .icon {
   display: grid;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  color: #b8363d;
+  width: 2.4rem;
+  height: 2.4rem;
+  background: rgba(11, 10, 9, 0.07);
+  color: var(--hv-ink);
+}
+
+.bar[data-set] .lead {
+  grid-template-columns: auto minmax(0, 1fr);
 }
 
 .bar[data-set] .icon {
@@ -52,10 +52,10 @@
 
 .label {
   display: block;
-  margin-bottom: 0.32rem;
+  margin-bottom: 0.22rem;
   color: #b8363d;
   font-family: var(--font-display);
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.16em;
   line-height: 1;
@@ -82,30 +82,29 @@
   border: 0 !important;
   box-shadow: none !important;
   color: var(--hv-ink);
-  font: 700 1.3rem/1.25 var(--font-display) !important;
+  font: 600 1.12rem/1.3 var(--font-display) !important;
   letter-spacing: -0.01em;
   outline: none;
 }
 
 .vs :global(input)::placeholder {
-  color: rgba(11, 10, 9, 0.34);
-  font-weight: 600;
+  color: rgba(11, 10, 9, 0.42);
 }
 
 .vs :global(.veh-search-results),
 .vs :global(.veh-search-empty) {
   position: absolute;
   top: 100%;
-  left: 0;
-  right: 0;
+  left: -1px;
+  right: -1px;
   z-index: 5;
   max-height: min(30vh, 218px) !important; /* ~4 rows: stays clear of the tape under the hero */
   overflow: auto;
   margin: 0;
   background: #fff;
-  border: 0 !important;
-  border-top: 1px solid rgba(11, 10, 9, 0.14) !important;
-  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.55), 0 26px 60px rgba(0, 0, 0, 0.36);
+  border: 1px solid var(--hv-ink) !important;
+  border-top: 0 !important;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.36);
 }
 
 .vs :global(.veh-search-results button) {
@@ -192,10 +191,11 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  padding: 0 2rem;
-  background: var(--hv-action);
+  margin: -1px -1px -1px 0;
+  padding: 0 1.6rem;
+  background: var(--hv-ink);
   border: 0;
-  color: #fff;
+  color: var(--hv-paper);
   font-family: var(--font-display);
   font-size: 0.84rem;
   font-weight: 900;
@@ -213,7 +213,7 @@
 
 @media (hover: hover) {
   .primary:hover {
-    background: var(--hv-ink);
+    background: var(--hv-red);
   }
 
   .primary:hover span {
@@ -235,8 +235,8 @@
   }
 
   .lead {
-    min-height: 72px;
-    padding: 0.7rem 0.95rem;
+    min-height: 68px;
+    padding: 0.6rem 0.85rem;
     gap: 0.75rem;
   }
 
@@ -252,15 +252,14 @@
   .primary {
     justify-content: space-between;
     min-height: 52px;
-    padding: 0 1.2rem;
-    font-size: 0.78rem;
+    margin: 0 -1px -1px;
+    padding: 0 1.1rem;
+    font-size: 0.76rem;
+    /* Keeps the button's edge visible against the dark hero photo. */
+    box-shadow: inset 0 0 0 1px rgba(243, 237, 223, 0.3);
   }
 
-  /* Results open right under the input and overlay the button while typing. */
-  .lead {
-    position: relative;
-  }
-
+  /* Results drop below the whole block, not between the input and the button. */
   .vs :global(.veh-search-results),
   .vs :global(.veh-search-empty) {
     max-height: min(30dvh, 218px) !important;
@@ -268,7 +267,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lead,
   .primary,
   .primary span {
     transition: none;
