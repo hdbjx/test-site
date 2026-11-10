@@ -8952,18 +8952,18 @@ img{max-width:100%}
   display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.45rem .9rem;
   margin:1.5rem auto 0;
   color:rgba(243,237,223,.78);
-  font:600 .7rem/1.3 var(--font-display);letter-spacing:.1em;text-transform:uppercase;
+  font:600 13px/1.35 var(--font-display);letter-spacing:.09em;text-transform:uppercase;
   text-shadow:0 1px 12px rgba(0,0,0,.55);
 }
 .home-hero-proof b{color:#f3eddf;font-weight:800}
 .home-hero-proof-rating{display:inline-flex;align-items:center;gap:.45rem;color:inherit;text-decoration:none}
 .home-hero-proof-rating:hover{color:#f3eddf}
 .home-hero-proof-rating:focus-visible{outline:2px solid #d56865;outline-offset:3px}
-.home-hero-proof-stars{color:#f2b544;letter-spacing:.06em;font-size:.8rem}
+.home-hero-proof-stars{color:#f2b544;letter-spacing:.06em;font-size:15px}
 .home-hero-proof-sep{width:1px;height:.9em;background:rgba(243,237,223,.32)}
 @media(max-width:720px){
   /* Rating on its own line; award and clients wrap under it. */
-  .home-hero-proof{gap:.35rem .7rem;font-size:.62rem;letter-spacing:.08em}
+  .home-hero-proof{gap:.3rem .7rem;font-size:12px;letter-spacing:.06em}
   /* Rating, award and clients each get a line; no dividers left dangling at line ends. */
   .home-hero-proof>*{flex-basis:100%;justify-content:center}
   .home-hero-proof-sep{display:none}
@@ -9063,3 +9063,40 @@ html[data-hero-vehicle-visible] .site-context-pill{opacity:0;visibility:hidden;p
 .v15-service.is-active .v15-service-price{color:rgb(243 241 236/.78)}
 .v15-service.is-active .v15-service-price b{color:var(--color-paper)}
 @media(max-width:640px){.v15-service-price{font-size:.84rem}.v15-service-price b{font-size:1.5rem}}
+
+/* ============================================================
+   HOMEPAGE TYPE SCALE (Apple HIG text styles, Nov 2026)
+   Caption 12 · Footnote 13 · Subheadline 15 · Body 17.
+   Nothing on the homepage renders below 12px. Uppercase tracked
+   labels use Caption (12) or Footnote (13); supporting copy uses
+   Subheadline (15); paragraphs use Body (17). Display type untouched.
+   ============================================================ */
+/* Caption — 12px: small uppercase labels */
+.v41-care-cadence,
+.v15-most,
+.v38-proof-count small,
+.v15-service-label span,
+.v41-care-heading>span,
+.v41-care-card-top span,
+.v41-care-card-top b,
+.home-book-bar-proof small{font-size:12px!important}
+
+/* Footnote — 13px: button labels, links, the hero kicker, dense lists */
+.v41-care-card-copy strong,
+.v29-work-end a,
+.home-book-bar-cta{font-size:13px!important}
+
+/* Subheadline — 15px: supporting copy */
+.v15-service-subline,
+.v15-service-price,
+.v41-care-card-copy p{font-size:15px!important}
+
+/* Body — 17px: section intro paragraphs */
+.v41-care-heading p{font-size:17px!important}
+
+@media(max-width:640px){
+  .v15-service-includes{font-size:13px!important}
+  .v15-service-cue{font-size:12px!important}
+  /* Kicker keeps one line at 12px with slightly tighter tracking. */
+  .v29-hero-kicker{font-size:12px!important;letter-spacing:.1em!important}
+}
