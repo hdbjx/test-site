@@ -17,6 +17,8 @@ export const site = {
     sms: "sms:+14048550672",
   },
   email: "hello@everydetail.co",
+  // Hiring / joining the crew goes straight to the business manager.
+  teamEmail: "davis@everydetail.co",
 
   // Service-area business: no public street address.
   city: "Decatur",
