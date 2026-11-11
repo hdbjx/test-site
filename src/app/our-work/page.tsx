@@ -7,6 +7,7 @@ import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
 import { WorkWall } from "@/components/work/WorkWall";
+import { RecentGoogleReviews } from "@/components/reviews/RecentGoogleReviews";
 import { site } from "@/data/site";
 import { workWall } from "@/data/work";
 import { clients, sponsorships, type CommunityEntry } from "@/data/community";
@@ -57,6 +58,7 @@ export default async function OurWorkPage() {
         <CurvedTape text="REAL JOBS • REAL REVIEWS • YOUR DRIVEWAY • SAME CREW • " label="Every Detail work promise" />
 
         <WorkWall anchorId={WALL_ANCHOR} />
+        <RecentGoogleReviews />
 
         {/* Static 50/50 proof spot. No slider: one honest photo of one panel. */}
         <section className="work-audit-before-after" data-header-tone="light" aria-labelledby="work-before-after-title">

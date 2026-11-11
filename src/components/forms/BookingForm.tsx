@@ -2,21 +2,31 @@
 
 import Link from "next/link";
 import { AddressFields } from "./AddressFields";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { useVehicle } from "@/components/vehicle/VehicleContext";
 import { PRICING, serviceList, services, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { duration, usd } from "@/lib/format";
 import { submitLead } from "@/lib/submit";
 import { FormError, formToObject, Honeypot, SelectField, Success, TextField } from "./parts";
+import { BookAssurance } from "@/components/ed/BookAssurance";
 import { AutofillSafeNotes } from "./AutofillSafeNotes";
 import { LeadSourceField } from "./LeadSourceField";
 import { TurnstileField } from "./TurnstileField";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-export function BookingForm({ initialVehicle, initialService }: { initialVehicle?: VehicleId; initialService?: ServiceId }) {
+export function BookingForm({ initialVehicle, initialService, crew }: { initialVehicle?: VehicleId; initialService?: ServiceId; crew?: React.ReactNode }) {
+  const { vehicle: siteVehicle } = useVehicle();
   const [vehicle, setVehicle] = useState<VehicleId | undefined>(initialVehicle);
+  // Fill in the size from "What do you drive?" (or a saved vehicle) when the link didn't carry one.
+  useEffect(() => {
+    if (!initialVehicle && siteVehicle?.vehicle) {
+      setVehicle((current) => current ?? siteVehicle.vehicle);
+      setService((current) => current ?? "premium");
+    }
+  }, [initialVehicle, siteVehicle?.vehicle]);
   const [service, setService] = useState<ServiceId | undefined>(initialService ?? (initialVehicle ? "premium" : undefined));
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -182,6 +192,7 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
           </SelectField>
           <LeadSourceField error={bad("leadSource")} />
         </fieldset>
+        {crew}
 
       </div>
 
@@ -214,6 +225,7 @@ export function BookingForm({ initialVehicle, initialService }: { initialVehicle
           <button type="submit" disabled={status === "sending"} className="btn btn-primary mt-4 w-full disabled:opacity-60">
             {status === "sending" ? "Sending…" : "Book my detail"}
           </button>
+          <BookAssurance className="text-center" />
         </div>
       </aside>
     </form>

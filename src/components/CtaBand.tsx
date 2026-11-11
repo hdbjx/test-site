@@ -1,4 +1,5 @@
 import { TrackedLink } from "./TrackedLink";
+import { BookAssurance } from "@/components/ed/BookAssurance";
 import { CtaNextOpening } from "@/components/journey/CtaNextOpening";
 
 type Props = {
@@ -27,6 +28,7 @@ export function CtaBand({
         <div className="site-cta-actions">
           <TrackedLink href="/book" event="book_click" params={{ location }} className="site-cta-primary">Book your detail <span>↗</span></TrackedLink>
           <TrackedLink href="/get-a-quote" event="quote_start" params={{ location }} className="site-cta-secondary">{quoteLabel} <span>↗</span></TrackedLink>
+          <BookAssurance />
         </div>
       </div>
     </section>

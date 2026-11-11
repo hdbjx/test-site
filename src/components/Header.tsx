@@ -25,7 +25,7 @@ const ROUTE_HEADER_TONE: Record<string, HeaderTone> = {
   "/detailplus": "light",
   "/gift-cards": "light",
   "/info-form": "ink",
-  "/mobile-car-detailing": "ink",
+  "/mobile-car-detailing": "light",
   "/our-services": "ink",
   "/our-work": "light",
   "/paint-correction": "light",

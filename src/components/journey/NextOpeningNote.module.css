@@ -27,8 +27,7 @@
 
 /* Doubled class selectors so host components' "strong"/"span"/"a" rules can't restyle the note. */
 .note .label,
-.note .when,
-.note .take {
+.note .slot {
   display: inline;
   margin: 0;
   color: inherit;
@@ -44,19 +43,45 @@
   opacity: 0.65;
 }
 
-.note .when {
-  font-weight: 800;
-  opacity: 1;
+.slots {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
 }
 
-.note .take {
+/* Each opening is a tappable ticket stub: hold the time, land on booking with it picked. */
+.note .slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  min-height: 1.9rem;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid currentColor;
+  border-radius: 2px;
   font-weight: 800;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration: none;
   white-space: nowrap;
+  transition: background-color 120ms ease, color 120ms ease, transform 120ms ease;
 }
 
-.note .take:focus-visible {
+.note .slot span {
+  opacity: 0.6;
+}
+
+@media (hover: hover) {
+  .note .slot:hover {
+    background: color-mix(in srgb, currentColor 14%, transparent);
+  }
+  .note .slot:hover span {
+    opacity: 1;
+  }
+}
+
+.note .slot:active {
+  transform: translateY(1px);
+}
+
+.note .slot:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }

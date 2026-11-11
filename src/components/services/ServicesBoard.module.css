@@ -1036,3 +1036,42 @@
     transform: none;
   }
 }
+
+/* Spec rows (reference pass): fixed labels so every card reads the same way. */
+.specs {
+  display: grid;
+  align-content: start;
+  gap: 0;
+  padding-bottom: 0.2rem;
+}
+
+.specs > div {
+  display: grid;
+  grid-template-columns: 6.6rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-top: 1px dashed var(--sb-line);
+}
+
+.specs > div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.specs dt {
+  color: var(--sb-ink);
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.specs dd {
+  margin: 0;
+  color: #403b35;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}

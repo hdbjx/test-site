@@ -1,12 +1,23 @@
 import Link from "next/link";
-import { TrackedLink } from "@/components/TrackedLink";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
+import { CurvedTape } from "@/components/CurvedTape";
+import { FaqList } from "@/components/FaqList";
+import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
-import { ServicePicker } from "@/components/ServicePicker";
+import { TrackedLink } from "@/components/TrackedLink";
+import { CrewStrip } from "@/components/ed/CrewStrip";
+import { ServicesBoard } from "@/components/services/ServicesBoard";
 import { areas } from "@/data/areas";
-import { pageMetadata, serviceSchema } from "@/lib/seo";
+import { homeFaqs, visible } from "@/data/faqs";
+import { startingPrice } from "@/data/services";
+import { usd } from "@/lib/format";
+import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
+import styles from "@/styles/servicePage.module.css";
+
+// The crew strip reads the live roster; refresh it every five minutes like About.
+export const revalidate = 300;
 
 export const metadata = pageMetadata({
   title: "Mobile Car Detailing in Decatur & Atlanta, GA | Every Detail",
@@ -15,53 +26,133 @@ export const metadata = pageMetadata({
   image: "hq-branded-van-side",
 });
 
+const covers = [
+  {
+    name: "Interior",
+    detail: "Vacuuming, seats, mats, dash, console, cupholders, doors, panels, glass and cargo areas, with deeper work when the service calls for it.",
+  },
+  {
+    name: "Exterior",
+    detail: "Hand washing, wheels and tires, exterior glass and finishing work, with paint protection or decontamination depending on the service.",
+  },
+  {
+    name: "Your driveway",
+    detail: "Our electric rigs carry their own water and battery power. No generator running, no outlet needed. You provide the car and room to work around it.",
+  },
+];
+
+const straight = [
+  { name: "First visit", detail: "Premium fits most cars we haven't seen before. It sets the clean baseline everything else builds on." },
+  { name: "Heavy buildup", detail: "Pet hair, stains, spills, odor or years of use: Factory Reset adds the time and extraction that takes." },
+  { name: "Already clean", detail: "Maintenance is for cars that already have a clean baseline and need to stay that way." },
+];
+
 export default function MobileCarDetailingPage() {
   return (
-    <div className="services-v161 mobile-detailing-page service85">
-      <section className="edu-hero mobile86-hero" data-header-tone="ink">
-        <div className="mobile86-hero-photo" aria-hidden="true"><Photo id="hq-mobile-rig-fleet" sizes="100vw" fill priority /></div>
-        <div className="mobile86-hero-shade" aria-hidden="true" />
-        <div className="svc-shell mobile86-hero-inner">
-        <div className="mb-6"><Breadcrumbs items={[{ name: "Mobile Car Detailing", path: "/mobile-car-detailing" }]} /></div>
-        <p className="svc-eyebrow">MOBILE CAR DETAILING / DECATUR + ATLANTA</p>
-        <div className="edu-hero-grid">
-          <h1>Full mobile car detailing,<br/><span>right in your driveway.</span></h1>
-          <div className="edu-hero-copy">
-            <p className="edu-lede">Every Detail brings the crew, water, power, products and equipment to you in a 100% electric mobile setup. Our core detailing services clean the vehicle inside and out rather than treating the first visit like a quick interior-only or exterior-only clean.</p>
-            <p>For most first-time clients, Premium is the starting point. If the vehicle has heavy stains, pet hair, spills, odor or long-term buildup, Factory Reset adds the labor needed for a deeper recovery. Maintenance is designed mainly for vehicles that are already clean and being kept that way.</p>
-            <div className="mt-7 flex flex-wrap gap-3"><TrackedLink href="/book" event="book_click" params={{ location: "mobile_detailing_hero" }} className="btn btn-primary">Book your detail ↗</TrackedLink><TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "mobile_detailing_hero" }} className="btn btn-secondary">Get a recommendation</TrackedLink></div>
+    <main className={styles.page}>
+      <section className={styles.hero} data-header-tone="light" aria-labelledby="mcd-hero-title">
+        <div className={styles.heroPhoto}><Photo id="hq-mobile-rig-fleet" sizes="(max-width: 900px) 100vw, 50vw" fill priority /></div>
+        <div className={styles.heroShade} aria-hidden="true" />
+        <div className={styles.heroInner}>
+          <div className={styles.crumbs}>
+            <Breadcrumbs items={[{ name: "Services", path: "/our-services" }, { name: "Mobile Car Detailing", path: "/mobile-car-detailing" }]} />
           </div>
+          <p className={styles.kicker}>Every Detail / Mobile car detailing</p>
+          <h1 id="mcd-hero-title" className={styles.heroTitle}>
+            <span>The detail shop</span>
+            <span>comes to you.</span>
+          </h1>
+          <p className={styles.heroLede}>Full inside-and-out car detailing in Decatur and nearby Atlanta. We bring the crew, the water, the power and the products to your driveway.</p>
+          <div className={styles.heroActions}>
+            <TrackedLink href="/book" event="book_click" params={{ location: "mobile_detailing_hero" }} className={styles.heroCta}>BOOK YOUR DETAIL <span aria-hidden="true">↗</span></TrackedLink>
+            <TrackedLink href="/get-a-quote" event="quote_start" params={{ location: "mobile_detailing_hero" }} className={styles.heroLink}>NOT SURE? FIND MY DETAIL <span aria-hidden="true">↗</span></TrackedLink>
+          </div>
+          <dl className={styles.heroFacts}>
+            <div><dt>Details from</dt><dd>{usd(startingPrice("maintenance"))}</dd></div>
+            <div><dt>Five-star reviews</dt><dd><LiveReviewCount /></dd></div>
+            <div><dt>Power + water</dt><dd>Included</dd></div>
+          </dl>
         </div>
-      </div></section>
-
-      <section className="edu-anatomy" data-header-tone="ink"><div className="svc-shell">
-        <div className="edu-section-intro"><p className="svc-eyebrow">WHAT MOBILE DETAILING MEANS HERE</p><h2>One appointment.<br/><span>The whole vehicle.</span></h2><p>Our standard first-visit approach is comprehensive. We work through the interior and exterior so the car leaves with a consistent baseline instead of one half being cleaned while the other is left behind.</p></div>
-        <figure className="mobile86-anatomy-photo"><Photo id="two-tech-interior-detail" ratio="16/7" sizes="92vw" /></figure>
-        <div className="grid gap-6 md:grid-cols-3 mt-10">
-          <article><b>01</b><h3 className="mt-3 text-xl font-semibold">Interior</h3><p className="mt-2">Vacuuming, seats, mats, dash, console, cupholders, doors, panels, glass and cargo areas, with deeper work when the selected service calls for it.</p></article>
-          <article><b>02</b><h3 className="mt-3 text-xl font-semibold">Exterior</h3><p className="mt-2">Hand washing, wheels and tires, exterior glass, door jambs and finishing work, with paint protection or decontamination depending on the service.</p></article>
-          <article><b>03</b><h3 className="mt-3 text-xl font-semibold">Your driveway</h3><p className="mt-2">Our 100% electric mobile rigs carry their own water and battery power, so there is no generator running in your driveway and no outlet needed. You provide the vehicle and an accessible place for the crew to work safely around it.</p></article>
-        </div>
-      </div></section>
-
-      <section className="area-v2-pricing" data-header-tone="ink"><div className="area-v2-shell">
-        <div className="area-v2-pricing-head"><div><p className="area-v2-kicker">CHOOSE THE RIGHT STARTING POINT</p><h2>First visit?<br/><span>Start with condition.</span></h2></div><p>Premium fits most first-time vehicles. Factory Reset is for heavier buildup. Maintenance makes the most sense once the vehicle already has a clean baseline.</p></div>
-        <ServicePicker location="mobile_detailing_seo" headingId="mobile-detailing-pricing" />
-        <p className="mt-6"><Link href="/our-services" className="link">Compare exactly what each service includes ↗</Link></p>
-      </div></section>
-
-      <section className="mobile86-photo-break" data-header-tone="light" aria-label="Every Detail mobile setup">
-        <Photo id="mobile-rig-open-driveway" ratio="16/6" sizes="100vw" />
-        <div><span>YOUR DRIVEWAY</span><strong>OUR DETAIL SHOP.</strong></div>
       </section>
 
-      <section className="areas-v2-list" data-header-tone="ink"><div className="areas-v2-shell">
-        <div className="areas-v2-head"><div><p className="areas-v2-kicker">SERVICE AREA</p><h2>Based in Decatur.<br/><span>Mobile across nearby Atlanta.</span></h2></div><p>We serve Decatur and nearby communities with appointment availability based on where our crews can actually travel and work.</p></div>
-        <div className="areas-v2-grid">{areas.map((area, i) => <Link key={area.slug} href={`/service-areas/${area.slug}`} className="areas-v2-card"><span className="areas-v2-index">{String(i+1).padStart(2,"0")}</span><div><h3>{area.name}</h3><p>{area.primary ? "Home base" : "Mobile service area"}</p></div><b>↗</b></Link>)}</div>
-      </div></section>
+      <CurvedTape text="INSIDE + OUT • ELECTRIC RIGS • POWER + WATER INCLUDED • WE COME TO YOU • " label="Every Detail mobile detailing" surface="ink" />
+
+      <section className={styles.fixes} data-header-tone="light" aria-labelledby="mcd-whole-title">
+        <div className={styles.shell}>
+          <div className={styles.sectionHead}>
+            <p className={styles.kickerLight}>What mobile means here</p>
+            <h2 id="mcd-whole-title" className={styles.sectionTitle}>
+              <span>One appointment.</span>
+              <span>The whole car.</span>
+            </h2>
+          </div>
+          <div className={styles.proofGrid}>
+            <figure className={styles.proof}>
+              <div className={styles.proofPhoto}><Photo id="two-tech-interior-detail" fill sizes="(max-width: 900px) 92vw, 46vw" /></div>
+            </figure>
+            <div>
+              <p className={styles.listLabel}>Every core detail covers</p>
+              <ul className={styles.defects}>
+                {covers.map((item, index) => (
+                  <li key={item.name}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <div><strong>{item.name}</strong><p>{item.detail}</p></div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className={styles.limitsCol}>
+            <p className={styles.listLabel}>Where to start</p>
+            <ul className={styles.limits}>
+              {straight.map((item) => (
+                <li key={item.name}><strong>{item.name}</strong><p>{item.detail}</p></li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <ServicesBoard anchorId="mobile-detailing-pricing" />
+
+      <section className={styles.quote} data-header-tone="light" aria-labelledby="mcd-area-title">
+        <div className={`${styles.shell} ${styles.quoteGrid}`}>
+          <div className={styles.quoteAside}>
+            <p className={styles.kickerLight}>Service area</p>
+            <h2 id="mcd-area-title" className={styles.sectionTitle}>
+              <span>Based in Decatur.</span>
+              <span>Out across Atlanta.</span>
+            </h2>
+            <p className={styles.note}>
+              Two electric rigs, booked by where the crew can actually get to. Outside the list? <Link href="/service-areas">Check your address ↗</Link>
+            </p>
+            <CrewStrip />
+          </div>
+          <ol className="mcd-areas">
+            {areas.map((area, index) => (
+              <li key={area.slug}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                {area.page ? <Link href={`/service-areas/${area.slug}`}>{area.name}</Link> : area.name}
+                {area.primary && <small>Home base</small>}
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className={styles.faq} data-header-tone="ink" aria-labelledby="mcd-faq-title">
+        <div className={`${styles.shell} ${styles.faqGrid}`}>
+          <h2 id="mcd-faq-title" className={styles.sectionTitle}>
+            <span>Before</span>
+            <span>we pull up.</span>
+          </h2>
+          <FaqList faqs={visible(homeFaqs).slice(0, 6)} />
+        </div>
+      </section>
 
       <CtaBand location="mobile_detailing_final" />
-      <JsonLd data={serviceSchema({ name: "Mobile Car Detailing", description: "Full inside-and-out mobile car detailing in Decatur and nearby Atlanta communities, using 100% electric mobile rigs with power and water supplied by Every Detail.", path: "/mobile-car-detailing" })} />
-    </div>
+      <JsonLd data={serviceSchema({ name: "Mobile Car Detailing", description: "Full inside-and-out mobile car detailing in Decatur and nearby Atlanta communities, using electric mobile rigs with power and water supplied by Every Detail.", path: "/mobile-car-detailing" })} />
+      <JsonLd data={breadcrumbSchema([{ name: "Services", path: "/our-services" }, { name: "Mobile Car Detailing", path: "/mobile-car-detailing" }])} />
+    </main>
   );
 }

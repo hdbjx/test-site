@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BookAssurance } from "@/components/ed/BookAssurance";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { PRICING, services, startingPrice, vehicleIdFromSize, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, isAddonIncludedInService, purchasableAddonIds, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
@@ -184,6 +185,8 @@ type Props = {
   fromQuote?: boolean;
   fromHome?: boolean;
   fromResume?: boolean;
+  /** Server-rendered "who shows up" strip, shown beside the time picker. */
+  crew?: ReactNode;
 };
 
 type BookingLine = {
@@ -230,7 +233,7 @@ const prettyPhone = (digits: string) =>
 /* Component                                                           */
 /* ------------------------------------------------------------------ */
 
-export function LiveBooking({ account, email, garage = [], initialVehicle, initialService, initialAddons = [], initialPaint = [], fromQuote = false, fromHome = false, fromResume = false }: Props) {
+export function LiveBooking({ account, email, garage = [], initialVehicle, initialService, initialAddons = [], initialPaint = [], fromQuote = false, fromHome = false, fromResume = false, crew }: Props) {
   const { vehicle: siteVehicle, hydrated: siteVehicleHydrated, openPicker: openSiteVehiclePicker } = useVehicle();
   const { serviceIntent, location: journeyLocation, selectedSlot: journeySelectedSlot, setServiceIntent, setLocation: setJourneyLocation, setSelectedSlot: setJourneySelectedSlot, setBookingResumeHref } = useJourney();
   const signedIn = !!account;
@@ -1467,6 +1470,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                   )
                 )}
               </div>
+              {crew}
             </>
           ))}
 
@@ -1571,6 +1575,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
               <button type="submit" disabled={sending} className="bk-btn bk-btn-coral bk-confirm">
                 {sending ? "Booking…" : lines.length > 1 ? `Confirm booking · ${lines.length} vehicles` : "Confirm booking"}
               </button>
+              <BookAssurance className="bk-assurance" />
             </div>
           ))}
         </div>

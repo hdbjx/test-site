@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { ServiceId, VehicleId } from "@/data/services";
 
 /**
- * First open slot in the next 14 days for a vehicle size + service (or the Detail+
+ * Open slots in the next 14 days for a vehicle size + service (or the Detail+
  * preset). Same request the journey drawer makes, shared here so any surface can
  * show it. Results are cached for two minutes so several notes on one page cost a
  * single request each. Returns null while loading, on errors, and when nothing is open.
@@ -30,25 +30,46 @@ export const nextOpeningLabel = (iso: string) => new Intl.DateTimeFormat("en-US"
   timeZone: TZ, weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
 }).format(new Date(iso));
 
-const cache = new Map<string, { at: number; promise: Promise<string | null> }>();
+const cache = new Map<string, { at: number; promise: Promise<string[]> }>();
 
-function firstSlot(url: string): Promise<string | null> {
+function openSlots(url: string): Promise<string[]> {
   const hit = cache.get(url);
   if (hit && Date.now() - hit.at < TTL_MS) return hit.promise;
   const promise = fetch(url)
     .then(async (response) => {
-      if (!response.ok) return null;
+      if (!response.ok) return [] as string[];
       const json = (await response.json().catch(() => ({}))) as { slots?: unknown };
       const slots = Array.isArray(json.slots) ? json.slots : [];
-      return slots.find((value): value is string => typeof value === "string" && Number.isFinite(Date.parse(value))) ?? null;
+      return slots
+        .filter((value): value is string => typeof value === "string" && Number.isFinite(Date.parse(value)))
+        .sort((a, b) => Date.parse(a) - Date.parse(b));
     })
-    .catch(() => null);
+    .catch(() => [] as string[]);
   cache.set(url, { at: Date.now(), promise });
   return promise;
 }
 
+/** First open slot per day, so a short list offers real choice instead of three times on one morning. */
+function spreadByDay(slots: string[], count: number) {
+  const picked: string[] = [];
+  const days = new Set<string>();
+  for (const slot of slots) {
+    const day = dayKey(new Date(slot));
+    if (days.has(day)) continue;
+    days.add(day);
+    picked.push(slot);
+    if (picked.length === count) break;
+  }
+  return picked;
+}
+
 export function useNextOpening(vehicle: VehicleId | null | undefined, service: ServiceId | "detailplus" | null | undefined) {
-  const [result, setResult] = useState<{ url: string; slot: string | null }>({ url: "", slot: null });
+  return useNextOpenings(vehicle, service, 1)[0] ?? null;
+}
+
+/** Up to `count` upcoming openings, one per day. Empty while loading, on errors, and when nothing is open. */
+export function useNextOpenings(vehicle: VehicleId | null | undefined, service: ServiceId | "detailplus" | null | undefined, count = 3) {
+  const [result, setResult] = useState<{ url: string; slots: string[] }>({ url: "", slots: [] });
 
   const url = (() => {
     if (!service) return "";
@@ -62,14 +83,14 @@ export function useNextOpening(vehicle: VehicleId | null | undefined, service: S
   useEffect(() => {
     if (!url) return;
     let cancelled = false;
-    void firstSlot(url).then((slot) => {
-      if (!cancelled) setResult({ url, slot });
+    void openSlots(url).then((slots) => {
+      if (!cancelled) setResult({ url, slots });
     });
     return () => {
       cancelled = true;
     };
   }, [url]);
 
-  // Only report a slot that belongs to the current vehicle + service.
-  return url && result.url === url ? result.slot : null;
+  // Only report slots that belong to the current vehicle + service.
+  return url && result.url === url ? spreadByDay(result.slots, count) : [];
 }

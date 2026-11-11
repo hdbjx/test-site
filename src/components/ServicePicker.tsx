@@ -7,6 +7,7 @@ import { PRICING, serviceList, vehicles, type VehicleId } from "@/data/services"
 import { track } from "@/lib/analytics";
 import { durationShort, usd } from "@/lib/format";
 import { TrackedLink } from "./TrackedLink";
+import { BookAssurance } from "@/components/ed/BookAssurance";
 import { NextOpeningNote } from "@/components/journey/NextOpeningNote";
 
 type Props = {
@@ -136,6 +137,7 @@ export function ServicePicker({ location, headingId }: Props) {
                 >
                   Book {s.name.replace(" Detail", "")}
                 </TrackedLink>
+                <BookAssurance className="text-center" />
               </div>
             </article>
           );

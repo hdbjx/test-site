@@ -6,6 +6,7 @@ import { isAddonId, isPaintUpgradeId, type AddonId, type PaintUpgradeId } from "
 import { getSession } from "@/lib/supabase/account";
 import { supabaseConfigured } from "@/lib/supabase/config";
 import { pageMetadata } from "@/lib/seo";
+import { CrewStrip } from "@/components/ed/CrewStrip";
 
 export const metadata = pageMetadata({
   title: "Book Mobile Car Detailing | Every Detail, Decatur GA",
@@ -43,7 +44,7 @@ export default async function BookPage({
             </div>
           </div>
           <section id="booking-main" className="container-ed pb-24" data-header-tone="ink">
-            <BookingForm initialVehicle={initialVehicle} initialService={initialService} />
+            <BookingForm initialVehicle={initialVehicle} initialService={initialService} crew={<CrewStrip tone="paper" />} />
           </section>
         </div>
       </div>
@@ -66,6 +67,7 @@ export default async function BookPage({
         fromQuote={fromQuote}
         fromHome={fromHome}
         fromResume={fromResume}
+        crew={<CrewStrip tone="paper" />}
       />
     </div>
   );

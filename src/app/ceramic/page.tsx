@@ -7,6 +7,8 @@ import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
 import { CeramicPricing } from "@/components/paint/CeramicPricing";
+import { CrewStrip } from "@/components/ed/CrewStrip";
+import { PaintScrollSteps } from "@/components/paint/PaintScrollSteps";
 import { PaintAssessmentTicket } from "@/components/paint/PaintAssessmentTicket";
 import { ceramicFaqs } from "@/data/faqs";
 import { PAINT_PRICING, ceramicDoes, ceramicDoesNot, paintProcess, paintServices } from "@/data/paint";
@@ -14,6 +16,9 @@ import { usd } from "@/lib/format";
 import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
 import styles from "@/styles/servicePage.module.css";
 import { ensureLiveCatalog } from "@/lib/live-catalog-server";
+
+// The crew strip reads the live roster; refresh it every five minutes like About.
+export const revalidate = 300;
 
 export const metadata = pageMetadata({
   title: "2-Year Ceramic Coating in Decatur & Atlanta | Every Detail",
@@ -127,15 +132,14 @@ export default async function CeramicPage() {
               <span>Nothing skipped.</span>
             </h2>
           </div>
-          <ol className={styles.ruledSteps}>
-            {paintProcess.map((step, index) => (
-              <li key={step.title}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <h3>{step.title}</h3>
-                <p>{step.body}</p>
-              </li>
-            ))}
-          </ol>
+          <PaintScrollSteps
+            tone="ink"
+            steps={paintProcess.map((step, index) => ({
+              title: step.title,
+              body: step.body,
+              photo: ["hq-black-suv-grille", "black-car-pressure-wash", "5050", "paint-01", "ceramic-02"][index] ?? "paint-01",
+            }))}
+          />
         </div>
       </section>
 
@@ -152,6 +156,7 @@ export default async function CeramicPage() {
               <li><span>02</span>We review it and reach out with the prep we&apos;d recommend.</li>
               <li><span>03</span>We confirm the correction level in person before anything is coated.</li>
             </ol>
+            <CrewStrip />
           </div>
           <PaintAssessmentTicket kind="ceramic" />
         </div>

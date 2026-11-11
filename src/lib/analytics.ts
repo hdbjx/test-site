@@ -22,7 +22,8 @@ export type EventName =
   | "detailplus_submit" // Detail+ request sent
   | "paint_inquiry" // any paint/ceramic quote click or submit
   | "gift_card_submit" // gift card request created: { amount }
-  | "hiring_click"; // join-the-team link: { location }
+  | "hiring_click" // join-the-team link: { location }
+  | "review_click"; // opened the Google review list: { location }
 
 type Params = Record<string, string | number | undefined>;
 

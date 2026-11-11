@@ -17,6 +17,16 @@ function bookAgainHref(serviceName: string | null | undefined) {
   return service ? `/book?service=${service}` : "/book";
 }
 
+/**
+ * Earliest repeat from each service's own cadence copy in data/services.ts
+ * ("every 3–4 weeks", "every 6–8 weeks", "once or twice a year").
+ */
+const REPEAT_DAYS: Record<string, number> = { maintenance: 21, premium: 42, factoryReset: 182 };
+function serviceIdFromName(serviceName: string | null | undefined) {
+  const name = (serviceName ?? "").toLowerCase();
+  return name.includes("factory") ? "factoryReset" : name.includes("premium") ? "premium" : name.includes("maintenance") ? "maintenance" : null;
+}
+
 const bookAgainStyle = {
   color: "#131210",
   font: "800 .68rem/1 var(--font-display)",
@@ -71,6 +81,11 @@ export default async function AccountPage() {
   try { reportJobs = await conditionReportJobIds(supabaseAdmin(), past.map((job) => job.id)); }
   catch (error) { console.error("Condition reports failed to load", error); }
   const first = account.full_name.split(" ")[0];
+  // "Due for" nudge from the most recent finished detail and that service's cadence.
+  const lastJob = past.find((job) => serviceIdFromName(job.service_name));
+  const lastService = lastJob ? serviceIdFromName(lastJob.service_name) : null;
+  const dueAt = lastJob && lastService ? Date.parse(lastJob.scheduled_start) + REPEAT_DAYS[lastService] * 86_400_000 : null;
+  const dueSoon = dueAt !== null && dueAt - now < 7 * 86_400_000 && portalJobs.length === 0;
   const giftBalance = giftCards.reduce((sum, card) => sum + card.balance_cents, 0);
   const totalCredit = rewards.balance_cents + giftBalance;
   const activeCount = portalJobs.length;
@@ -99,6 +114,15 @@ export default async function AccountPage() {
       <main className="account68-main" data-header-tone="ink">
         <div className="account68-shell account68-grid">
           <div className="account68-primary-column">
+            {dueSoon && lastJob && (
+              <section className="account68-section account68-due" data-header-tone="ink">
+                <p className="account68-kicker">{dueAt! <= now ? "DUE NOW" : "COMING UP"}</p>
+                <h2>{lastJob.vehicle ? `${lastJob.vehicle.toUpperCase()} IS DUE.` : "TIME FOR THE NEXT ONE."}</h2>
+                <p>Last detail: {lastJob.service_name}, {when(lastJob.scheduled_start)}. That one holds best when it&rsquo;s repeated around {when(new Date(dueAt!).toISOString())}.</p>
+                <Link href={bookAgainHref(lastJob.service_name)} className="account68-primary">BOOK {(lastJob.service_name ?? "IT").toUpperCase()} AGAIN ↗</Link>
+              </section>
+            )}
+
             <section className="account68-section account68-live" data-header-tone="ink">
               <LiveJobPortal initialJobs={portalJobs} initialLoadFailed={portalLoadFailed} />
             </section>

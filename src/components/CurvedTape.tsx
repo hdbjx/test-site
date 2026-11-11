@@ -76,7 +76,8 @@ export function CurvedTape({ text, speed = 70, boost = 0.9, followScroll = true,
         vel += (target - vel) * (1 - Math.pow(1 - ease, dt * 60));
 
         if (visible) {
-          const s = Math.min(speed + vel, 2500);
+          // Reduced motion: the tape holds still (no drift, no scroll boost).
+          const s = reduced.matches ? 0 : Math.min(speed + vel, 2500);
           offset = (((offset + dir * s * dt) % unit) + unit) % unit;
           tp.setAttribute("startOffset", String(offset - unit));
         }

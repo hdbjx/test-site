@@ -1,0 +1,295 @@
+/* Compare-all rate card: sits directly under the services board on the same paper. */
+
+.section {
+  --rc-ink: var(--v29-ink, #0b0a09);
+  --rc-paper: var(--v29-paper, #f2ecdf);
+  --rc-red: var(--v29-red, #d56865);
+  --rc-oxblood: var(--ed90-oxblood, #590d07);
+  --rc-line: rgba(16, 14, 12, 0.16);
+  --rc-card: #fbf8f1;
+  margin-top: calc(-1 * clamp(2.5rem, 4vw, 4rem));
+  padding-block: 0 clamp(5rem, 8vw, 8rem);
+  background: var(--rc-paper);
+  color: var(--rc-ink);
+}
+
+.shell {
+  width: min(1240px, 100%);
+  margin-inline: auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.2rem 2rem;
+  padding-top: 1.6rem;
+  border-top: 2px solid var(--rc-ink);
+}
+
+.kicker {
+  margin: 0 0 0.5rem;
+  color: var(--rc-oxblood);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 48px;
+  padding: 0 1.2rem;
+  border: 1.5px solid var(--rc-ink);
+  background: var(--rc-ink);
+  color: var(--rc-paper);
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--rc-red);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.toggle span {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.toggle:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--rc-red);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--rc-red);
+  outline-offset: 3px;
+}
+
+/* ---------- the printed card ---------- */
+
+.card {
+  margin-top: 1.8rem;
+  border: 2px solid var(--rc-ink);
+  background: var(--rc-card);
+  box-shadow: 8px 8px 0 var(--rc-ink);
+  animation: rcPrint 260ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.card[hidden] {
+  display: none;
+}
+
+.cardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem 1.5rem;
+  padding: 0.9rem clamp(1rem, 2vw, 1.5rem);
+  border-bottom: 1.5px dashed var(--rc-ink);
+}
+
+.cardHead p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.size {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.size select {
+  min-height: 40px;
+  padding: 0 2rem 0 0.7rem;
+  border: 1.5px solid var(--rc-ink);
+  border-radius: 0;
+  background: var(--rc-paper);
+  color: var(--rc-ink);
+  font: inherit;
+  font-weight: 800;
+}
+
+.scroller {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.scroller:focus-visible {
+  outline: 2px solid var(--rc-red);
+  outline-offset: -2px;
+}
+
+.table {
+  width: 100%;
+  min-width: 940px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table th,
+.table td {
+  padding: 0.85rem clamp(0.7rem, 1.2vw, 1rem);
+  border-top: 1px solid var(--rc-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table thead th {
+  border-top: 0;
+  padding-top: 1.2rem;
+  padding-bottom: 1rem;
+}
+
+.table tbody th {
+  width: 8.5rem;
+  color: var(--rc-ink);
+  font-family: var(--font-display);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.62;
+}
+
+/* Row labels stay put while the services scroll sideways on phones. */
+.table tbody th,
+.corner {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--rc-card);
+}
+
+.corner {
+  width: 8.5rem;
+}
+
+.table td {
+  color: #403b35;
+  font-size: 0.86rem;
+  line-height: 1.42;
+}
+
+.groupStart {
+  border-left: 1.5px solid var(--rc-ink);
+}
+
+.group,
+.name,
+.price {
+  display: block;
+}
+
+.group {
+  color: var(--rc-oxblood);
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.name {
+  margin-top: 0.3rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.price {
+  margin-top: 0.45rem;
+  font-family: var(--font-numeral);
+  font-size: 2.2rem;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.ctaRow td {
+  padding-bottom: 1.2rem;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--rc-ink);
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-transform: uppercase;
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--rc-red);
+  outline-offset: 2px;
+}
+
+.fine {
+  margin: 0;
+  padding: 0.9rem clamp(1rem, 2vw, 1.5rem);
+  border-top: 1.5px dashed var(--rc-ink);
+  color: #5f5952;
+  font-size: 0.8rem;
+}
+
+@keyframes rcPrint {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .table {
+    min-width: 760px;
+  }
+  .table tbody th,
+  .corner {
+    width: 5.6rem;
+  }
+  .table tbody th {
+    font-size: 0.58rem;
+  }
+}

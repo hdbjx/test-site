@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Photo } from "@/components/Photo";
 import { RubberStamp } from "@/components/ed/RubberStamp";
 import { TrackedLink } from "@/components/TrackedLink";
+import { BookAssurance } from "@/components/ed/BookAssurance";
 import { NextOpeningNote } from "@/components/journey/NextOpeningNote";
 import { useJourney } from "@/components/journey/JourneyContext";
 import { siteVehicleLabel, useVehicle } from "@/components/vehicle/VehicleContext";
@@ -166,7 +167,13 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
                   <span className={styles.priceSize}>{sizeLabel}</span>
                 </div>
 
-                <p className={styles.cellMeta}>About {durationShort(quote.minutes)} in your driveway</p>
+                {/* Aesop-style spec rows: the same four facts, in the same order, on every card. */}
+                <dl className={`${styles.cellMeta} ${styles.specs}`}>
+                  <div><dt>Time on site</dt><dd>About {durationShort(quote.minutes)}</dd></div>
+                  <div><dt>Suited to</dt><dd>{service.whoFor}</dd></div>
+                  <div><dt>Repeat</dt><dd>{service.cadence.replace(/^Works best (\w)/, (_, c: string) => c.toUpperCase())}</dd></div>
+                  <div><dt>Crew</dt><dd>{service.crew === 1 ? "1 technician" : `${service.crew} technicians`}</dd></div>
+                </dl>
 
                 <div className={styles.cellNext}>
                   <NextOpeningNote service={id} vehicle={siteVehicle ? selected : null} location="services_board" />
@@ -228,6 +235,7 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
                   >
                     Book {service.name.replace(" Detail", "")} <span aria-hidden="true">↗</span>
                   </TrackedLink>
+                  <BookAssurance />
                 </div>
               </article>
             );
@@ -359,6 +367,7 @@ function ServiceDetailsDialog({
             >
               Book {service.name.replace(" Detail", "")} · {usd(quote.price)} <span aria-hidden="true">↗</span>
             </TrackedLink>
+            <BookAssurance />
           </footer>
         </div>
       )}

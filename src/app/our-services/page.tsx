@@ -6,6 +6,7 @@ import { LiveReviewCount } from "@/components/GoogleReviewStats";
 import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
 import { ServicesBoard } from "@/components/services/ServicesBoard";
+import { CompareRateCard } from "@/components/services/CompareRateCard";
 import { TrackedLink } from "@/components/TrackedLink";
 import { homeFaqs } from "@/data/faqs";
 import { PAINT_PRICING, paintServices } from "@/data/paint";
@@ -80,6 +81,7 @@ export default async function ServicesPage() {
         <CurvedTape text="PRICED BY VEHICLE • POWER + WATER INCLUDED • WE COME TO YOU • REAL CREW • " label="Every Detail service promise" />
 
         <ServicesBoard anchorId={serviceAnchors.menu.anchor} />
+        <CompareRateCard />
 
         {/* Beyond the core details: paint care and the recurring club, priced like the board. */}
         <section className={styles.beyond} data-header-tone="light" aria-labelledby="sv-beyond-title">

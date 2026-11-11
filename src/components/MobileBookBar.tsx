@@ -3,6 +3,14 @@
 import { useEffect, useState } from "react";
 import { LiveReviewCount } from "./GoogleReviewStats";
 import { TrackedLink } from "./TrackedLink";
+import { useJourney } from "@/components/journey/JourneyContext";
+import { useNextOpening } from "@/components/journey/useNextOpening";
+import { useVehicle } from "@/components/vehicle/VehicleContext";
+import { isServiceId } from "@/data/services";
+
+const TZ = "America/New_York";
+const shortOpening = (iso: string) =>
+  new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short", hour: "numeric", minute: "2-digit" }).format(new Date(iso)).replace(":00", "");
 
 /**
  * Homepage-only booking bar for phones. Slides up once the hero's own buttons
@@ -13,6 +21,11 @@ const HIDE_ZONES = [".v29-hero", "#home-config-stage", ".v29-close", ".site-foot
 
 export function MobileBookBar() {
   const [visible, setVisible] = useState(false);
+  const { vehicle } = useVehicle();
+  const { serviceIntent } = useJourney();
+  // Only once we know the vehicle: an opening for the wrong size would be a guess.
+  const detailIntent = serviceIntent && isServiceId(serviceIntent) ? serviceIntent : "premium";
+  const opening = useNextOpening(vehicle?.vehicle, vehicle ? detailIntent : null);
 
   useEffect(() => {
     // Rect checks on scroll rather than IntersectionObserver: the package
@@ -48,7 +61,11 @@ export function MobileBookBar() {
     <div className={`home-book-bar ${visible ? "is-visible" : ""}`} aria-hidden={!visible}>
       <div className="home-book-bar-proof">
         <span aria-hidden="true">★★★★★</span>
-        <small><LiveReviewCount /> Google reviews</small>
+        {opening ? (
+          <small className="home-book-bar-next"><i aria-hidden="true" />Next opening · {shortOpening(opening)}</small>
+        ) : (
+          <small><LiveReviewCount /> Google reviews</small>
+        )}
       </div>
       <TrackedLink
         href="/book"
