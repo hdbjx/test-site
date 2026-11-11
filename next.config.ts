@@ -53,6 +53,10 @@ const nextConfig: NextConfig = {
     deviceSizes: [390, 640, 828, 1080, 1280, 1600, 1920],
     qualities: [55, 75],
   },
+  // Paid-social landing page: a single-file motion page in public/ad/.
+  async rewrites() {
+    return [{ source: "/ad", destination: "/ad/index.html" }];
+  },
   async redirects() {
     return legacyRedirects().map(({ statusCode, ...r }) => ({ ...r, statusCode }));
   },

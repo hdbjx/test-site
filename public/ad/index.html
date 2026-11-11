@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Scroll to detail it | Every Detail Mobile Detailing, Decatur GA</title>
+<meta name="description" content="Mobile car detailing in Decatur and nearby Atlanta. We bring the crew, the power and the water to your driveway. Details from $150.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b0a09">
+<meta property="og:title" content="Scroll to detail it | Every Detail">
+<meta property="og:description" content="Mobile car detailing in Decatur and nearby Atlanta. Power and water included. Details from $150.">
+<meta property="og:image" content="/images/hq-mobile-rig-fleet.webp">
+<link rel="icon" href="/favicon.ico">
+<link rel="preload" href="/ad/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/ad/fonts/bebas-neue-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Space Grotesk";font-weight:500;font-display:swap;src:url(/ad/fonts/space-grotesk-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:700;font-display:swap;src:url(/ad/fonts/space-grotesk-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Bebas Neue";font-weight:400;font-display:swap;src:url(/ad/fonts/bebas-neue-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow";font-weight:400;font-display:swap;src:url(/ad/fonts/barlow-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow";font-weight:600;font-display:swap;src:url(/ad/fonts/barlow-latin-600-normal.woff2) format("woff2")}
+
+:root{
+  --ink:#0b0a09;--paper:#f2ecdf;--card:#fbf8f1;--red:#d56865;--oxblood:#590d07;--muted:#5f5952;
+  --display:"Space Grotesk",ui-sans-serif,sans-serif;--num:"Bebas Neue","Space Grotesk",sans-serif;--body:"Barlow",ui-sans-serif,sans-serif;
+  --e-out:cubic-bezier(0,0,.2,1);--e-in:cubic-bezier(.4,0,1,1);--e-inout:cubic-bezier(.45,0,.55,1);--e:cubic-bezier(.22,1,.36,1);--e-hero:cubic-bezier(.34,1.56,.64,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--body);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit}
+img{display:block;max-width:100%}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- top bar ---------- */
+.top{position:fixed;z-index:20;top:max(14px,env(safe-area-inset-top));left:max(16px,env(safe-area-inset-left));right:max(16px,env(safe-area-inset-right));display:flex;align-items:center;justify-content:space-between;pointer-events:none}
+.top>*{pointer-events:auto}
+.logo{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:rgba(11,10,9,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 0 0 1px rgba(242,236,223,.18);transition:rotate .45s var(--e),scale .45s var(--e)}
+.logo img{width:44px;height:44px}
+.logo:hover{rotate:-6deg;scale:1.05}
+.top-cta{display:inline-flex;align-items:center;gap:.55rem;min-height:46px;padding:0 1.1rem;background:var(--paper);color:var(--ink);font:700 .74rem/1 var(--display);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;box-shadow:4px 4px 0 var(--red);transition:translate .35s var(--e),box-shadow .35s var(--e)}
+.top-cta:hover{translate:0 -2px;box-shadow:5px 6px 0 var(--red)}
+.top-cta:active{translate:2px 2px;box-shadow:2px 2px 0 var(--red)}
+
+/* ---------- pinned stage ---------- */
+#track{position:relative;height:520vh}
+#stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--ink)}
+.atmo{position:absolute;inset:0;z-index:0;background:
+  radial-gradient(60% 55% at 62% 62%,rgba(213,104,101,.22),transparent 70%),
+  radial-gradient(40% 35% at 18% 20%,rgba(242,236,223,.08),transparent 70%),
+  radial-gradient(90% 40% at 50% 100%,rgba(89,13,7,.55),transparent 70%),
+  linear-gradient(180deg,#0b0a09 0%,#141110 60%,#1b1513 100%)}
+.ghost{position:absolute;z-index:0;left:0;right:0;top:58%;text-align:center;font:400 clamp(5rem,16vw,15rem)/.8 var(--num);letter-spacing:.02em;color:rgba(242,236,223,.045);white-space:nowrap;user-select:none}
+#scene{position:absolute;inset:0;z-index:1;width:100%;height:100%;display:block}
+.vignette{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 55% 55%,transparent 55%,rgba(0,0,0,.55) 100%)}
+.grain{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+.ui{position:absolute;inset:0;z-index:2;pointer-events:none;padding:clamp(6.5rem,13vh,9rem) clamp(1.25rem,5vw,4.5rem) 0}
+.ui a,.ui button{pointer-events:auto}
+.kicker{margin:0;font:700 .72rem/1 var(--display);letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+.h1{margin:.7rem 0 0;font:700 clamp(2.9rem,7.2vw,6.6rem)/.84 var(--display);letter-spacing:-.05em;text-transform:uppercase}
+.h1 span{display:block}
+.h1 span+span{color:var(--red)}
+
+/* captions: five stacked, crossfade by stage */
+.caps{position:relative;margin-top:clamp(1rem,3vh,1.8rem);min-height:6.2rem;max-width:30rem}
+.cap{position:absolute;inset:0 auto auto 0;opacity:0;translate:0 10px;transition:opacity .45s var(--e-out),translate .45s var(--e-out);visibility:hidden}
+.cap.on{opacity:1;translate:0 0;visibility:visible}
+.cap b{display:block;font:700 1.15rem/1.15 var(--display);letter-spacing:-.01em;text-transform:uppercase}
+.cap p{margin:.45rem 0 0;color:rgba(242,236,223,.72);font-size:1rem;line-height:1.45}
+.cap .n{font:400 1.5rem/1 var(--num);color:var(--red);margin-right:.35rem}
+
+.meter{position:absolute;left:clamp(1.25rem,5vw,4.5rem);right:clamp(1.25rem,5vw,4.5rem);bottom:max(1.4rem,env(safe-area-inset-bottom));display:flex;align-items:center;gap:1rem}
+.idx{font:700 .7rem/1 var(--display);letter-spacing:.16em;color:rgba(242,236,223,.7);white-space:nowrap}
+.idx strong{font:400 1.25rem/1 var(--num);color:var(--red);letter-spacing:0}
+.bar{position:relative;flex:1;height:2px;background:rgba(242,236,223,.18)}
+.bar i{position:absolute;inset:0;transform-origin:left;transform:scaleX(0);background:var(--red)}
+.bar s{position:absolute;top:-3px;width:1px;height:8px;background:rgba(242,236,223,.35)}
+.hint{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem .9rem;border-radius:99px;background:rgba(11,10,9,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 0 0 1px rgba(242,236,223,.16);font:700 .66rem/1 var(--display);letter-spacing:.16em;text-transform:uppercase;transition:opacity .4s var(--e-in)}
+.hint.gone{opacity:0}
+.hint i{display:block;width:1px;height:14px;background:var(--paper);animation:drip 1.6s linear infinite}
+@keyframes drip{0%{transform:scaleY(.2);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(.2);transform-origin:bottom}}
+
+/* end-of-scrub tag */
+.tag{position:absolute;z-index:3;right:clamp(1.25rem,6vw,6rem);top:clamp(6.5rem,14vh,9rem);padding:1rem 1.2rem 1.1rem;background:var(--paper);color:var(--ink);box-shadow:6px 6px 0 var(--red);rotate:4deg;opacity:0;scale:.6;transition:opacity .3s var(--e-out),scale .55s var(--e-hero);pointer-events:none}
+.tag.on{opacity:1;scale:1;pointer-events:auto}
+.tag small{display:block;font:700 .62rem/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--oxblood)}
+.tag strong{display:block;margin-top:.3rem;font:400 3.4rem/.85 var(--num)}
+.tag span{display:block;margin-top:.35rem;font:600 .78rem/1.2 var(--body);color:var(--muted)}
+
+/* ---------- after the scrub ---------- */
+.shell{width:min(1180px,100%);margin-inline:auto;padding-inline:max(20px,env(safe-area-inset-left))}
+.proof{position:relative;z-index:2;background:var(--ink);border-top:1px solid rgba(242,236,223,.12)}
+.proof ul{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0;padding:0;list-style:none}
+.proof li{padding:1.6rem 1.2rem 1.7rem;border-left:1px solid rgba(242,236,223,.12)}
+.proof li:first-child{border-left:0}
+.proof strong{display:block;font:400 clamp(2.2rem,4vw,3.2rem)/.9 var(--num);color:var(--paper)}
+.proof span{display:block;margin-top:.5rem;font:700 .66rem/1.3 var(--display);letter-spacing:.14em;text-transform:uppercase;color:rgba(242,236,223,.62)}
+
+.menu{background:var(--paper);color:var(--ink);padding-block:clamp(4.5rem,9vw,7.5rem)}
+.sec-k{margin:0;font:700 .72rem/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--oxblood)}
+.sec-t{margin:.8rem 0 0;font:700 clamp(2.6rem,6.4vw,5.6rem)/.84 var(--display);letter-spacing:-.05em;text-transform:uppercase}
+.sec-t span{display:block}
+.sec-t span+span{color:var(--red)}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1rem,2vw,1.6rem);margin-top:clamp(2rem,4vw,3rem)}
+.pkg{position:relative;display:flex;flex-direction:column;border:2px solid var(--ink);background:var(--card);box-shadow:6px 6px 0 var(--ink);text-decoration:none;transition:translate .45s var(--e),box-shadow .45s var(--e)}
+.pkg:hover{translate:0 -5px;box-shadow:8px 11px 0 var(--ink)}
+.pkg.feat{box-shadow:6px 6px 0 var(--red)}
+.pkg.feat:hover{box-shadow:8px 11px 0 var(--red)}
+.pkg figure{position:relative;margin:0;aspect-ratio:4/3;overflow:hidden;border-bottom:2px solid var(--ink)}
+.pkg figure img{width:100%;height:100%;object-fit:cover;transition:scale .8s var(--e)}
+.pkg:hover figure img{scale:1.05}
+.pkg figure em{position:absolute;left:.8rem;bottom:.4rem;font:400 3.4rem/1 var(--num);font-style:normal;color:var(--paper);text-shadow:0 2px 14px rgba(0,0,0,.5)}
+.pkg .stamp{position:absolute;right:.8rem;top:.8rem;padding:.4rem .6rem;border:2px solid var(--red);color:var(--red);background:rgba(251,248,241,.9);font:700 .62rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;rotate:-6deg}
+.pkg .body{display:flex;flex-direction:column;flex:1;padding:1.1rem 1.2rem 1.25rem}
+.pkg h3{margin:0;font:700 1.45rem/1 var(--display);letter-spacing:-.02em;text-transform:uppercase}
+.pkg .line{margin:.25rem 0 0;font:700 .95rem/1.2 var(--display);color:var(--oxblood)}
+.pkg .price{margin:.9rem 0 0;font:400 3.6rem/.85 var(--num)}
+.pkg .price small{margin-left:.4rem;font:700 .62rem/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.pkg .for{margin:.8rem 0 1.1rem;color:#403b35;font-size:.95rem;line-height:1.45}
+.pkg .go{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:.9rem;border-top:1px dashed rgba(16,14,12,.25);font:700 .72rem/1 var(--display);letter-spacing:.12em;text-transform:uppercase}
+.menu .fine{margin:1.5rem 0 0;color:var(--muted);font:700 .66rem/1.4 var(--display);letter-spacing:.12em;text-transform:uppercase}
+
+.quote{background:var(--oxblood);color:var(--paper);padding-block:clamp(4.5rem,9vw,7rem)}
+.quote blockquote{margin:0;max-width:62rem;font:700 clamp(1.7rem,3.6vw,3rem)/1.08 var(--display);letter-spacing:-.03em}
+.quote p{margin:1.4rem 0 0;font:700 .72rem/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:rgba(242,236,223,.72)}
+.quote .stars{color:#f2b544;letter-spacing:.1em;margin-right:.6rem}
+
+.close{position:relative;overflow:hidden;background:var(--red);color:var(--paper);padding-block:clamp(5rem,10vw,8rem)}
+.close .word{position:absolute;left:-2vw;top:-1vw;font:700 clamp(6rem,17vw,16rem)/.8 var(--display);letter-spacing:-.06em;text-transform:uppercase;color:rgba(255,255,255,.1);white-space:nowrap;pointer-events:none}
+.close .grid{position:relative;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:2rem;align-items:end}
+.close h2{margin:0;font:700 clamp(3rem,7vw,6.2rem)/.84 var(--display);letter-spacing:-.05em;text-transform:uppercase}
+.close h2 span{display:block}
+.close .sub{margin:1.1rem 0 0;max-width:32rem;font-size:1.05rem;color:rgba(255,255,255,.9)}
+.actions{display:grid;gap:.75rem}
+.cta{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:60px;padding:0 1.4rem;background:var(--paper);color:var(--ink);font:700 .82rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;box-shadow:5px 5px 0 var(--ink),0 14px 34px -10px rgba(11,10,9,.45);transition:translate .4s var(--e),box-shadow .4s var(--e)}
+.cta>*{position:relative;z-index:2}
+.cta::before{content:"";position:absolute;z-index:1;top:-20%;left:-45%;width:38%;height:140%;background:linear-gradient(90deg,transparent,rgba(213,104,101,.28),transparent);rotate:14deg;filter:blur(5px);animation:sheen 5.5s linear infinite}
+.cta::after{content:"";position:absolute;z-index:1;inset:0;background:radial-gradient(160px circle at var(--mx,50%) var(--my,50%),rgba(213,104,101,.22),transparent 70%);opacity:0;transition:opacity .35s var(--e)}
+.cta:hover{translate:0 -2px;box-shadow:6px 8px 0 var(--ink),0 18px 40px -10px rgba(11,10,9,.5)}
+.cta:hover::after{opacity:1}
+.cta:active{translate:2px 2px;box-shadow:2px 2px 0 var(--ink)}
+@keyframes sheen{0%,55%{left:-45%}85%,100%{left:115%}}
+.cta2{display:flex;align-items:center;justify-content:space-between;min-height:56px;padding:0 1.4rem;border:2px solid var(--paper);color:var(--paper);font:700 .76rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:background-color .2s var(--e),color .2s var(--e)}
+.cta2:hover{background:var(--paper);color:var(--ink)}
+.trust{margin:.3rem 0 0;font:700 .72rem/1.5 var(--display);letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.92)}
+.foot{background:var(--ink);color:rgba(242,236,223,.6);padding:1.6rem 0 calc(1.6rem + env(safe-area-inset-bottom));font:700 .66rem/1.6 var(--display);letter-spacing:.12em;text-transform:uppercase}
+.foot .shell{display:flex;flex-wrap:wrap;gap:.6rem 1.6rem;justify-content:space-between}
+.foot a{text-decoration:none}
+.foot a:hover{text-decoration:underline}
+
+/* phone sticky book bar: shows after the scrub */
+.dock{position:fixed;z-index:19;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));display:none}
+.dock a{display:flex;align-items:center;justify-content:space-between;min-height:56px;padding:0 1.2rem;background:var(--paper);color:var(--ink);font:700 .8rem/1 var(--display);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;box-shadow:4px 4px 0 var(--red),0 10px 30px rgba(0,0,0,.4);translate:0 140%;transition:translate .45s var(--e)}
+.dock.on a{translate:0 0}
+.dock small{font:600 .7rem/1 var(--body);letter-spacing:.02em;text-transform:none;color:var(--muted)}
+
+@media (max-width:900px){
+  .proof ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .proof li:nth-child(3){border-left:0}
+  .proof li:nth-child(n+3){border-top:1px solid rgba(242,236,223,.12)}
+  .cards{grid-template-columns:1fr;max-width:30rem}
+  .close .grid{grid-template-columns:1fr}
+}
+@media (max-width:740px){
+  .ui{padding-top:5.6rem}
+  .h1{font-size:clamp(2.5rem,12.5vw,3.6rem)}
+  .caps{min-height:7.4rem}
+  .cap p{font-size:.95rem}
+  .tag{top:auto;bottom:5rem;right:1rem;padding:.8rem 1rem .9rem}
+  .tag strong{font-size:2.8rem}
+  .ghost{top:55%}
+  .dock{display:block}
+  .foot{padding-bottom:calc(5.5rem + env(safe-area-inset-bottom))}
+}
+
+body.still .cap,body.still .tag,body.still .hint,body.still .dock a{transition:none}
+body.still .cta::before,body.still .hint i{animation:none}
+@media (prefers-reduced-motion:reduce){
+  .cap,.tag,.pkg,.pkg figure img,.cta,.dock a,.logo,.top-cta{transition:none}
+  .cta::before,.hint i{animation:none}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="logo" href="/" aria-label="Every Detail home"><img src="/brand/every-detail-logo.png" alt=""></a>
+  <a class="top-cta" href="/book?from=ad" data-track="ad_top">Book a detail <span aria-hidden="true">↗</span></a>
+</header>
+
+<main>
+  <section id="track" aria-label="Scroll to watch a car get detailed">
+    <div id="stage">
+      <div class="atmo"></div>
+      <div class="ghost" aria-hidden="true">EVERY DETAIL</div>
+      <canvas id="scene" aria-hidden="true"></canvas>
+      <div class="vignette"></div>
+      <div class="grain"></div>
+
+      <div class="ui">
+        <p class="kicker">Mobile detailing · Decatur + Atlanta</p>
+        <h1 class="h1"><span>Scroll to</span><span>detail it.</span></h1>
+        <div class="caps" aria-live="polite">
+          <div class="cap on"><b><span class="n">01</span>We pull up.</b><p>Our electric rig brings the crew, the water and the power. No hose, no outlet, nothing borrowed from your house.</p></div>
+          <div class="cap"><b><span class="n">02</span>Foam first.</b><p>A thick foam pre-wash loosens the grime so we lift it off instead of grinding it into the paint.</p></div>
+          <div class="cap"><b><span class="n">03</span>Hand wash + rinse.</b><p>Washed by hand, panel by panel, wheels and windows included.</p></div>
+          <div class="cap"><b><span class="n">04</span>Inside, every corner.</b><p>Vacuumed, wiped down and detailed inside. Premium adds the full deep clean.</p></div>
+          <div class="cap"><b><span class="n">05</span>Back to its best.</b><p>Premium finishes with spray sealant paint protection. You pay after the detail.</p></div>
+        </div>
+      </div>
+
+      <div class="tag" aria-hidden="true">
+        <small>Details from</small>
+        <strong>$150</strong>
+        <span>Power + water included</span>
+      </div>
+
+      <div class="meter">
+        <span class="idx"><strong id="idx">01</strong> / 05</span>
+        <span class="bar" aria-hidden="true"><i id="bar"></i><s style="left:20%"></s><s style="left:40%"></s><s style="left:60%"></s><s style="left:80%"></s></span>
+        <span class="hint"><i aria-hidden="true"></i>Scroll</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof" aria-label="Why Every Detail">
+    <div class="shell">
+      <ul>
+        <li><strong id="reviews">170+</strong><span>Five-star Google reviews</span></li>
+        <li><strong>2025</strong><span>Best of Decaturish</span></li>
+        <li><strong>Included</strong><span>Power + water, from our rig</span></li>
+        <li><strong>After</strong><span>When you pay: after the detail</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="menu" aria-labelledby="menu-title">
+    <div class="shell">
+      <p class="sec-k">The menu / priced by vehicle</p>
+      <h2 id="menu-title" class="sec-t"><span>Three details.</span><span>One honest price.</span></h2>
+      <div class="cards">
+        <a class="pkg" href="/book?service=maintenance&amp;from=ad" data-track="ad_maintenance">
+          <figure><img src="/images/exterior-hand-wash.webp" alt="Every Detail technician hand washing a car" loading="lazy"><em>01</em></figure>
+          <div class="body">
+            <h3>Maintenance</h3><p class="line">Keep it clean.</p>
+            <p class="price">$150<small>Sedan, from</small></p>
+            <p class="for">For cars that are already in good shape: hand wash, interior vacuum and wipe-down, windows and wheels.</p>
+            <span class="go">Book Maintenance <span aria-hidden="true">↗</span></span>
+          </div>
+        </a>
+        <a class="pkg feat" href="/book?service=premium&amp;from=ad" data-track="ad_premium">
+          <figure><img src="/images/hq-interior-front-seat-work.webp" alt="Technician detailing the front seats of a car" loading="lazy"><em>02</em><span class="stamp">Most booked</span></figure>
+          <div class="body">
+            <h3>Premium</h3><p class="line">Bring it back.</p>
+            <p class="price">$260<small>Sedan, from</small></p>
+            <p class="for">Most first visits start here. Everything in Maintenance plus a full interior deep clean and spray sealant.</p>
+            <span class="go">Book Premium <span aria-hidden="true">↗</span></span>
+          </div>
+        </a>
+        <a class="pkg" href="/book?service=factoryReset&amp;from=ad" data-track="ad_factory_reset">
+          <figure><img src="/images/hq-technician-trunk-detail.webp" alt="Technician detailing the cargo area of an SUV" loading="lazy"><em>03</em></figure>
+          <div class="body">
+            <h3>Factory Reset</h3><p class="line">Start over.</p>
+            <p class="price">$400<small>Sedan, from</small></p>
+            <p class="for">For kids, pets, spills and years of buildup: extraction, clay and every seam and vent.</p>
+            <span class="go">Book Factory Reset <span aria-hidden="true">↗</span></span>
+          </div>
+        </a>
+      </div>
+      <p class="fine">Exact price follows your vehicle size · Pick your time online</p>
+    </div>
+  </section>
+
+  <section class="quote" aria-label="Customer review">
+    <div class="shell">
+      <blockquote>&ldquo;My 11 year-old car looks brand new. From scheduling to finish (with mints left on the seat) it was a great experience.&rdquo;</blockquote>
+      <p><span class="stars" aria-label="5 out of 5 stars">★★★★★</span>Rutledge H. · Google review</p>
+    </div>
+  </section>
+
+  <section class="close" aria-labelledby="close-title">
+    <div class="word" aria-hidden="true">CLEAN CAR</div>
+    <div class="shell grid">
+      <div>
+        <h2 id="close-title"><span>Your car</span><span>is next.</span></h2>
+        <p class="sub">Pick your vehicle and a time. We come to your driveway in Decatur and nearby Atlanta.</p>
+      </div>
+      <div class="actions">
+        <a class="cta" href="/book?from=ad" data-track="ad_close"><span>Book your detail</span><span aria-hidden="true">↗</span></a>
+        <a class="cta2" href="/get-a-quote" data-track="ad_quote"><span>Not sure? Find my detail</span><span aria-hidden="true">↗</span></a>
+        <p class="trust">✓ No payment to book · ✓ Pay after the detail · ✓ We come to you</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="shell">
+    <span>© 2026 Every Detail Mobile Detailing LLC · Decatur, Georgia</span>
+    <span><a href="tel:+14048550672">(404) 855-0672</a> · <a href="/">everydetail.co</a> · <a href="/terms">Terms</a> · <a href="/privacy-policy">Privacy</a></span>
+  </div>
+</footer>
+
+<div class="dock" id="dock"><a href="/book?from=ad" data-track="ad_dock" tabindex="-1"><span>Book a detail</span><small>Pay after the detail ↗</small></a></div>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+  const qs = new URLSearchParams(location.search);
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const still = qs.has("still");
+  const pinned = qs.has("p") ? Math.min(1, Math.max(0, parseFloat(qs.get("p")) || 0)) : null;
+  if (still) document.body.classList.add("still");
+
+  const track = $("#track"), cv = $("#scene"), cx = cv.getContext("2d");
+  const bar = $("#bar"), idxEl = $("#idx"), hint = $(".hint"), caps = $$(".cap"), tag = $(".tag"), dock = $("#dock");
+
+  /* ---------- math ---------- */
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const seg = (p, a, b) => clamp((p - a) / (b - a));
+  const eo = (x) => 1 - Math.pow(1 - x, 3);
+  const eio = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const lerp = (a, b, k) => a + (b - a) * k;
+  function rng(seed) { return () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
+
+  /* ---------- the car (side view, in a 1000 x 420 design space, facing right) ---------- */
+  const W0 = 1000, H0 = 420, WHEELS = [[232, 318], [772, 318]], WR = 56;
+  function bodyPath(c) {
+    c.beginPath();
+    c.moveTo(60, 318);
+    c.quadraticCurveTo(46, 300, 52, 268);           // rear bumper
+    c.quadraticCurveTo(58, 238, 96, 232);           // tail
+    c.lineTo(250, 222);                             // trunk lid
+    c.quadraticCurveTo(300, 168, 352, 150);         // rear glass
+    c.quadraticCurveTo(450, 132, 560, 140);         // roof
+    c.quadraticCurveTo(620, 150, 700, 214);         // windshield
+    c.quadraticCurveTo(840, 226, 912, 244);         // hood
+    c.quadraticCurveTo(952, 256, 950, 290);         // nose
+    c.lineTo(944, 318);
+    // underside with wheel arches
+    c.lineTo(WHEELS[1][0] + WR + 12, 318);
+    c.arc(WHEELS[1][0], 318, WR + 12, 0, Math.PI, true);
+    c.lineTo(WHEELS[0][0] + WR + 12, 318);
+    c.arc(WHEELS[0][0], 318, WR + 12, 0, Math.PI, true);
+    c.closePath();
+  }
+  function glassPath(c) {
+    c.beginPath();
+    c.moveTo(286, 216);
+    c.quadraticCurveTo(326, 174, 366, 162);
+    c.quadraticCurveTo(450, 148, 548, 154);
+    c.quadraticCurveTo(596, 164, 664, 214);
+    c.closePath();
+  }
+
+  // Seeded scatter: grime specks, foam bubbles, sparkle points. Same layout every load.
+  const R = rng(7);
+  const specks = Array.from({ length: 520 }, () => ({ x: 60 + R() * 880, y: 140 + R() * 185, r: 0.8 + R() * 2.6, a: 0.25 + R() * 0.5 }));
+  const streaks = Array.from({ length: 26 }, () => ({ x: 90 + R() * 820, y: 236 + R() * 40, l: 18 + R() * 46 }));
+  const bubbles = Array.from({ length: 300 }, () => ({ x: 50 + R() * 910, y: 135 + R() * 200, r: 7 + R() * 17, d: R() }));
+  const sparks = [[372, 160], [640, 196], [880, 248], [120, 240], [520, 262], [790, 300], [262, 300]];
+
+  function drawCar(c, p, t) {
+    const grime = 1 - eo(seg(p, 0.36, 0.56));                 // washed off by the rinse
+    const foam = eo(seg(p, 0.14, 0.34));                       // foam builds left to right
+    const wipe = eio(seg(p, 0.36, 0.56));                      // rinse line sweeps left to right
+    const wipeX = lerp(30, 980, wipe);
+    const glass = eo(seg(p, 0.56, 0.68));                      // windows clear, interior shows
+    const shine = seg(p, 0.68, 0.88);                          // specular sweep
+    const gloss = eo(seg(p, 0.6, 0.9));                        // paint depth + floor reflection
+    const settle = eo(seg(p, 0.0, 0.08));
+
+    // arrival: the car rolls the last few feet in
+    c.save();
+    c.translate(lerp(-60, 0, settle), 0);
+
+    // floor reflection (only once it's clean and glossy)
+    if (gloss > 0) {
+      c.save();
+      c.globalAlpha = 0.22 * gloss;
+      c.translate(0, 318 * 2 + 8);
+      c.scale(1, -1);
+      bodyPath(c);
+      const rg = c.createLinearGradient(0, 318, 0, 220);
+      rg.addColorStop(0, "#a3201a"); rg.addColorStop(1, "rgba(163,32,26,0)");
+      c.fillStyle = rg; c.fill();
+      c.restore();
+    }
+
+    // contact shadow
+    const sh = c.createRadialGradient(500, 372, 20, 500, 372, 470);
+    sh.addColorStop(0, "rgba(0,0,0,.65)"); sh.addColorStop(1, "rgba(0,0,0,0)");
+    c.fillStyle = sh; c.beginPath(); c.ellipse(500, 372, 470, 24, 0, 0, Math.PI * 2); c.fill();
+
+    // paint: deep red, gets deeper and glossier as it's cleaned
+    bodyPath(c);
+    const pg = c.createLinearGradient(0, 132, 0, 330);
+    pg.addColorStop(0, `rgb(${lerp(150, 196, gloss)},${lerp(44, 46, gloss)},${lerp(38, 40, gloss)})`);
+    pg.addColorStop(0.38, `rgb(${lerp(118, 150, gloss)},${lerp(30, 24, gloss)},${lerp(26, 20, gloss)})`);
+    pg.addColorStop(0.62, `rgb(${lerp(84, 98, gloss)},${lerp(22, 14, gloss)},${lerp(20, 12, gloss)})`);
+    pg.addColorStop(1, "#2a0805");
+    c.fillStyle = pg; c.fill();
+
+    c.save();
+    bodyPath(c); c.clip();
+
+    // body line + sill highlight
+    c.strokeStyle = `rgba(255,214,200,${0.18 + 0.32 * gloss})`; c.lineWidth = 2.2;
+    c.beginPath(); c.moveTo(70, 254); c.quadraticCurveTo(500, 238, 940, 262); c.stroke();
+    c.strokeStyle = "rgba(0,0,0,.35)"; c.lineWidth = 3;
+    c.beginPath(); c.moveTo(300, 300); c.lineTo(700, 300); c.stroke();
+    // door seams + handles
+    c.strokeStyle = "rgba(0,0,0,.45)"; c.lineWidth = 1.6;
+    c.beginPath(); c.moveTo(462, 152); c.quadraticCurveTo(458, 240, 470, 312); c.moveTo(672, 214); c.quadraticCurveTo(684, 262, 690, 300); c.moveTo(300, 222); c.quadraticCurveTo(296, 270, 302, 300); c.stroke();
+    c.fillStyle = "rgba(0,0,0,.4)"; c.fillRect(392, 246, 34, 6); c.fillRect(600, 246, 34, 6);
+
+    // glass: grimy brown haze -> clear, with an interior silhouette behind it
+    glassPath(c);
+    c.fillStyle = "#151313"; c.fill();
+    if (glass > 0) {
+      c.save(); glassPath(c); c.clip();
+      c.globalAlpha = glass;
+      c.fillStyle = "#3a302c";
+      c.beginPath(); c.roundRect(338, 186, 70, 52, 10); c.roundRect(520, 182, 72, 56, 10); c.fill();       // seat backs
+      c.beginPath(); c.arc(612, 196, 18, 0, Math.PI * 2); c.fillStyle = "#2a2422"; c.fill();                   // headrest/steering
+      c.restore();
+    }
+    c.save(); glassPath(c); c.clip();
+    const gg = c.createLinearGradient(300, 150, 640, 220);
+    gg.addColorStop(0, `rgba(242,236,223,${0.06 + 0.16 * glass})`); gg.addColorStop(0.5, "rgba(242,236,223,0)"); gg.addColorStop(1, `rgba(242,236,223,${0.04 + 0.1 * glass})`);
+    c.fillStyle = gg; c.fillRect(280, 140, 400, 90);
+    c.fillStyle = `rgba(122,96,62,${0.55 * (1 - glass)})`; c.fillRect(280, 140, 400, 90);
+    c.restore();
+    c.strokeStyle = "#0d0b0a"; c.lineWidth = 7; c.beginPath(); c.moveTo(462, 152); c.lineTo(460, 220); c.stroke(); // B-pillar
+
+    // lights
+    c.fillStyle = `rgba(255,236,200,${0.55 + 0.4 * gloss})`; c.beginPath(); c.ellipse(918, 258, 18, 7, -0.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = "#e0453c"; c.beginPath(); c.ellipse(64, 252, 9, 12, 0, 0, Math.PI * 2); c.fill();
+
+    // GRIME: dull film + specks + drip streaks, only right of the rinse line
+    if (grime > 0.001) {
+      c.save();
+      c.beginPath(); c.rect(wipeX, 0, W0, H0); c.clip();
+      c.fillStyle = "rgba(112,88,58,.42)"; c.fillRect(0, 0, W0, H0);
+      for (const s of specks) { c.fillStyle = `rgba(70,52,34,${s.a})`; c.beginPath(); c.arc(s.x, s.y, s.r, 0, Math.PI * 2); c.fill(); }
+      c.strokeStyle = "rgba(60,44,28,.45)"; c.lineWidth = 2;
+      for (const s of streaks) { c.beginPath(); c.moveTo(s.x, s.y); c.lineTo(s.x + 2, s.y + s.l); c.stroke(); }
+      c.restore();
+    }
+
+    // SPECULAR SWEEP: a diagonal light band crosses the paint once it's clean
+    if (shine > 0 && shine < 1) {
+      const sx = lerp(-200, 1200, eio(shine));
+      const sg = c.createLinearGradient(sx - 120, 0, sx + 120, 0);
+      sg.addColorStop(0, "rgba(255,255,255,0)"); sg.addColorStop(0.5, "rgba(255,240,232,.55)"); sg.addColorStop(1, "rgba(255,255,255,0)");
+      c.save(); c.transform(1, 0, -0.35, 1, 90, 0); c.fillStyle = sg; c.fillRect(sx - 140, 0, 280, H0); c.restore();
+    }
+    // permanent gloss highlight along the shoulder
+    if (gloss > 0) {
+      const hg = c.createLinearGradient(0, 200, 0, 250);
+      hg.addColorStop(0, "rgba(255,255,255,0)"); hg.addColorStop(0.5, `rgba(255,230,220,${0.26 * gloss})`); hg.addColorStop(1, "rgba(255,255,255,0)");
+      c.fillStyle = hg; c.fillRect(0, 200, W0, 50);
+    }
+    c.restore(); // end body clip
+
+    // wheels
+    for (const [wx, wy] of WHEELS) {
+      c.fillStyle = "#0e0d0c"; c.beginPath(); c.arc(wx, wy, WR, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = "#1f1c1a"; c.lineWidth = 6; c.beginPath(); c.arc(wx, wy, WR - 6, 0, Math.PI * 2); c.stroke();
+      const rimClean = wipeX > wx ? 1 : 0;
+      const rim = c.createRadialGradient(wx - 10, wy - 12, 4, wx, wy, 36);
+      rim.addColorStop(0, rimClean ? "#f2ecdf" : "#8d8273"); rim.addColorStop(1, rimClean ? "#7d7a76" : "#4e463c");
+      c.fillStyle = rim; c.beginPath(); c.arc(wx, wy, 34, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = rimClean ? "#3a3734" : "#3a3026"; c.lineWidth = 5;
+      const spin = p * 0.6; // a little turn as you scrub
+      for (let k = 0; k < 5; k++) { const a = spin + (k * Math.PI * 2) / 5; c.beginPath(); c.moveTo(wx + Math.cos(a) * 8, wy + Math.sin(a) * 8); c.lineTo(wx + Math.cos(a) * 31, wy + Math.sin(a) * 31); c.stroke(); }
+      c.fillStyle = "#1a1816"; c.beginPath(); c.arc(wx, wy, 8, 0, Math.PI * 2); c.fill();
+      if (!rimClean && grime > 0.01) { c.fillStyle = "rgba(90,70,45,.5)"; c.beginPath(); c.arc(wx, wy, 34, 0, Math.PI * 2); c.fill(); }
+    }
+
+    // FOAM: bubbles bloom left to right, then rinse away behind the wipe line
+    if (foam > 0) {
+      c.save();
+      bodyPath(c); c.clip();
+      for (const b of bubbles) {
+        const show = clamp((foam * 1.35 - (b.x - 50) / 910 * 0.9 - b.d * 0.12) * 3);
+        if (show <= 0 || b.x < wipeX) continue;
+        const r = b.r * eo(show);
+        c.fillStyle = "rgba(250,248,244,.92)"; c.beginPath(); c.arc(b.x, b.y, r, 0, Math.PI * 2); c.fill();
+        c.strokeStyle = "rgba(180,176,170,.55)"; c.lineWidth = 1; c.stroke();
+        c.fillStyle = "rgba(255,255,255,.95)"; c.beginPath(); c.arc(b.x - r * 0.35, b.y - r * 0.35, r * 0.22, 0, Math.PI * 2); c.fill();
+      }
+      c.restore();
+    }
+
+    // RINSE: a sheet of water at the wipe line, with drops flying off
+    if (wipe > 0 && wipe < 1) {
+      const wg = c.createLinearGradient(wipeX - 40, 0, wipeX + 10, 0);
+      wg.addColorStop(0, "rgba(200,225,240,0)"); wg.addColorStop(0.8, "rgba(220,238,248,.55)"); wg.addColorStop(1, "rgba(255,255,255,.85)");
+      c.fillStyle = wg; c.fillRect(wipeX - 40, 128, 50, 210);
+      const dr = rng(Math.floor(t * 30) + 3);
+      c.fillStyle = "rgba(225,240,250,.85)";
+      for (let k = 0; k < 26; k++) { const dy = 130 + dr() * 200, dx = wipeX + 6 + dr() * 60; c.beginPath(); c.ellipse(dx, dy, 2.6, 1.4, 0, 0, Math.PI * 2); c.fill(); }
+    }
+
+    // FOAM CANNON spray from the left while foaming
+    const spray = seg(p, 0.12, 0.3) * (1 - seg(p, 0.3, 0.36));
+    if (spray > 0) {
+      const sr = rng(Math.floor(t * 24) + 11);
+      for (let k = 0; k < 70; k++) {
+        const f = sr(), ex = lerp(-40, lerp(140, 940, foam), f), ey = 230 + (sr() - 0.5) * 120 * f;
+        c.fillStyle = `rgba(248,246,240,${0.6 * spray * (1 - f * 0.5)})`; c.beginPath(); c.arc(ex, ey, 1.5 + f * 4, 0, Math.PI * 2); c.fill();
+      }
+    }
+
+    // SPARKLES: four-point glints pop in as the shine passes
+    if (shine > 0) {
+      sparks.forEach(([x, y], i) => {
+        const k = seg(shine, i * 0.1, i * 0.1 + 0.35), a = Math.sin(k * Math.PI) * (still ? 1 : 0.85 + 0.15 * Math.sin(t * 5 + i));
+        if (a <= 0.01) return;
+        const s = 7 + 13 * a;
+        c.save(); c.translate(x, y); c.globalAlpha = a; c.fillStyle = "#fff8ee";
+        c.beginPath(); c.moveTo(0, -s); c.quadraticCurveTo(1.5, -1.5, s, 0); c.quadraticCurveTo(1.5, 1.5, 0, s); c.quadraticCurveTo(-1.5, 1.5, -s, 0); c.quadraticCurveTo(-1.5, -1.5, 0, -s); c.fill();
+        c.restore();
+      });
+    }
+    c.restore();
+  }
+
+  /* ---------- layout + loop ---------- */
+  let w = 0, h = 0, dpr = 1;
+  function resize() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    w = cv.clientWidth; h = cv.clientHeight;
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+  }
+  function frame(p, t) {
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cx.clearRect(0, 0, w, h);
+    const phone = w <= 740;
+    // Phone: car spans the width and sits in the open middle band. Desktop: big, lower right.
+    const s = phone ? (w * 1.06) / W0 : Math.min((w * 0.7) / W0, (h * 0.78) / H0);
+    const ox = phone ? (w - W0 * s) / 2 : w - W0 * s - w * 0.025;
+    const oy = phone ? h * 0.69 - H0 * s * 0.66 : h - H0 * s - h * 0.07;
+    cx.save(); cx.translate(ox, oy); cx.scale(s, s);
+    drawCar(cx, p, t);
+    cx.restore();
+  }
+
+  const STAGES = [0, 0.14, 0.36, 0.56, 0.7];
+  let target = 0, prog = pinned ?? (still ? 0.78 : 0), lastCap = -1;
+  function readScroll() {
+    const max = track.offsetHeight - innerHeight;
+    target = max > 0 ? clamp((scrollY - track.offsetTop) / max) : 0;
+  }
+  function ui(p) {
+    let i = 0; STAGES.forEach((s, k) => { if (p >= s) i = k; });
+    if (i !== lastCap) { caps.forEach((c, k) => c.classList.toggle("on", k === i)); idxEl.textContent = String(i + 1).padStart(2, "0"); lastCap = i; }
+    bar.style.transform = `scaleX(${p})`;
+    hint.classList.toggle("gone", p > 0.02);
+    tag.classList.toggle("on", p > 0.84);
+  }
+  const t0 = performance.now();
+  function loop(now) {
+    const t = still ? 2 : (now - t0) / 1000;
+    if (pinned === null && !still) prog = reduced ? target : prog + (target - prog) * 0.1;
+    frame(prog, t); ui(prog);
+    if (!still) requestAnimationFrame(loop);
+  }
+
+  // pinned/still: collapse the track so the frame is a plain screenshot
+  if (pinned !== null || still) { track.style.height = "100vh"; }
+  addEventListener("resize", () => { resize(); readScroll(); if (still) frame(prog, 2); });
+  addEventListener("scroll", () => {
+    readScroll();
+    // phone dock: only once the scrub is done and before the closing CTA is on screen
+    const close = $(".close").getBoundingClientRect();
+    dock.classList.toggle("on", scrollY > track.offsetTop + track.offsetHeight - innerHeight * 0.6 && close.top > innerHeight * 0.85);
+    dock.querySelector("a").tabIndex = dock.classList.contains("on") ? 0 : -1;
+  }, { passive: true });
+  resize(); readScroll();
+  (document.fonts?.ready || Promise.resolve()).then(() => requestAnimationFrame(loop));
+
+  // cursor light on the closing CTA
+  $$(".cta").forEach((el) => el.addEventListener("pointermove", (e) => {
+    const r = el.getBoundingClientRect();
+    el.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+    el.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+  }));
+
+  // live review count from the main site's API (falls back to 170+)
+  fetch("/api/google-review-stats").then((r) => (r.ok ? r.json() : null)).then((d) => {
+    if (d && Number.isFinite(Number(d.count))) $("#reviews").textContent = `${Number(d.count)}+`;
+  }).catch(() => {});
+
+  // GA4 if the main site set it up (window.gtag)
+  $$("[data-track]").forEach((el) => el.addEventListener("click", () => {
+    window.gtag?.("event", "book_click", { location: el.dataset.track });
+  }));
+})();
+</script>
+</body>
+</html>
