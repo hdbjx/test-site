@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { recommenderVehicles, type RecommenderVehicle } from "@/data/recommenderVehicles";
 import { PRICING, services, vehicleLabel, type ServiceId } from "@/data/services";
 import { ADDON_PRICES, PAINT_UPGRADES, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { track } from "@/lib/analytics";
 import { submitLead } from "@/lib/submit";
 import { QuoteBookingContinuation } from "@/components/QuoteBookingContinuation";
+import { TurnstileField } from "@/components/forms/TurnstileField";
 import { useVehicle } from "@/components/vehicle/VehicleContext";
 import { useJourney } from "@/components/journey/JourneyContext";
 import { vehicleClassForYear, vehicleMatches, yearFromVehicleQuery } from "@/lib/vehicle-search";
@@ -304,7 +305,15 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
   }
 
 
-  async function sendBuild() {
+  // Turnstile verifies the form before React's onSubmit runs, then leaves the
+  // token in the hidden turnstileToken input. /api/lead rejects quotes without it.
+  function submitBuild(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const token = String(new FormData(event.currentTarget).get("turnstileToken") ?? "");
+    void sendBuild(token);
+  }
+
+  async function sendBuild(turnstileToken: string) {
     if (!vehicle || !condition || !service || !result) return;
     if (!desiredTiming) { setError("Tell us when you would want it done."); return; }
     if (!name.trim()) { setError("Enter your name so we know who the build belongs to."); return; }
@@ -347,6 +356,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       source: "Website Recommender",
       sessionId,
       desiredTiming,
+      turnstileToken,
     });
 
     if (response.ok) {
@@ -506,7 +516,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
               <div className="quote-rec-trust-row"><span>✓ No payment now</span><span>✓ Quote stays saved</span><span>✓ We come to you</span></div>
             </div>
 
-            <div className="quote-rec-progressive-form">
+            <form className="quote-rec-progressive-form" onSubmit={submitBuild} noValidate>
               <label className="quote-rec-progressive-field is-visible">
                 <span>First, what's your name?</span>
                 <input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" placeholder="First name" required autoFocus />
@@ -524,11 +534,12 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
               </div>
 
               {error && <p className="quote-rec-error" role="alert">{error}</p>}
-              <button type="button" className={`btn btn-primary quote-rec-conversion-button ${submitReady ? "is-ready" : ""}`} onClick={sendBuild} disabled={sending || !submitReady}>
+              <TurnstileField action="lead" />
+              <button type="submit" className={`btn btn-primary quote-rec-conversion-button ${submitReady ? "is-ready" : ""}`} disabled={sending || !submitReady}>
                 {sending ? "Saving..." : contactPrompt.cta}
               </button>
               <p className="quote-rec-privacy">No spam. Your info is only used to help with this detail and scheduling.</p>
-            </div>
+            </form>
           </section>
         ) : (
           <>
@@ -562,7 +573,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
                 {result.upgradeMessage && result.upgradeService && <button type="button" className="quote-rec-upgrade" onClick={applyUpgrade}><span>Consider upgrading</span><strong>{result.upgradeMessage}</strong><b>Upgrade to {services[result.upgradeService].name} ↗</b></button>}
                 {result.addons.length > 0 && <div className="quote-rec-customize-group"><h4>Add-ons</h4><div className="quote-rec-addon-list">{result.addons.map((addon) => { const checked = checkedAddons.has(addon.id); return <button key={addon.id} type="button" className={`quote-rec-addon ${checked ? "is-selected" : ""}`} onClick={() => toggleAddon(addon.id)} aria-pressed={checked}><span className="quote-rec-check">{checked ? "✓" : ""}</span><strong>{addon.name}</strong>{addon.recommended && <small>Recommended</small>}<b>{addon.price}</b></button>; })}</div></div>}
                 <div className="quote-rec-customize-group"><h4>Paint correction + protection</h4><div className="quote-rec-paint-grid">{(Object.keys(PAINT_UPGRADES) as PaintUpgradeId[]).map((id) => { const item = PAINT_UPGRADES[id]; const selected = paint.has(id); return <button key={id} type="button" className={`quote-rec-paint-card ${selected ? "is-selected" : ""}`} onClick={() => togglePaint(id)} aria-pressed={selected}><span>{item.tag}</span><strong>{item.name}</strong><b>${item.prices[vehicle.vehicle]}</b><p>{item.why}</p></button>; })}</div></div>
-                <div className="quote-rec-customize-footer"><div><span>Updated estimate</span><strong>{totalDisplay}</strong><p>{totalNote}</p></div><button type="button" className="btn btn-primary" onClick={sendBuild} disabled={sending || !quoteDirty}>{sending ? "Saving..." : quoteDirty ? "Save changes ↗" : "Saved ✓"}</button></div>
+                <form className="quote-rec-customize-footer" onSubmit={submitBuild}><div><span>Updated estimate</span><strong>{totalDisplay}</strong><p>{totalNote}</p></div><TurnstileField action="lead" /><button type="submit" className="btn btn-primary" disabled={sending || !quoteDirty}>{sending ? "Saving..." : quoteDirty ? "Save changes ↗" : "Saved ✓"}</button></form>
                 {error && <p className="quote-rec-error" role="alert">{error}</p>}
               </section>
             )}

@@ -9109,3 +9109,6 @@ html[data-hero-vehicle-visible] .site-context-pill{opacity:0;visibility:hidden;p
   align-items:center!important;
   min-height:44px!important;
 }
+
+/* Quote form Turnstile: the empty widget slot takes no space in the grid/flex layout */
+.quote-rec-progressive-form .ed-turnstile:empty,.quote-rec-customize-footer .ed-turnstile:empty{display:contents}
