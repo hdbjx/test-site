@@ -153,6 +153,12 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     setSearch("");
   }, [siteVehicle]);
 
+  // Each result stage (match, then revealed price) starts at the top of the screen.
+  useEffect(() => {
+    if (!result) return;
+    resultRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+  }, [result, sent]);
+
   async function recordBehavior(stage: string, extra: Record<string, unknown> = {}) {
     const id = sessionId || sessionStorage.getItem("ed_quote_session_id");
     if (!id) return;
@@ -315,11 +321,10 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
 
   async function sendBuild(turnstileToken: string) {
     if (!vehicle || !condition || !service || !result) return;
-    if (!desiredTiming) { setError("Tell us when you would want it done."); return; }
-    if (!name.trim()) { setError("Enter your name so we know who the build belongs to."); return; }
-    if ((phone.match(/\d/g) ?? []).length < 10) { setError("Enter a 10-digit phone number so we can follow up."); return; }
-    if (!email.trim()) { setError("Enter your email so we can save your quote."); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setError("Check your email address and try again."); return; }
+    if (!name.trim()) { setError("Add your first name."); return; }
+    if ((phone.match(/\d/g) ?? []).length < 10) { setError("Add a 10-digit mobile number."); return; }
+    if (!email.trim()) { setError("Add your email so we can send your quote."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setError("That email doesn't look right. Check it and try again."); return; }
 
     const selectedAddonNames = result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.name);
     const paintNames = [...paint].map((id) => PAINT_UPGRADES[id].name);
@@ -355,14 +360,14 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
       internalNotes,
       source: "Website Recommender",
       sessionId,
-      desiredTiming,
+      desiredTiming: desiredTiming ?? "",
       turnstileToken,
     });
 
     if (response.ok) {
       setSent(true);
       sessionStorage.setItem("ed_quote_contact", JSON.stringify({ name:name.trim(), phone:phone.trim(), email:email.trim() }));
-      void recordBehavior("contact_captured", { desiredTiming, quoteAmount: total });
+      void recordBehavior("contact_captured", { recommendedService: services[service].name, quoteAmount: total });
       setQuoteDirty(false);
       track("quote_submit", { interest: service, source: "recommender" });
       track("quote_price_reveal", { vehicle: vehicle.vehicle, service, total });
@@ -374,7 +379,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
   }
 
   if (result && vehicle && service && activeService) {
-    const included = activeService.includes.slice(0, 4);
+    const included = activeService.includes.slice(0, 3);
     const selectedAddonNames = result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.name);
     const selectedPaintNames = [...paint].map((id) => PAINT_UPGRADES[id].name);
     const extrasSummary = [...selectedAddonNames, ...selectedPaintNames];
@@ -382,202 +387,105 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
     const conditionLabel = CONDITIONS.find((item) => item.value === condition)?.label ?? "";
     const concernNames = [...concerns].map(concernLabel);
     const firstConcern = concernNames[0];
-
-    const timingOptions = [
-      { value: "asap", label: "As soon as possible", sub: "I'd like to get it handled" },
-      { value: "weekend", label: "This weekend", sub: "Weekend works best" },
-      { value: "next_week", label: "Next week", sub: "I'm planning ahead" },
-      { value: "exploring", label: "Just looking around", sub: "I'm not ready yet" },
-    ] as const;
-
-    const timingCopy = desiredTiming === "asap"
-      ? { eyebrow: "Let's get it handled", title: `Let's find the earliest fit for your ${vehicle.model}.`, body: "See the earliest openings.", cta: "Find my earliest opening ↗" }
-      : desiredTiming === "weekend"
-        ? { eyebrow: "Weekend works", title: `Let's see what works for your ${vehicle.model} this weekend.`, body: "See the weekend openings.", cta: "Check weekend openings ↗" }
-        : desiredTiming === "next_week"
-          ? { eyebrow: "Planning ahead", title: `We'll find a good time for your ${vehicle.model} next week.`, body: "See next week's openings.", cta: "See next week's openings ↗" }
-          : { eyebrow: "No pressure", title: `Want to keep this ${vehicle.model} recommendation?`, body: "Keep this recommendation for later.", cta: `Save my ${totalDisplay} recommendation ↗` };
+    const firstName = name.trim().split(/\s+/)[0] || "";
 
     const personalReason = concerns.has("selling")
       ? `Since you're getting the ${vehicle.model} ready to sell, we built this around presentation and value instead of adding work that will not meaningfully help.`
       : concernNames.length > 0
-        ? `You told us the ${vehicle.model} is in ${conditionLabel.toLowerCase()} shape${firstConcern ? ` and mentioned ${firstConcern.toLowerCase()}` : ""}. This gives it the level of work it needs without automatically pushing you into more service than makes sense.`
+        ? `You told us the ${vehicle.model} is in ${conditionLabel.toLowerCase()} shape${firstConcern ? ` and mentioned ${firstConcern.toLowerCase()}` : ""}. This gives it the level of work it needs without pushing you into more service than makes sense.`
         : `Based on the ${vehicle.model}'s ${conditionLabel.toLowerCase()} condition, this is the level of detail that makes the most sense without adding unnecessary work.`;
+
+    const timingOptions = [
+      { value: "asap", label: "As soon as possible" },
+      { value: "weekend", label: "This weekend" },
+      { value: "next_week", label: "Next week" },
+      { value: "exploring", label: "Just looking" },
+    ] as const;
 
     function chooseTiming(value: typeof timingOptions[number]["value"]) {
       setDesiredTiming(value);
-      setError(null);
       void recordBehavior("timing_selected", { desiredTiming: value });
-      void recordBehavior("recommendation_viewed", { desiredTiming: value, recommendedService: activeService?.name ?? service, quoteAmount: total });
     }
 
-    if (!desiredTiming) {
+    // Step 1 of the result: the match is shown, the price is held until we have
+    // a way to follow up. The lead is the conversion; booking comes after.
+    if (!sent) {
       return (
-        <div ref={resultRef} className="quote-rec-result quote-rec-conversation q51-result">
+        <div ref={resultRef} className="quote-rec-result q100-result">
           <button type="button" onClick={reset} className="quote-rec-back">← Start over</button>
 
-          <section className="q79-plan" aria-live="polite">
-            <header className="q79-plan-head">
-              <p className="q79-eyebrow">YOUR MATCH · {vehicleName}</p>
-              <div className="q79-plan-title-row">
-                <h2>{activeService.name}</h2>
-                <div className="q79-price">
-                  <span>YOUR PRICE</span>
-                  <strong>{totalDisplay}</strong>
-                </div>
-              </div>
-              {extrasSummary.length > 0 ? <p className="q79-extras">{extrasSummary.join(" + ")} included in this price</p> : null}
-            </header>
-
-            <div className="q79-plan-body">
-              <div className="q79-fit">
-                <h3>Why this fits</h3>
-                <p>{personalReason}</p>
-              </div>
-
-              <div className="q79-included" aria-label="Included in your detail">
-                <span>INCLUDED</span>
-                <ul>
-                  {included.slice(0,3).map((item) => <li key={item}>{item}</li>)}
-                </ul>
-              </div>
-            </div>
-
-            <div className="q79-next">
-              <div className="q79-next-copy">
-                <span>NEXT</span>
-                <h3>When works best?</h3>
-                <p>Pick a window and we’ll show the right availability.</p>
-              </div>
-              <div className="q79-timing-options">
-                {timingOptions.map((item) => (
-                  <button key={item.value} type="button" onClick={() => chooseTiming(item.value)}>
-                    <strong>{item.label}</strong>
-                    <small>{item.sub}</small>
-                  </button>
-                ))}
-              </div>
-            </div>
+          <section className="q100-match" aria-live="polite">
+            <p className="q79-eyebrow">Your match · {vehicleName}</p>
+            <h2>{activeService.name}</h2>
+            <ul className="q100-includes is-compact">
+              {[...included, ...extrasSummary].map((item) => <li key={item}>{item}</li>)}
+            </ul>
           </section>
+
+          <form className="q100-form" onSubmit={submitBuild} noValidate>
+            <div className="q100-price-lock" aria-label="Your price is ready">
+              <span>Your price</span>
+              <strong aria-hidden="true">$000</strong>
+            </div>
+            <h3>Where should we send your quote?</h3>
+            <p>See your price right away. We&rsquo;ll also send you a copy. No payment, no commitment.</p>
+            <label><span>First name</span><input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" placeholder="First name" required /></label>
+            <label><span>Mobile number</span><input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="(404) 555-0123" required /></label>
+            <label><span>Email</span><input className="field" value={email} onChange={(e) => setEmail(e.target.value)} type="email" inputMode="email" autoComplete="email" placeholder="you@email.com" required /></label>
+            {error && <p className="quote-rec-error" role="alert">{error}</p>}
+            <TurnstileField action="lead" />
+            <button type="submit" className="btn btn-primary q100-submit" disabled={sending}>{sending ? "Getting your price..." : "See my price ↗"}</button>
+            <p className="quote-rec-privacy">No spam. We only use this for your quote.</p>
+          </form>
         </div>
       );
     }
 
-    const timingLabel = timingOptions.find((item) => item.value === desiredTiming)?.label ?? "";
-    const firstName = name.trim().split(/\s+/)[0] || "";
-    const phoneReady = name.trim().length >= 2;
-    const emailReady = phone.replace(/\D/g, "").length >= 10;
-    const submitReady = emailReady && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-
-    const contactPrompt = desiredTiming === "exploring"
-      ? {
-          kicker: "Save it for later",
-          title: firstName ? `Nice to meet you, ${firstName}.` : `Want us to save this for you?`,
-          body: `${activeService.name} · ${totalDisplay} for your ${vehicle.model}.`,
-          cta: `Save my recommendation ↗`,
-        }
-      : {
-          kicker: desiredTiming === "asap" ? "Let's find a spot" : desiredTiming === "weekend" ? "Let's check the weekend" : "Let's plan next week",
-          title: firstName ? `Perfect, ${firstName}. Let's find a time.` : `Want to see the openings that fit?`,
-          body: `${activeService.name} · ${totalDisplay} for your ${vehicle.model}.`,
-          cta: desiredTiming === "asap" ? "Show my earliest openings ↗" : desiredTiming === "weekend" ? "Show weekend openings ↗" : "Show next week's openings ↗",
-        };
-
     return (
-      <div ref={resultRef} className="quote-rec-result quote-rec-conversation quote-rec-flow q51-result" id="quote-personal-result">
-        <div className="quote-rec-answerbar">
-          <button type="button" onClick={() => { setDesiredTiming(null); setSent(false); setError(null); }} className="quote-rec-answer-edit">← Change</button>
-          <div><span>You said</span><strong>{timingLabel}</strong></div>
-          <div className="quote-rec-answer-vehicle"><span>{vehicleName}</span><span>{conditionLabel}{concernNames.length ? ` · ${concernNames.slice(0,2).join(" · ")}` : ""}</span></div>
-        </div>
-
-        <section className="quote-rec-reveal-card q76-followup-summary" aria-live="polite">
-          <div className="quote-rec-reveal-copy">
-            <p className="eyebrow">Here's what we'd do</p>
+      <div ref={resultRef} className="quote-rec-result q100-result" id="quote-personal-result">
+        <section className="q100-match is-revealed" role="status">
+          <p className="q79-eyebrow">{firstName ? `Here's your quote, ${firstName}` : "Your quote"} · {vehicleName}</p>
+          <div className="q100-reveal-row">
             <h2>{activeService.name}</h2>
-            <p className="quote-rec-reveal-reason">{personalReason}</p>
-            <div className="quote-rec-reveal-includes">{included.slice(0,3).map((item) => <span key={item}>✓ {item}</span>)}</div>
-            <details className="quote-rec-why-details"><summary>Why this fits your {vehicle.model}</summary><p>{result.why}</p></details>
+            <div className="q100-price"><strong>{totalDisplay}</strong>{extrasSummary.length > 0 && <small>Includes {extrasSummary.join(", ")}</small>}</div>
           </div>
-          <div className="quote-rec-reveal-price">
-            <span>Your recommendation</span>
-            <strong>{totalDisplay}</strong>
-            <small>{activeService.name}{extrasSummary.length ? ` + ${extrasSummary.join(", ")}` : ""}</small>
-            <p>{totalNote}</p>
+          <p className="q100-reason">{personalReason}</p>
+          <ul className="q100-includes">{included.map((item) => <li key={item}>{item}</li>)}</ul>
+          <p className="q100-note">{totalNote} A copy is on its way to {email.trim()}.</p>
+          <details className="quote-rec-why-details"><summary>Why this fits your {vehicle.model}</summary><p>{result.why}</p></details>
+        </section>
+
+        <section className="q100-timing">
+          <h3>When are you hoping to get it done?</h3>
+          <div role="radiogroup" aria-label="When are you hoping to get it done?">
+            {timingOptions.map((item) => (
+              <button key={item.value} type="button" role="radio" aria-checked={desiredTiming === item.value} className={desiredTiming === item.value ? "is-selected" : ""} onClick={() => chooseTiming(item.value)}>{item.label}</button>
+            ))}
           </div>
         </section>
 
-        {!sent ? (
-          <section className="quote-rec-next-card">
-            <div className="quote-rec-next-copy">
-              <p className="eyebrow">{contactPrompt.kicker}</p>
-              <h3>{contactPrompt.title}</h3>
-              <p>{contactPrompt.body}</p>
-              <div className="quote-rec-trust-row"><span>✓ No payment now</span><span>✓ Quote stays saved</span><span>✓ We come to you</span></div>
-            </div>
+        <QuoteBookingContinuation
+          vehicle={vehicle.vehicle}
+          service={service}
+          addons={result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.id)}
+          paint={[...paint]}
+          name={name.trim()}
+          phone={phone.trim()}
+          email={email.trim()}
+          timing={desiredTiming ?? ""}
+          sessionId={sessionId}
+          bookingHref={selectedBookingHref()}
+        />
 
-            <form className="quote-rec-progressive-form" onSubmit={submitBuild} noValidate>
-              <label className="quote-rec-progressive-field is-visible">
-                <span>First, what's your name?</span>
-                <input className="field" value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" placeholder="First name" required autoFocus />
-              </label>
-
-              <div className={`quote-rec-progressive-step ${phoneReady ? "is-visible" : ""}`} aria-hidden={!phoneReady}>
-                <p>{firstName ? `Thanks, ${firstName}. What's the best number for scheduling?` : "What's the best mobile number?"}</p>
-                <input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="(404) 555-0123" required tabIndex={phoneReady ? 0 : -1} />
-                <small>We'll use this for your quote and scheduling updates.</small>
-              </div>
-
-              <div className={`quote-rec-progressive-step ${emailReady ? "is-visible" : ""}`} aria-hidden={!emailReady}>
-                <p>And where should we send the details?</p>
-                <input className="field" value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="email" placeholder="Email address" required tabIndex={emailReady ? 0 : -1} />
-              </div>
-
-              {error && <p className="quote-rec-error" role="alert">{error}</p>}
-              <TurnstileField action="lead" />
-              <button type="submit" className={`btn btn-primary quote-rec-conversion-button ${submitReady ? "is-ready" : ""}`} disabled={sending || !submitReady}>
-                {sending ? "Saving..." : contactPrompt.cta}
-              </button>
-              <p className="quote-rec-privacy">No spam. Your info is only used to help with this detail and scheduling.</p>
-            </form>
+        <button type="button" className="q100-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)} aria-expanded={customizeExpanded}>{customizeExpanded ? "Hide options ↑" : "Add extras or upgrade +"}</button>
+        {customizeExpanded && (
+          <section className="quote-rec-customize-panel">
+            {result.upgradeMessage && result.upgradeService && <button type="button" className="quote-rec-upgrade" onClick={applyUpgrade}><span>Consider upgrading</span><strong>{result.upgradeMessage}</strong><b>Upgrade to {services[result.upgradeService].name} ↗</b></button>}
+            {result.addons.length > 0 && <div className="quote-rec-customize-group"><h4>Add-ons</h4><div className="quote-rec-addon-list">{result.addons.map((addon) => { const checked = checkedAddons.has(addon.id); return <button key={addon.id} type="button" className={`quote-rec-addon ${checked ? "is-selected" : ""}`} onClick={() => toggleAddon(addon.id)} aria-pressed={checked}><span className="quote-rec-check">{checked ? "✓" : ""}</span><strong>{addon.name}</strong>{addon.recommended && <small>Recommended</small>}<b>{addon.price}</b></button>; })}</div></div>}
+            <div className="quote-rec-customize-group"><h4>Paint correction + protection</h4><div className="quote-rec-paint-grid">{(Object.keys(PAINT_UPGRADES) as PaintUpgradeId[]).map((id) => { const item = PAINT_UPGRADES[id]; const selected = paint.has(id); return <button key={id} type="button" className={`quote-rec-paint-card ${selected ? "is-selected" : ""}`} onClick={() => togglePaint(id)} aria-pressed={selected}><span>{item.tag}</span><strong>{item.name}</strong><b>${item.prices[vehicle.vehicle]}</b><p>{item.why}</p></button>; })}</div></div>
+            <form className="quote-rec-customize-footer" onSubmit={submitBuild}><div><span>Updated estimate</span><strong>{totalDisplay}</strong><p>{totalNote}</p></div><TurnstileField action="lead" />{quoteDirty || sending ? <button type="submit" className="btn btn-primary" disabled={sending}>{sending ? "Saving..." : "Save changes ↗"}</button> : <p className="q100-saved">Saved ✓</p>}</form>
+            {error && <p className="quote-rec-error" role="alert">{error}</p>}
           </section>
-        ) : (
-          <>
-            <section className="quote-rec-book-card quote-rec-book-card-clean" role="status">
-              <div>
-                <span>{firstName ? `You're set, ${firstName}` : "Saved"}</span>
-                <h3>{desiredTiming === "exploring" ? `Your ${vehicle.model} recommendation is saved.` : `Your recommendation is saved. Now pick the time.`}</h3>
-                <p>{desiredTiming === "exploring" ? "Check openings whenever you&rsquo;re ready." : `${vehicle.model} · ${activeService.name} · ${totalDisplay}`}</p>
-              </div>
-              <div className="quote-rec-book-actions">
-                <button type="button" className="quote-rec-customize-toggle" onClick={() => setCustomizeExpanded((value) => !value)}>{customizeExpanded ? "Hide options ↑" : "Customize detail +"}</button>
-              </div>
-            </section>
-
-            <QuoteBookingContinuation
-              vehicle={vehicle.vehicle}
-              service={service}
-              addons={result.addons.filter((item) => checkedAddons.has(item.id)).map((item) => item.id)}
-              paint={[...paint]}
-              name={name.trim()}
-              phone={phone.trim()}
-              email={email.trim()}
-              timing={desiredTiming}
-              sessionId={sessionId}
-              bookingHref={selectedBookingHref()}
-            />
-
-            {customizeExpanded && (
-              <section className="quote-rec-customize-panel">
-                <div className="quote-rec-options-head"><div><p className="eyebrow">Optional</p><h3>Customize your detail</h3></div></div>
-                {result.upgradeMessage && result.upgradeService && <button type="button" className="quote-rec-upgrade" onClick={applyUpgrade}><span>Consider upgrading</span><strong>{result.upgradeMessage}</strong><b>Upgrade to {services[result.upgradeService].name} ↗</b></button>}
-                {result.addons.length > 0 && <div className="quote-rec-customize-group"><h4>Add-ons</h4><div className="quote-rec-addon-list">{result.addons.map((addon) => { const checked = checkedAddons.has(addon.id); return <button key={addon.id} type="button" className={`quote-rec-addon ${checked ? "is-selected" : ""}`} onClick={() => toggleAddon(addon.id)} aria-pressed={checked}><span className="quote-rec-check">{checked ? "✓" : ""}</span><strong>{addon.name}</strong>{addon.recommended && <small>Recommended</small>}<b>{addon.price}</b></button>; })}</div></div>}
-                <div className="quote-rec-customize-group"><h4>Paint correction + protection</h4><div className="quote-rec-paint-grid">{(Object.keys(PAINT_UPGRADES) as PaintUpgradeId[]).map((id) => { const item = PAINT_UPGRADES[id]; const selected = paint.has(id); return <button key={id} type="button" className={`quote-rec-paint-card ${selected ? "is-selected" : ""}`} onClick={() => togglePaint(id)} aria-pressed={selected}><span>{item.tag}</span><strong>{item.name}</strong><b>${item.prices[vehicle.vehicle]}</b><p>{item.why}</p></button>; })}</div></div>
-                <form className="quote-rec-customize-footer" onSubmit={submitBuild}><div><span>Updated estimate</span><strong>{totalDisplay}</strong><p>{totalNote}</p></div><TurnstileField action="lead" /><button type="submit" className="btn btn-primary" disabled={sending || !quoteDirty}>{sending ? "Saving..." : quoteDirty ? "Save changes ↗" : "Saved ✓"}</button></form>
-                {error && <p className="quote-rec-error" role="alert">{error}</p>}
-              </section>
-            )}
-          </>
         )}
       </div>
     );
@@ -590,7 +498,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
           <span className={vehicle ? "is-done" : "is-current"}><b>{vehicle ? "✓" : "01"}</b> Vehicle</span>
           <span className={condition ? "is-done" : vehicle ? "is-current" : ""}><b>{condition ? "✓" : "02"}</b> Condition</span>
           <span className={condition ? "is-current" : ""}><b>03</b> Issues</span>
-          <span><b>04</b> Recommendation</span>
+          <span><b>04</b> Your price</span>
         </div>
 
         {!vehicle && (

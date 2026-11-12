@@ -137,7 +137,7 @@ export function QuoteBookingContinuation({
   }
 
   return <section ref={availabilityRef} className="quote-inline-booking scroll-mt-28">
-    <div className="quote-inline-head"><div><p className="eyebrow">Live availability</p><h3>{timing === "exploring" ? "Want to see when we could do it?" : `Let's get it on the calendar, ${name.split(/\s+/)[0]}.`}</h3><p>These are real openings for your {services[service].name.toLowerCase()}.</p></div><span>{vehicles.find(v=>v.id===vehicle)?.label}</span></div>
+    <div className="quote-inline-head"><div><p className="eyebrow">Optional · live availability</p><h3>Want to lock in a time now?</h3><p>These are real openings for your {services[service].name.toLowerCase()}. Or skip it, and we&rsquo;ll reach out.</p></div><span>{vehicles.find(v=>v.id===vehicle)?.label}</span></div>
 
     {slots === null && !slotsError && <p className="quote-inline-loading">Checking the schedule…</p>}
     {slotsError && <p className="quote-rec-error">We couldn't load openings right now. You can still use the full booking calendar.</p>}

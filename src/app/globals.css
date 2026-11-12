@@ -9112,3 +9112,66 @@ html[data-hero-vehicle-visible] .site-context-pill{opacity:0;visibility:hidden;p
 
 /* Quote form Turnstile: the empty widget slot takes no space in the grid/flex layout */
 .quote-rec-progressive-form .ed-turnstile:empty,.quote-rec-customize-footer .ed-turnstile:empty{display:contents}
+
+/* V112 / LEAD-FIRST QUOTE RESULT ------------------------------------------------ */
+/* Once past step 1 the page title steps aside so each step owns the screen. */
+.q53-tool:has([data-art-number="02"],[data-art-number="03"],.q100-result) .q53-intro{display:none}
+.q100-result{width:min(100%,640px);margin:0 auto;padding:clamp(1rem,3vw,2rem) 0 3rem;scroll-margin-top:96px}
+.q100-match{padding:clamp(1.25rem,3vw,2rem) 0 1.5rem;border-top:1px solid rgba(17,17,17,.7);animation:q79-materialize .38s cubic-bezier(.2,.8,.2,1) both}
+.q100-match h2{margin:0;font-family:var(--font-display);font-size:clamp(2.6rem,9vw,4.25rem);font-weight:650;line-height:.95;letter-spacing:-.045em;text-transform:none}
+.q100-includes{list-style:none;margin:1.1rem 0 0;padding:0}
+.q100-includes li{position:relative;padding:.5rem 0 .5rem 1.2rem;border-bottom:1px solid rgba(17,17,17,.1);color:#292724;font-size:.92rem;line-height:1.35}
+.q100-includes li:last-child{border-bottom:0}
+.q100-includes li::before{content:"✓";position:absolute;left:0;color:#a8463f;font-weight:800}
+.q100-price-lock{display:flex;align-items:baseline;gap:.9rem;margin-top:1.1rem;padding-top:1rem;border-top:1px solid rgba(17,17,17,.7)}
+.q100-price-lock span,.q100-price-lock small{color:#756f68;font-family:var(--font-display);font-size:.7rem;font-weight:750;letter-spacing:.08em;text-transform:uppercase}
+.q100-price-lock strong{font-family:var(--font-display);font-size:clamp(2.4rem,8vw,3.4rem);font-weight:650;line-height:.9;letter-spacing:-.045em;filter:blur(9px);user-select:none}
+.q100-price-lock small{margin-left:auto;color:#a8463f}
+.q100-form{display:grid;gap:.85rem;padding:clamp(1.25rem,4vw,2rem);border:1.5px solid #111;border-radius:14px;background:#fbf9f4;box-shadow:0 18px 40px -28px rgba(17,17,17,.45)}
+.q100-form h3{margin:0;font-family:var(--font-display);font-size:clamp(1.55rem,5.5vw,2.1rem);font-weight:650;line-height:1.02;letter-spacing:-.035em}
+.q100-form>p:not(.quote-rec-error):not(.quote-rec-privacy){margin:-.3rem 0 .2rem;color:#5f5952;font-size:.92rem;line-height:1.45}
+.q100-form label{display:grid;gap:.35rem}
+.q100-form label span{font-size:.8rem;font-weight:700;color:#292724}
+.q100-form .field{min-height:3.2rem;font-size:1rem}
+.q100-submit{width:100%;min-height:3.4rem;margin-top:.2rem;font-size:1rem}
+.q100-result .ed-turnstile:empty{display:contents}
+.q100-reveal-row{display:flex;align-items:flex-end;justify-content:space-between;gap:1.25rem}
+.q100-price{flex:0 0 auto;text-align:right}
+.q100-price strong{display:block;font-family:var(--font-display);font-size:clamp(2.6rem,9vw,4rem);font-weight:650;line-height:.9;letter-spacing:-.045em;animation:q79-materialize .5s cubic-bezier(.2,.8,.2,1) both}
+.q100-price small{display:block;max-width:16ch;margin-top:.35rem;margin-left:auto;color:#68625b;font-size:.75rem;line-height:1.3}
+.q100-reason{margin:1rem 0 0;color:#58534d;font-size:.98rem;line-height:1.55}
+.q100-note{margin:1rem 0 .6rem;color:#68625b;font-size:.8rem;line-height:1.45}
+.q100-timing{padding:1.25rem 0 1.5rem;border-top:1px solid rgba(17,17,17,.14)}
+.q100-timing h3{margin:0 0 .8rem;font-family:var(--font-display);font-size:1.05rem;font-weight:700;letter-spacing:-.01em}
+.q100-timing>div{display:flex;flex-wrap:wrap;gap:.5rem}
+.q100-timing button{min-height:2.75rem;padding:0 1rem;border:1px solid rgba(17,17,17,.3);border-radius:999px;background:#fbf9f4;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .15s ease,color .15s ease,border-color .15s ease}
+.q100-timing button.is-selected{border-color:#111;background:#111;color:#fbf9f4}
+.q100-customize-toggle{display:block;margin:1.25rem auto 0;padding:.6rem 1rem;color:#111;font-family:var(--font-display);font-size:.92rem;font-weight:650;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+@media(max-width:520px){.q100-reveal-row{display:block}.q100-price{margin-top:.9rem;text-align:left}.q100-price small{margin-left:0;max-width:none}}
+/* V112.1: keep the price form above the fold on phones */
+.q100-includes.is-compact{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem}
+.q100-includes.is-compact li{padding:.38rem .7rem .38rem 1.55rem;border:1px solid rgba(17,17,17,.16);border-radius:999px;background:#fbf9f4;font-size:.8rem}
+.q100-includes.is-compact li:last-child{border-bottom:1px solid rgba(17,17,17,.16)}
+.q100-includes.is-compact li::before{left:.65rem;top:.38rem}
+.q100-result>.quote-rec-back{margin-bottom:.5rem}
+.q100-match:not(.is-revealed){padding-bottom:1.1rem}
+.q100-form .q100-price-lock{margin:0 0 .15rem;padding:0 0 .8rem;border-top:0;border-bottom:1px solid rgba(17,17,17,.12)}
+.q100-form .q100-price-lock strong{font-size:2rem;filter:blur(8px)}
+@media(max-width:560px){
+  .q100-match h2{font-size:2.5rem}
+  .q53-page .q51-condition-grid.quote-rec-condition-grid button,.q53-page .q51-condition-grid.quote-rec-condition-grid button:last-child{min-height:0;padding:.85rem 1rem}
+  .q53-page .q51-condition-grid.quote-rec-condition-grid button span{display:none}
+  .q53-page .q51-condition-grid.quote-rec-condition-grid button strong{margin-top:0}
+}
+/* V112.2 readability pass */
+.q100-reveal-row{align-items:flex-end}
+.q100-match.is-revealed h2{max-width:none}
+.q100-price small{max-width:22ch;font-size:.84rem;color:#5f5952}
+.q100-note{font-size:.88rem;color:#5f5952}
+.q100-form .quote-rec-error{margin:0;font-size:.92rem;line-height:1.4}
+.q100-result .quote-rec-customize-footer strong{font-family:var(--font-display);font-weight:650;letter-spacing:-.045em;font-size:2.6rem}
+.q100-result .quote-rec-customize-footer .q100-saved{margin:0;align-self:center;color:#3f7d4f;font-family:var(--font-display);font-size:1rem;font-weight:700;letter-spacing:0;text-transform:none}
+@media(max-width:560px){
+  .q53-page .q51-concern-grid.quote-rec-concern-grid button{min-height:0;padding:.7rem .9rem}
+  .q53-page .q51-concern-grid.quote-rec-concern-grid{gap:7px}
+}
