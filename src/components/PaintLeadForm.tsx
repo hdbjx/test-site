@@ -80,7 +80,7 @@ export function PaintLeadForm({ kind, hideIntro = false }: Props) {
       service: kind === "paint-correction" ? "Paint Correction" : kind === "ceramic" ? "2-Year Ceramic Coating" : "Paint Correction / Ceramic",
       source: kind === "paint-correction" ? "Website Paint Correction Page" : kind === "ceramic" ? "Website Ceramic Coating Page" : "Website Paint Care Page",
       message: context,
-      company: String(form.get("company") ?? ""),
+      ed_trap: String(form.get("ed_trap") ?? ""),
       turnstileToken: String(form.get("turnstileToken") ?? ""),
     });
 
@@ -118,7 +118,7 @@ export function PaintLeadForm({ kind, hideIntro = false }: Props) {
         </div>
 
         <form className="paint-lead-form paint-lead-form-compact" onSubmit={onSubmit}>
-          <input className="paint-hp" type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+          <input className="paint-hp" type="text" name="ed_trap" tabIndex={-1} autoComplete="off" aria-hidden="true" data-1p-ignore="true" data-lpignore="true" />
           <TurnstileField action="lead" />
 
           <div className="paint-field-grid">
@@ -171,7 +171,7 @@ export function PaintLeadForm({ kind, hideIntro = false }: Props) {
       )}
 
       <form className="paint-lead-form" onSubmit={onSubmit}>
-        <input className="paint-hp" type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+        <input className="paint-hp" type="text" name="ed_trap" tabIndex={-1} autoComplete="off" aria-hidden="true" data-1p-ignore="true" data-lpignore="true" />
         <TurnstileField action="lead" />
         <div className="paint-field-grid">
           <label><span>What should we call you?</span><input name="name" autoComplete="name" required placeholder="Your name" /></label>

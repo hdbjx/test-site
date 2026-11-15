@@ -98,8 +98,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
   }
 
-  // Honeypot. Bots that fill the hidden company field should not create contacts.
-  if (typeof body.company === "string" && body.company.trim()) {
+  // Honeypot. Bots that fill the hidden trap field should not create contacts.
+  if (typeof body.ed_trap === "string" && body.ed_trap.trim()) {
+    console.warn("[lead] honeypot filled; request ignored");
     return NextResponse.json({ ok: true });
   }
 

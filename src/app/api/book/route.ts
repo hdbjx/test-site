@@ -90,7 +90,8 @@ export async function POST(req: Request) {
 
   // Hidden field used by the real booking form. Bots that fill every field are
   // acknowledged without creating a job or sending email.
-  if (typeof body.company === "string" && body.company.trim()) {
+  if (typeof body.ed_trap === "string" && body.ed_trap.trim()) {
+    console.warn("[book] honeypot filled; request ignored");
     return NextResponse.json({ ok: true });
   }
 

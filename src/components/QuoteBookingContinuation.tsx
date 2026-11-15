@@ -117,7 +117,7 @@ export function QuoteBookingContinuation({
     const res = await fetch("/api/book", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({
       vehicles:[{vehicle,service,vehicleId:null,addons,paint}], start:selected.toISOString(), name, phone:phone.replace(/\D/g,""), email, address,
       notes:get("service_notes"), leadSource, leadSourceDetail:get("leadSourceDetail"),
-      company:get("company"), turnstileToken:get("turnstileToken"),
+      ed_trap:get("ed_trap"), turnstileToken:get("turnstileToken"),
     })}).catch(() => null);
     const json = res ? await res.json().catch(() => ({})) : {};
     setSending(false);

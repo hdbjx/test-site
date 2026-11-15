@@ -20,7 +20,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
   }
 
-  if (typeof body.company === "string" && body.company.trim()) {
+  if (typeof body.ed_trap === "string" && body.ed_trap.trim()) {
+    console.warn("[gift-cards] honeypot filled; request ignored");
     return NextResponse.json({ ok: true });
   }
 

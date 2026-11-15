@@ -88,13 +88,17 @@ export function TextArea(p: Base & TextareaHTMLAttributes<HTMLTextAreaElement>) 
   );
 }
 
-/** Hidden spam trap. */
+/**
+ * Hidden spam trap. Named so browser AutoFill never recognizes it: a field
+ * called "company" gets filled by Safari/Chrome contact AutoFill, which made
+ * real customers look like bots.
+ */
 export function Honeypot() {
   return (
     <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
       <label>
-        Company
-        <input type="text" name="company" tabIndex={-1} autoComplete="off" />
+        Leave this field empty
+        <input type="text" name="ed_trap" tabIndex={-1} autoComplete="off" data-1p-ignore="true" data-lpignore="true" />
       </label>
     </div>
   );

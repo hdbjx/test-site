@@ -723,7 +723,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
         leadSource: get("leadSource"),
         leadSourceDetail: get("leadSourceDetail"),
         giftCardCode: giftCardPreview ? giftCardCode.trim().toUpperCase() : null,
-        company: get("company"),
+        ed_trap: get("ed_trap"),
         turnstileToken: get("turnstileToken"),
       }),
     }).catch(() => null);

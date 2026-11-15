@@ -55,7 +55,7 @@ export function InfoForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...fields,
-          company: String(data.company ?? ""),
+          ed_trap: String(data.ed_trap ?? ""),
           turnstileToken: String(data.turnstileToken ?? ""),
         }),
       });
