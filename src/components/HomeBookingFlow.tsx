@@ -23,7 +23,7 @@ const serviceMeta: Record<ServiceId, { number: string; cue: string; subline: str
     cue: "Bring it back",
     subline: "Top-to-bottom clean, inside and out. Every corner, every detail.",
     includes: services.premium.includes.join(" · "),
-    detail: "Full interior + exterior · Most booked",
+    detail: "Full interior + exterior",
   },
   factoryReset: {
     number: "03",

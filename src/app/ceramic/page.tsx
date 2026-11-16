@@ -11,7 +11,7 @@ import { PaintAssessmentTicket } from "@/components/paint/PaintAssessmentTicket"
 import { ceramicFaqs } from "@/data/faqs";
 import { PAINT_PRICING, ceramicDoes, ceramicDoesNot, paintProcess, paintServices } from "@/data/paint";
 import { usd } from "@/lib/format";
-import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
+import { breadcrumbSchema, faqSchema, pageMetadata, serviceSchema } from "@/lib/seo";
 import styles from "@/styles/servicePage.module.css";
 import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
@@ -42,7 +42,7 @@ export default async function CeramicPage() {
           </div>
           <p className={styles.kicker}>Every Detail / Ceramic coating</p>
           <h1 id="cc-hero-title" className={styles.heroTitle}>
-            <span>Protect the</span>
+            <span>Protect the{" "}</span>
             <span>finish you fixed.</span>
           </h1>
           <p className={styles.heroLede}>Paint correction, a professional two-year coating and a free follow-up detail in one package, done in your driveway.</p>
@@ -66,7 +66,7 @@ export default async function CeramicPage() {
           <div className={styles.sectionHead}>
             <p className={styles.kickerLight}>Ceramic, clearly</p>
             <h2 id="cc-truth-title" className={styles.sectionTitle}>
-              <span>Easier to keep clean.</span>
+              <span>Easier to keep clean.{" "}</span>
               <span>Not magic armor.</span>
             </h2>
           </div>
@@ -104,7 +104,7 @@ export default async function CeramicPage() {
             <div>
               <p className={styles.kickerDark}>Your package</p>
               <h2 id="cc-pricing-title" className={styles.sectionTitle}>
-                <span>Correct. Coat.</span>
+                <span>Correct. Coat.{" "}</span>
                 <span>Follow up.</span>
               </h2>
             </div>
@@ -123,7 +123,7 @@ export default async function CeramicPage() {
           <div className={styles.sectionHead}>
             <p className={styles.kickerLight}>How it goes</p>
             <h2 id="cc-process-title" className={styles.sectionTitle}>
-              <span>Five steps.</span>
+              <span>Five steps.{" "}</span>
               <span>Nothing skipped.</span>
             </h2>
           </div>
@@ -144,7 +144,7 @@ export default async function CeramicPage() {
           <div className={styles.quoteAside}>
             <p className={styles.kickerLight}>Coating plan</p>
             <h2 id="cc-quote-title" className={styles.sectionTitle}>
-              <span>Let&apos;s look at</span>
+              <span>Let&apos;s look at{" "}</span>
               <span>the paint.</span>
             </h2>
             <ol className={styles.quoteSteps}>
@@ -160,7 +160,7 @@ export default async function CeramicPage() {
       <section className={styles.faq} data-header-tone="ink" aria-labelledby="cc-faq-title">
         <div className={`${styles.shell} ${styles.faqGrid}`}>
           <h2 id="cc-faq-title" className={styles.sectionTitle}>
-            <span>Before</span>
+            <span>Before{" "}</span>
             <span>you coat.</span>
           </h2>
           <FaqList faqs={ceramicFaqs} />
@@ -170,6 +170,7 @@ export default async function CeramicPage() {
       <JsonLd data={[
         serviceSchema({ name: ceramic.name, description: ceramic.summary, path: "/ceramic", lowPrice: ceramic.startingAt, highPrice: maxCeramic }),
         breadcrumbSchema([{ name: "Services", path: "/our-services" }, { name: "Ceramic Coating", path: "/ceramic" }]),
+        faqSchema(ceramicFaqs),
       ]} />
     </main>
   );

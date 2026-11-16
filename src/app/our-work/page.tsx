@@ -37,7 +37,7 @@ export default async function OurWorkPage() {
             <div className={styles.crumbs}><Breadcrumbs items={[{ name: "Our Work", path: "/our-work" }]} /></div>
             <p className={styles.kicker}>Every Detail / Our work</p>
             <h1 id="wk-hero-title" className={styles.heroTitle}>
-              <span>Real cars.</span>
+              <span>Real cars.{" "}</span>
               <span>Real driveways.</span>
             </h1>
             <p className={styles.heroLede}>Every photo here is a customer&apos;s car and our crew. Every quote is a real Google review. No stock, no staging.</p>
@@ -63,7 +63,7 @@ export default async function OurWorkPage() {
           <div className="container-ed work-audit-before-after-grid">
             <div>
               <p className={styles.kickerLight}>Paint / Same panel, same light</p>
-              <h2 id="work-before-after-title">Same panel.<br /><span>Different finish.</span></h2>
+              <h2 id="work-before-after-title">Same panel.{" "}<br /><span>Different finish.</span></h2>
               <p>A real 50/50 paint-correction test spot under an inspection light. The corrected side is on the left. The side on the right is how it arrived.</p>
               <TrackedLink href="/paint-correction" event="paint_inquiry" params={{ location: "work_before_after" }} className={styles.proofCta}>See paint correction <span aria-hidden="true">↗</span></TrackedLink>
             </div>
@@ -80,7 +80,7 @@ export default async function OurWorkPage() {
             <div>
               <p className={styles.kicker}>Who shows up</p>
               <h2 id="wk-crew-title" className={styles.sectionTitle}>
-                <span>The crew</span>
+                <span>The crew{" "}</span>
                 <span>in the photos.</span>
               </h2>
               <p className={styles.body}>The people on this page are the people who come to your driveway. Students, trained in-house, running two fully loaded rigs.</p>
@@ -95,7 +95,7 @@ export default async function OurWorkPage() {
             <div className={styles.communityHead}>
               <p className={styles.kicker}>In the community</p>
               <h2 id="wk-community-title" className={styles.sectionTitle}>
-                <span>Trusted locally.</span>
+                <span>Trusted locally.{" "}</span>
                 <span>Invested locally.</span>
               </h2>
             </div>

@@ -100,7 +100,7 @@ export default async function AboutPage() {
           <div className={styles.crumbs}><Breadcrumbs items={[{ name: "About Us", path: "/about-us" }]} /></div>
           <p className={styles.kicker}>Every Detail / Decatur, Georgia</p>
           <h1 id="ab-hero-title" className={styles.heroTitle}>
-            <span>Started in</span>
+            <span>Started in{" "}</span>
             <span>eighth grade.</span>
           </h1>
           <p className={styles.heroLede}>One driveway job turned into a student crew running two fully loaded rigs across Decatur and Atlanta. Built by students, run for real.</p>
@@ -126,7 +126,7 @@ export default async function AboutPage() {
           <div className={styles.storyAside}>
             <p className={styles.kickerDark}>The story</p>
             <h2 id="ab-story-title" className={styles.sectionTitle}>
-              <span>One driveway.</span>
+              <span>One driveway.{" "}</span>
               <span>Then two rigs.</span>
             </h2>
             <figure className={styles.storyPhoto}>
@@ -159,7 +159,7 @@ export default async function AboutPage() {
             <div>
               <p className={styles.kicker}>The crew</p>
               <h2 id="ab-team-title" className={styles.sectionTitle}>
-                <span>Real names.</span>
+                <span>Real names.{" "}</span>
                 <span>Real responsibility.</span>
               </h2>
             </div>
@@ -205,7 +205,7 @@ export default async function AboutPage() {
           <div className={styles.processHead}>
             <p className={styles.kicker}>How we run it</p>
             <h2 id="ab-process-title" className={styles.sectionTitle}>
-              <span>Student-run.</span>
+              <span>Student-run.{" "}</span>
               <span>Not student-grade.</span>
             </h2>
           </div>
@@ -237,7 +237,7 @@ export default async function AboutPage() {
           <div className={join.intro}>
             <p className={join.kicker}>Careers / Join the crew</p>
             <h2 id="ab-join-title" className={join.title}>
-              <span>Start at Tier 1.</span>
+              <span>Start at Tier 1.{" "}</span>
               <span>Earn the rest.</span>
             </h2>
             <p className={join.lede}>No experience needed. Everyone learns the same process in-house through hands-on training and our 83-module program, then moves up as their work proves it.</p>
@@ -271,8 +271,8 @@ export default async function AboutPage() {
       <section className={styles.close} data-header-tone="brand" aria-labelledby="ab-close-title">
         <div className={`${styles.shell} ${styles.closeGrid}`}>
           <h2 id="ab-close-title" className={styles.closeTitle}>
-            <span>More cars.</span>
-            <span>More students.</span>
+            <span>More cars.{" "}</span>
+            <span>More students.{" "}</span>
             <span>Same standard.</span>
           </h2>
           <div>

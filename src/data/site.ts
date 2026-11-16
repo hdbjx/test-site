@@ -38,6 +38,15 @@ export const site = {
     year: 2025,
   },
 
+  // Public hours. The crew is in school on weekdays during the school year,
+  // so weekday jobs on school days start at 4:30pm.
+  hours: {
+    display: "Every day, 8am–7pm",
+    schoolDays: "School days from 4:30pm",
+    opens: "08:00",
+    closes: "19:00",
+  },
+
   paymentMethods: ["Cash", "Check", "Venmo", "Zelle"] as string[],
 
   // Site-wide notice (holiday closure, booked-out week). Set in Team HQ → Settings.

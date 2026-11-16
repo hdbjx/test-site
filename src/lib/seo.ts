@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { site } from "@/data/site";
 import { areas } from "@/data/areas";
 import { imageById } from "@/data/images";
+import { visible, type Faq } from "@/data/faqs";
 
 type PageMeta = {
   title: string; // full <title>; keep under ~60 chars
@@ -47,6 +48,8 @@ export function localBusinessSchema() {
     "@type": "AutoWash",
     "@id": businessId,
     name: site.name,
+    alternateName: "Every Detail Mobile Detailing",
+    legalName: site.legalName,
     description: site.description,
     url: site.url,
     telephone: site.phone.href.replace("tel:", ""),
@@ -57,6 +60,14 @@ export function localBusinessSchema() {
     paymentAccepted: site.paymentMethods.join(", "),
     address: { "@type": "PostalAddress", addressLocality: site.city, addressRegion: site.region, addressCountry: site.country },
     areaServed: areas.map((a) => ({ "@type": "Place", name: `${a.name}, GA` })),
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        opens: site.hours.opens,
+        closes: site.hours.closes,
+      },
+    ],
     award: site.award.title,
     sameAs: [site.googleBusinessProfile, ...site.social.map((s) => s.href)].filter(Boolean),
   };
@@ -82,6 +93,19 @@ export function serviceSchema(s: { name: string; description: string; path: stri
           },
         }
       : {}),
+  };
+}
+
+/** FAQPage markup built from the same list FaqList renders, so the two never drift. */
+export function faqSchema(faqs: Faq[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: visible(faqs).map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
   };
 }
 

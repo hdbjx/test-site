@@ -84,7 +84,7 @@ export function WorkWall({ anchorId }: { anchorId: string }) {
           <div>
             <p className={styles.kicker}>The wall / Real jobs, real reviews</p>
             <h2 id="ww-title" className={styles.title}>
-              <span>Every photo.</span>
+              <span>Every photo.{" "}</span>
               <span>A real driveway.</span>
             </h2>
           </div>

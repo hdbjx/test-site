@@ -16,7 +16,7 @@ export default function PrivacyPolicyPage() {
       <header className="legal-v1-hero" data-header-tone="light">
         <div className="legal-v1-shell">
           <p className="legal-v1-kicker">EVERY DETAIL / LEGAL</p>
-          <h1>Privacy<br/><span>Policy.</span></h1>
+          <h1>Privacy{" "}<br/><span>Policy.</span></h1>
           <div className="legal-v1-intro">
             <p>This policy explains what information Every Detail collects through our website and services, why we use it, and the choices you have.</p>
             <p className="legal-v1-date">LAST UPDATED / {updated.toUpperCase()}</p>

@@ -10,17 +10,23 @@ import { PersonalizedHeroTitle } from "@/components/PersonalizedHeroTitle";
 import { HeroVehicleField } from "@/components/vehicle/HeroVehicleField";
 import { reviews } from "@/data/reviews";
 import { paintServices } from "@/data/paint";
+import { detailPlusMinimum } from "@/data/detailplus";
+import { startingPrice } from "@/data/services";
 import { usd } from "@/lib/format";
 import { pageMetadata } from "@/lib/seo";
 import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 
-export const metadata = pageMetadata({
-  title: "Mobile Car Detailing in Decatur & Atlanta | Every Detail",
-  description: `Mobile detailing in Decatur and nearby Atlanta. We bring our own power and water, show pricing online, and book at your driveway.`,
-  path: "/",
-  image: "og-default",
-});
+// Async so the starting price follows the live catalog (Team HQ).
+export async function generateMetadata() {
+  await ensureLiveCatalog();
+  return pageMetadata({
+    title: "Mobile Car Detailing in Decatur & Atlanta | Every Detail",
+    description: `Mobile car detailing in Decatur and nearby Atlanta. Our electric rigs bring their own power and water. Details from ${usd(startingPrice("maintenance"))}, priced online.`,
+    path: "/",
+    image: "og-default",
+  });
+}
 
 const proofReviews = [
   {
@@ -73,7 +79,7 @@ export default async function Home() {
       <section className="v29-choice" data-header-tone="ink" id="pricing" data-v29-scene="choice" aria-labelledby="v29-choice-title">
         <div className="v29-shell">
           <div className="v29-choice-intro v38-choice-intro">
-            <h2 id="v29-choice-title"><span>ONE CAR.</span><span>THREE WAYS BACK.</span></h2>
+            <h2 id="v29-choice-title"><span>ONE CAR.{" "}</span><span>THREE WAYS BACK.</span></h2>
           </div>
           <div className="v29-booking" data-v29-services><HomeBookingFlow /></div>
         </div>
@@ -82,7 +88,7 @@ export default async function Home() {
       <section className="v29-work" data-header-tone="light" data-v29-work data-v29-scene="work" aria-labelledby="v29-work-title">
         <div className="v29-work-sticky">
           <div className="v29-work-heading v29-shell">
-            <h2 id="v29-work-title"><span>NO STOCK CARS.</span><span>NO MYSTERY SHOP.</span></h2>
+            <h2 id="v29-work-title"><span>NO STOCK CARS.{" "}</span><span>NO MYSTERY SHOP.</span></h2>
           </div>
           <div className="v29-work-track" data-v29-work-track>
             <figure className="v29-shot v29-shot-a" data-v29-tilt><Photo id="work-mateo-0670" sizes="70vw" fill /></figure>
@@ -100,7 +106,7 @@ export default async function Home() {
       <section className="v37-story" data-header-tone="light" data-v29-story data-v29-scene="story" aria-labelledby="v37-story-title">
         <div className="v29-shell v37-story-inner">
           <h2 id="v37-story-title" className="v37-story-title">
-            <span>BUILT BY STUDENTS.</span>
+            <span>BUILT BY STUDENTS.{" "}</span>
             <span>RUN LIKE A COMPANY.</span>
           </h2>
 
@@ -141,17 +147,17 @@ export default async function Home() {
         <div className="v29-shell v41-care-inner">
           <div className="v41-care-heading">
             <span>AFTER THE RESET</span>
-            <h2 id="v41-care-title">KEEP THE CAR<br /><em>FEELING RIGHT.</em></h2>
+            <h2 id="v41-care-title">KEEP THE CAR{" "}<br /><em>FEELING RIGHT.</em></h2>
             <p>Protect the finish, or keep the whole car on a regular clean cycle. Two different jobs. One cleaner way to own a car.</p>
           </div>
 
           <div className="v41-care-grid">
-            <Link href="/ceramic" className="v41-care-card v41-care-card-paint" data-header-tone="light">
+            <Link href="/paint-correction" className="v41-care-card v41-care-card-paint" data-header-tone="light">
               <div className="v41-care-card-image"><Photo id="hq-black-suv-finished" sizes="(max-width: 900px) 100vw, 58vw" fill /></div>
               <div className="v41-care-card-shade" />
               <div className="v41-care-card-top"><span>01</span><b>PAINT CARE</b></div>
               <div className="v41-care-card-copy">
-                <h3>BRING BACK<br />THE GLOSS.</h3>
+                <h3>BRING BACK{" "}<br />THE GLOSS.</h3>
                 <p>Correction and protection for paint that deserves more than a wash. From {usd(paintFrom)}.</p>
                 <strong>Explore paint care ↗</strong>
               </div>
@@ -162,8 +168,8 @@ export default async function Home() {
               <div className="v41-care-card-shade" />
               <div className="v41-care-card-top"><span>02</span><b>DETAIL+</b></div>
               <div className="v41-care-card-copy">
-                <h3>STAY CLEAN.<br />SKIP THE RESET.</h3>
-                <p>Recurring maintenance built around how often you actually drive.</p>
+                <h3>STAY CLEAN.{" "}<br />SKIP THE RESET.</h3>
+                <p>Recurring maintenance built around how often you actually drive. From {usd(detailPlusMinimum)} a visit.</p>
                 <strong>Explore Detail+ ↗</strong>
               </div>
               <div className="v41-care-cadence">MONTHLY • BI-WEEKLY • CUSTOM</div>
@@ -176,7 +182,7 @@ export default async function Home() {
         <div className="v29-close-photo"><Photo id="hq-van-through-flowers" sizes="100vw" fill /></div>
         <div className="v29-close-shade" />
         <div className="v29-shell v29-close-inner">
-          <h2 id="v29-close-title">LIFE’S GOOD<br /><span>IN A CLEAN CAR.</span></h2>
+          <h2 id="v29-close-title">LIFE’S GOOD{" "}<br /><span>IN A CLEAN CAR.</span></h2>
           <TrackedLink href="/book" event="book_click" params={{ location: "home_v29_close" }} className="v29-close-cta" data-v29-magnetic>Book a detail <span>↗</span></TrackedLink>
         </div>
       </section>

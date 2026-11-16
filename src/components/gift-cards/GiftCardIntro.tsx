@@ -23,7 +23,7 @@ export function GiftCardIntro() {
         <div>
           <p className={styles.kicker}>Every Detail / Gift cards</p>
           <h1 id="gc-hero-title" className={styles.heroTitle}>
-            <span>Give a</span>
+            <span>Give a{" "}</span>
             <span>cleaner car.</span>
           </h1>
           <p className={styles.heroLede}>A real Every Detail gift card for any detail, add-on or upgrade. Pay by Venmo or Zelle and we activate it as soon as payment is confirmed.</p>
