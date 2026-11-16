@@ -4,15 +4,15 @@ import { JsonLd } from "@/components/JsonLd";
 import { Photo } from "@/components/Photo";
 import { DetailPlusForm } from "@/components/forms/DetailPlusForm";
 import { getDetailPlusCatalog } from "@/lib/detailPlusCatalog";
-import { detailPlusBenefits, detailPlusGuarantee, detailPlusSteps } from "@/data/detailplus";
+import { detailPlusBenefits, detailPlusGuarantee, detailPlusMinimum, detailPlusSteps } from "@/data/detailplus";
 import { startingPrice } from "@/data/services";
 import { detailPlusFaqs } from "@/data/faqs";
-import { pageMetadata, serviceSchema } from "@/lib/seo";
+import { faqSchema, pageMetadata, serviceSchema } from "@/lib/seo";
 import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
 export const metadata = pageMetadata({
   title: "Detail+ Recurring Car Detailing Membership | Every Detail",
-  description: "Recurring mobile detailing in Decatur and Atlanta. Choose bi-weekly, monthly, every six weeks, or a custom 1 to 13 week rhythm, with no contracts.",
+  description: `Recurring mobile detailing in Decatur and Atlanta. Pick your tasks and a rhythm from weekly to every 3 months. From $${detailPlusMinimum} a visit, no contract.`,
   path: "/detailplus",
   image: "hq-black-suv-finished",
 });
@@ -26,7 +26,7 @@ export default async function DetailPlusPage() {
         <div className="dp56-shell dp56-hero-grid">
           <div className="dp56-hero-copy">
             <p className="dp56-kicker">EVERY DETAIL / SERVICE CLUB</p>
-            <h1>STAY CLEAN.<br/><span>SKIP THE RESET.</span></h1>
+            <h1>STAY CLEAN.{" "}<br/><span>SKIP THE RESET.</span></h1>
             <p className="dp56-hero-lede">Detail+ is recurring mobile detailing for cars that already feel right. Pick the rhythm once, then we come back before the mess turns into another reset.</p>
             <div className="dp56-hero-actions">
               <a href="#club-builder" className="dp56-btn dp56-btn-light">JOIN DETAIL+ ↗</a>
@@ -61,7 +61,7 @@ export default async function DetailPlusPage() {
         <div className="dp56-shell">
           <p className="dp56-kicker dark">WHY THE CLUB EXISTS</p>
           <div className="dp56-thesis-grid">
-            <h2>Clean once is a moment.<br/><span>Staying clean is a system.</span></h2>
+            <h2>Clean once is a moment.{" "}<br/><span>Staying clean is a system.</span></h2>
             <p>Most cars do not suddenly become a disaster. They slowly slide backward. Detail+ changes the timing by bringing us back while the car is still easy to keep right.</p>
           </div>
           <div className="dp56-compare">
@@ -80,7 +80,7 @@ export default async function DetailPlusPage() {
       <section id="club-builder" className="dp56-builder" data-header-tone="ink">
         <div className="dp56-shell">
           <div className="dp56-section-head">
-            <div><p className="dp56-kicker dark">BUILD YOUR PLAN</p><h2>Your car.<br/><span>Your clean cycle.</span></h2></div>
+            <div><p className="dp56-kicker dark">BUILD YOUR PLAN</p><h2>Your car.{" "}<br/><span>Your clean cycle.</span></h2></div>
             <p>Pick your vehicle, choose exactly what gets cleaned, and set a rhythm anywhere from every week to every 3 months. Your flat per-visit price updates as you build.</p>
           </div>
           <DetailPlusForm catalog={catalog} />
@@ -90,7 +90,7 @@ export default async function DetailPlusPage() {
       <section className="dp56-covered" data-header-tone="ink">
         <div className="dp56-shell">
           <div className="dp56-section-head">
-            <div><p className="dp56-kicker dark">THE DETAIL+ RULE</p><h2>If it&rsquo;s in the plan,<br/><span>it&rsquo;s covered.</span></h2></div>
+            <div><p className="dp56-kicker dark">THE DETAIL+ RULE</p><h2>If it&rsquo;s in the plan,{" "}<br/><span>it&rsquo;s covered.</span></h2></div>
             <p>{detailPlusGuarantee}</p>
           </div>
           <div className="dp56-benefit-grid">
@@ -117,7 +117,7 @@ export default async function DetailPlusPage() {
         <div className="dp56-shell dp56-how-grid">
           <div className="dp56-how-copy">
             <p className="dp56-kicker">THE LOOP</p>
-            <h2>Set it once.<br/><span>Keep it moving.</span></h2>
+            <h2>Set it once.{" "}<br/><span>Keep it moving.</span></h2>
             <p>Choose the plan once. We keep the car on schedule.</p>
           </div>
           <div className="dp56-how-steps">
@@ -132,7 +132,7 @@ export default async function DetailPlusPage() {
 
       <section className="dp56-faq" data-header-tone="ink">
         <div className="dp56-shell dp56-faq-grid">
-          <div><p className="dp56-kicker dark">CLUB QUESTIONS</p><h2>Before you put it<br/><span>on repeat.</span></h2><p>Still want to start with one visit? <Link href="/book">Book a regular detail ↗</Link></p></div>
+          <div><p className="dp56-kicker dark">CLUB QUESTIONS</p><h2>Before you put it{" "}<br/><span>on repeat.</span></h2><p>Still want to start with one visit? <Link href="/book">Book a regular detail ↗</Link></p></div>
           <FaqList faqs={detailPlusFaqs} />
         </div>
       </section>
@@ -140,13 +140,13 @@ export default async function DetailPlusPage() {
       <section className="dp56-final ed-paper ed-paper--ink ed-paper--crumpled" data-header-tone="light">
         <div className="dp56-shell">
           <p className="dp56-kicker">DETAIL+ / READY WHEN YOU ARE</p>
-          <h2>NEVER THINK ABOUT<br/><span>A DIRTY CAR AGAIN.</span></h2>
+          <h2>NEVER THINK ABOUT{" "}<br/><span>A DIRTY CAR AGAIN.</span></h2>
           <p>Pick the rhythm. Get the flat rate. We&rsquo;ll keep showing up.</p>
           <a href="#club-builder" className="dp56-btn dp56-btn-light">BUILD MY DETAIL+ PLAN ↗</a>
         </div>
       </section>
 
-      <JsonLd data={serviceSchema({ name: "Detail+ recurring detailing membership", description: "Recurring mobile car detailing on a set schedule for one flat rate per visit.", path: "/detailplus" })} />
+      <JsonLd data={[serviceSchema({ name: "Detail+ recurring detailing membership", description: "Recurring mobile car detailing on a set schedule for one flat rate per visit.", path: "/detailplus", lowPrice: detailPlusMinimum }), faqSchema(detailPlusFaqs)]} />
     </div>
   );
 }

@@ -31,7 +31,7 @@ export default function ServiceAreas() {
         <div className={styles.heroInner}>
           <p className={styles.kicker}>Every Detail / Service areas</p>
           <h1 id="sa-hero-title" className={styles.heroTitle}>
-            <span>We come to</span>
+            <span>We come to{" "}</span>
             <span>your driveway.</span>
           </h1>
           <p className={styles.heroLede}>Based in Decatur and serving nearby Atlanta neighborhoods with two fully loaded electric rigs.</p>
@@ -55,7 +55,7 @@ export default function ServiceAreas() {
             <div>
               <p className={styles.kickerDark}>Regular service area</p>
               <h2 id="sa-list-title" className={styles.sectionTitle}>
-                <span>Where we&apos;re</span>
+                <span>Where we&apos;re{" "}</span>
                 <span>usually working.</span>
               </h2>
             </div>
@@ -71,7 +71,7 @@ export default function ServiceAreas() {
           <div className={styles.sectionHead}>
             <p className={styles.kickerLight}>Detail day</p>
             <h2 id="sa-setup-title" className={styles.sectionTitle}>
-              <span>You bring the car.</span>
+              <span>You bring the car.{" "}</span>
               <span>We bring the shop.</span>
             </h2>
           </div>

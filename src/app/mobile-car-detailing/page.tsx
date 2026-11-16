@@ -25,7 +25,7 @@ export default function MobileCarDetailingPage() {
         <div className="mb-6"><Breadcrumbs items={[{ name: "Mobile Car Detailing", path: "/mobile-car-detailing" }]} /></div>
         <p className="svc-eyebrow">MOBILE CAR DETAILING / DECATUR + ATLANTA</p>
         <div className="edu-hero-grid">
-          <h1>Full mobile car detailing,<br/><span>right in your driveway.</span></h1>
+          <h1>Full mobile car detailing,{" "}<br/><span>right in your driveway.</span></h1>
           <div className="edu-hero-copy">
             <p className="edu-lede">Every Detail brings the crew, water, power, products and equipment to you in a 100% electric mobile setup. Our core detailing services clean the vehicle inside and out rather than treating the first visit like a quick interior-only or exterior-only clean.</p>
             <p>For most first-time clients, Premium is the starting point. If the vehicle has heavy stains, pet hair, spills, odor or long-term buildup, Factory Reset adds the labor needed for a deeper recovery. Maintenance is designed mainly for vehicles that are already clean and being kept that way.</p>
@@ -35,7 +35,7 @@ export default function MobileCarDetailingPage() {
       </div></section>
 
       <section className="edu-anatomy" data-header-tone="ink"><div className="svc-shell">
-        <div className="edu-section-intro"><p className="svc-eyebrow">WHAT MOBILE DETAILING MEANS HERE</p><h2>One appointment.<br/><span>The whole vehicle.</span></h2><p>Our standard first-visit approach is comprehensive. We work through the interior and exterior so the car leaves with a consistent baseline instead of one half being cleaned while the other is left behind.</p></div>
+        <div className="edu-section-intro"><p className="svc-eyebrow">WHAT MOBILE DETAILING MEANS HERE</p><h2>One appointment.{" "}<br/><span>The whole vehicle.</span></h2><p>Our standard first-visit approach is comprehensive. We work through the interior and exterior so the car leaves with a consistent baseline instead of one half being cleaned while the other is left behind.</p></div>
         <figure className="mobile86-anatomy-photo"><Photo id="two-tech-interior-detail" ratio="16/7" sizes="92vw" /></figure>
         <div className="grid gap-6 md:grid-cols-3 mt-10">
           <article><b>01</b><h3 className="mt-3 text-xl font-semibold">Interior</h3><p className="mt-2">Vacuuming, seats, mats, dash, console, cupholders, doors, panels, glass and cargo areas, with deeper work when the selected service calls for it.</p></article>
@@ -45,7 +45,7 @@ export default function MobileCarDetailingPage() {
       </div></section>
 
       <section className="area-v2-pricing" data-header-tone="ink"><div className="area-v2-shell">
-        <div className="area-v2-pricing-head"><div><p className="area-v2-kicker">CHOOSE THE RIGHT STARTING POINT</p><h2>First visit?<br/><span>Start with condition.</span></h2></div><p>Premium fits most first-time vehicles. Factory Reset is for heavier buildup. Maintenance makes the most sense once the vehicle already has a clean baseline.</p></div>
+        <div className="area-v2-pricing-head"><div><p className="area-v2-kicker">CHOOSE THE RIGHT STARTING POINT</p><h2>First visit?{" "}<br/><span>Start with condition.</span></h2></div><p>Premium fits most first-time vehicles. Factory Reset is for heavier buildup. Maintenance makes the most sense once the vehicle already has a clean baseline.</p></div>
         <ServicePicker location="mobile_detailing_seo" headingId="mobile-detailing-pricing" />
         <p className="mt-6"><Link href="/our-services" className="link">Compare exactly what each service includes ↗</Link></p>
       </div></section>
@@ -56,7 +56,7 @@ export default function MobileCarDetailingPage() {
       </section>
 
       <section className="areas-v2-list" data-header-tone="ink"><div className="areas-v2-shell">
-        <div className="areas-v2-head"><div><p className="areas-v2-kicker">SERVICE AREA</p><h2>Based in Decatur.<br/><span>Mobile across nearby Atlanta.</span></h2></div><p>We serve Decatur and nearby communities with appointment availability based on where our crews can actually travel and work.</p></div>
+        <div className="areas-v2-head"><div><p className="areas-v2-kicker">SERVICE AREA</p><h2>Based in Decatur.{" "}<br/><span>Mobile across nearby Atlanta.</span></h2></div><p>We serve Decatur and nearby communities with appointment availability based on where our crews can actually travel and work.</p></div>
         <div className="areas-v2-grid">{areas.map((area, i) => <Link key={area.slug} href={`/service-areas/${area.slug}`} className="areas-v2-card"><span className="areas-v2-index">{String(i+1).padStart(2,"0")}</span><div><h3>{area.name}</h3><p>{area.primary ? "Home base" : "Mobile service area"}</p></div><b>↗</b></Link>)}</div>
       </div></section>
 

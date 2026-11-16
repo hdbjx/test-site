@@ -54,7 +54,7 @@ export default async function AreaPage({ params }: Params) {
           <div className={styles.crumbs}><Breadcrumbs items={[{ name: "Service Areas", path: "/service-areas" }, { name: area.name, path: `/service-areas/${slug}` }]} /></div>
           <p className={styles.kicker}>Mobile detailing / {area.name}</p>
           <h1 id="ar-hero-title" className={styles.heroTitle}>
-            <span>Car detailing</span>
+            <span>Car detailing{" "}</span>
             <span>{area.name}.</span>
           </h1>
           <p className={styles.heroLede}>{page.intro}</p>
@@ -77,7 +77,7 @@ export default async function AreaPage({ params }: Params) {
           <div>
             <p className={styles.kickerLight}>Detailing in {area.name}</p>
             <h2 id="ar-local-title" className={styles.sectionTitle}>
-              <span>Your parking spot.</span>
+              <span>Your parking spot.{" "}</span>
               <span>Our setup.</span>
             </h2>
           </div>
@@ -94,7 +94,7 @@ export default async function AreaPage({ params }: Params) {
           <div className={areaStyles.coverageCopy}>
             <p className={styles.kickerDark}>Coverage</p>
             <h2 id="ar-coverage-title" className={styles.sectionTitle}>
-              <span>Is your street</span>
+              <span>Is your street{" "}</span>
               <span>on the route?</span>
             </h2>
             <p className={areaStyles.coverageLede}>

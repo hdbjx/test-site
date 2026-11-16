@@ -28,7 +28,7 @@ export default function GiftCardsPage() {
           <div className={styles.sectionHead}>
             <p className={styles.kickerDark}>Build the gift</p>
             <h2 id="gc-builder-title" className={styles.sectionTitle}>
-              <span>Choose the amount.</span>
+              <span>Choose the amount.{" "}</span>
               <span>We&apos;ll handle the rest.</span>
             </h2>
           </div>
@@ -42,7 +42,7 @@ export default function GiftCardsPage() {
             <div>
               <p className={styles.kicker}>How it works</p>
               <h2 id="gc-how-title" className={styles.sectionTitle}>
-                <span>Simple to give.</span>
+                <span>Simple to give.{" "}</span>
                 <span>Easy to use.</span>
               </h2>
               <p className={styles.howNote}>They don&apos;t need an account to use it. If they make an Every Detail account later with the same email, the balance shows up there on its own.</p>
@@ -60,7 +60,7 @@ export default function GiftCardsPage() {
       <section className={styles.rewards} data-header-tone="brand" aria-labelledby="gc-rewards-title">
         <div className={`${styles.shell} ${styles.rewardsGrid}`}>
           <h2 id="gc-rewards-title" className={styles.rewardsTitle}>
-            <span>Gift cards + rewards.</span>
+            <span>Gift cards + rewards.{" "}</span>
             <span>One account.</span>
           </h2>
           <div>

@@ -189,13 +189,6 @@ export function Header() {
 
   return (
     <header className={headerClass} data-tone={headerTone} data-menu-open={menuOpen ? "true" : "false"}>
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
-      >
-        Skip to content
-      </a>
-
       <div className="site-shared-nav-shell">
         <Link href="/" className={`site-shared-logo-control ${onHome ? "home-logo-control" : ""}`} aria-label="Every Detail home">
           <span className={`site-shared-logo-mark ${onHome ? "home-logo-mark" : ""}`} aria-hidden="true" />

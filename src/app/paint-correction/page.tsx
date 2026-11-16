@@ -11,7 +11,7 @@ import { PaintStagePricing } from "@/components/paint/PaintStagePricing";
 import { paintCorrectionFaqs } from "@/data/faqs";
 import { PAINT_PRICING, paintDefects, paintProcess, paintServices } from "@/data/paint";
 import { usd } from "@/lib/format";
-import { breadcrumbSchema, pageMetadata, serviceSchema } from "@/lib/seo";
+import { breadcrumbSchema, faqSchema, pageMetadata, serviceSchema } from "@/lib/seo";
 import styles from "@/styles/servicePage.module.css";
 import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
@@ -54,7 +54,7 @@ export default async function PaintCorrectionPage() {
           </div>
           <p className={styles.kicker}>Every Detail / Paint correction</p>
           <h1 id="pc-hero-title" className={styles.heroTitle}>
-            <span>Bring the</span>
+            <span>Bring the{" "}</span>
             <span>reflection back.</span>
           </h1>
           <p className={styles.heroLede}>Swirls, haze and dull clear coat, polished out in your driveway. We look at the paint in person and tell you which level it actually needs.</p>
@@ -78,7 +78,7 @@ export default async function PaintCorrectionPage() {
           <div className={styles.sectionHead}>
             <p className={styles.kickerLight}>What it fixes</p>
             <h2 id="pc-fixes-title" className={styles.sectionTitle}>
-              <span>Remove defects.</span>
+              <span>Remove defects.{" "}</span>
               <span>Don&apos;t cover them.</span>
             </h2>
           </div>
@@ -116,7 +116,7 @@ export default async function PaintCorrectionPage() {
             <div>
               <p className={styles.kickerDark}>Pricing</p>
               <h2 id="pc-pricing-title" className={styles.sectionTitle}>
-                <span>Two levels.</span>
+                <span>Two levels.{" "}</span>
                 <span>One honest call.</span>
               </h2>
             </div>
@@ -131,7 +131,7 @@ export default async function PaintCorrectionPage() {
           <div className={styles.sectionHead}>
             <p className={styles.kickerLight}>How it goes</p>
             <h2 id="pc-process-title" className={styles.sectionTitle}>
-              <span>Inspect. Wash.</span>
+              <span>Inspect. Wash.{" "}</span>
               <span>Correct. Protect.</span>
             </h2>
           </div>
@@ -162,7 +162,7 @@ export default async function PaintCorrectionPage() {
           <div className={styles.quoteAside}>
             <p className={styles.kickerLight}>Paint assessment</p>
             <h2 id="pc-quote-title" className={styles.sectionTitle}>
-              <span>Let&apos;s see what</span>
+              <span>Let&apos;s see what{" "}</span>
               <span>it needs.</span>
             </h2>
             <ol className={styles.quoteSteps}>
@@ -178,7 +178,7 @@ export default async function PaintCorrectionPage() {
       <section className={styles.faq} data-header-tone="ink" aria-labelledby="pc-faq-title">
         <div className={`${styles.shell} ${styles.faqGrid}`}>
           <h2 id="pc-faq-title" className={styles.sectionTitle}>
-            <span>Before</span>
+            <span>Before{" "}</span>
             <span>we polish.</span>
           </h2>
           <FaqList faqs={paintCorrectionFaqs} />
@@ -189,6 +189,7 @@ export default async function PaintCorrectionPage() {
         serviceSchema({ name: enhancement.name, description: enhancement.summary, path: "/paint-correction", lowPrice: enhancement.startingAt, highPrice: maxEnhancement }),
         serviceSchema({ name: correction.name, description: correction.summary, path: "/paint-correction", lowPrice: correction.startingAt, highPrice: maxCorrection }),
         breadcrumbSchema([{ name: "Services", path: "/our-services" }, { name: "Paint Correction", path: "/paint-correction" }]),
+        faqSchema(paintCorrectionFaqs),
       ]} />
     </main>
   );

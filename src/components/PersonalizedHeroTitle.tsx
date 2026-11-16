@@ -15,7 +15,8 @@ function AnimatedLine({ text, line }: { text: string; line: number }) {
     <span>
       {text.split(" ").map((word, index) => (
         <i key={`${line}-${index}`} className="v90-hero-word" style={motionFor(index, line)}>
-          {word}
+          {/* Trailing space keeps words apart in the page text (search, screen readers); it collapses visually inside the inline-block. */}
+          {word}{" "}
         </i>
       ))}
     </span>

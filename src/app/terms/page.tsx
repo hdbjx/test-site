@@ -16,7 +16,7 @@ export default function TermsPage() {
       <header className="legal-v1-hero legal-v1-hero-terms" data-header-tone="light">
         <div className="legal-v1-shell">
           <p className="legal-v1-kicker">EVERY DETAIL / LEGAL</p>
-          <h1>Terms of<br/><span>Service.</span></h1>
+          <h1>Terms of{" "}<br/><span>Service.</span></h1>
           <div className="legal-v1-intro">
             <p>These terms cover use of our website and what customers can expect when booking mobile detailing with Every Detail.</p>
             <p className="legal-v1-date">LAST UPDATED / {updated.toUpperCase()}</p>

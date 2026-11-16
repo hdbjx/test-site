@@ -8,10 +8,11 @@ import { Photo } from "@/components/Photo";
 import { ServicesBoard } from "@/components/services/ServicesBoard";
 import { TrackedLink } from "@/components/TrackedLink";
 import { homeFaqs } from "@/data/faqs";
+import { detailPlusMinimum } from "@/data/detailplus";
 import { PAINT_PRICING, paintServices } from "@/data/paint";
 import { PRICING, serviceList, startingPrice, vehicles } from "@/data/services";
 import { usd } from "@/lib/format";
-import { pageMetadata, serviceSchema } from "@/lib/seo";
+import { faqSchema, pageMetadata, serviceSchema } from "@/lib/seo";
 import styles from "./services.module.css";
 import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 
@@ -31,9 +32,11 @@ const serviceAnchors = {
 } as const;
 
 
+const servicesFaqs = homeFaqs.slice(0, 5);
+
 const DETAIL_PLUS_TERMS = [
   ["Rhythm", "Weekly to quarterly"],
-  ["Rate", "Flat per visit"],
+  ["Rate", `From $${detailPlusMinimum} per visit`],
   ["Contract", "None"],
 ] as const;
 
@@ -46,8 +49,9 @@ export default async function ServicesPage() {
     }),
     ...paintServices.map((service) => {
       const prices = vehicles.map((vehicle) => PAINT_PRICING[vehicle.id][service.id]);
-      return serviceSchema({ name: service.name, description: service.summary, path: "/ceramic", lowPrice: Math.min(...prices), highPrice: Math.max(...prices) });
+      return serviceSchema({ name: service.name, description: service.summary, path: service.id === "ceramic2yr" ? "/ceramic" : "/paint-correction", lowPrice: Math.min(...prices), highPrice: Math.max(...prices) });
     }),
+    faqSchema(servicesFaqs),
   ];
 
   return (
@@ -61,7 +65,7 @@ export default async function ServicesPage() {
             <div className={styles.crumbs}><Breadcrumbs items={[{ name: "Detailing Services", path: "/our-services" }]} /></div>
             <p className={styles.kicker}>Every Detail / Service menu</p>
             <h1 id="sv-hero-title" className={styles.heroTitle}>
-              <span>Pick your detail.</span>
+              <span>Pick your detail.{" "}</span>
               <span>See your price.</span>
             </h1>
             <p className={styles.heroLede}>Three levels of clean, priced by vehicle and done in your driveway. We bring the power and the water.</p>
@@ -87,7 +91,7 @@ export default async function ServicesPage() {
             <div className={styles.sectionHead}>
               <p className={styles.kickerLight}>After the detail</p>
               <h2 id="sv-beyond-title" className={styles.sectionTitle}>
-                <span>Protect the paint.</span>
+                <span>Protect the paint.{" "}</span>
                 <span>Keep it clean.</span>
               </h2>
             </div>
@@ -140,8 +144,8 @@ export default async function ServicesPage() {
 
         <section className="sv90-faq" data-header-tone="ink" aria-labelledby="sv90-faq-title">
           <div className="sv90-shell sv90-faq-grid">
-            <div className="sv90-faq-heading"><h2 id="sv90-faq-title" className="ed90-heading">BEFORE<br /><span>YOU BOOK.</span></h2></div>
-            <FaqList faqs={homeFaqs.slice(0, 5)} />
+            <div className="sv90-faq-heading"><h2 id="sv90-faq-title" className="ed90-heading">BEFORE{" "}<br /><span>YOU BOOK.</span></h2></div>
+            <FaqList faqs={servicesFaqs} />
           </div>
         </section>
       </main>

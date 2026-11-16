@@ -81,7 +81,7 @@ export function ServicesBoard({ anchorId = "all-services" }: { anchorId?: string
           <div>
             <p className={styles.kicker}>The menu / priced by vehicle</p>
             <h2 id="svc-board-title" className={styles.title}>
-              <span>Three details.</span>
+              <span>Three details.{" "}</span>
               <span>One honest price.</span>
             </h2>
           </div>
