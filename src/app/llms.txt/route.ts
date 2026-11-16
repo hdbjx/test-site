@@ -45,7 +45,9 @@ ${paint.join("\n")}
 - Ceramic coating does not make paint scratch-proof. Improper washing can still mar a coated car.
 
 ## Hours
-${site.hours.display}. On school days, jobs start at 4:30pm.
+- ${site.hours.weekdays}
+- ${site.hours.weekends}
+- ${site.hours.breaks}
 
 ## Where we work
 Mobile only, from a home base in ${site.city}, GA. Service area: ${areaList}. Text your address to ${site.phone.display} to check if you're on the route.

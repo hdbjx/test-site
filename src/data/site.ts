@@ -41,9 +41,11 @@ export const site = {
   // Public hours. The crew is in school on weekdays during the school year,
   // so weekday jobs on school days start at 4:30pm.
   hours: {
-    display: "Every day, 8am–7pm",
-    schoolDays: "School days from 4:30pm",
-    opens: "08:00",
+    weekdays: "Mon–Fri: 4:30–7pm",
+    weekends: "Sat–Sun: 8am–7pm",
+    breaks: "Weekdays 8am–7pm during school breaks",
+    weekdayOpens: "16:30",
+    weekendOpens: "08:00",
     closes: "19:00",
   },
 
