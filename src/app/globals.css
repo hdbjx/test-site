@@ -9175,3 +9175,18 @@ html[data-hero-vehicle-visible] .site-context-pill{opacity:0;visibility:hidden;p
   .q53-page .q51-concern-grid.quote-rec-concern-grid button{min-height:0;padding:.7rem .9rem}
   .q53-page .q51-concern-grid.quote-rec-concern-grid{gap:7px}
 }
+
+/* Homepage service selector — selected row legibility (Nov 2026).
+   .v29-booking forces row backgrounds transparent, so the older oxblood
+   active state lost its fill and left paper-colored text on paper.
+   Selected now reads like a held hover: soft red tint, ink text, red title. */
+.v29-booking .v15-service.is-active{background:rgba(223,52,64,.08)!important;color:var(--v29-ink)!important;padding-left:1rem!important}
+.v29-booking .v15-service.is-active .v15-service-copy strong{color:var(--v29-red)!important}
+.v29-booking .v15-service.is-active .v15-service-num{color:var(--color-oxblood)!important}
+.v29-booking .v15-service.is-active .v15-service-cue{color:var(--v29-ink)!important}
+.v29-booking .v15-service.is-active .v15-service-price{color:color-mix(in srgb,var(--v29-ink) 72%,transparent)!important}
+.v29-booking .v15-service.is-active .v15-service-price b{color:var(--color-oxblood)!important}
+.v29-booking .v15-service.is-active .v15-service-subline,
+.v29-booking .v15-service.is-active .v15-service-includes{color:color-mix(in srgb,var(--v29-ink) 74%,transparent)!important}
+.v29-booking .v15-service.is-active .v15-service-detail,
+.v29-booking .v15-service.is-active .v15-service-detail.is-maintenance{color:var(--v29-ink)!important;background:rgba(17,17,17,.07)!important}
