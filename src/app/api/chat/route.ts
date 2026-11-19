@@ -5,6 +5,7 @@ import { isServiceId, isVehicleId, PRICING, services, vehicles } from "@/data/se
 import { enforceRateLimits, ipLimit } from "@/lib/public-security";
 import { site } from "@/data/site";
 import { usd } from "@/lib/format";
+import { buildVisitorContext, type ClientContext } from "@/lib/chat-visitor";
 
 /**
  * POST /api/chat  { messages: [{ role: "user" | "assistant", content: string }] }
@@ -42,6 +43,11 @@ ACCURACY:
 - Quote exact prices from the price table for the customer's vehicle size. If you don't know their vehicle, ask (or give the "from" price and the size range).
 - Detail+ prices: always call quote_detail_plus. Openings: always call check_availability; never guess dates.
 - You cannot book, change or cancel appointments, take payment, or see a customer's existing bookings. Send them to /book (or /account for existing bookings), or have them text us.
+
+USING WHAT YOU KNOW ABOUT THIS VISITOR:
+- The site already knows things about them (vehicle picked in the header, page they're on, and if signed in: name, garage, appointments, balances). Use it the way a good front-desk person would: quote prices for their car without asking, check availability for their car, answer "when's my appointment?" from their appointments, mention a gift card or rewards balance when it's relevant to paying.
+- If they have more than one saved vehicle and it matters, ask which one.
+- Never invent account details. If something isn't in the visitor context, you don't know it.
 
 RECOMMENDING:
 - First-timers or cars not detailed in a while → Premium. Already-maintained cars → Maintenance. Heavy pet hair, stains, odor, years of buildup → Factory Reset. Swirls/dull paint → paint correction pages. Recurring upkeep → Detail+.
@@ -156,7 +162,7 @@ export async function POST(req: Request) {
     if (limited) return NextResponse.json({ ok: false, reply: "You're sending messages quickly. Give it a minute and try again." }, { status: limited.status });
   }
 
-  let body: { messages?: unknown };
+  let body: { messages?: unknown; context?: ClientContext };
   try {
     body = await req.json();
   } catch {
@@ -165,11 +171,12 @@ export async function POST(req: Request) {
   const msgs = cleanMessages(body.messages);
   if (!msgs) return NextResponse.json({ ok: false, reply: FALLBACK }, { status: 400 });
 
-  const { text: knowledge, detailPlus } = await buildChatKnowledge();
+  const [{ text: knowledge, detailPlus }, visitor] = await Promise.all([buildChatKnowledge(), buildVisitorContext(body.context)]);
   const today = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "long", year: "numeric", month: "long", day: "numeric" }).format(new Date());
   const system = [
     { type: "text", text: RULES.replace("{{TODAY}}", today) },
     { type: "text", text: knowledge, cache_control: { type: "ephemeral" } },
+    { type: "text", text: visitor },
   ];
 
   const convo: ApiMessage[] = msgs.map((m) => ({ role: m.role, content: m.content }));

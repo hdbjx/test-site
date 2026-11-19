@@ -5,13 +5,15 @@ import { usePathname } from "next/navigation";
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
+import { useVehicle } from "@/components/vehicle/VehicleContext";
+import { useJourney } from "@/components/journey/JourneyContext";
 import styles from "./chat.module.css";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
 const STORE = "ed-chat-v1";
 const GREETING = "Hey! I'm the Every Detail assistant. Ask me about packages, prices for your car, openings, or Detail+.";
-const STARTERS = ["Which detail should I get?", "How much for my SUV?", "What's open this weekend?", "How does Detail+ work?"];
+const STARTERS = ["Which detail should I get?", "How much for my car?", "What's open this weekend?", "How does Detail+ work?"];
 const HIDDEN_ON = ["/book", "/account", "/auth", "/info-form"];
 
 /* ---- tiny safe markdown: **bold**, [text](/path), "- " lists. No HTML is ever injected. ---- */
@@ -57,6 +59,12 @@ function Rich({ text }: { text: string }) {
 
 export function ChatWidget() {
   const pathname = usePathname() || "/";
+  const { vehicle: siteVehicle } = useVehicle();
+  const { serviceIntent, location, selectedSlot } = useJourney();
+  const carName = siteVehicle ? siteVehicle.customLabel || [siteVehicle.make, siteVehicle.model].filter(Boolean).join(" ") : "";
+  const starters = carName
+    ? [`What should I get for my ${carName}?`, `What's open this weekend?`, `How much is Detail+ for my ${siteVehicle?.model || "car"}?`, "Do I need to be home?"]
+    : STARTERS;
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
@@ -107,7 +115,20 @@ export function ChatWidget() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next.slice(-16) }),
+        body: JSON.stringify({
+          messages: next.slice(-16),
+          context: {
+            path: pathname,
+            title: document.title,
+            pageText: (document.querySelector("main")?.textContent || "").replace(/\s+/g, " ").trim().slice(0, 2500),
+            vehicle: siteVehicle
+              ? { make: siteVehicle.make, model: siteVehicle.model, year: siteVehicle.year, size: siteVehicle.vehicle, label: siteVehicle.customLabel }
+              : null,
+            serviceIntent,
+            location,
+            selectedSlot,
+          },
+        }),
       });
       const data = (await res.json().catch(() => null)) as { reply?: string } | null;
       setMessages([...next, { role: "assistant", content: data?.reply || `Something went wrong. Text us at ${site.phone.display}.` }]);
@@ -141,10 +162,12 @@ export function ChatWidget() {
           </header>
 
           <div className={styles.list} ref={listRef} aria-live="polite">
-            <div className={`${styles.msg} ${styles.bot}`}><p>{GREETING}</p></div>
+            <div className={`${styles.msg} ${styles.bot}`}>
+              <p>{carName ? `Hey! I'm the Every Detail assistant. Ask me anything about detailing your ${carName}: packages, prices, openings, or Detail+.` : GREETING}</p>
+            </div>
             {messages.length === 0 && (
               <div className={styles.starters}>
-                {STARTERS.map((s) => (
+                {starters.map((s) => (
                   <button key={s} type="button" onClick={() => send(s)}>{s}</button>
                 ))}
               </div>
