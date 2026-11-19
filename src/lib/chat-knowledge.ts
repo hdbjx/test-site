@@ -14,6 +14,41 @@ import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 import { getDetailPlusCatalog } from "@/lib/detailPlusCatalog";
 import type { DetailPlusCatalog } from "@/lib/detailPlusPricing";
 import { durationShort, usd } from "@/lib/format";
+import { companyStory } from "@/data/companyStory";
+import { clients, sponsorships } from "@/data/community";
+import { reviews, serviceReviews } from "@/data/reviews";
+import { workWall } from "@/data/work";
+import { roleLabels, team } from "@/data/team";
+import { getPublicTeamRoster } from "@/lib/team-roster";
+import { getAllPosts, getPost } from "@/lib/blog";
+
+const list = (items: string[]) => items.map((line) => `- ${line}`).join("\n");
+const plain = (html: string) =>
+  html
+    .replace(/<\/(p|h\d|li)>/g, "\n")
+    .replace(/<li>/g, "- ")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;|&rsquo;/g, "'").replace(/&nbsp;/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+async function rosterText() {
+  const live = await getPublicTeamRoster();
+  const rows = live.length
+    ? live.map((m) => `${m.name}: ${m.title}`)
+    : team.map((m) => `${m.name}: ${roleLabels[m.role]}`);
+  return rows.join("\n- ");
+}
+
+function blogText() {
+  return getAllPosts()
+    .map((meta) => {
+      const post = getPost(meta.slug);
+      return post ? `### ${post.title} (/post/${post.slug}, ${post.date})\n${plain(post.html)}` : "";
+    })
+    .filter(Boolean)
+    .join("\n\n");
+}
 
 /**
  * Everything the website chat knows, built from the same data the site renders.
@@ -21,7 +56,7 @@ import { durationShort, usd } from "@/lib/format";
  */
 export async function buildChatKnowledge(): Promise<{ text: string; detailPlus: DetailPlusCatalog }> {
   await ensureLiveCatalog(); // applies live prices, add-ons, hours and payments to the shared objects
-  const detailPlus = await getDetailPlusCatalog();
+  const [detailPlus, roster] = await Promise.all([getDetailPlusCatalog(), rosterText()]);
 
   const vehicleHeader = vehicles.map((v) => v.label).join(" | ");
   const priceRows = serviceList
@@ -84,6 +119,32 @@ export async function buildChatKnowledge(): Promise<{ text: string; detailPlus: 
 - Payment: ${site.paymentMethods.join(", ")}.
 ${site.announcement ? `- CURRENT NOTICE: ${site.announcement.text}` : ""}
 
+## Our story
+${list(companyStory.origin)}
+
+## The team (current roster, live from the Team App — this list is the source of truth)
+- ${roster}
+Public info is first names and titles only. Never share last names, ages, schools, phone numbers, schedules or anything personal about team members. People named in older reviews may no longer be on the crew; only this roster is current.
+
+## How we run it
+${list(companyStory.howWeRunIt)}
+
+## Equipment & rigs
+${list(companyStory.equipment)}
+
+## Community
+${list(companyStory.community)}
+Clients: ${clients.map((c) => c.name).join(", ")}. Sponsorships: ${sponsorships.map((s) => s.name + (s.note ? ` (${s.note})` : "")).join(", ")}.
+
+## Careers / joining the crew
+${list(companyStory.careers)}
+
+## Booking, appointment day and after
+${list(companyStory.appointmentDay)}
+
+## Customer accounts
+${list(companyStory.accounts)}
+
 ## Detailing packages
 Vehicle size ids: ${vehicles.map((v) => `${v.id} = ${v.label} (${v.hint})`).join("; ")}.
 
@@ -121,13 +182,23 @@ Page: /detailplus (customers build and request their plan there).
 Areas served: ${areas.map((a) => a.name).join(", ")}. Coverage is based on one-way drive time from Decatur: within about ${tierMinutes("fee")} minutes can usually book online (the farther part of that may carry a travel fee); ${tierMinutes("fee")}–${tierMinutes("premium")} minutes is case by case for bigger jobs; beyond that, text us. Customers can check an exact address on /service-areas. Pricing does not depend on neighborhood.
 
 ## Gift cards
-Sold on /gift-cards. Common amounts: ${GIFT_CARD_PRESETS.map(usd).join(", ")}. Redeemable when booking online.
+Preset amounts: ${GIFT_CARD_PRESETS.map(usd).join(", ")}.
+${list(companyStory.giftCards)}
+
+## Real Google reviews (verbatim — quote only these, attributed to the reviewer)
+${reviews.map((r) => `- ${r.author}: "${r.text}"`).join("\n")}
+${Object.entries(serviceReviews).map(([id, r]) => `- ${r.author} (${id}): "${r.quote}"`).join("\n")}
+${workWall.flatMap((w) => (w.kind === "review" ? [`- ${w.author}: "${w.quote}"${w.crew ? ` (crew: ${w.crew})` : ""}`] : [])).join("\n")}
+More photos and reviews: /our-work. All reviews: Google (${site.reviews.count}+).
+
+## Shine On blog (our own articles — use for car-care questions, link the post)
+${blogText()}
 
 ## FAQ (approved answers — prefer this wording)
 ${faqText}
 
 ## Website pages
-/book (book a detail, live calendar) · /get-a-quote (not sure what you need — we'll recommend) · /our-services · /detailplus · /paint-correction · /ceramic · /service-areas · /gift-cards · /our-work · /about-us · /account (sign in, saved vehicles, bookings)
+/book (book a detail, live calendar) · /get-a-quote (not sure what you need — we'll recommend) · /our-services · /detailplus · /paint-correction · /ceramic · /service-areas · /gift-cards · /our-work (photos + reviews) · /about-us (story, crew, careers) · /blog (Shine On articles) · /account (sign in, saved vehicles, bookings)
 `;
   return { text, detailPlus };
 }
