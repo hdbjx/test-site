@@ -120,7 +120,6 @@ async function callClaude(apiKey: string, system: unknown[], messages: ApiMessag
     body: JSON.stringify({
       model: process.env.CHAT_MODEL || "claude-sonnet-5-5",
       max_tokens: 700,
-      temperature: 0.3,
       system,
       tools: TOOLS,
       messages,
