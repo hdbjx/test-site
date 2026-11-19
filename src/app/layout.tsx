@@ -14,6 +14,7 @@ import { localBusinessSchema } from "@/lib/seo";
 import { CatalogSync } from "@/components/CatalogSync";
 import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 import { AnnouncementBar } from "@/components/announcement/AnnouncementBar";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 
 // Prices come from the live catalog (Team HQ); pages refresh at most once a minute.
 export const revalidate = 60;
@@ -56,6 +57,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </main>
         <Footer />
         {notice ? <AnnouncementBar text={notice.text} linkText={notice.linkText} linkUrl={notice.linkUrl} /> : null}
+        <ChatWidget />
         <JsonLd data={localBusinessSchema()} />
         <Analytics />
         </JourneyProvider>
