@@ -9190,3 +9190,29 @@ html[data-hero-vehicle-visible] .site-context-pill{opacity:0;visibility:hidden;p
 .v29-booking .v15-service.is-active .v15-service-includes{color:color-mix(in srgb,var(--v29-ink) 74%,transparent)!important}
 .v29-booking .v15-service.is-active .v15-service-detail,
 .v29-booking .v15-service.is-active .v15-service-detail.is-maintenance{color:var(--v29-ink)!important;background:rgba(17,17,17,.07)!important}
+
+/* V113 motion layer — scroll reveal + stagger, press feedback, origin-aware chat, booking peak-end.
+   Hidden states only apply under html.ed-motion (set by MotionLayer after it checks reduced motion),
+   and everything uses opacity/translate/scale so existing transform effects are untouched. */
+@keyframes ed-reveal{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+html.ed-motion [data-reveal]:not([data-reveal="stagger"]):not([data-revealed]),
+html.ed-motion [data-reveal="stagger"]:not([data-revealed])>*{opacity:0;translate:0 18px}
+html.ed-motion [data-reveal][data-revealed="true"]:not([data-reveal="stagger"]){animation:ed-reveal .56s cubic-bezier(.2,.8,.2,1) both}
+html.ed-motion [data-reveal="stagger"][data-revealed="true"]>*{animation:ed-reveal .52s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--reveal-i,0) * 70ms)}
+@media(prefers-reduced-motion:reduce){
+  html.ed-motion [data-reveal],html.ed-motion [data-reveal]>*{opacity:1!important;translate:none!important;animation:none!important}
+}
+/* Doherty: a tap answers instantly. `scale` composes with any existing transform. */
+@media(prefers-reduced-motion:no-preference){
+  main :is(a[class*="Cta"],a[class*="cta"],a[class*="book"],button):not(:disabled):not(.bk-btn):active{scale:.97}
+}
+/* Booking confirmed: the stamp lands, then the details follow it in. */
+@media(prefers-reduced-motion:no-preference){
+  .bk-done .bk-done-when,.bk-done .bk-done-lines,.bk-done .bk-done-actions,.bk-done .bk-done-note{animation:ed-reveal .5s cubic-bezier(.2,.8,.2,1) both}
+  .bk-done .bk-done-when{animation-delay:.32s}
+  .bk-done .bk-done-lines{animation-delay:.42s}
+  .bk-done .bk-done-actions{animation-delay:.52s}
+  .bk-done .bk-done-note{animation-delay:.6s}
+  .bk-done .bk-kicker .bk-dot{animation:ed-dot-pulse 1.4s ease-out .2s 2}
+}
+@keyframes ed-dot-pulse{0%{box-shadow:0 0 0 0 rgba(213,104,101,.5)}100%{box-shadow:0 0 0 12px rgba(213,104,101,0)}}

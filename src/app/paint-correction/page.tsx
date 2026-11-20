@@ -75,7 +75,7 @@ export default async function PaintCorrectionPage() {
       {/* What correction fixes, and what it honestly can't. */}
       <section className={styles.fixes} data-header-tone="light" aria-labelledby="pc-fixes-title">
         <div className={styles.shell}>
-          <div className={styles.sectionHead}>
+          <div className={styles.sectionHead} data-reveal>
             <p className={styles.kickerLight}>What it fixes</p>
             <h2 id="pc-fixes-title" className={styles.sectionTitle}>
               <span>Remove defects.{" "}</span>
@@ -83,13 +83,13 @@ export default async function PaintCorrectionPage() {
             </h2>
           </div>
           <div className={styles.proofGrid}>
-            <figure className={styles.proof}>
+            <figure className={styles.proof} data-reveal>
               <PaintInspectionLight className={styles.proofPhoto} />
               <figcaption><span>← Corrected</span><span>As arrived →</span></figcaption>
             </figure>
             <div>
               <p className={styles.listLabel}>Correction takes out</p>
-              <ul className={styles.defects}>
+              <ul className={styles.defects} data-reveal="stagger">
                 {paintDefects.map((defect, index) => (
                   <li key={defect.name}>
                     <span>{String(index + 1).padStart(2, "0")}</span>
@@ -101,7 +101,7 @@ export default async function PaintCorrectionPage() {
           </div>
           <div className={styles.limitsCol}>
             <p className={styles.listLabel}>Straight answers</p>
-            <ul className={styles.limits}>
+            <ul className={styles.limits} data-reveal="stagger">
               {limits.map((limit) => (
                 <li key={limit.name}><strong>{limit.name}</strong><p>{limit.detail}</p></li>
               ))}
@@ -112,7 +112,7 @@ export default async function PaintCorrectionPage() {
 
       <section id={ANCHORS.pricing} className={styles.pricing} data-header-tone="ink" aria-labelledby="pc-pricing-title">
         <div className={styles.shell}>
-          <div className={styles.pricingHead}>
+          <div className={styles.pricingHead} data-reveal>
             <div>
               <p className={styles.kickerDark}>Pricing</p>
               <h2 id="pc-pricing-title" className={styles.sectionTitle}>
@@ -128,14 +128,14 @@ export default async function PaintCorrectionPage() {
 
       <section className={styles.process} data-header-tone="light" aria-labelledby="pc-process-title">
         <div className={styles.shell}>
-          <div className={styles.sectionHead}>
+          <div className={styles.sectionHead} data-reveal>
             <p className={styles.kickerLight}>How it goes</p>
             <h2 id="pc-process-title" className={styles.sectionTitle}>
               <span>Inspect. Wash.{" "}</span>
               <span>Correct. Protect.</span>
             </h2>
           </div>
-          <ol className={styles.steps}>
+          <ol className={styles.steps} data-reveal="stagger">
             {steps.map((step, index) => (
               <li key={step.title} className={styles.step}>
                 <div className={styles.stepPhoto}><Photo id={stepPhotos[index]} fill sizes="(max-width: 900px) 80vw, 24vw" /></div>
@@ -149,7 +149,7 @@ export default async function PaintCorrectionPage() {
       </section>
 
       <section className={styles.gallery} data-header-tone="ink" aria-label="Finished paint from Every Detail jobs">
-        <div className={styles.galleryTrack}>
+        <div className={styles.galleryTrack} data-reveal>
           {gallery.map((id) => (
             <div key={id} className={styles.galleryItem}><Photo id={id} fill sizes="(max-width: 640px) 70vw, 26vw" /></div>
           ))}
@@ -159,7 +159,7 @@ export default async function PaintCorrectionPage() {
 
       <section id={ANCHORS.quote} className={styles.quote} data-header-tone="light" aria-labelledby="pc-quote-title">
         <div className={`${styles.shell} ${styles.quoteGrid}`}>
-          <div className={styles.quoteAside}>
+          <div className={styles.quoteAside} data-reveal>
             <p className={styles.kickerLight}>Paint assessment</p>
             <h2 id="pc-quote-title" className={styles.sectionTitle}>
               <span>Let&apos;s see what{" "}</span>

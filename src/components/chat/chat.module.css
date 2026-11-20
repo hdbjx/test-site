@@ -77,11 +77,12 @@
   background: var(--color-paper);
   color: var(--color-ink);
   box-shadow: 6px 6px 0 var(--color-ink);
-  animation: rise 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: rise 0.24s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transform-origin: calc(100% - 1.6rem) calc(100% + 2rem);
   overflow: hidden;
 }
 @keyframes rise {
-  from { opacity: 0; transform: translateY(14px); }
+  from { opacity: 0; transform: translateY(10px) scale(0.92); }
   to { opacity: 1; transform: none; }
 }
 

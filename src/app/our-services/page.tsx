@@ -88,7 +88,7 @@ export default async function ServicesPage() {
         {/* Beyond the core details: paint care and the recurring club, priced like the board. */}
         <section className={styles.beyond} data-header-tone="light" aria-labelledby="sv-beyond-title">
           <div className={styles.shell}>
-            <div className={styles.sectionHead}>
+            <div className={styles.sectionHead} data-reveal>
               <p className={styles.kickerLight}>After the detail</p>
               <h2 id="sv-beyond-title" className={styles.sectionTitle}>
                 <span>Protect the paint.{" "}</span>
@@ -96,7 +96,7 @@ export default async function ServicesPage() {
               </h2>
             </div>
 
-            <div className={styles.beyondGrid}>
+            <div className={styles.beyondGrid} data-reveal="stagger">
               <article className={styles.card}>
                 <div className={styles.cardPhoto}><Photo id="classic-red-wheel" sizes="(max-width: 900px) 92vw, 46vw" fill /></div>
                 <div className={styles.cardBody}>
@@ -144,7 +144,7 @@ export default async function ServicesPage() {
 
         <section className="sv90-faq" data-header-tone="ink" aria-labelledby="sv90-faq-title">
           <div className="sv90-shell sv90-faq-grid">
-            <div className="sv90-faq-heading"><h2 id="sv90-faq-title" className="ed90-heading">BEFORE{" "}<br /><span>YOU BOOK.</span></h2></div>
+            <div className="sv90-faq-heading" data-reveal><h2 id="sv90-faq-title" className="ed90-heading">BEFORE{" "}<br /><span>YOU BOOK.</span></h2></div>
             <FaqList faqs={servicesFaqs} />
           </div>
         </section>
