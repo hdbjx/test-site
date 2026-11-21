@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useLiveAvailability } from "./useLiveAvailability";
 import { PRICING, services, startingPrice, vehicleIdFromSize, vehicles, type ServiceId, type VehicleId } from "@/data/services";
 import { ADDON_LABELS, ADDON_PRICES, PAINT_UPGRADES, isAddonIncludedInService, purchasableAddonIds, type AddonId, type PaintUpgradeId } from "@/data/quoteExtras";
 import { recommenderVehicles } from "@/data/recommenderVehicles";
@@ -477,8 +478,77 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
   }
 
   /* ----- availability ----- */
+  const liveKeyRef = useRef<string | null>(null);
+  const liveBusyRef = useRef(false);
+  const startRef = useRef<Date | null>(null);
+  const lockedRef = useRef(false);
+  useEffect(() => {
+    startRef.current = start;
+  }, [start]);
+  useEffect(() => {
+    lockedRef.current = sending || !!booked;
+  }, [sending, booked]);
+
+  // Two ranges because the RPC caps a request at 35 days.
+  async function loadSlotList(): Promise<Date[]> {
+    const from = dayKey(new Date());
+    const ranges: [string, string][] = [[from, addDaysKey(from, 31)], [addDaysKey(from, 32), addDaysKey(from, 62)]];
+    const items = resolved.map((line) => ({ vehicle: line.vehicle, service: line.service }));
+    const itemsParam = encodeURIComponent(JSON.stringify(items));
+    const results = await Promise.allSettled(
+      ranges.map(async ([rangeFrom, rangeTo]) => {
+        const response = await fetch(`/api/availability?items=${itemsParam}&from=${rangeFrom}&to=${rangeTo}`, { cache: "no-store" });
+        const json = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(json.error || "Availability unavailable");
+        return (Array.isArray(json.slots) ? json.slots : []) as unknown[];
+      }),
+    );
+    const successful = results.filter((result): result is PromiseFulfilledResult<unknown[]> => result.status === "fulfilled");
+    if (!successful.length) throw new Error("Availability unavailable");
+    return successful
+      .flatMap((result) => result.value)
+      .filter((s): s is string => typeof s === "string")
+      .map((s) => new Date(s))
+      .filter(isValidDate)
+      .sort((a, b) => a.getTime() - b.getTime());
+  }
+
+  // Quiet background refresh: keeps the calendar in step with the live schedule
+  // without flashing the loader or moving the customer's place.
+  const refreshSlotsLive = useCallback(async () => {
+    if (liveBusyRef.current || lockedRef.current) return;
+    const key = liveKeyRef.current;
+    if (!key) return;
+    liveBusyRef.current = true;
+    try {
+      const list = await loadSlotList();
+      if (liveKeyRef.current !== key || lockedRef.current) return;
+      setSlotsError(null);
+      setSlots((current) => {
+        if (current && current.length === list.length && current.every((slot, i) => slot.getTime() === list[i].getTime())) return current;
+        return list;
+      });
+      const picked = startRef.current;
+      if (picked && !list.some((slot) => slot.getTime() === picked.getTime())) {
+        setStart(null);
+        setJourneySelectedSlot(null);
+        setActive((current) => (STEPS.indexOf(current) > STEPS.indexOf("schedule") ? "schedule" : current));
+        setStepError({ step: "schedule", message: "That time was just booked. Pick another open time." });
+      }
+    } catch {
+      // Keep showing the last good schedule; the next tick will try again.
+    } finally {
+      liveBusyRef.current = false;
+    }
+    // loadSlotList reads the latest `resolved` via liveKeyRef guard.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [availabilityKey, setJourneySelectedSlot]);
+
+  useLiveAvailability(priced && slots !== null && !booked, refreshSlotsLive);
+
   useEffect(() => {
     if (!priced) {
+      liveKeyRef.current = null;
       setSlots(null);
       setStart(null);
       return;
@@ -487,31 +557,11 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
     setSlots(null);
     setSlotsError(null);
     setStart(null);
-    const from = dayKey(new Date());
-    const firstTo = addDaysKey(from, 31);
-    const secondFrom = addDaysKey(from, 32);
-    const secondTo = addDaysKey(from, 62);
-    const items = resolved.map((line) => ({ vehicle: line.vehicle, service: line.service }));
-    const itemsParam = encodeURIComponent(JSON.stringify(items));
+    liveKeyRef.current = availabilityKey;
 
-    const loadRange = async (rangeFrom: string, rangeTo: string) => {
-      const response = await fetch(`/api/availability?items=${itemsParam}&from=${rangeFrom}&to=${rangeTo}`);
-      const json = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(json.error || "Availability unavailable");
-      return (Array.isArray(json.slots) ? json.slots : []) as unknown[];
-    };
-
-    Promise.allSettled([loadRange(from, firstTo), loadRange(secondFrom, secondTo)])
-      .then((results) => {
+    loadSlotList()
+      .then((list) => {
         if (cancelled) return;
-        const successful = results.filter((result): result is PromiseFulfilledResult<unknown[]> => result.status === "fulfilled");
-        if (!successful.length) throw new Error("Availability unavailable");
-        const raw = successful.flatMap((result) => result.value);
-        const list = raw
-          .filter((s): s is string => typeof s === "string")
-          .map((s) => new Date(s))
-          .filter(isValidDate)
-          .sort((a, b) => a.getTime() - b.getTime());
         setSlots(list);
         const rememberedStart = journeySelectedSlot ? list.find((slot) => slot.toISOString() === journeySelectedSlot) ?? null : null;
         if (rememberedStart) {
@@ -1445,7 +1495,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                             );
                           })}
                         </div>
-                        <p className="bk-calendar-key"><span /> Open appointments · Select a date to see times</p>
+                        <p className="bk-calendar-key"><span /> Open appointments · Updates live · Select a date to see times</p>
                       </div>
                       {day && (
                         <div className="bk-slots bk-reveal" key={day}>
@@ -1460,6 +1510,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
                               );
                             })}
                           </div>
+                          {daySlots.length === 0 && <p className="bk-note">This day just filled up. Pick another date, or <a href={site.phone.sms}>text us</a>.</p>}
                           <p className="bk-tz">Arrival times · Eastern</p>
                         </div>
                       )}
