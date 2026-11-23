@@ -33,9 +33,9 @@ export const site = {
   },
 
   award: {
-    title: "Best of Decaturish 2025",
+    title: "Best of Decaturish 2025 & 2026",
     short: "Best of Decaturish",
-    year: 2025,
+    year: "2025 · 2026",
   },
 
   // Public hours. The crew is in school on weekdays during the school year,

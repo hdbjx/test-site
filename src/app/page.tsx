@@ -8,6 +8,7 @@ import { Photo } from "@/components/Photo";
 import { TrackedLink } from "@/components/TrackedLink";
 import { PersonalizedHeroTitle } from "@/components/PersonalizedHeroTitle";
 import { HeroVehicleField } from "@/components/vehicle/HeroVehicleField";
+import { site } from "@/data/site";
 import { reviews } from "@/data/reviews";
 import { paintServices } from "@/data/paint";
 import { detailPlusMinimum } from "@/data/detailplus";
@@ -66,7 +67,7 @@ export default async function Home() {
               <span>· <b><LiveReviewCount /></b> Google reviews</span>
             </a>
             <span className="home-hero-proof-sep" aria-hidden="true" />
-            <span>Best of Decaturish 2025</span>
+            <span>{site.award.title}</span>
             <span className="home-hero-proof-sep" aria-hidden="true" />
             <span>Trusted by Emory University &amp; Cliff Valley School</span>
           </p>

@@ -51,7 +51,7 @@ const story = [
   {
     step: "04",
     title: "Reviews + recognition",
-    body: "Five-star Google reviews from customers across Decatur and Atlanta, and Best of Decaturish in 2025.",
+    body: "Five-star Google reviews from customers across Decatur and Atlanta, and Best of Decaturish two years running (2025 and 2026).",
   },
 ] as const;
 

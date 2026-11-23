@@ -12,7 +12,7 @@ export const companyStory = {
     "The name was the standard from day one: door jambs, carpet edges, switches, wheels. Every detail.",
     "Bookings outgrew one person. Other students joined, learned the process in-house and earned more responsibility as their work got more consistent.",
     "Today it's a student crew running two fully loaded electric rigs (a van and a trailer) across Decatur and nearby Atlanta.",
-    "Five-star Google reviews from customers across Decatur and Atlanta, and Best of Decaturish in 2025.",
+    "Five-star Google reviews from customers across Decatur and Atlanta, and Best of Decaturish two years running (2025 and 2026).",
     "Taglines: \"Built by students. Run for real.\" / \"Student-run. Not student-grade.\" / \"Student-run. Professionally detailed.\"",
   ],
 
@@ -37,7 +37,7 @@ export const companyStory = {
   community: [
     "Clients include Emory University and Cliff Valley School.",
     "Sponsored the Love Run 5K (benefiting the Women's Resource Center) and Decatur Performs.",
-    "Award: Best of Decaturish 2025.",
+    "Awards: Best of Decaturish 2025 and 2026.",
   ],
 
   careers: [
