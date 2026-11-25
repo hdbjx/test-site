@@ -2,7 +2,6 @@ import Link from "next/link";
 import { HomeArtMotion } from "@/components/HomeArtMotion";
 import { XmasOrnaments } from "@/components/christmas/XmasOrnaments"; // CHRISTMAS
 import { XMAS_TAPE } from "@/components/christmas/tape"; // CHRISTMAS
-import { HeroSantaHat } from "@/components/christmas/HeroSantaHat"; // CHRISTMAS
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
 import { CurvedTape } from "@/components/CurvedTape";
 import { AnimatedReviewCount, LiveReviewCount, LiveReviewRating } from "@/components/GoogleReviewStats";
@@ -78,7 +77,6 @@ export default async function Home() {
           </p>
         </div>
         <div className="v29-sweep" aria-hidden="true" />
-        <HeroSantaHat /> {/* CHRISTMAS */}
       </section>
 
       {/* CHRISTMAS — when removing, restore: <CurvedTape text="WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU • " label="Every Detail promise" /> */}

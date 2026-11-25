@@ -83,26 +83,38 @@ section~section [class*="servicePage-module__"][class*="__kickerLight"]{color:va
 .xmas-hat{display:inline-block;line-height:0;pointer-events:none}
 .xmas-hat svg{display:block;width:100%;height:auto;overflow:visible}
 
-/* Santa hat on the hero headline's last letter (HeroSantaHat.tsx positions it). */
-.xmas-hero-hat{position:absolute;top:0;left:0;z-index:3;opacity:0;pointer-events:none;transform-origin:50% 76.3%;will-change:transform;transition:opacity .4s ease;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35))}
-.xmas-hero-hat .xmas-hat{width:100%}
-
-/* About page roster: Santa hats on the leads, elf hats on the crew, tipped on the photo's top-right corner.
-   (Members without a photo get the hat on their name instead.) */
-ul[class*="about-module__"][class*="__roster"]>li{position:relative}
-ul[class*="about-module__"][class*="__roster"]>li::before{
-  content:"";position:absolute;z-index:2;pointer-events:none;
-  top:clamp(1.1rem,2vw,1.5rem);right:calc(clamp(1.1rem,2vw,1.5rem) - 14px);
-  width:44%;aspect-ratio:420/420;
-  background:url(/christmas/elf-hat.svg) center/contain no-repeat;
-  transform:translateY(-66%) rotate(14deg);transform-origin:50% 75%;
-  filter:drop-shadow(0 6px 10px rgba(0,0,0,.4));
+/* Santa hat on the header logo (every page): tipped on the badge's top-left. */
+.site-shared-logo-control::after{
+  /* The control can be wider than the badge (it's a grid cell on the homepage), but its height always
+     equals the badge size, so the hat is sized off height and centered with a translate. */
+  content:"";position:absolute;pointer-events:none;z-index:1;
+  left:50%;top:-27%;height:56%;aspect-ratio:420/380;
+  background:url(/christmas/santa-hat.svg) center/contain no-repeat;
+  transform:translateX(-82%) rotate(-22deg);transform-origin:50% 76%;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.3));
 }
-ul[class*="about-module__"][class*="__rosterLead"]>li::before{
-  aspect-ratio:420/380;background-image:url(/christmas/santa-hat.svg);transform:translateY(-70%) rotate(14deg);transform-origin:50% 76%;
+
+/* About page roster: Santa hats on the leads, elf hats on the crew, sitting on each person's head.
+   The headshots are framed the same way (4:5, head at the top center), so the hat is placed as a fraction
+   of the photo width. margin-top % resolves against width, which keeps it locked to the photo at any size.
+   (Members without a photo get a small hat on their name instead.) */
+ul[class*="about-module__"][class*="__roster"]>li{position:relative;--xp:clamp(1.1rem,2vw,1.5rem);--pw:calc(100% - 2 * var(--xp))}
+ul[class*="about-module__"][class*="__roster"]>li:has([class*="__rosterPhoto"])::before{
+  content:"";position:absolute;z-index:2;pointer-events:none;top:0;
+  width:calc(var(--pw) * .62);aspect-ratio:1;
+  left:calc(var(--xp) + var(--pw) * .21);
+  margin-top:calc(var(--xp) - var(--pw) * .19);
+  background:url(/christmas/elf-hat.svg) center/contain no-repeat;
+  transform:rotate(-7deg);transform-origin:50% 72%;
+  filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));
+}
+ul[class*="about-module__"][class*="__rosterLead"]>li:has([class*="__rosterPhoto"])::before{
+  width:calc(var(--pw) * .66);aspect-ratio:420/380;
+  left:calc(var(--xp) + var(--pw) * .19);
+  margin-top:calc(var(--xp) - var(--pw) * .21);
+  background-image:url(/christmas/santa-hat.svg);transform-origin:50% 76%;
 }
 /* no photo: no corner hat; a small hat tipped on the first letter of the name instead */
-ul[class*="about-module__"][class*="__roster"]>li:not(:has([class*="__rosterPhoto"]))::before{content:none}
 ul[class*="about-module__"][class*="__roster"]>li:not(:has([class*="__rosterPhoto"]))>strong{position:relative}
 ul[class*="about-module__"][class*="__roster"]>li:not(:has([class*="__rosterPhoto"]))>strong::before{
   content:"";position:absolute;left:-.12em;top:0;width:.95em;aspect-ratio:420/420;pointer-events:none;

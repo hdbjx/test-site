@@ -24,7 +24,7 @@ const PAD = 8; // room for blur/lighting around the snow
 const TOP = 24; // SVG height above the button's top edge
 const BELOW = 12; // SVG height below it (lip sags + contact shadow)
 
-type Cap = { el: HTMLElement; node: HTMLDivElement; width: number };
+type Cap = { el: HTMLElement; node: HTMLDivElement; width: number; op: string; tf: string };
 
 // Small seeded RNG so a given button always gets the same pile (no reshuffling on resize).
 function rng(seed: number) {
@@ -113,7 +113,7 @@ export function SnowCaps() {
         const node = document.createElement("div");
         node.className = "xmas-snowcap";
         layer.appendChild(node);
-        caps.set(el, { el, node, width: 0 });
+        caps.set(el, { el, node, width: 0, op: "", tf: "" });
       });
     };
 
@@ -135,14 +135,17 @@ export function SnowCaps() {
           covered = !!hit && !cap.el.contains(hit) && !hit.contains(cap.el);
         }
         const show = onScreen && !covered && parseFloat(getComputedStyle(cap.el).opacity) > 0.5;
-        cap.node.style.opacity = show ? "1" : "0";
+        // Only touch the DOM when something changed: the header watches style mutations sitewide.
+        const op = show ? "1" : "0";
+        if (op !== cap.op) { cap.op = op; cap.node.style.opacity = op; }
         if (!onScreen) continue;
         const w = Math.round(r.width);
         if (w !== cap.width) {
           cap.width = w;
           cap.node.innerHTML = snowSvg(w, seedFor(cap.el));
         }
-        cap.node.style.transform = `translate3d(${r.left - OV - PAD}px, ${r.top - TOP}px, 0)`;
+        const tf = `translate3d(${Math.round(r.left - OV - PAD)}px, ${Math.round(r.top - TOP)}px, 0)`;
+        if (tf !== cap.tf) { cap.tf = tf; cap.node.style.transform = tf; }
       }
       raf = requestAnimationFrame(tick);
     };

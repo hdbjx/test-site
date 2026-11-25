@@ -20,7 +20,7 @@ const REACH = 170; // px — how close the cursor has to be to really push
 const PUSH = 0.0035; // per px of cursor travel near the ornament, at full speed
 const FULL_SPEED = 1500; // px/s — slower moves push proportionally less
 const MAX_VEL = 0.9; // rad/s cap so a wild swipe still looks natural
-const IDLE = 0.012; // rad — barely-there resting drift
+const IDLE = 0; // no resting drift: at rest nothing is written to the DOM (the header watches style mutations)
 
 export function XmasOrnaments() {
   const refs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -34,6 +34,7 @@ export function XmasOrnaments() {
     let visible = true;
     let lastPointer: { x: number; y: number; t: number } | null = null;
     let lastScroll = window.scrollY;
+    const lastTf: string[] = [];
 
     const kick = (i: number, amount: number) => {
       state[i].vel = Math.max(-MAX_VEL, Math.min(MAX_VEL, state[i].vel + amount));
@@ -75,7 +76,8 @@ export function XmasOrnaments() {
         s.vel += acc * dt;
         s.angle = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, s.angle + s.vel * dt));
         const el = refs.current[i];
-        if (el) el.style.transform = `rotate(${s.angle}rad)`;
+        const tf = `rotate(${s.angle.toFixed(4)}rad)`;
+        if (el && tf !== lastTf[i]) { lastTf[i] = tf; el.style.transform = tf; }
       });
       if (visible) raf = requestAnimationFrame(tick);
     };
