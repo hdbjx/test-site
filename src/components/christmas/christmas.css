@@ -21,3 +21,33 @@
 .xmas-snowcap{position:absolute;top:0;left:0;opacity:0;transition:opacity .2s ease;will-change:transform;filter:drop-shadow(0 2px 3px rgba(15,22,32,.18))}
 .xmas-snowcap svg{display:block}
 @media print{.xmas-snowcaps{display:none}}
+
+/* ───────── Christmas green accents ─────────
+   Red stays the action color (logo, Book buttons, prices, headlines). Green only on small labels/accents.
+   Contrast (WCAG): pine on cream 6.4:1, deep pine on cream 8.1:1, frost green on near-black 8.9:1,
+   white on pine 7.4:1, cream on pine 6.4:1. No green text in any photo hero (the photos are full of foliage).
+   !important because these override existing rules regardless of stylesheet load order. */
+:root{
+  --xmas-pine:#2F5D46;      /* small text + fills on cream */
+  --xmas-pine-deep:#264D3A; /* tiny (<11px) text on cream */
+  --xmas-frost:#8DB89A;     /* small text on near-black */
+}
+
+/* Homepage "Built by students" section: deep pine into the brand red, through a short dark seam
+   (a straight green→red blend goes muddy brown in the middle). */
+.v37-story{background:linear-gradient(180deg,#10261b 0%,#1b3d2c 16%,#28533d 32%,#2f5d46 42%,#1f3329 49%,#4a2326 53%,#a94a4a 60%,var(--v29-red) 76%,#da706e 100%)!important}
+
+/* Cream sections → pine */
+.v41-care-heading>span{color:var(--xmas-pine-deep)!important}
+.dp56-kicker.dark{color:var(--xmas-pine-deep)!important}
+[class*="ServicesBoard-module__"][class*="__buildsOn"] em{color:var(--xmas-pine)!important}
+[class*="ServicesBoard-module__"][class*="__adds"]>li::before{background:var(--xmas-pine)!important}
+[class*="WorkWall-module__"][class*="__crew"]{color:var(--xmas-pine-deep)!important}
+
+/* Near-black sections → frost green */
+.v41-proof-index,.v41-proof-review footer{color:var(--xmas-frost)!important}
+.site-footer-column h3{color:var(--xmas-frost)!important}
+section~section [class*="services-module__"][class*="__kickerLight"],
+section~section [class*="servicePage-module__"][class*="__kickerLight"]{color:var(--xmas-frost)!important}
+[class*="about-module__"][class*="__honestLabel"],
+[class*="about-module__"][class*="__roster"] li>span{color:var(--xmas-frost)!important}
