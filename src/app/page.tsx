@@ -56,13 +56,13 @@ export default async function Home() {
 
       <section className="v29-hero" data-header-tone="brand" data-v29-scene="hero" aria-labelledby="v29-hero-title">
         <div className="v29-hero-photo" data-v29-depth><Photo id="hero" sizes="100vw" fill priority quality={55} /></div>
-        <div className="v29-hero-shade" aria-hidden="true" />
-        <div className="v30-hero-focus" aria-hidden="true" />
-        {/* Christmas: two ornaments hanging from the top-left. Lives inside the hero so it scrolls away with it. */}
+        {/* Christmas: two ornaments hanging from the top-left. Sits under the hero shade so it takes the same light; scrolls away with the hero. */}
         <div className="xmas-ornaments" aria-hidden="true">
           <span className="xmas-ornament xmas-ornament--a"><i /><Image src="/images/xmas-ornament.webp" alt="" width={300} height={382} loading="eager" /></span>
           <span className="xmas-ornament xmas-ornament--b"><i /><Image src="/images/xmas-ornament.webp" alt="" width={300} height={382} loading="eager" /></span>
         </div>
+        <div className="v29-hero-shade" aria-hidden="true" />
+        <div className="v30-hero-focus" aria-hidden="true" />
         <div className="v29-shell v29-hero-inner">
           <PersonalizedHeroTitle />
           <HeroVehicleField />
