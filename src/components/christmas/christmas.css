@@ -34,21 +34,24 @@
 }
 
 /* Homepage "Built by students": same grainy mesh build as the original red one in styles/fx.css
-   (film grain + soft color blobs), re-colored pine → burgundy → brand red. The green and red
-   meet through dark burgundy so the middle never goes muddy. */
+   (film grain + soft color blobs), re-colored on a diagonal: pine top-left, brand red bottom-right, with green and red
+   blooms drifting into each other. Where they overlap it stays dark (burgundy / deep pine)
+   so the mix never goes muddy. */
 section.v37-story{
   background-image:
     var(--fx-grain),
-    radial-gradient(55% 45% at 12% 20%, rgb(47 93 70 / .95) 0%, rgb(47 93 70 / 0) 100%),
-    radial-gradient(45% 38% at 74% 14%, rgb(36 78 57 / .9) 0%, rgb(36 78 57 / 0) 100%),
-    radial-gradient(42% 30% at 24% 54%, rgb(110 41 45 / .85) 0%, rgb(110 41 45 / 0) 100%),
-    radial-gradient(44% 28% at 80% 47%, rgb(96 36 40 / .85) 0%, rgb(96 36 40 / 0) 100%),
-    radial-gradient(46% 44% at 94% 74%, rgb(232 128 116 / .9) 0%, rgb(232 128 116 / 0) 100%),
-    radial-gradient(58% 46% at 34% 94%, rgb(184 54 61 / .9) 0%, rgb(184 54 61 / 0) 100%),
-    radial-gradient(40% 36% at 84% 100%, rgb(219 199 179 / .5) 0%, rgb(219 199 179 / 0) 100%),
-    linear-gradient(180deg, #10261b 0%, #1d4030 26%, #3a2626 47%, #b5524f 64%, #d56865 84%, #da706e 100%) !important;
-  background-size: var(--fx-grain-size),100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100% !important;
-  background-blend-mode: overlay,normal,normal,normal,normal,normal,normal,normal,normal !important;
+    radial-gradient(55% 38% at 8% 12%, rgb(52 102 76 / .95) 0%, rgb(52 102 76 / 0) 100%),
+    radial-gradient(34% 30% at 70% 20%, rgb(181 70 72 / .5) 0%, rgb(181 70 72 / 0) 100%),
+    radial-gradient(30% 34% at 96% 8%, rgb(28 66 48 / .9) 0%, rgb(28 66 48 / 0) 100%),
+    radial-gradient(34% 30% at 6% 62%, rgb(22 52 38 / .8) 0%, rgb(22 52 38 / 0) 100%),
+    radial-gradient(42% 30% at 38% 46%, rgb(78 30 34 / .75) 0%, rgb(78 30 34 / 0) 100%),
+    radial-gradient(26% 22% at 80% 52%, rgb(32 70 51 / .4) 0%, rgb(32 70 51 / 0) 100%),
+    radial-gradient(46% 46% at 92% 74%, rgb(232 128 116 / .85) 0%, rgb(232 128 116 / 0) 100%),
+    radial-gradient(56% 44% at 34% 96%, rgb(184 54 61 / .9) 0%, rgb(184 54 61 / 0) 100%),
+    radial-gradient(40% 34% at 84% 100%, rgb(219 199 179 / .45) 0%, rgb(219 199 179 / 0) 100%),
+    linear-gradient(165deg, #10261b 0%, #214735 20%, #1d3529 32%, #3a2427 46%, #7d3c3c 58%, #c25b58 73%, #da706e 100%) !important;
+  background-size: var(--fx-grain-size),100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100% !important;
+  background-blend-mode: overlay,normal,normal,normal,normal,normal,normal,normal,normal,normal,normal !important;
 }
 
 /* Cream sections → pine */
