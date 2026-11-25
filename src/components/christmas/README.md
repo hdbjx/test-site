@@ -22,5 +22,6 @@ Everything Christmas lives in three places:
 - Hat components: `SantaHat` and `ElfHat` in `Hats.tsx`
 
 - Open menu: frost-green labels, "Holiday" tag on Gift Cards, snow on Book a detail, a strand of lights along the bottom (`light-strand.svg` / `light-glow.svg`) — CSS in `christmas.css`, snow target in `SnowCaps.tsx`
+- Gift Cards page: pine hero, "Holiday edition" kicker, ribbon + bow on every card face (`bow.svg`), green accents, light strand on the rewards band, snow on Continue to payment — CSS in `christmas.css`
 
 When adding new Christmas pieces, keep them in these folders and tag any line outside them with `CHRISTMAS`.

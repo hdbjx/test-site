@@ -17,6 +17,7 @@ const TARGETS = [
   ".home-book-bar-cta", // mobile sticky "Book a detail"
   'button[aria-label="Chat with Every Detail"]', // "Ask us"
   '.site-shared-menu-actions a[href="/book"]', // "Book a detail" in the open menu
+  'form[class*="gift-module__"] button[class*="__submit"]', // Gift Cards "Continue to payment"
 ].join(",");
 
 // Geometry (px). The SVG is placed so its button edge lines up with the real button's top edge.

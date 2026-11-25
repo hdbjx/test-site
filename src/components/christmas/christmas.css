@@ -168,3 +168,52 @@ ul[class*="about-module__"][class*="__roster"]>li:not(:has([class*="__rosterPhot
     background:url(/christmas/light-strand.svg) 0 0/280px 44px repeat-x;
   }
 }
+
+/* ───────── Gift Cards page, holiday edition ─────────
+   Hero becomes a deep-pine grainy mesh (same build as the homepage story section), every gift card face
+   gets a pine satin ribbon with a bow, section accents go green, and the rewards band gets a light strand. */
+section[class*="gift-module__"][class*="__hero"]{
+  position:relative;
+  background-color:#0c1c14!important;
+  background-image:
+    var(--fx-grain),
+    radial-gradient(52% 60% at 6% 18%, rgb(47 93 70 / .75) 0%, rgb(47 93 70 / 0) 100%),
+    radial-gradient(40% 55% at 74% 46%, rgb(184 54 61 / .32) 0%, rgb(184 54 61 / 0) 100%),
+    radial-gradient(60% 50% at 40% 110%, rgb(20 48 34 / .9) 0%, rgb(20 48 34 / 0) 100%),
+    linear-gradient(160deg,#10261b 0%,#0c1c14 55%,#120f0d 100%)!important;
+  background-size:var(--fx-grain-size),100% 100%,100% 100%,100% 100%,100% 100%!important;
+  background-blend-mode:overlay,normal,normal,normal,normal!important;
+}
+section[class*="gift-module__"][class*="__hero"] [class*="__kicker"]{color:var(--xmas-frost)!important}
+section[class*="gift-module__"][class*="__hero"] [class*="__kicker"]::after{content:" · Holiday edition"}
+section[class*="gift-module__"][class*="__hero"] [class*="__quickLabel"]{color:var(--xmas-frost)!important}
+section[class*="gift-module__"][class*="__hero"] [class*="__quick"] button:hover{background:var(--xmas-pine)!important;border-color:var(--xmas-pine)!important;color:#fff!important}
+
+/* Ribbon + bow on every card face (hero card and the live preview) */
+[class*="gift-module__"][class*="__card"].ed-paper{overflow:visible}
+[class*="gift-module__"][class*="__card"].ed-paper::before{
+  content:"";position:absolute;top:0;bottom:0;left:64%;width:11%;pointer-events:none;z-index:1;
+  background:linear-gradient(90deg,#c9a24a 0 5%,#2f7d50 5% 20%,#46a56c 38%,#2a6e46 62%,#1f5a3a 95%,#c9a24a 95%);
+  box-shadow:inset 0 0 0 0 transparent, 2px 0 4px rgba(0,0,0,.15), -2px 0 4px rgba(0,0,0,.12);
+}
+[class*="gift-module__"][class*="__card"].ed-paper::after{
+  content:"";position:absolute;left:69.5%;top:0;width:34%;aspect-ratio:200/150;pointer-events:none;z-index:2;
+  background:url(/christmas/bow.svg) center/contain no-repeat;
+  transform:translate(-50%,-40%) rotate(-6deg);
+}
+
+/* Builder (cream) and How it works (dark): green accents */
+[class*="gift-module__"][class*="__builderSection"] [class*="__kickerDark"]{color:var(--xmas-pine-deep)!important}
+[class*="gift-module__"][class*="__how"] [class*="__kicker"]{color:var(--xmas-frost)!important}
+[class*="gift-module__"][class*="__howSteps"] span{color:var(--xmas-frost)!important}
+
+/* Rewards band: a strand of lights across the top edge */
+section[class*="gift-module__"][class*="__rewards"]{position:relative;padding-top:calc(clamp(4.5rem,8vw,7rem) + 24px)!important}
+section[class*="gift-module__"][class*="__rewards"]::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:44px;pointer-events:none;
+  background:url(/christmas/light-strand.svg) 0 0/280px 44px repeat-x;
+}
+/* keep the card's text clear of the ribbon: lines stop before it and wrap instead of running underneath */
+[class*="gift-module__"][class*="__card"].ed-paper [class*="__cardLines"]{max-width:calc(64% - clamp(1.2rem,2.6vw,1.8rem) - 4px)}
+[class*="gift-module__"][class*="__card"].ed-paper [class*="__cardLines"] dd{white-space:normal}
+[class*="gift-module__"][class*="__card"].ed-paper [class*="__cardTop"]{position:relative;z-index:3}
