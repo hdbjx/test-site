@@ -173,7 +173,7 @@ export default async function AboutPage() {
                   <p className={styles.groupLabel}>Running the business</p>
                   <ul className={`${styles.roster} ${styles.rosterLead}`}>
                     {leads.map((member) => (
-                      <li key={member.id}><MemberPhoto name={member.name} /><strong>{member.name}</strong><span>{member.title}</span></li>
+                      <li key={member.id} data-role={member.title}><MemberPhoto name={member.name} /><strong>{member.name}</strong><span>{member.title}</span></li>
                     ))}
                   </ul>
                 </div>
@@ -183,7 +183,7 @@ export default async function AboutPage() {
                   <p className={styles.groupLabel}>In the driveway</p>
                   <ul className={styles.roster}>
                     {crew.map((member) => (
-                      <li key={member.id}><MemberPhoto name={member.name} /><strong>{member.name}</strong><span>{member.title}</span></li>
+                      <li key={member.id} data-role={member.title}><MemberPhoto name={member.name} /><strong>{member.name}</strong><span>{member.title}</span></li>
                     ))}
                   </ul>
                 </div>

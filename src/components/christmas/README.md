@@ -18,7 +18,7 @@ Everything Christmas lives in three places:
 - Sitewide: green accents (pine on cream, frost green on dark) on small labels, review/footer headings, Services "plus" bullets, and a green→red gradient on the homepage "Built by students" section. All in `christmas.css` under "Christmas green accents"; red stays the action color.
 
 - Header logo (every page): Santa hat, CSS only in `christmas.css`
-- About page: Santa hats on the leads, elf hats on the crew, on their heads — CSS only in `christmas.css`, images in `public/christmas/`
+- About page: Santa hats on the leads and Tier 3 techs, elf hats on everyone else, on their heads — CSS only in `christmas.css` (keys off each card's `data-role`), images in `public/christmas/`
 - Hat components: `SantaHat` and `ElfHat` in `Hats.tsx`
 
 When adding new Christmas pieces, keep them in these folders and tag any line outside them with `CHRISTMAS`.
