@@ -74,3 +74,7 @@ section~section [class*="servicePage-module__"][class*="__kickerLight"]{color:va
 #v29-choice-title span:last-child{color:var(--xmas-pine)!important}
 .v38-proof-count strong{color:var(--xmas-frost)!important}
 .v29-work-end strong{color:var(--xmas-frost)!important}
+
+/* Sitewide light snowfall (Snowfall.tsx). Under the header, snow piles and chat; never takes clicks. */
+.xmas-snowfall{position:fixed;inset:0;width:100vw;height:100vh;z-index:30;pointer-events:none}
+@media print{.xmas-snowfall{display:none}}

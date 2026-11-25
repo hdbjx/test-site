@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { HomeArtMotion } from "@/components/HomeArtMotion";
 import { XmasOrnaments } from "@/components/christmas/XmasOrnaments"; // CHRISTMAS
+import { XMAS_TAPE } from "@/components/christmas/tape"; // CHRISTMAS
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
 import { CurvedTape } from "@/components/CurvedTape";
 import { AnimatedReviewCount, LiveReviewCount, LiveReviewRating } from "@/components/GoogleReviewStats";
@@ -78,7 +79,8 @@ export default async function Home() {
         <div className="v29-sweep" aria-hidden="true" />
       </section>
 
-      <CurvedTape text="WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU • " label="Every Detail promise" />
+      {/* CHRISTMAS — when removing, restore: <CurvedTape text="WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU • " label="Every Detail promise" /> */}
+      <CurvedTape {...XMAS_TAPE} /> {/* CHRISTMAS */}
 
       <section className="v29-choice fx-pixel-out" data-header-tone="ink" id="pricing" data-v29-scene="choice" aria-labelledby="v29-choice-title">
         <div className="v29-shell">
