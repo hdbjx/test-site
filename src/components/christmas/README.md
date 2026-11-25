@@ -23,5 +23,6 @@ Everything Christmas lives in three places:
 
 - Open menu: frost-green labels, "Holiday" tag on Gift Cards, snow on Book a detail, a strand of lights along the bottom (`light-strand.svg` / `light-glow.svg`) — CSS in `christmas.css`, snow target in `SnowCaps.tsx`
 - Gift Cards page: pine hero, "Holiday edition" kicker, ribbon + bow on every card face (`bow.svg`), green accents, light strand on the rewards band, snow on Continue to payment — CSS in `christmas.css`
+- Booking + quote flows: green step labels/progress, snow on the final button, holiday note + one-time snow burst + gift card nudge on the confirmation / revealed quote (`HolidayNote`, tagged lines in `LiveBooking.tsx` and `QuoteRecommender.tsx`). No snowfall in these flows.
 
 When adding new Christmas pieces, keep them in these folders and tag any line outside them with `CHRISTMAS`.
