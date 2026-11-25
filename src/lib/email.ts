@@ -1,4 +1,5 @@
 import { teamEmailPhoto } from "@/data/team";
+import { xmasEmailPhoto } from "@/components/christmas/emailHats"; // CHRISTMAS
 import { site } from "@/data/site";
 import { emailOverride, liveReviewUrl, type EmailKind } from "@/lib/email-copy";
 
@@ -865,6 +866,7 @@ function teamMemberCard(member: DayOfTeamMember) {
   const name = firstNameOnly(member.name) || "Every Detail";
   const role = member.isLead ? "Lead detailer" : "Detailer";
   const photo = teamEmailPhoto(member.name);
+  const xmasPhoto = xmasEmailPhoto(member.name); // CHRISTMAS
 
   return `
     <tr>
@@ -872,7 +874,9 @@ function teamMemberCard(member: DayOfTeamMember) {
         <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;border:1px solid rgba(17,17,17,.14);">
           <tr>
             <td width="66" style="width:66px;padding:12px 0 12px 14px;vertical-align:middle;">
-              ${photo
+              ${xmasPhoto /* CHRISTMAS: round headshot with a hat baked in (email clients ignore positioning) */
+                ? `<img src="${xmasPhoto}" width="52" height="75" alt="${escapeHtml(name)}" style="display:block;width:52px;height:75px;border:0;" />`
+                : photo
                 ? `<img src="${photo}" width="52" height="52" alt="${escapeHtml(name)}" style="display:block;width:52px;height:52px;border-radius:999px;border:0;object-fit:cover;background:${BRAND.oxblood};" />`
                 : `<div style="width:52px;height:52px;border-radius:999px;background:${BRAND.oxblood};color:${BRAND.cream};text-align:center;line-height:52px;font-size:13px;font-weight:900;letter-spacing:.8px;">${escapeHtml(initials(member.name))}</div>`}
             </td>
