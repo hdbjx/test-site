@@ -16,6 +16,7 @@ const TARGETS = [
   ".v29-hero [data-hero-vehicle]", // hero "What do you drive?" field
   ".home-book-bar-cta", // mobile sticky "Book a detail"
   'button[aria-label="Chat with Every Detail"]', // "Ask us"
+  '.site-shared-menu-actions a[href="/book"]', // "Book a detail" in the open menu
 ].join(",");
 
 // Geometry (px). The SVG is placed so its button edge lines up with the real button's top edge.

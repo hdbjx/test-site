@@ -21,4 +21,6 @@ Everything Christmas lives in three places:
 - About page: Santa hats on the leads and Tier 3 techs, elf hats on everyone else, on their heads — CSS only in `christmas.css` (keys off each card's `data-role`), images in `public/christmas/`
 - Hat components: `SantaHat` and `ElfHat` in `Hats.tsx`
 
+- Open menu: frost-green labels, "Holiday" tag on Gift Cards, snow on Book a detail, a strand of lights along the bottom (`light-strand.svg` / `light-glow.svg`) — CSS in `christmas.css`, snow target in `SnowCaps.tsx`
+
 When adding new Christmas pieces, keep them in these folders and tag any line outside them with `CHRISTMAS`.

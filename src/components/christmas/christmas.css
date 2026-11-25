@@ -135,3 +135,36 @@ ul[class*="about-module__"][class*="__roster"]>li:not(:has([class*="__rosterPhot
   background:var(--hat) center/contain no-repeat;transform:translateY(-64%) rotate(-14deg);
   filter:drop-shadow(0 4px 8px rgba(0,0,0,.4));
 }
+
+/* Open menu: frost-green labels, a "Holiday" tag on Gift Cards, and a strand of lights along the bottom
+   edge (the glow layer underneath breathes slowly). Snow on the menu's Book button comes from SnowCaps.tsx. */
+.site-shared-menu-link>span,
+.site-shared-menu-explore>p,
+.site-shared-menu-vehicle>span{color:var(--xmas-frost)!important}
+.site-shared-menu-link[href="/gift-cards"] strong::after{
+  content:"Holiday";display:inline-block;vertical-align:.95em;margin-left:.55em;padding:.32em .6em .28em;
+  border:1px solid rgba(141,184,154,.55);border-radius:999px;color:var(--xmas-frost);
+  font-family:var(--font-display);font-size:.62rem;font-weight:800;letter-spacing:.14em;line-height:1;text-transform:uppercase;
+}
+.site-shared-menu-shell{padding-bottom:58px!important}
+.site-shared-menu-panel::before,
+.site-shared-menu-panel::after{
+  content:"";position:absolute;left:0;right:0;bottom:8px;height:44px;pointer-events:none;
+  background:url(/christmas/light-strand.svg) 0 0/280px 44px repeat-x;
+}
+.site-shared-menu-panel::before{
+  background-image:url(/christmas/light-glow.svg);mix-blend-mode:screen;
+  animation:xmas-glow 3.2s ease-in-out infinite alternate;
+}
+@keyframes xmas-glow{from{opacity:.45}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.site-shared-menu-panel::before{animation:none;opacity:.8}}
+/* ≤900px the menu is a full-height scrolling sheet, so the strand moves into the content flow at the end
+   (below Text us / Book) instead of being pinned over it. */
+@media(max-width:900px){
+  .site-shared-menu-panel::before,.site-shared-menu-panel::after{content:none}
+  .site-shared-menu-shell{padding-bottom:22px!important}
+  .site-shared-menu-shell::after{
+    content:"";display:block;height:44px;margin:6px -18px 0;pointer-events:none;
+    background:url(/christmas/light-strand.svg) 0 0/280px 44px repeat-x;
+  }
+}
