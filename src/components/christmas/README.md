@@ -12,5 +12,6 @@ Everything Christmas lives in three places:
 
 ## Currently in
 - Homepage hero: two hanging ornaments that swing with the mouse (`XmasOrnaments`, used in `src/app/page.tsx`)
+- Sitewide: snow piles on MENU, the hero vehicle field, the mobile Book bar, and Ask us (`SnowCaps`, used in `src/app/layout.tsx`). Targets are the `TARGETS` list at the top of `SnowCaps.tsx`.
 
 When adding new Christmas pieces, keep them in these folders and tag any line outside them with `CHRISTMAS`.
