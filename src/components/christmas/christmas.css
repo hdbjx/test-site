@@ -18,9 +18,11 @@
 
 /* Snow piles on key buttons — positioned by SnowCaps.tsx in one fixed overlay layer. */
 .xmas-snowcaps{position:fixed;inset:0;z-index:60;pointer-events:none;overflow:hidden}
+/* page layer: scrolls with the document; sits under the fixed header (z 40) */
+.xmas-snowcaps-page{position:absolute;top:0;left:0;width:0;height:0;z-index:20;pointer-events:none}
 .xmas-snowcap{position:absolute;top:0;left:0;opacity:0;transition:opacity .2s ease;will-change:transform;filter:drop-shadow(0 2px 3px rgba(15,22,32,.18))}
 .xmas-snowcap svg{display:block}
-@media print{.xmas-snowcaps{display:none}}
+@media print{.xmas-snowcaps,.xmas-snowcaps-page{display:none}}
 
 /* ───────── Christmas green accents ─────────
    Red stays the action color (logo, Book buttons, prices, headlines). Green only on small labels/accents.
@@ -214,3 +216,21 @@ section[class*="gift-module__"][class*="__rewards"]::before{
   background:url(/christmas/light-strand.svg) 0 0/280px 44px repeat-x;
 }
 /* the ribbon wraps the card over the perforation, between the face and the stub */
+
+/* ───────── Booking + quote flows (kept calm: no snowfall here) ─────────
+   Green step labels/progress (pine on cream 6.4:1+), snow on the final button (SnowCaps.tsx),
+   and a holiday note + one-time snow burst on the confirmation / revealed quote (HolidayNote.tsx). */
+.bk-progress li.is-current{border-color:var(--xmas-pine)!important;color:var(--xmas-pine)!important}
+.bk-step-num{color:var(--xmas-pine-deep)!important}
+.bk-progress-mobile i{background:var(--xmas-pine)!important}
+.bk-kicker .bk-dot{background:var(--xmas-pine)!important;box-shadow:0 0 0 4px rgba(47,93,70,.18)!important}
+.bk-done-next .bk-btn-line[href="/gift-cards"]{border-color:var(--xmas-pine)!important;color:var(--xmas-pine)!important}
+.q51-progress span.is-current{border-color:var(--xmas-pine)!important;color:var(--xmas-pine)!important}
+.q51-step-label,.q53-intro p,.q79-eyebrow{color:var(--xmas-pine-deep)!important}
+
+.xmas-note{margin:1.1rem 0 0}
+.xmas-note-line{display:flex;align-items:center;gap:.6rem;margin:0;color:var(--xmas-pine-deep);font-family:var(--font-display);font-size:.82rem;font-weight:800;letter-spacing:.06em}
+.xmas-note-bow{flex:none;width:34px;aspect-ratio:200/150;background:url(/christmas/bow.svg) center/contain no-repeat}
+.xmas-note-gift{display:inline-block;margin-top:.6rem;color:var(--xmas-pine);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.xmas-note-gift:hover{color:var(--xmas-pine-deep)}
+.xmas-snowburst{position:fixed;inset:0;width:100vw;height:100vh;z-index:70;pointer-events:none}
