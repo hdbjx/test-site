@@ -5,6 +5,7 @@ import { CurvedTape } from "@/components/CurvedTape";
 import { AnimatedReviewCount, LiveReviewCount, LiveReviewRating } from "@/components/GoogleReviewStats";
 import { MobileBookBar } from "@/components/MobileBookBar";
 import { Photo } from "@/components/Photo";
+import { FlutedGlassPhoto } from "@/components/FlutedGlassPhoto";
 import { TrackedLink } from "@/components/TrackedLink";
 import { PersonalizedHeroTitle } from "@/components/PersonalizedHeroTitle";
 import { HeroVehicleField } from "@/components/vehicle/HeroVehicleField";
@@ -180,7 +181,7 @@ export default async function Home() {
       </section>
 
       <section className="v29-close" data-header-tone="light" data-v29-scene="close" aria-labelledby="v29-close-title">
-        <div className="v29-close-photo"><Photo id="hq-van-through-flowers" sizes="100vw" fill /></div>
+        <div className="v29-close-photo"><FlutedGlassPhoto id="hq-van-through-flowers" ratio={1600 / 2400} /></div>
         <div className="v29-close-shade" />
         <div className="v29-shell v29-close-inner">
           <h2 id="v29-close-title">LIFE’S GOOD{" "}<br /><span>IN A CLEAN CAR.</span></h2>

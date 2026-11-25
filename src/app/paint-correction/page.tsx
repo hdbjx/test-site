@@ -48,7 +48,6 @@ export default async function PaintCorrectionPage() {
       <section className={styles.hero} data-header-tone="light" aria-labelledby="pc-hero-title">
         <div className={styles.heroPhoto}><Photo id="paint-polisher" sizes="(max-width: 900px) 100vw, 50vw" fill priority /></div>
         <div className={styles.heroShade} aria-hidden="true" />
-        <div className="fx-fluted pc-fluted" aria-hidden="true" />
         <div className={styles.heroInner}>
           <div className={styles.crumbs}>
             <Breadcrumbs items={[{ name: "Services", path: "/our-services" }, { name: "Paint Correction", path: "/paint-correction" }]} />
