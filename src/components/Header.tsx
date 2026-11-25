@@ -35,6 +35,8 @@ const ROUTE_HEADER_TONE: Record<string, HeaderTone> = {
 };
 
 function routeTone(pathname: string): HeaderTone {
+  // Vercel can render the cached homepage shell with the pathname "/index".
+  if (pathname === "/index") pathname = "/";
   if (pathname.startsWith("/detailplus/")) return "light";
   if (pathname.startsWith("/post/")) return "ink";
   if (pathname.startsWith("/service-areas/")) return "ink";
