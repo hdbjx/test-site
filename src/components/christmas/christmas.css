@@ -18,6 +18,6 @@
 
 /* Snow piles on key buttons — positioned by SnowCaps.tsx in one fixed overlay layer. */
 .xmas-snowcaps{position:fixed;inset:0;z-index:60;pointer-events:none;overflow:hidden}
-.xmas-snowcap{position:absolute;top:0;left:0;opacity:0;transition:opacity .2s ease;will-change:transform;filter:drop-shadow(0 1.5px 1.5px rgba(20,30,45,.3))}
+.xmas-snowcap{position:absolute;top:0;left:0;opacity:0;transition:opacity .2s ease;will-change:transform;filter:drop-shadow(0 2px 3px rgba(15,22,32,.18))}
 .xmas-snowcap svg{display:block}
 @media print{.xmas-snowcaps{display:none}}
