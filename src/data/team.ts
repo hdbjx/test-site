@@ -30,7 +30,7 @@ export const team: TeamMember[] = [
 ];
 
 /** Headshots in /public/team (site, 4:5) and /public/team/email (email, square). */
-const PHOTOS = new Set(["wiley", "davis", "grady", "mateo", "will", "nathan", "thomas", "rex"]);
+const PHOTOS = new Set(["wiley", "davis", "grady", "mateo", "will", "nathan", "thomas", "rex", "alejandro"]);
 const photoKey = (name: string) => (name.trim().split(/\s+/)[0] || "").toLowerCase();
 export const teamPhoto = (name: string) => (PHOTOS.has(photoKey(name)) ? `/team/${photoKey(name)}.webp` : null);
 export const teamEmailPhoto = (name: string) =>
