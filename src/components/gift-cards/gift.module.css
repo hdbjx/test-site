@@ -226,21 +226,12 @@
   display: block;
   width: 13cqw;
   aspect-ratio: 1;
-  background: #2b1715;
+  background: var(--gc-paper);
+  filter: drop-shadow(0.5cqw 0.5cqw 0 #2b1715);
   -webkit-mask: url("/brand/every-detail-logo.png") center / contain no-repeat;
   mask: url("/brand/every-detail-logo.png") center / contain no-repeat;
 }
 
-.cardTop b {
-  padding: 1cqw 1.8cqw 0.8cqw;
-  border: 0.3cqw solid #2b1715;
-  border-radius: 99px;
-  font-family: var(--font-display);
-  font-size: 2.1cqw;
-  font-weight: 900;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
 
 .cardAmount {
   position: relative;
@@ -320,9 +311,9 @@
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   font-family: var(--font-display);
-  font-size: 2.2cqw;
+  font-size: 3cqw;
   font-weight: 900;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
 }
 

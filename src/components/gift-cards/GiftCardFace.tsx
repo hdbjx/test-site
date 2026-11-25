@@ -14,7 +14,6 @@ export function GiftCardFace({ amount, to, message, className = "" }: Props) {
       <div className={styles.cardMain}>
         <div className={styles.cardTop}>
           <span className={styles.cardLogo} role="img" aria-label="Every Detail" />
-          <b>Gift card</b>
         </div>
         <p className={styles.cardAmount}><sup>$</sup>{value}</p>
         <dl className={styles.cardLines}>
@@ -23,7 +22,7 @@ export function GiftCardFace({ amount, to, message, className = "" }: Props) {
         </dl>
       </div>
       <div className={styles.cardStub}>
-        <span>Good for any detail, add-on or upgrade</span>
+        <span>Gift card</span>
         <small>Decatur · ATL</small>
       </div>
     </div>
