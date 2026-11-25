@@ -17,6 +17,8 @@ import { ensureLiveCatalog } from "@/lib/live-catalog-server";
 import { AnnouncementBar } from "@/components/announcement/AnnouncementBar";
 import { ChatWidget } from "@/components/chat/ChatWidget";
 import { MotionLayer } from "@/components/motion/MotionLayer";
+import { SnowCaps } from "@/components/christmas/SnowCaps"; // CHRISTMAS
+import { Snowfall } from "@/components/christmas/Snowfall"; // CHRISTMAS
 
 // Prices come from the live catalog (Team HQ); pages refresh at most once a minute.
 export const revalidate = 60;
@@ -61,6 +63,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {notice ? <AnnouncementBar text={notice.text} linkText={notice.linkText} linkUrl={notice.linkUrl} /> : null}
         <ChatWidget />
         <MotionLayer />
+        <SnowCaps /> {/* CHRISTMAS */}
+        <Snowfall /> {/* CHRISTMAS */}
         <JsonLd data={localBusinessSchema()} />
         <Analytics />
         </JourneyProvider>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { site } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { supabaseConfigured } from "@/lib/supabase/config";
@@ -35,6 +35,8 @@ const ROUTE_HEADER_TONE: Record<string, HeaderTone> = {
 };
 
 function routeTone(pathname: string): HeaderTone {
+  // Vercel can render the cached homepage shell with the pathname "/index".
+  if (pathname === "/index") pathname = "/";
   if (pathname.startsWith("/detailplus/")) return "light";
   if (pathname.startsWith("/post/")) return "ink";
   if (pathname.startsWith("/service-areas/")) return "ink";
@@ -83,6 +85,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [headerTone, setHeaderTone] = useState<HeaderTone>(() => routeTone(pathname));
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
   // Close menus on navigation
@@ -181,6 +184,15 @@ export function Header() {
 
 
 
+  // The server-rendered data-tone can disagree with the client's first tone (e.g. a cached page shell).
+  // React doesn't patch attribute mismatches after hydration, and if the computed tone then equals the
+  // initial state there's no re-render, so the logo stayed the wrong color until a scroll changed the tone.
+  // Write the attribute straight to the DOM whenever it's out of sync.
+  useLayoutEffect(() => {
+    const el = headerRef.current;
+    if (el && el.dataset.tone !== headerTone) el.dataset.tone = headerTone;
+  });
+
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
   const headerClass = "fixed inset-x-0 top-0 z-40 site-shared-header";
 
@@ -188,7 +200,7 @@ export function Header() {
   if (pathname === "/book" || pathname === "/get-a-quote") return null;
 
   return (
-    <header className={headerClass} data-tone={headerTone} data-menu-open={menuOpen ? "true" : "false"}>
+    <header ref={headerRef} className={headerClass} data-tone={headerTone} data-menu-open={menuOpen ? "true" : "false"}>
       <div className="site-shared-nav-shell">
         <Link href="/" className={`site-shared-logo-control ${onHome ? "home-logo-control" : ""}`} aria-label="Every Detail home">
           <span className={`site-shared-logo-mark ${onHome ? "home-logo-mark" : ""}`} aria-hidden="true" />

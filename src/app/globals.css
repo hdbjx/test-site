@@ -3590,6 +3590,7 @@ body:has(.v29-hero) .site-shared-menu-label{font-size:.73rem!important;letter-sp
 .ed-tape-svg{display:block;width:100%;height:100%;overflow:hidden}
 .ed-tape-paper{fill:var(--v29-paper)}
 .ed-tape-line{fill:none;stroke:var(--v29-red);stroke-width:92}
+.ed-tape-link{pointer-events:auto;cursor:pointer;outline:none}.ed-tape-link .ed-tape-line{pointer-events:stroke}.ed-tape-link .ed-tape-text{pointer-events:none}.ed-tape-link:hover .ed-tape-line,.ed-tape-link:focus-visible .ed-tape-line{stroke:#c85a58}
 .ed-tape-text{
   fill:var(--v29-paper);
   font-family:var(--font-display);

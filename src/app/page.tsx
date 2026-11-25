@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { HomeArtMotion } from "@/components/HomeArtMotion";
+import { XmasOrnaments } from "@/components/christmas/XmasOrnaments"; // CHRISTMAS
+import { XMAS_TAPE } from "@/components/christmas/tape"; // CHRISTMAS
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
 import { CurvedTape } from "@/components/CurvedTape";
 import { AnimatedReviewCount, LiveReviewCount, LiveReviewRating } from "@/components/GoogleReviewStats";
@@ -57,6 +59,7 @@ export default async function Home() {
         <div className="v29-hero-photo" data-v29-depth><Photo id="hero" sizes="100vw" fill priority quality={55} /></div>
         <div className="v29-hero-shade" aria-hidden="true" />
         <div className="v30-hero-focus" aria-hidden="true" />
+        <XmasOrnaments /> {/* CHRISTMAS */}
         <div className="v29-shell v29-hero-inner">
           <PersonalizedHeroTitle />
           <HeroVehicleField />
@@ -76,12 +79,13 @@ export default async function Home() {
         <div className="v29-sweep" aria-hidden="true" />
       </section>
 
-      <CurvedTape text="WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU • " label="Every Detail promise" />
+      {/* CHRISTMAS — when removing, restore: <CurvedTape text="WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU • " label="Every Detail promise" /> */}
+      <CurvedTape {...XMAS_TAPE} /> {/* CHRISTMAS */}
 
       <section className="v29-choice fx-pixel-out" data-header-tone="ink" id="pricing" data-v29-scene="choice" aria-labelledby="v29-choice-title">
         <div className="v29-shell">
           <div className="v29-choice-intro v38-choice-intro">
-            <h2 id="v29-choice-title"><span>ONE CAR.{" "}</span><span>THREE WAYS BACK.</span></h2>
+            <h2 id="v29-choice-title"><span>ONE CAR,{" "}</span><span>THREE WAYS BACK.</span></h2>
           </div>
           <div className="v29-booking" data-v29-services><HomeBookingFlow /></div>
         </div>
@@ -90,7 +94,7 @@ export default async function Home() {
       <section className="v29-work" data-header-tone="light" data-v29-work data-v29-scene="work" aria-labelledby="v29-work-title">
         <div className="v29-work-sticky">
           <div className="v29-work-heading v29-shell">
-            <h2 id="v29-work-title"><span>NO STOCK CARS.{" "}</span><span>NO MYSTERY SHOP.</span></h2>
+            <h2 id="v29-work-title"><span>NO STOCK PICTURES,{" "}</span><span>NO MYSTERY SHOP.</span></h2>
           </div>
           <div className="v29-work-track" data-v29-work-track>
             <figure className="v29-shot v29-shot-a" data-v29-tilt><Photo id="work-mateo-0670" sizes="70vw" fill /></figure>
@@ -98,7 +102,7 @@ export default async function Home() {
             <figure className="v29-shot v29-shot-c" data-v29-tilt><Photo id="work-finished-0771" sizes="64vw" fill /></figure>
             <figure className="v29-shot v29-shot-d" data-v29-tilt><Photo id="hq-mobile-rig-fleet" sizes="52vw" fill /></figure>
             <div className="v29-work-end">
-              <p>REAL DRIVEWAYS.</p><p>REAL CREW.</p><strong>EVERY DETAIL.</strong>
+              <p>REAL DRIVEWAYS,</p><p>REAL CREW,</p><strong>EVERY DETAIL.</strong>
               <Link href="/our-work">See the full archive ↗</Link>
             </div>
           </div>
@@ -108,7 +112,7 @@ export default async function Home() {
       <section className="v37-story" data-header-tone="light" data-v29-story data-v29-scene="story" aria-labelledby="v37-story-title">
         <div className="v29-shell v37-story-inner">
           <h2 id="v37-story-title" className="v37-story-title">
-            <span>BUILT BY STUDENTS.{" "}</span>
+            <span>BUILT BY STUDENTS,{" "}</span>
             <span>RUN LIKE A COMPANY.</span>
           </h2>
 
@@ -128,7 +132,7 @@ export default async function Home() {
               <div className="v38-proof-count v41-proof-count">
                 <strong><AnimatedReviewCount /></strong>
                 <span>FIVE-STAR REVIEWS</span>
-                <small>REAL CUSTOMERS. REAL CARS.</small>
+                <small>REAL CUSTOMERS, REAL CARS.</small>
               </div>
 
               <div className="v38-proof-reviews v41-proof-reviews" aria-label="Customer review highlights">
@@ -170,7 +174,7 @@ export default async function Home() {
               <div className="v41-care-card-shade" />
               <div className="v41-care-card-top"><span>02</span><b>DETAIL+</b></div>
               <div className="v41-care-card-copy">
-                <h3>STAY CLEAN.{" "}<br />SKIP THE RESET.</h3>
+                <h3>STAY CLEAN,{" "}<br />SKIP THE RESET.</h3>
                 <p>Recurring maintenance built around how often you actually drive. From {usd(detailPlusMinimum)} a visit.</p>
                 <strong>Explore Detail+ ↗</strong>
               </div>
