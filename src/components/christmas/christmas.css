@@ -68,3 +68,9 @@ section~section [class*="services-module__"][class*="__kickerLight"],
 section~section [class*="servicePage-module__"][class*="__kickerLight"]{color:var(--xmas-frost)!important}
 [class*="about-module__"][class*="__honestLabel"],
 [class*="about-module__"][class*="__roster"] li>span{color:var(--xmas-frost)!important}
+
+/* Homepage headline accents (big type, so contrast is easy):
+   "THREE WAYS BACK." pine on cream (6.4:1) · "170+" and "EVERY DETAIL." frost green on near-black (8.9:1) */
+#v29-choice-title span:last-child{color:var(--xmas-pine)!important}
+.v38-proof-count strong{color:var(--xmas-frost)!important}
+.v29-work-end strong{color:var(--xmas-frost)!important}
