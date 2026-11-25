@@ -91,11 +91,13 @@ section~section [class*="servicePage-module__"][class*="__kickerLight"]{color:va
 .site-shared-logo-control::after{
   content:"";position:absolute;pointer-events:none;z-index:1;
   left:50%;top:-24%;height:50%;aspect-ratio:420/380;
-  background:url(/christmas/santa-hat.svg) center/contain no-repeat;
+  background:url(/christmas/santa-hat.webp) center/contain no-repeat;
   transform:translateX(-14%) rotate(28deg);transform-origin:50% 76%;
   filter:drop-shadow(0 4px 8px rgba(0,0,0,.3));
 }
 
+/* Hats are pre-rendered WebP (from santa-hat.svg / elf-hat.svg): the SVGs use heavy filters that mobile
+   Safari renders unreliably as CSS backgrounds, and a bitmap is cheaper on phones anyway. */
 /* About page roster: hats sit on each person's head.
    Leads and every Tier 3 tech get a Santa hat; everyone else on the crew gets an elf hat.
    Driven by each li's data-role (the member's title), so it follows whatever list the live site loads.
@@ -106,12 +108,12 @@ ul[class*="about-module__"][class*="__roster"]>li{
   position:relative;
   --xp:clamp(1.1rem,2vw,1.5rem);   /* li padding */
   --pw:calc(100% - 2 * var(--xp)); /* photo width */
-  --hat:url(/christmas/elf-hat.svg);--ar:1;--k:.58;--brim:.757;--o:72%; /* elf (default) */
+  --hat:url(/christmas/elf-hat.webp);--ar:1;--k:.58;--brim:.757;--o:72%; /* elf (default) */
 }
 ul[class*="about-module__"][class*="__rosterLead"]>li,
 ul[class*="about-module__"][class*="__roster"]>li[data-role*="tier 3" i],
 ul[class*="about-module__"][class*="__roster"]>li[data-role*="tier3" i]{
-  --hat:url(/christmas/santa-hat.svg);--ar:420/380;--k:.56;--brim:.691;--o:76%;
+  --hat:url(/christmas/santa-hat.webp);--ar:420/380;--k:.56;--brim:.691;--o:76%;
 }
 /* variety: lean/size/offset repeat every 3, side flips every 2, an extra lean every 5 */
 ul[class*="about-module__"][class*="__roster"]>li:nth-child(3n+1){--tilt:-8deg;--dx:-.02;--s:1}
