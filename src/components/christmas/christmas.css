@@ -88,9 +88,9 @@ section~section [class*="servicePage-module__"][class*="__kickerLight"]{color:va
    the badge size, so the hat is sized off height and positioned from the center with a translate. */
 .site-shared-logo-control::after{
   content:"";position:absolute;pointer-events:none;z-index:1;
-  left:50%;top:-33%;height:50%;aspect-ratio:420/380;
+  left:50%;top:-24%;height:50%;aspect-ratio:420/380;
   background:url(/christmas/santa-hat.svg) center/contain no-repeat;
-  transform:translateX(-6%) rotate(24deg);transform-origin:50% 76%;
+  transform:translateX(-14%) rotate(28deg);transform-origin:50% 76%;
   filter:drop-shadow(0 4px 8px rgba(0,0,0,.3));
 }
 
