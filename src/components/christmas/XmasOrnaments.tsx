@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import "./christmas.css";
 
 /**
  * Christmas: two ornaments hanging from the top-left of the homepage hero.
@@ -106,7 +107,7 @@ export function XmasOrnaments() {
       {ORNAMENTS.map((o, i) => (
         <span key={o.key} ref={(el) => { refs.current[i] = el; }} className={`xmas-ornament xmas-ornament--${o.key}`}>
           <i />
-          <Image src="/images/xmas-ornament.webp" alt="" width={300} height={382} loading="eager" />
+          <Image src="/christmas/ornament.webp" alt="" width={300} height={382} loading="eager" />
         </span>
       ))}
     </div>

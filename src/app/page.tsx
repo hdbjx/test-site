@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { HomeArtMotion } from "@/components/HomeArtMotion";
-import { XmasOrnaments } from "@/components/XmasOrnaments";
+import { XmasOrnaments } from "@/components/christmas/XmasOrnaments"; // CHRISTMAS
 import { HomeBookingFlow } from "@/components/HomeBookingFlow";
 import { CurvedTape } from "@/components/CurvedTape";
 import { AnimatedReviewCount, LiveReviewCount, LiveReviewRating } from "@/components/GoogleReviewStats";
@@ -58,8 +58,7 @@ export default async function Home() {
         <div className="v29-hero-photo" data-v29-depth><Photo id="hero" sizes="100vw" fill priority quality={55} /></div>
         <div className="v29-hero-shade" aria-hidden="true" />
         <div className="v30-hero-focus" aria-hidden="true" />
-        {/* Christmas: hanging ornaments that swing with the mouse. Inside the hero so they scroll away with it. */}
-        <XmasOrnaments />
+        <XmasOrnaments /> {/* CHRISTMAS */}
         <div className="v29-shell v29-hero-inner">
           <PersonalizedHeroTitle />
           <HeroVehicleField />

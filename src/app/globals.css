@@ -9216,20 +9216,3 @@ html.ed-motion [data-reveal="stagger"][data-revealed="true"]>*{animation:ed-reve
   .bk-done .bk-kicker .bk-dot{animation:ed-dot-pulse 1.4s ease-out .2s 2}
 }
 @keyframes ed-dot-pulse{0%{box-shadow:0 0 0 0 rgba(213,104,101,.5)}100%{box-shadow:0 0 0 12px rgba(213,104,101,0)}}
-
-/* Christmas hero ornaments — hang from the top-left of the homepage hero and scroll away with it.
-   Swing is driven by XmasOrnaments.tsx (pendulum physics), not CSS animation. */
-.v29-hero .xmas-ornaments{position:absolute;top:0;left:0;right:0;height:0;z-index:-1;pointer-events:none}
-.v29-hero .xmas-ornament{position:absolute;top:0;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0;will-change:transform}
-.v29-hero .xmas-ornament i{display:block;flex:none;width:1px;background:linear-gradient(180deg,rgba(236,230,218,.35),rgba(236,230,218,.9))}
-.v29-hero .xmas-ornament img{display:block;width:100%!important;height:auto!important;margin-top:-2px;filter:brightness(1.12) saturate(1.05) contrast(1.04) drop-shadow(0 0 12px rgba(255,240,215,.16))}
-.v29-hero .xmas-ornament--a{left:clamp(34px,5.4vw,96px);width:clamp(70px,6.4vw,104px)}
-.v29-hero .xmas-ornament--a i{height:clamp(96px,11vh,128px)}
-.v29-hero .xmas-ornament--b{left:calc(clamp(34px,5.4vw,96px) + clamp(84px,7.8vw,124px));width:clamp(56px,5vw,82px)}
-.v29-hero .xmas-ornament--b i{height:clamp(150px,19vh,210px)}
-@media(max-width:760px){
-  .v29-hero .xmas-ornament--a{left:16px;width:50px}
-  .v29-hero .xmas-ornament--a i{height:84px}
-  .v29-hero .xmas-ornament--b{left:70px;width:40px}
-  .v29-hero .xmas-ornament--b i{height:122px}
-}
