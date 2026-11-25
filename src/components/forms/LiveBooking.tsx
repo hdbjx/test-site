@@ -20,6 +20,7 @@ import { LeadSourceField } from "./LeadSourceField";
 import { BookingTopBar } from "./BookingTopBar";
 import { Honeypot } from "./parts";
 import { TurnstileField } from "./TurnstileField";
+import { HolidayNote } from "@/components/christmas/HolidayNote"; // CHRISTMAS
 
 /* ------------------------------------------------------------------ */
 /* Time helpers (all scheduling is Eastern)                            */
@@ -894,6 +895,7 @@ export function LiveBooking({ account, email, garage = [], initialVehicle, initi
           <p className="bk-kicker"><span className="bk-dot" aria-hidden="true" /> Booking confirmed</p>
           <h1 className="bk-done-title">You&rsquo;re on<br />the books.</h1>
           <p className="bk-done-when">{fmtDay(d, { weekday: "long", month: "short", day: "numeric" })} · {fmtTime(d)}</p>
+          <HolidayNote kind="booking" date={d} /> {/* CHRISTMAS */}
           <div className="bk-done-lines">
             {booked.vehicles.map((line, index) => (
               <p key={`${line.vehicle}-${index}`}>{line.service} · {line.vehicle}<span>{usd(line.price)}</span></p>

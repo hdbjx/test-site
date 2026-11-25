@@ -7,8 +7,10 @@ import "./christmas.css";
  * CHRISTMAS — small snow piles sitting on a few key buttons.
  * Each pile is an SVG shape lit with SVG lighting filters (rounded volume, cool shaded underside,
  * fine grain + glints) so it reads as real snow rather than a flat white shape.
- * Caps live in one fixed overlay layer and follow their buttons every frame, so nothing
- * inside the real buttons is touched (no clipping, no layout changes, no edits to other components).
+ * Caps live in overlay layers, so nothing inside the real buttons is touched (no clipping, no layout
+ * changes, no edits to other components). Buttons inside fixed UI (header, chat, sticky bars) use a fixed
+ * layer; everything else uses a page-level absolute layer, so those caps scroll natively with the page
+ * instead of being repositioned a frame late (which looked like the snow lagging behind on scroll).
  * A cap hides itself when its button is covered (menu open, modal, etc.) or not on screen.
  */
 const TARGETS = [
@@ -18,6 +20,8 @@ const TARGETS = [
   'button[aria-label="Chat with Every Detail"]', // "Ask us"
   '.site-shared-menu-actions a[href="/book"]', // "Book a detail" in the open menu
   'form[class*="gift-module__"] button[class*="__submit"]', // Gift Cards "Continue to payment"
+  ".bk-confirm", // Booking: final "Confirm booking"
+  ".q100-submit", // Quote: final "See my price"
 ].join(",");
 
 // Geometry (px). The SVG is placed so its button edge lines up with the real button's top edge.
@@ -26,7 +30,7 @@ const PAD = 8; // room for blur/lighting around the snow
 const TOP = 24; // SVG height above the button's top edge
 const BELOW = 12; // SVG height below it (lip sags + contact shadow)
 
-type Cap = { el: HTMLElement; node: HTMLDivElement; width: number; op: string; tf: string };
+type Cap = { el: HTMLElement; node: HTMLDivElement; width: number; op: string; tf: string; fixed: boolean };
 
 // Small seeded RNG so a given button always gets the same pile (no reshuffling on resize).
 function rng(seed: number) {
@@ -107,15 +111,32 @@ export function SnowCaps() {
     const caps = new Map<HTMLElement, Cap>();
     let raf = 0;
 
+    // Page-level layer for caps on elements that scroll with the document.
+    const pageLayer = document.createElement("div");
+    pageLayer.className = "xmas-snowcaps-page";
+    pageLayer.setAttribute("aria-hidden", "true");
+    document.body.appendChild(pageLayer);
+
+    const inFixedUi = (el: HTMLElement) => {
+      for (let n: HTMLElement | null = el; n && n !== document.body; n = n.parentElement) {
+        const pos = getComputedStyle(n).position;
+        if (pos === "fixed" || pos === "sticky") return true;
+      }
+      return false;
+    };
+
     const collect = () => {
       const found = new Set(document.querySelectorAll<HTMLElement>(TARGETS));
       for (const [el, cap] of caps) if (!found.has(el) || !el.isConnected) { cap.node.remove(); caps.delete(el); }
       found.forEach((el) => {
-        if (caps.has(el)) return;
+        const fixed = inFixedUi(el);
+        const existing = caps.get(el);
+        if (existing && existing.fixed === fixed) return;
+        existing?.node.remove();
         const node = document.createElement("div");
         node.className = "xmas-snowcap";
-        layer.appendChild(node);
-        caps.set(el, { el, node, width: 0, op: "", tf: "" });
+        (fixed ? layer : pageLayer).appendChild(node);
+        caps.set(el, { el, node, width: 0, op: "", tf: "", fixed });
       });
     };
 
@@ -146,7 +167,9 @@ export function SnowCaps() {
           cap.width = w;
           cap.node.innerHTML = snowSvg(w, seedFor(cap.el));
         }
-        const tf = `translate3d(${Math.round(r.left - OV - PAD)}px, ${Math.round(r.top - TOP)}px, 0)`;
+        const ox = cap.fixed ? 0 : window.scrollX;
+        const oy = cap.fixed ? 0 : window.scrollY;
+        const tf = `translate3d(${Math.round(r.left + ox - OV - PAD)}px, ${Math.round(r.top + oy - TOP)}px, 0)`;
         if (tf !== cap.tf) { cap.tf = tf; cap.node.style.transform = tf; }
       }
       raf = requestAnimationFrame(tick);
@@ -159,6 +182,7 @@ export function SnowCaps() {
       cancelAnimationFrame(raf);
       clearInterval(poll);
       caps.forEach((c) => c.node.remove());
+      pageLayer.remove();
     };
   }, []);
 

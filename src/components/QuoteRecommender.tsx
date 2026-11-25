@@ -11,6 +11,7 @@ import { TurnstileField } from "@/components/forms/TurnstileField";
 import { useVehicle } from "@/components/vehicle/VehicleContext";
 import { useJourney } from "@/components/journey/JourneyContext";
 import { vehicleClassForYear, vehicleMatches, yearFromVehicleQuery } from "@/lib/vehicle-search";
+import { HolidayNote } from "@/components/christmas/HolidayNote"; // CHRISTMAS
 
 const CONDITIONS = [
   { value: 1, label: "Like New", desc: "Looks great in there. Regular upkeep is all it needs." },
@@ -452,6 +453,7 @@ export function QuoteRecommender({ defaultInterest }: { defaultInterest?: string
           <p className="q100-reason">{personalReason}</p>
           <ul className="q100-includes">{included.map((item) => <li key={item}>{item}</li>)}</ul>
           <p className="q100-note">{totalNote} A copy is on its way to {email.trim()}.</p>
+          <HolidayNote kind="quote" /> {/* CHRISTMAS */}
           <details className="quote-rec-why-details"><summary>Why this fits your {vehicle.model}</summary><p>{result.why}</p></details>
         </section>
 
