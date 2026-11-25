@@ -13,12 +13,16 @@ type CurvedTapeProps = {
   label?: string;
   /** colour of the section right below the tape, so the fill under the curve blends into it */
   surface?: "paper" | "ink";
+  /** optional link: makes the red ribbon itself clickable (the paper fill under it stays inert) */
+  href?: string;
+  /** accessible name for the link */
+  linkLabel?: string;
 };
 
 // One curve drives everything: the paper fill below it, the red ribbon on it, and the text riding it.
 const CURVE = "M -400 172 C 120 214, 520 222, 820 156 S 1340 78, 1840 112";
 
-export function CurvedTape({ text, speed = 70, boost = 0.9, followScroll = true, label, surface = "paper" }: CurvedTapeProps) {
+export function CurvedTape({ text, speed = 70, boost = 0.9, followScroll = true, label, surface = "paper", href, linkLabel }: CurvedTapeProps) {
   const rawId = useId();
   const pathId = `ed-tape-path-${rawId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const svgRef = useRef<SVGSVGElement>(null);
@@ -102,14 +106,21 @@ export function CurvedTape({ text, speed = 70, boost = 0.9, followScroll = true,
         className="ed-tape-svg"
         viewBox="0 0 1440 260"
         preserveAspectRatio="xMidYMid slice"
-        aria-hidden="true"
+        aria-hidden={href ? undefined : "true"}
         focusable="false"
       >
         <path className="ed-tape-paper" d={`${CURVE} L 1840 400 L -400 400 Z`} style={surface === "ink" ? { fill: "var(--v29-ink, #0b0a09)" } : undefined} />
-        <path id={pathId} className="ed-tape-line" d={CURVE} />
-        <text className="ed-tape-text" dy="0.36em">
-          <textPath ref={tpRef} href={`#${pathId}`} />
-        </text>
+        {(() => {
+          const ribbon = (
+            <>
+              <path id={pathId} className="ed-tape-line" d={CURVE} />
+              <text className="ed-tape-text" dy="0.36em">
+                <textPath ref={tpRef} href={`#${pathId}`} />
+              </text>
+            </>
+          );
+          return href ? <a href={href} className="ed-tape-link" aria-label={linkLabel ?? label ?? text.trim()}>{ribbon}</a> : ribbon;
+        })()}
         <text ref={measureRef} className="ed-tape-text" visibility="hidden" />
       </svg>
     </section>
