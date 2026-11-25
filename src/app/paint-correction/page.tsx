@@ -48,6 +48,7 @@ export default async function PaintCorrectionPage() {
       <section className={styles.hero} data-header-tone="light" aria-labelledby="pc-hero-title">
         <div className={styles.heroPhoto}><Photo id="paint-polisher" sizes="(max-width: 900px) 100vw, 50vw" fill priority /></div>
         <div className={styles.heroShade} aria-hidden="true" />
+        <div className="fx-fluted pc-fluted" aria-hidden="true" />
         <div className={styles.heroInner}>
           <div className={styles.crumbs}>
             <Breadcrumbs items={[{ name: "Services", path: "/our-services" }, { name: "Paint Correction", path: "/paint-correction" }]} />
@@ -148,7 +149,7 @@ export default async function PaintCorrectionPage() {
         </div>
       </section>
 
-      <section className={styles.gallery} data-header-tone="ink" aria-label="Finished paint from Every Detail jobs">
+      <section className={`${styles.gallery} fx-pixel-out`} data-header-tone="ink" aria-label="Finished paint from Every Detail jobs">
         <div className={styles.galleryTrack} data-reveal>
           {gallery.map((id) => (
             <div key={id} className={styles.galleryItem}><Photo id={id} fill sizes="(max-width: 640px) 70vw, 26vw" /></div>

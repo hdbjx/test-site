@@ -77,7 +77,7 @@ export default async function Home() {
 
       <CurvedTape text="WE BRING THE DETAIL SHOP TO YOUR DRIVEWAY • REAL CREW • POWER + WATER INCLUDED • WE COME TO YOU • " label="Every Detail promise" />
 
-      <section className="v29-choice" data-header-tone="ink" id="pricing" data-v29-scene="choice" aria-labelledby="v29-choice-title">
+      <section className="v29-choice fx-pixel-out" data-header-tone="ink" id="pricing" data-v29-scene="choice" aria-labelledby="v29-choice-title">
         <div className="v29-shell">
           <div className="v29-choice-intro v38-choice-intro">
             <h2 id="v29-choice-title"><span>ONE CAR.{" "}</span><span>THREE WAYS BACK.</span></h2>
