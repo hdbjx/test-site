@@ -99,7 +99,7 @@ section~section [class*="servicePage-module__"][class*="__kickerLight"]{color:va
 /* Hats are pre-rendered WebP (from santa-hat.svg / elf-hat.svg): the SVGs use heavy filters that mobile
    Safari renders unreliably as CSS backgrounds, and a bitmap is cheaper on phones anyway. */
 /* About page roster: hats sit on each person's head.
-   Leads and every Tier 3 tech get a Santa hat; everyone else on the crew gets an elf hat.
+   Leads, Tier 3 and Lead Technicians get a Santa hat; everyone else on the crew gets an elf hat.
    Driven by each li's data-role (the member's title), so it follows whatever list the live site loads.
    Headshots share one framing (4:5, head top-center), so the hat is placed as a fraction of the photo
    width; margin-top % resolves against width, which keeps it locked to the photo at any size.
@@ -112,7 +112,8 @@ ul[class*="about-module__"][class*="__roster"]>li{
 }
 ul[class*="about-module__"][class*="__rosterLead"]>li,
 ul[class*="about-module__"][class*="__roster"]>li[data-role*="tier 3" i],
-ul[class*="about-module__"][class*="__roster"]>li[data-role*="tier3" i]{
+ul[class*="about-module__"][class*="__roster"]>li[data-role*="tier3" i],
+ul[class*="about-module__"][class*="__roster"]>li[data-role*="lead" i]{
   --hat:url(/christmas/santa-hat.webp);--ar:420/380;--k:.56;--brim:.691;--o:76%;
 }
 /* variety: lean/size/offset repeat every 3, side flips every 2, an extra lean every 5 */
