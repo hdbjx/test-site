@@ -366,9 +366,10 @@
   color: var(--sv-red);
 }
 
+/* Stacked: "RESPONSIBILITY." is one long word and ran under the note when they sat side by side. */
 .teamHead {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: end;
   gap: 1.5rem 3rem;
   margin-bottom: clamp(2.5rem, 5vw, 4rem);
