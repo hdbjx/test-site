@@ -410,6 +410,8 @@
 .roster li {
   display: grid;
   align-content: end;
+  min-width: 0;
+  container-type: inline-size;
   gap: 0.45rem;
   padding: clamp(1.1rem, 2vw, 1.5rem);
   border-right: 1px solid rgba(242, 236, 223, 0.16);
@@ -439,9 +441,15 @@
 }
 
 
+/* Long names (e.g. ALEJANDRO) shrink to fit the card instead of widening the column.
+   --name-len is set per card; ~0.6em per uppercase letter in the display face (0.68 for margin).
+   The name box keeps the full-size height so photos stay level across the row. */
 .roster strong {
   font-family: var(--font-display);
-  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+  font-size: min(clamp(1.7rem, 2.6vw, 2.4rem), calc(100cqi / (var(--name-len, 6) * 0.68)));
+  display: flex;
+  align-items: flex-end;
+  min-height: calc(clamp(1.7rem, 2.6vw, 2.4rem) * 0.9);
   font-weight: 900;
   line-height: 0.9;
   letter-spacing: -0.04em;
@@ -458,7 +466,8 @@
 }
 
 .rosterLead strong {
-  font-size: clamp(2.2rem, 3.6vw, 3.4rem);
+  font-size: min(clamp(2.2rem, 3.6vw, 3.4rem), calc(100cqi / (var(--name-len, 6) * 0.68)));
+  min-height: calc(clamp(2.2rem, 3.6vw, 3.4rem) * 0.9);
 }
 
 .teamPhoto {
