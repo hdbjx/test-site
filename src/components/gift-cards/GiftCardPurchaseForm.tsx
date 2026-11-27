@@ -5,11 +5,10 @@ import { Honeypot } from "@/components/forms/parts";
 import { TurnstileField } from "@/components/forms/TurnstileField";
 import { track } from "@/lib/analytics";
 import { site } from "@/data/site";
-import { GIFT_CARD_PRESETS } from "@/data/giftCards";
+import { giftCardPackages } from "@/data/giftCards";
 import { GiftCardFace } from "./GiftCardFace";
 import styles from "./gift.module.css";
 
-const PRESETS = GIFT_CARD_PRESETS;
 
 type Result = { reference: string; amount: number; paymentMethod: "venmo" | "zelle"; paymentTarget?: string; paymentUrl?: string };
 
@@ -28,7 +27,7 @@ export function GiftCardPurchaseForm() {
   useEffect(() => {
     const onAmount = (event: Event) => {
       const amount = Number((event as CustomEvent<number>).detail);
-      if (PRESETS.includes(amount)) setPreset(amount);
+      if (giftCardPackages().some((p) => p.amount === amount)) setPreset(amount);
     };
     window.addEventListener("ed:gift-amount", onAmount);
     return () => window.removeEventListener("ed:gift-amount", onAmount);
@@ -128,12 +127,12 @@ export function GiftCardPurchaseForm() {
       <div className={styles.section}>
         <div className={styles.step}><b>01</b><span>Choose the value</span></div>
         <div className={styles.amounts}>
-          {PRESETS.map((value) => (
-            <button key={value} type="button" aria-pressed={preset === value} onClick={() => setPreset(value)}>
-              ${value}
+          {giftCardPackages().map((pkg) => (
+            <button key={pkg.label} type="button" aria-pressed={preset === pkg.amount} onClick={() => setPreset(pkg.amount)}>
+              <span>{pkg.label}</span>${pkg.amount}
             </button>
           ))}
-          <button type="button" aria-pressed={preset === "custom"} onClick={() => setPreset("custom")}>Custom</button>
+          <button type="button" aria-pressed={preset === "custom"} onClick={() => setPreset("custom")}>Any amount</button>
         </div>
         {preset === "custom" && (
           <label className={styles.custom}>
