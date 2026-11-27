@@ -131,6 +131,42 @@
   text-transform: uppercase;
 }
 
+.quick button small {
+  margin-right: 0.25rem;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+/* vehicle picker above the packages: prices follow the recipient's vehicle */
+.vehiclePick {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.vehiclePick span {
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.vehiclePick select {
+  min-height: 48px;
+  padding: 0 0.9rem;
+  border: 1.5px solid var(--gc-ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--gc-ink);
+  font: inherit;
+  font-weight: 700;
+}
+
 .quick button:last-child {
   font-family: var(--font-display);
   font-size: 0.76rem;

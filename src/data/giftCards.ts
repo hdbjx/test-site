@@ -1,15 +1,12 @@
-import { PRICING, services } from "@/data/services";
+import { PRICING, services, type VehicleId } from "@/data/services";
 
 /** Quick-pick gift card amounts. Team HQ → Settings can change these. */
 export const GIFT_CARD_PRESETS: number[] = [100, 150, 250, 400];
 
-/** Gift card "packages": each one is just a dollar amount (the sedan price of that detail),
- *  sent to the backend exactly like a preset. Read at render so live pricing applies. */
-export function giftCardPackages(): { label: string; amount: number }[] {
-  const s = PRICING.sedan;
-  return [
-    { label: services.maintenance.name, amount: s.maintenance.price },
-    { label: services.premium.name, amount: s.premium.price },
-    { label: services.factoryReset.name, amount: s.factoryReset.price },
-  ];
+/** Gift card "packages": a detail priced for the recipient's vehicle. Each is just a dollar amount,
+ *  sent to the backend exactly like a typed amount. Read at render so live pricing applies. */
+export const GIFT_PACKAGE_SERVICES = ["maintenance", "premium", "factoryReset"] as const;
+export type GiftPackageService = (typeof GIFT_PACKAGE_SERVICES)[number];
+export function giftCardPackages(vehicle: VehicleId = "sedan"): { service: GiftPackageService; label: string; amount: number }[] {
+  return GIFT_PACKAGE_SERVICES.map((service) => ({ service, label: services[service].name, amount: PRICING[vehicle][service].price }));
 }
