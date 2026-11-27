@@ -107,7 +107,7 @@
 
 .quick button {
   min-width: 76px;
-  min-height: 52px;
+  min-height: 64px;
   padding: 0 1.1rem;
   border: 1.5px solid rgba(242, 236, 223, 0.55);
   background: transparent;
@@ -117,6 +117,18 @@
   line-height: 1;
   cursor: pointer;
   transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+
+/* package buttons: small detail name over the price */
+.quick button span,
+.amounts button span {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .quick button:last-child {
@@ -420,14 +432,15 @@
 
 .amounts {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0;
   border-top: 1.5px solid var(--gc-ink);
   border-left: 1.5px solid var(--gc-ink);
 }
 
 .amounts button {
-  min-height: 58px;
+  min-height: 72px;
+  padding: 0.5rem 0.4rem;
   border: 0;
   border-right: 1.5px solid var(--gc-ink);
   border-bottom: 1.5px solid var(--gc-ink);

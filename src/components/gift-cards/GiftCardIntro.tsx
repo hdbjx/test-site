@@ -1,10 +1,9 @@
 "use client";
 
 import styles from "./gift.module.css";
-import { GIFT_CARD_PRESETS } from "@/data/giftCards";
+import { giftCardPackages } from "@/data/giftCards";
 import { GiftCardFace } from "./GiftCardFace";
 
-const QUICK = GIFT_CARD_PRESETS;
 
 /** Hero for /gift-cards. Quick amounts preselect the builder below via the "ed:gift-amount" event. */
 export function GiftCardIntro() {
@@ -27,12 +26,12 @@ export function GiftCardIntro() {
             <span>cleaner car.</span>
           </h1>
           <p className={styles.heroLede}>A real Every Detail gift card for any detail, add-on or upgrade. Pay by Venmo or Zelle and we activate it as soon as payment is confirmed.</p>
-          <p className={styles.quickLabel}>Pick an amount</p>
+          <p className={styles.quickLabel}>Gift a detail</p>
           <div className={styles.quick} role="group" aria-label="Gift card amounts">
-            {QUICK.map((amount) => (
-              <button key={amount} type="button" onClick={() => chooseAmount(amount)}>${amount}</button>
+            {giftCardPackages().map((pkg) => (
+              <button key={pkg.label} type="button" onClick={() => chooseAmount(pkg.amount)}><span>{pkg.label}</span>${pkg.amount}</button>
             ))}
-            <button type="button" onClick={scrollToBuilder}>Custom</button>
+            <button type="button" onClick={scrollToBuilder}>Any amount</button>
           </div>
           <dl className={styles.heroFacts}>
             <div><dt>Value</dt><dd>Never expires</dd></div>
