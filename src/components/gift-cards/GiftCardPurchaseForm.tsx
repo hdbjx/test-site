@@ -5,7 +5,8 @@ import { Honeypot } from "@/components/forms/parts";
 import { TurnstileField } from "@/components/forms/TurnstileField";
 import { track } from "@/lib/analytics";
 import { site } from "@/data/site";
-import { giftCardPackages } from "@/data/giftCards";
+import { giftCardPackages, GIFT_PACKAGE_SERVICES, type GiftPackageService } from "@/data/giftCards";
+import { vehicles, type VehicleId } from "@/data/services";
 import { GiftCardFace } from "./GiftCardFace";
 import styles from "./gift.module.css";
 
@@ -13,7 +14,9 @@ import styles from "./gift.module.css";
 type Result = { reference: string; amount: number; paymentMethod: "venmo" | "zelle"; paymentTarget?: string; paymentUrl?: string };
 
 export function GiftCardPurchaseForm() {
-  const [preset, setPreset] = useState<number | "custom">(250);
+  const [preset, setPreset] = useState<GiftPackageService | "custom">("premium");
+  const [vehicle, setVehicle] = useState<VehicleId>("sedan");
+  const packages = giftCardPackages(vehicle);
   const [custom, setCustom] = useState(250);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -22,12 +25,12 @@ export function GiftCardPurchaseForm() {
   // Live preview on the card while they type.
   const [to, setTo] = useState("");
   const [note, setNote] = useState("");
-  const amount = useMemo(() => (preset === "custom" ? custom : preset), [preset, custom]);
+  const amount = useMemo(() => (preset === "custom" ? custom : packages.find((p) => p.service === preset)?.amount ?? 0), [preset, custom, packages]);
 
   useEffect(() => {
     const onAmount = (event: Event) => {
-      const amount = Number((event as CustomEvent<number>).detail);
-      if (giftCardPackages().some((p) => p.amount === amount)) setPreset(amount);
+      const service = (event as CustomEvent<string>).detail as GiftPackageService;
+      if (GIFT_PACKAGE_SERVICES.includes(service)) setPreset(service);
     };
     window.addEventListener("ed:gift-amount", onAmount);
     return () => window.removeEventListener("ed:gift-amount", onAmount);
@@ -126,9 +129,15 @@ export function GiftCardPurchaseForm() {
       <TurnstileField action="gift_order" />
       <div className={styles.section}>
         <div className={styles.step}><b>01</b><span>Choose the value</span></div>
+        <label className={styles.vehiclePick}>
+          <span>Their vehicle</span>
+          <select value={vehicle} onChange={(e) => setVehicle(e.target.value as VehicleId)}>
+            {vehicles.map((v) => <option key={v.id} value={v.id}>{v.label} · {v.hint}</option>)}
+          </select>
+        </label>
         <div className={styles.amounts}>
-          {giftCardPackages().map((pkg) => (
-            <button key={pkg.label} type="button" aria-pressed={preset === pkg.amount} onClick={() => setPreset(pkg.amount)}>
+          {packages.map((pkg) => (
+            <button key={pkg.service} type="button" aria-pressed={preset === pkg.service} onClick={() => setPreset(pkg.service)}>
               <span>{pkg.label}</span>${pkg.amount}
             </button>
           ))}

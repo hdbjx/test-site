@@ -11,8 +11,8 @@ export function GiftCardIntro() {
     document.getElementById("gift-builder")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const chooseAmount = (amount: number) => {
-    window.dispatchEvent(new CustomEvent("ed:gift-amount", { detail: amount }));
+  const chooseAmount = (service: string) => {
+    window.dispatchEvent(new CustomEvent("ed:gift-amount", { detail: service }));
     scrollToBuilder();
   };
 
@@ -29,7 +29,7 @@ export function GiftCardIntro() {
           <p className={styles.quickLabel}>Gift a detail</p>
           <div className={styles.quick} role="group" aria-label="Gift card amounts">
             {giftCardPackages().map((pkg) => (
-              <button key={pkg.label} type="button" onClick={() => chooseAmount(pkg.amount)}><span>{pkg.label}</span>${pkg.amount}</button>
+              <button key={pkg.service} type="button" onClick={() => chooseAmount(pkg.service)}><span>{pkg.label}</span><small>from</small>${pkg.amount}</button>
             ))}
             <button type="button" onClick={scrollToBuilder}>Any amount</button>
           </div>
